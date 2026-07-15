@@ -225,15 +225,8 @@ document.getElementById('hero-sub').textContent = '收录区间：' + DATA.windo
 const statsEl = document.getElementById('hero-stats');
 const totalStat = document.createElement('div');
 totalStat.className = 'stat total';
-totalStat.innerHTML = '<span class="num">' + DATA.flat.length + '</span><span class="lab">条</span>';
+totalStat.innerHTML = '<span class="num">' + DATA.flat.length + '</span><span class="lab">条 · 今日精选</span>';
 statsEl.appendChild(totalStat);
-DATA.sections.forEach(function(s, i){
-  const el = document.createElement('div');
-  el.className = 'stat';
-  el.innerHTML = '<span class="dot" style="background:var(--c' + i + ')"></span>'
-    + '<span class="lab">' + s.label + '</span><span class="num">' + s.items.length + '</span>';
-  statsEl.appendChild(el);
-});
 
 // Cards with GLOBAL continuous numbering + cover + full (long) summary
 const ICONS = [
