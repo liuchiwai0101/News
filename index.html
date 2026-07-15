@@ -16,6 +16,11 @@
     --accent:#2f44c4;       /* deeper indigo for links/badge (AA contrast) */
     --accent-soft:#eef2fb;
     --c0:#2f44c4; --c1:#0e8f6e; --c2:#c2410c; --c3:#7c3aed; --c4:#be123c;
+    --g0:linear-gradient(135deg,#3b4fd1,#2f44c4);
+    --g1:linear-gradient(135deg,#10a37f,#0b7a5d);
+    --g2:linear-gradient(135deg,#ea580c,#c2410c);
+    --g3:linear-gradient(135deg,#8b5cf6,#7c3aed);
+    --g4:linear-gradient(135deg,#f43f5e,#be123c);
     --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.06);
   }
   * { box-sizing:border-box; }
@@ -79,27 +84,38 @@
   .section-head h2 { font-size:21px; margin:0; font-weight:800; color:var(--ink); }
   .section-head .cnt { color:var(--muted); font-size:14px; font-weight:600; }
 
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:18px; }
+  /* GRID — JS masonry: variable card heights, left-to-right order preserved */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    grid-auto-rows:8px; gap:20px; align-items:start; }
   .card {
     position:relative; background:var(--card); border:1px solid var(--line);
-    border-radius:16px; padding:20px 20px 18px; box-shadow:var(--shadow);
+    border-radius:16px; overflow:hidden; box-shadow:var(--shadow);
     display:flex; flex-direction:column; transition:.18s;
   }
   .card:hover { transform:translateY(-3px); box-shadow:0 4px 10px rgba(15,23,42,.08),0 18px 40px rgba(15,23,42,.10); border-color:#cbd5e7; }
-  .card .idx {
-    position:absolute; top:-12px; left:18px; background:var(--accent); color:#fff;
-    font-size:13.5px; font-weight:800; padding:3px 11px; border-radius:999px;
-    box-shadow:0 2px 8px rgba(47,68,196,.45);
-  }
-  .card .meta-top { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:6px 0 11px; }
-  .chip {
-    font-size:12.5px; font-weight:600; color:#334155; background:var(--accent-soft);
-    border:1px solid var(--line); padding:3px 10px; border-radius:8px;
-    max-width:76%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  }
-  .card .when { font-size:12.5px; color:var(--muted); white-space:nowrap; }
-  .card h3 { font-size:17px; margin:0 0 10px; font-weight:700; line-height:1.5; color:var(--ink); }
-  .card p { margin:0 0 15px; font-size:14.5px; color:var(--body); flex:1; }
+  .card.featured { grid-column:span 2; }
+
+  /* COVER — generated visual band (stands in for a thumbnail) */
+  .card .cover { position:relative; height:92px; background:var(--g0);
+    display:flex; align-items:flex-end; padding:12px 14px; overflow:hidden; }
+  .card.featured .cover { height:148px; padding:16px 18px; }
+  .card .cover-ico { position:absolute; top:50%; right:14px; transform:translateY(-50%);
+    width:74px; height:74px; color:rgba(255,255,255,.22); }
+  .card.featured .cover-ico { width:120px; height:120px; right:18px; }
+  .card .cover-ico svg { width:100%; height:100%; display:block; }
+  .card .idx { position:absolute; top:12px; left:14px; background:rgba(0,0,0,.32);
+    color:#fff; font-size:13px; font-weight:800; padding:3px 11px; border-radius:999px;
+    backdrop-filter:blur(2px); z-index:2; }
+  .card .cover-src { position:relative; z-index:1; font-size:12.5px; font-weight:700;
+    color:#fff; background:rgba(0,0,0,.28); padding:4px 11px; border-radius:999px;
+    max-width:78%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .card .cover-date { position:absolute; bottom:12px; right:14px; z-index:1;
+    font-size:11.5px; color:rgba(255,255,255,.85); font-weight:600; }
+
+  .card .body { padding:15px 18px 18px; display:flex; flex-direction:column; flex:1; }
+  .card h3 { font-size:16.5px; margin:0 0 9px; font-weight:700; line-height:1.5; color:var(--ink); }
+  .card.featured h3 { font-size:20px; }
+  .card p { margin:0 0 14px; font-size:14.5px; color:var(--body); line-height:1.7; flex:1; }
   .card .read {
     align-self:flex-start; font-size:13.5px; font-weight:700; color:var(--accent);
     display:inline-flex; align-items:center; gap:6px; border:1px solid #c7d2fe;
@@ -145,14 +161,16 @@
     .section-head h2 { font-size:19px; }
     .section-head .bar { height:21px; }
 
-    /* CARDS: 单列、加大点按区域 */
+    /* CARDS: 单列；封面与 featured 收小 */
     .grid { grid-template-columns:1fr; gap:15px; }
-    .card { padding:18px 16px 16px; border-radius:14px; }
-    .card .idx { left:16px; }
-    .card h3 { font-size:16.5px; }
-    .card p { font-size:14.5px; margin-bottom:13px; }
-    .card .meta-top { flex-wrap:wrap; gap:6px; margin:4px 0 10px; }
-    .chip { max-width:100%; }
+    .card.featured { grid-column:span 1; }
+    .card .cover { height:84px; padding:11px 12px; }
+    .card.featured .cover { height:118px; padding:14px 14px; }
+    .card .cover-ico { width:60px; height:60px; right:10px; }
+    .card.featured .cover-ico { width:96px; height:96px; right:14px; }
+    .card h3 { font-size:16px; }
+    .card.featured h3 { font-size:18px; }
+    .card p { font-size:14px; margin-bottom:13px; }
     .card .read {
       width:100%; justify-content:center; padding:11px; font-size:14px;
       border-radius:11px;
@@ -209,7 +227,15 @@ DATA.sections.forEach(function(s, i){
   statsEl.appendChild(el);
 });
 
-// Cards with GLOBAL continuous numbering
+// Cards with GLOBAL continuous numbering + cover + full (long) summary
+const ICONS = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5M9 13h7M9 17h7M9 9h3"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.3 1 2.5h6c0-1.2.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>'
+];
+
 const content = document.getElementById('content');
 let globalIdx = 0;
 DATA.sections.forEach(function(sec, si){
@@ -225,25 +251,41 @@ DATA.sections.forEach(function(sec, si){
   const grid = document.createElement('div');
   grid.className = 'grid';
 
-  sec.items.forEach(function(item){
+  sec.items.forEach(function(item, ii){
     globalIdx++;
     const card = document.createElement('article');
-    card.className = 'card';
-    let sum = item.summary || '';
-    if (sum.length > 60) sum = sum.slice(0, 59) + '…';   // cap at <=60 chars incl. ellipsis
+    card.className = 'card' + (ii === 0 ? ' featured' : '');
+    const sum = item.summary || '';
     card.innerHTML =
-      '<div class="idx">#' + globalIdx + '</div>'
-      + '<div class="meta-top"><span class="chip" title="' + item.sourceName + '">' + item.sourceName + '</span>'
-      + '<span class="when">' + DATA.cardDate + '</span></div>'
+      '<div class="cover" style="background:var(--g' + si + ')">'
+      + '<span class="cover-ico">' + ICONS[si] + '</span>'
+      + '<span class="idx">#' + globalIdx + '</span>'
+      + '<span class="cover-src" title="' + item.sourceName + '">' + item.sourceName + '</span>'
+      + '<span class="cover-date">' + DATA.cardDate + '</span>'
+      + '</div>'
+      + '<div class="body">'
       + '<h3>' + item.title + '</h3>'
       + '<p>' + sum + '</p>'
-      + '<a class="read" href="' + item.sourceUrl + '" target="_blank" rel="noopener noreferrer">阅读原文 ' + LINK_SVG + '</a>';
+      + '<a class="read" href="' + item.sourceUrl + '" target="_blank" rel="noopener noreferrer">阅读原文 ' + LINK_SVG + '</a>'
+      + '</div>';
     grid.appendChild(card);
   });
 
   section.appendChild(grid);
   content.appendChild(section);
 });
+
+// Masonry: set each card's row span from its rendered height (variable sizes, order preserved)
+function layoutMasonry(){
+  const gap = 20, unit = 8;
+  document.querySelectorAll('.card').forEach(function(c){
+    const h = c.getBoundingClientRect().height;
+    c.style.gridRowEnd = 'span ' + Math.ceil((h + gap) / (unit + gap));
+  });
+}
+layoutMasonry();
+window.addEventListener('resize', function(){ clearTimeout(window.__mt); window.__mt = setTimeout(layoutMasonry, 120); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutMasonry);
 
 // Footer
 document.getElementById('foot').innerHTML =
