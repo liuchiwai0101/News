@@ -28,6 +28,11 @@ color:var(--muted);margin-bottom:6px;}
 padding:14px 16px;border-radius:12px;font-size:14.5px;}
 .notice a{color:var(--accent);font-weight:600;}
 .body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
 .back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
 text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
 .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
@@ -41,7 +46,62 @@ font-size:12.5px;color:var(--muted);}
 <div class="meta"><span class="src">SegmentFault 思否</span><span>· 7月16日 周四</span>
 <span>· <a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
-<div class="body"><h3>前言</h3><p>React已經很快了，但如果你不注意細節，它會做很多“無用功”：組件沒必要的重渲染、大列表全量渲染、狀態更新導致整個頁面刷新……這些問題累積起來，再好的電腦也扛不住。 今天我們不聊虛擬DOM原理，直接上代碼、上工具，告訴你哪些寫法是“性能殺手”，哪些是“救星”。優化完，你的React應用會快得讓用戶懷疑是不是裝了外掛。 一、第1招：用React.memo避免“父動子也動” React默認：父組件更新，所有子組件都會重新渲染（即使props沒變）。這會導致大量浪費。 差代碼：</p><h3>const Child = ({ name }) =&gt; {</h3><p>console.log(&#x27;Child渲染了&#x27;); return &lt;div&gt;{name}&lt;/div&gt;; };</p><h3>const Parent = () =&gt; {</h3><p>const [count, setCount] = useState(0);</p><h3>return (</h3><h3>&lt;div&gt;</h3><p>&lt;button onClick={() =&gt; setCount(c =&gt; c+1)}&gt;点击 {count}&lt;/button&gt;</p><h3>&lt;Child name=&quot;张三&quot; /&gt;</h3><h3>&lt;/div&gt;</h3><p>); };每次點擊按鈕，Child都會重新渲染，但它的name根本沒變。 好代碼：用React.memo包裝子組件。</p><h3>const Child = React.memo(({ name }) =&gt; {</h3><p>console.log(&#x27;Child渲染了&#x27;); return &lt;div&gt;{name}&lt;/div&gt;; });現在只有name變化時，Child纔會重新渲染。 注意：如果Child接收的props包含函數或對象，需要配合useCallback、useMemo（見第2招）。 二、第2招：用useCallback和useMemo緩存函數和值 在React組件裏，每次渲染都會重新創建所有內聯函數和對象。即使內容相同，引用也不同，導致React.memo失效。 差代碼：</p><h3>const Parent = () =&gt; {</h3><p>const handleClick = () =&gt; console.log(&#x27;clicked&#x27;); // 每次渲染都是新函数 return &lt;Child onClick={handleClick} /&gt;; };好代碼：用useCallback緩存函數。</p><h3>const Parent = () =&gt; {</h3><p>const handleClick = useCallback(() =&gt; console.log(&#x27;clicked&#x27;), []); // 依赖为空，永远不变 return &lt;Child onClick={handleClick} /&gt;; };對於複雜計算的值（比如過濾大列表），用useMemo緩存結果： const visibleTodos = useMemo(() =&gt; filterTodos(todos, tab), [todos, tab]);三、第3招：虚拟列表，渲染一万条也不怕 直接渲染長列表（比如聊天記錄、商品列表）會導致瀏覽器創建上萬個DOM節點，內存爆炸，滾動卡頓。虛擬列表只渲染可視區域內的幾條，滾動時動態替換。 不用自己造輪子，用現成庫：</p><h3>- react-window（轻量）</h3><h3>- react-virtualized（功能全）</h3><p>import { FixedSizeList as List } from &#x27;react-window&#x27;; const Row = ({ index, style }) =&gt; (</p><h3>&lt;div style={style}&gt;行 {index}&lt;/div&gt;</h3><p>);</p><h3>&lt;List</h3><h3>height={400}</h3><h3>itemCount={10000}</h3><h3>itemSize={35}</h3><h3>width={300}</h3><h3>&gt;</h3><h3>{Row}</h3><p>&lt;/List&gt;一秒渲染一萬條，滾動絲滑。 四、第4招：代碼分割 + 懶加載，別一次加載所有組件 你的用戶訪問首頁，結果你把後臺管理、用戶設置、訂單詳情所有頁面的代碼都下載了。浪費流量，也拖慢首屏。 用React.lazy + Suspense： const Dashboard = lazy(() =&gt; import(&#x27;./Dashboard&#x27;)); const Settings = lazy(() =&gt; import(&#x27;./Settings&#x27;));</p><h3>function App() {</h3><h3>return (</h3><h3>&lt;Suspense fallback={&lt;div&gt;加载中...&lt;/div&gt;}&gt;</h3><h3>&lt;Routes&gt;</h3><p>&lt;Route path=&quot;/dashboard&quot; element={&lt;Dashboard /&gt;} /&gt; &lt;Route path=&quot;/settings&quot; element={&lt;Settings /&gt;} /&gt;</p><h3>&lt;/Routes&gt;</h3><h3>&lt;/Suspense&gt;</h3><p>); }每個路由的代碼單獨打包，只有訪問時才加載。 五、第5招：避免內聯對象和函數傳遞 即使不用memo，內聯對象也會導致子組件每次接收新對象，觸發重渲染。 差代碼： &lt;Child style={{ color: &#x27;red&#x27; }} /&gt;  // 每次渲染都是新對象好代碼：把對象提取到組件外部或使用useMemo。 const childStyle = { color: &#x27;red&#x27; }; // 外部定义，引用不变 &lt;Child style={childStyle} /&gt;六、额外绝招：使用useTransition标记非紧急更新 React 18引入了useTransition，可以把某些更新標記爲“低優先級”，讓高優先級交互（如輸入框打字）更流暢。 const [isPending, startTransition] = useTransition(); const [query, setQuery] = useState(&#x27;&#x27;); const [list, setList] = useState([]);</p><h3>const handleChange = (e) =&gt; {</h3><p>const value = e.target.value; setQuery(value); // 緊急更新：更新輸入框</p><h3>startTransition(() =&gt; {</h3><h3>// 非緊急更新：過濾大列表</h3><p>const filtered = hugeList.filter(item =&gt; item.includes(value)); setList(filtered); }); };這樣打字不會卡，列表過濾稍後完成。 七、工具检测：React DevTools Profiler 安裝React DevTools，打開Profiler標籤，錄製一段操作，可以看到每個組件渲染耗時。顏色越黃/紅，越需要優化。 八、總結：優化口訣 - 子組件純展示，包上React.memo。 - 函數和對象，用useCallback、useMemo緩存。 - 長列表用虛擬滾動。 - 路由懶加載，按需取。 - 內聯對象移出去，引用不變。 - 緊急更新與非緊急分開，用useTransition。 優化完，你的React應用會快得飛起。用戶會驚歎：“這網站怎麼比原生App還流暢？”</p></div>
+<div class="body"><p>React已經很快了，但如果你不注意細節，它會做很多“無用功”：組件沒必要的重渲染、大列表全量渲染、狀態更新導致整個頁面刷新……這些問題累積起來，再好的電腦也扛不住。</p><p>今天我們不聊虛擬DOM原理，直接上代碼、上工具，告訴你哪些寫法是“性能殺手”，哪些是“救星”。優化完，你的React應用會快得讓用戶懷疑是不是裝了外掛。</p><h3>一、第1招：用`React.memo`避免“父動子也動”</h3><p>React默認：父組件更新，所有子組件都會重新渲染（即使props沒變）。這會導致大量浪費。</p><p class='list-item'>**差代碼**：</p><pre><code>const Child = ({ name }) =&gt; {
+  console.log(&#x27;Child渲染了&#x27;);
+  return &lt;div&gt;{name}&lt;/div&gt;;
+};
+const Parent = () =&gt; {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c+1)}&gt;点击 {count}&lt;/button&gt;
+      &lt;Child name=&quot;张三&quot; /&gt;
+    &lt;/div&gt;
+  );
+};</code></pre><p>每次點擊按鈕，<code>Child</code>都會重新渲染，但它的<code>name</code>根本沒變。</p><p class='list-item'>**好代碼**：用`React.memo`包裝子組件。</p><pre><code>const Child = React.memo(({ name }) =&gt; {
+  console.log(&#x27;Child渲染了&#x27;);
+  return &lt;div&gt;{name}&lt;/div&gt;;
+});</code></pre><p>現在只有<code>name</code>變化時，<code>Child</code>纔會重新渲染。</p><p class='list-item'>**注意**：如果`Child`接收的props包含函數或對象，需要配合`useCallback`、`useMemo`（見第2招）。</p><h3>二、第2招：用`useCallback`和`useMemo`緩存函數和值</h3><p>在React組件裏，每次渲染都會重新創建所有內聯函數和對象。即使內容相同，引用也不同，導致<code>React.memo</code>失效。</p><p class='list-item'>**差代碼**：</p><pre><code>const Parent = () =&gt; {
+  const handleClick = () =&gt; console.log(&#x27;clicked&#x27;); // 每次渲染都是新函数
+  return &lt;Child onClick={handleClick} /&gt;;
+};</code></pre><p class='list-item'>**好代碼**：用`useCallback`緩存函數。</p><pre><code>const Parent = () =&gt; {
+  const handleClick = useCallback(() =&gt; console.log(&#x27;clicked&#x27;), []); // 依赖为空，永远不变
+  return &lt;Child onClick={handleClick} /&gt;;
+};</code></pre><p>對於複雜計算的值（比如過濾大列表），用<code>useMemo</code>緩存結果：</p><p><code>const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);</code>## 三、第3招：虚拟列表，渲染一万条也不怕</p><p>直接渲染長列表（比如聊天記錄、商品列表）會導致瀏覽器創建上萬個DOM節點，內存爆炸，滾動卡頓。**虛擬列表**只渲染可視區域內的幾條，滾動時動態替換。</p><p class='list-item'>**不用自己造輪子，用現成庫**：</p><p class='list-item'>- `react-window`（轻量）</p><p class='list-item'>- `react-virtualized`（功能全）</p><pre><code>import { FixedSizeList as List } from &#x27;react-window&#x27;;
+const Row = ({ index, style }) =&gt; (
+  &lt;div style={style}&gt;行 {index}&lt;/div&gt;
+);
+&lt;List
+  height={400}
+  itemCount={10000}
+  itemSize={35}
+  width={300}
+&gt;
+  {Row}
+&lt;/List&gt;</code></pre><p>一秒渲染一萬條，滾動絲滑。</p><h3>四、第4招：代碼分割 + 懶加載，別一次加載所有組件</h3><p>你的用戶訪問首頁，結果你把後臺管理、用戶設置、訂單詳情所有頁面的代碼都下載了。浪費流量，也拖慢首屏。</p><p class='list-item'>**用 React.lazy + Suspense**：</p><pre><code>const Dashboard = lazy(() =&gt; import(&#x27;./Dashboard&#x27;));
+const Settings = lazy(() =&gt; import(&#x27;./Settings&#x27;));
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;加载中...&lt;/div&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path=&quot;/dashboard&quot; element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path=&quot;/settings&quot; element={&lt;Settings /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre><p>每個路由的代碼單獨打包，只有訪問時才加載。</p><h3>五、第5招：避免內聯對象和函數傳遞</h3><p>即使不用<code>memo</code>，內聯對象也會導致子組件每次接收新對象，觸發重渲染。</p><p class='list-item'>**差代碼**：</p><p><code><Child style={{ color: 'red' }} />  // 每次渲染都是新对象</code>**好代码**：把对象提取到组件外部或使用<code>useMemo</code>。</p><pre><code>const childStyle = { color: &#x27;red&#x27; }; // 外部定义，引用不变
+&lt;Child style={childStyle} /&gt;</code></pre><h3>六、額外絕招：使用`useTransition`標記非緊急更新</h3><p>React 18引入了<code>useTransition</code>，可以把某些更新標記爲“低優先級”，讓高優先級交互（如輸入框打字）更流暢。</p><pre><code>const [isPending, startTransition] = useTransition();
+const [query, setQuery] = useState(&#x27;&#x27;);
+const [list, setList] = useState([]);
+const handleChange = (e) =&gt; {
+  const value = e.target.value;
+  setQuery(value); // 紧急更新：更新输入框
+  startTransition(() =&gt; {
+    // 非紧急更新：过滤大列表
+    const filtered = hugeList.filter(item =&gt; item.includes(value));
+    setList(filtered);
+  });
+};</code></pre><p>這樣打字不會卡，列表過濾稍後完成。</p><h3>七、工具检测：React DevTools Profiler</h3><p>安裝React DevTools，打開Profiler標籤，錄製一段操作，可以看到每個組件渲染耗時。顏色越黃/紅，越需要優化。</p><h3>八、總結：優化口訣</h3><p class='list-item'>- 子組件純展示，包上`React.memo`。</p><p class='list-item'>- 函数和对象，用`useCallback`、`useMemo`缓存。</p><p class='list-item'>- 長列表用虛擬滾動。</p><p class='list-item'>- 路由懶加載，按需取。</p><p class='list-item'>- 內聯對象移出去，引用不變。</p><p class='list-item'>- 緊急更新與非緊急分開，用`useTransition`。</p><p>優化完，你的React應用會快得飛起。用戶會驚歎：“這網站怎麼比原生App還流暢？”</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

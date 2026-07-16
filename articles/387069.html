@@ -28,6 +28,11 @@ color:var(--muted);margin-bottom:6px;}
 padding:14px 16px;border-radius:12px;font-size:14.5px;}
 .notice a{color:var(--accent);font-weight:600;}
 .body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
 .back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
 text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
 .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
@@ -41,7 +46,7 @@ font-size:12.5px;color:var(--muted);}
 <div class="meta"><span class="src">開源中國</span><span>· 7月16日 周四</span>
 <span>· <a href="https://www.oschina.net/comment/news/387069" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://www.oschina.net/comment/news/387069" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
-<div class="body"><p>近日，Ant Design X V2 正式發佈！本次升級的重點爲： - 底層依賴升級 Ant Design V6，同時將伴隨 React 19 以及 CSS Variables 樣式架構的升級。 - Ant Design X 2.0 升级为 monorepo 架构，拆分成三个子包：@ant-design/x、@ant-design/x-markdown、@ant-design/x-sdk，因此 Ant Design X 将升级为搭建AI应用的工具集。 Ant Design X 基於 RICH 交互範式，在不同的交互階段提供了大量的原子組件，專爲 AI 驅動界面設計，提供開箱即用的智能對話組件、無縫集成 API 服務，快速搭建智能應用界面。</p><h3>Ant Design X 2.0 技术升级</h3><p>Ant Design 依赖升级到 V6，详情请看 https://ant.design/docs/react/migration-v6-cn</p><h3>新特性與功能增強</h3><h3>- 核心 UI 组件库（@ant-design/x）</h3><p>基於 RICH 範式的 React UI 組件庫，提供開箱即用的智能對話界面組件，提供原子化組件，支持靈活組合。</p><h3>- 支持 TypeScript</h3><h3>- 組件語義化結構</h3><h3>- 國際化定製</h3><h3>- 深度主題定製</h3><p>- 高性能 Markdown 流式渲染器（@ant-design/x-markdown） 專爲 AI 流式場景打造的高性能 Markdown 渲染器。</p><h3>- useXChat</h3><p>通過 Agent 進行會話數據管理，併產出供頁面渲染使用的數據。</p><h3>- useXConversations</h3><p>提供會話列表管理，多會話保持，包括會話創建、刪除、更新等操作能力。</p><h3>- Chat Provider</h3><p>内置了 DefaultChatProvider、OpenAIChatProvider、DeepSeekChatProvider 三个数据处理，同时可以自定义 Chat Provider 满足各种模型或者 agent 调用。</p><h3>- XRequest 和 XStream</h3><p>將流請求和流處理遷移到 X-SDK。</p><h3>升級指南</h3><p>- 確保 Ant Design 升級爲 V6 版本。 - 確保項目運行在 React 18 或更高版本。 - @ant-design/x 相關升級。 1. 我們對 Sender、ThoughtChain、Bubble 這三個組件進行了UI層面以及功能的全面升級，同時需要你參考應用頁面設計來選取使用，因此無法使用統一工具兼容升級，但我們仍有一份文檔（https://x.ant-design-x/docs/react/migration-v2-cn）可以幫助您升級。 2. v2 版本已將 Tools 相關內容遷移到了 @ant-design/x-sdk，同時刪除了 useXAgent，建議直接使用新的 useXChat，更多功能可看 X-SDK 官網文檔（https://x.ant.design/x-sdks/introduce-cn/）。 &lt;/li&gt; &lt;li&gt; 不再支持 IE。 &lt;/li&gt;</p><h3>未來規劃</h3><p>- 基於 X 的 AI 應用腳手架 X-Pro。 - AI 應用內容生成規範以及接入方案 ：x-card ，目前還在設計中具體內容後續會在 X Discussions 發佈。 - 根據不同的模型廠商提供更多內置的 Chat Provider。 - 更多組件功能支持快捷鍵觸發。 - 此外還有一些新的組件：GenScroller（生成式滾動）、Artifacts（微型瀏覽器）等正在開發中，敬請期待。 下载地址：https://github.com/ant-design/x/releases/tag/2.0.0</p></div>
+<div class="body"><p>評論刪除後，數據將無法恢復</p><p>評論刪除後，數據將無法恢復</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

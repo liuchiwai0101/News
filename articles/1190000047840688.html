@@ -28,6 +28,11 @@ color:var(--muted);margin-bottom:6px;}
 padding:14px 16px;border-radius:12px;font-size:14.5px;}
 .notice a{color:var(--accent);font-weight:600;}
 .body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
 .back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
 text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
 .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
@@ -40,8 +45,138 @@ font-size:12.5px;color:var(--muted);}
 <h1>CSS Container Queries：徹底告別 @media 寫到手軟（附 5 個真實佈局案例）</h1>
 <div class="meta"><span class="src">SegmentFault 思否</span><span>· 7月16日 周四</span>
 <span>· <a href="https://segmentfault.com/a/1190000047840688" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://segmentfault.com/a/1190000047840688" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://segmentfault.com/a/1190000047840688" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>以前寫響應式組件，總要根據視口寬度寫一堆<code>@media</code>，代碼又臭又長。現在 Container Queries 讓組件根據父容器尺寸響應，代碼直接減半。本文講透語法 + 5 個可直接複用的案例。</p><h3>一、Container Queries 解決了什麼問題？</h3><p><code>@media</code> 媒體查詢基於**視口**寬度。這導致一個組件在不同父容器下無法獨立響應——同樣的卡片，在側邊欄和主內容區需要兩套樣式或者額外類名。</p><p class='list-item'>**Container Queries** 允許你定義：當**父容器**達到某個寬度時，子元素改變佈局。</p><pre><code>/* 以前：基于视口，无法区分卡片在哪个容器里 */
+@media (min-width: 600px) {
+  .card { display: flex; }
+}
+/* 现在：基于父容器宽度 */
+@container (min-width: 300px) {
+  .card { display: flex; }
+}</code></pre><h3>二、基礎語法（三步搞定）</h3><h3>2.1 定義容器</h3><pre><code>.sidebar {
+  container-type: inline-size;   /* 监听内联方向（宽度）变化 */
+  container-name: sidebar;       /* 可选，给容器起名 */
+}</code></pre><p class='list-item'>- `container-type: inline-size`最常用，表示根据宽度变化。</p><p class='list-item'>- 也可以 `size`（寬高都監聽）或`normal`（不監聽）。</p><h3>2.2 使用 @container</h3><pre><code>@container (min-width: 300px) {
+  .card-title {
+    font-size: 1.5rem;
+  }
+}</code></pre><p>如果只有一個容器，可以直接寫條件。如果有多個容器，用 <code>container-name</code> 限定：</p><pre><code>@container sidebar (min-width: 300px) {
+  /* 只对 sidebar 容器内的元素生效 */
+}</code></pre><h3>2.3 組合與範圍</h3><pre><code>@container (100px &lt;= width &lt; 300px) {
+  /* 容器宽度在 100px 到 300px 之间 */
+}</code></pre><h3>三、與 @media 對比（代碼量減少 50%）</h3><p class='list-item'>**代碼對比**：</p><pre><code>&lt;!-- 以前：需要额外类名 --&gt;
+&lt;div class=&quot;sidebar&quot;&gt;
+  &lt;div class=&quot;card vertical&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;main&quot;&gt;
+  &lt;div class=&quot;card horizontal&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre><pre><code>/* 以前：手动控制 */
+.card.vertical { flex-direction: column; }
+.card.horizontal { flex-direction: row; }
+/* Container Queries：一套规则 */
+.card {
+  container-type: inline-size;
+}
+@container (min-width: 400px) {
+  .card { flex-direction: row; }
+}
+@container (max-width: 399px) {
+  .card { flex-direction: column; }
+}</code></pre><h3>四、5 個實戰案例（可直接複製）</h3><h3>案例 1：卡片組件根據容器寬度切換佈局</h3><pre><code>&lt;div class=&quot;card-container&quot;&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;img src=&quot;photo.jpg&quot; alt=&quot;&quot;&gt;
+    &lt;div class=&quot;card-body&quot;&gt;
+      &lt;h3&gt;标题&lt;/h3&gt;
+      &lt;p&gt;描述文字&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre><pre><code>.card-container {
+  container-type: inline-size;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@container (min-width: 350px) {
+  .card {
+    flex-direction: row;
+    align-items: center;
+  }
+  .card img {
+    width: 40%;
+  }
+}</code></pre><h3>案例 2：側邊欄與主內容區共享同一卡片組件</h3><pre><code>/* 不需要任何额外代码，卡片自己响应父容器宽度 */
+.sidebar { container-type: inline-size; width: 280px; }
+.main { container-type: inline-size; width: 800px; }
+/* 卡片规则如上，当父容器&lt;350px时垂直，&gt;350px时水平 */</code></pre><h3>案例 3：儀表盤小部件矩陣</h3><pre><code>&lt;div class=&quot;dashboard&quot;&gt;
+  &lt;div class=&quot;widget&quot; style=&quot;width: 200px&quot;&gt;...&lt;/div&gt;
+  &lt;div class=&quot;widget&quot; style=&quot;width: 400px&quot;&gt;...&lt;/div&gt;
+  &lt;div class=&quot;widget&quot; style=&quot;width: 200px&quot;&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre><pre><code>.widget {
+  container-type: inline-size;
+}
+.widget-content {
+  font-size: 12px;
+}
+@container (min-width: 250px) {
+  .widget-content {
+    font-size: 16px;
+    display: flex;
+    gap: 1rem;
+  }
+}</code></pre><h3>案例 4：商品列表切換行列（類似 Grid 與 Flex 混合）</h3><pre><code>.product-list {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.product-item {
+  flex: 1 1 200px;
+}
+@container (max-width: 500px) {
+  .product-item {
+    flex-basis: 100%;  /* 小于500px时每行一个 */
+  }
+}</code></pre><h3>案例 5：自適應導航欄（摺疊菜單）</h3><pre><code>&lt;nav class=&quot;navbar&quot;&gt;
+  &lt;div class=&quot;logo&quot;&gt;Logo&lt;/div&gt;
+  &lt;ul class=&quot;nav-links&quot;&gt;
+    &lt;li&gt;首页&lt;/li&gt;
+    &lt;li&gt;产品&lt;/li&gt;
+    &lt;li&gt;关于&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre><pre><code>.navbar {
+  container-type: inline-size;
+  display: flex;
+  justify-content: space-between;
+}
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+@container (max-width: 500px) {
+  .navbar {
+    flex-direction: column;
+  }
+  .nav-links {
+    flex-direction: column;
+    margin-top: 0.5rem;
+  }
+}</code></pre><h3>五、瀏覽器兼容性與降級方案</h3><p class='list-item'>**支持情況**（截至 2026-06）：</p><p class='list-item'>- Chrome 105+ ✅</p><p class='list-item'>- Firefox 110+ ✅</p><p class='list-item'>- Safari 16+ ✅</p><p class='list-item'>- Edge 105+ ✅</p><p class='list-item'>**如果需要兼容舊瀏覽器**，使用 `@supports` 漸進增強：</p><pre><code>/* 降级：默认样式（例如始终垂直） */
+.card {
+  flex-direction: column;
+}
+/* 支持 Container Queries 时覆盖 */
+@supports (container-type: inline-size) {
+  .card-container {
+    container-type: inline-size;
+  }
+  @container (min-width: 350px) {
+    .card {
+      flex-direction: row;
+    }
+  }
+}</code></pre><h3>六、總結</h3><p class='list-item'>- Container Queries 讓組件根據**父容器**而非視口響應，實現真正的組件級響應式。</p><p class='list-item'>- 语法简单：`container-type`+`@container`。</p><p class='list-item'>- 5 個案例覆蓋卡片、側邊欄、儀表盤、商品列表、導航欄。</p><p class='list-item'>- 兼容性已可投入生產，配合 `@supports`安全降級。</p><p>文中所有代碼均可直接複製到項目中。以後寫響應式組件，先問自己：這個樣式是由視口決定，還是由父容器決定？</p><p class='list-item'>**討論**：你在開發中遇到過哪些因 `@media` 全局斷點導致的組件複用困難？歡迎留言分享。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
