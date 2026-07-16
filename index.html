@@ -111,7 +111,7 @@
     grid-auto-rows:8px; gap:20px; align-items:start; }
   .card {
     position:relative; background:var(--card); border:1px solid var(--line);
-    border-radius:16px; overflow:hidden; box-shadow:var(--shadow);
+    border-radius:16px; overflow:hidden; box-shadow:var(--shadow); cursor:pointer;
     display:flex; flex-direction:column; transition:.18s;
   }
   .card:hover { transform:translateY(-3px); box-shadow:0 4px 10px rgba(15,23,42,.08),0 18px 40px rgba(15,23,42,.10); border-color:#cbd5e7; }
@@ -155,21 +155,6 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .card.featured h3 { font-size:18px; -webkit-line-clamp:2; }
   .card p { margin:0 0 14px; font-size:14.5px; color:var(--body); line-height:1.7; flex:1; }
-  .card .read {
-    align-self:flex-start; font-size:13.5px; font-weight:700; color:var(--accent);
-    display:inline-flex; align-items:center; gap:6px; border:1px solid #c7d2fe;
-    padding:7px 13px; border-radius:10px; transition:.15s;
-  }
-  .card .read:hover { background:var(--accent-soft); }
-  .card .read svg { width:14px; height:14px; }
-  .actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
-  .expand { font:inherit; font-size:13px; font-weight:700; cursor:pointer; color:#fff;
-    background:var(--accent); border:none; border-radius:9px; padding:7px 13px; transition:background .15s; }
-  .expand:hover { background:#1b3a8f; }
-  .expand.on { background:#0e7490; }
-  .card .src { font-size:12.5px; color:var(--muted); border:1px solid var(--line);
-    border-radius:9px; padding:7px 11px; }
-  .card .src:hover { color:var(--body); }
   /* READER — frosted backdrop + header-width centered panel; tap to close (no X) */
   .reader { position:fixed; inset:0; z-index:1000;
     background:rgba(15,23,42,.42); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
@@ -261,10 +246,6 @@
     .card.featured h3 { font-size:17px; }
     .card p { font-size:14px; margin-bottom:13px;
       display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; }
-    .card .read {
-      width:100%; justify-content:center; padding:11px; font-size:14px;
-      border-radius:11px;
-    }
 
     /* FOOTER */
     .foot { font-size:13.5px; }
@@ -383,9 +364,6 @@ function makeCard(item, idx, ri, isExt, featured) {
     + '<div class="body">'
     + '<h3>' + item.title + '</h3>'
     + '<p>' + sum + '</p>'
-    + '<div class="actions">'
-    + (aId ? '<button type="button" class="expand" data-id="' + aId + '">展開全文</button>' : '')
-    + '</div>'
     + '</div>';
   card.dataset.aid = aId;
   card.dataset.sname = item.sourceName || "";
@@ -507,15 +485,13 @@ function closeReader() {
   readerScroll.innerHTML = '';
 }
 
-// Open: tap the 展開全文 button, or tap anywhere on the card (links/buttons excluded).
+// Open: tap anywhere on the card to open the reader directly (no 展開全文 button).
 // Only one reader shows at a time, so switching cards restores the previous card automatically.
 // Exit: tap anywhere inside the reader (no hard-to-reach X on mobile) or press Esc.
 document.addEventListener('click', function(e){
   if (reader.contains(e.target)) { closeReader(); return; }   // tap inside reader → exit
-  const expandBtn = e.target.closest('.expand');
-  if (expandBtn) { const c = expandBtn.closest('.card'); if (c) openReader(c); return; }
   const card = e.target.closest('.card');
-  if (card && !e.target.closest('a, button')) openReader(card);
+  if (card && !e.target.closest('a')) openReader(card);
 });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !reader.hidden) closeReader(); });
 
