@@ -169,11 +169,14 @@
   .card .src { font-size:12.5px; color:var(--muted); border:1px solid var(--line);
     border-radius:9px; padding:7px 11px; }
   .card .src:hover { color:var(--body); }
-  /* READER — full-page modal; tap anywhere to close (mobile-friendly, no hard-to-reach X) */
-  .reader { position:fixed; inset:0; z-index:1000; background:#fff;
-    display:flex; flex-direction:column; overflow:hidden;
-    padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom); }
+  /* READER — frosted backdrop + header-width centered panel; tap to close (no X) */
+  .reader { position:fixed; inset:0; z-index:1000;
+    background:rgba(15,23,42,.42); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    display:flex; justify-content:center; align-items:stretch;
+    padding:env(safe-area-inset-top) max(18px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(18px,env(safe-area-inset-left)); }
   .reader[hidden] { display:none; }
+  .reader-panel { width:100%; max-width:1080px; background:#fff; border-radius:16px;
+    display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.4); }
   .reader-bar { flex:0 0 auto; padding:14px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));
     background:linear-gradient(135deg,#1b266b,#2f3fb0); color:#fff; }
   .reader-bar .r-title { display:block; font-size:17px; font-weight:800; line-height:1.35;
@@ -292,14 +295,16 @@
 
 <footer class="foot" id="foot"></footer>
 
-<!-- Full-page Reader modal — tap anywhere to close (no hard-to-reach X) -->
+<!-- Reader modal: header-width panel over a frosted backdrop — tap to close (no X) -->
 <div id="reader" class="reader" hidden>
-  <div class="reader-bar">
-    <span class="r-title" id="reader-title"></span>
-    <span class="r-src" id="reader-src"></span>
+  <div class="reader-panel">
+    <div class="reader-bar">
+      <span class="r-title" id="reader-title"></span>
+      <span class="r-src" id="reader-src"></span>
+    </div>
+    <div class="reader-scroll" id="reader-scroll"></div>
+    <div class="reader-foot" id="reader-foot">輕觸任意處關閉</div>
   </div>
-  <div class="reader-scroll" id="reader-scroll"></div>
-  <div class="reader-foot" id="reader-foot">輕觸任意處關閉</div>
 </div>
 
 <script src="articles.js"></script>
