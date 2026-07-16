@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>React 效能優化：從「卡成狗」到「絲般順滑」的 5 個秘訣 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>React 效能優化：從「卡成狗」到「絲般順滑」的 5 個秘訣</h1>
+<div class="meta"><span class="src">SegmentFault 思否</span><span>· 7月16日 周四</span>
+<span>· <a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>前言</h3><p>React已經很快了，但如果你不注意細節，它會做很多“無用功”：組件沒必要的重渲染、大列表全量渲染、狀態更新導致整個頁面刷新……這些問題累積起來，再好的電腦也扛不住。 今天我們不聊虛擬DOM原理，直接上代碼、上工具，告訴你哪些寫法是“性能殺手”，哪些是“救星”。優化完，你的React應用會快得讓用戶懷疑是不是裝了外掛。 一、第1招：用React.memo避免“父動子也動” React默認：父組件更新，所有子組件都會重新渲染（即使props沒變）。這會導致大量浪費。 差代碼：</p><h3>const Child = ({ name }) =&gt; {</h3><p>console.log(&#x27;Child渲染了&#x27;); return &lt;div&gt;{name}&lt;/div&gt;; };</p><h3>const Parent = () =&gt; {</h3><p>const [count, setCount] = useState(0);</p><h3>return (</h3><h3>&lt;div&gt;</h3><p>&lt;button onClick={() =&gt; setCount(c =&gt; c+1)}&gt;点击 {count}&lt;/button&gt;</p><h3>&lt;Child name=&quot;张三&quot; /&gt;</h3><h3>&lt;/div&gt;</h3><p>); };每次點擊按鈕，Child都會重新渲染，但它的name根本沒變。 好代碼：用React.memo包裝子組件。</p><h3>const Child = React.memo(({ name }) =&gt; {</h3><p>console.log(&#x27;Child渲染了&#x27;); return &lt;div&gt;{name}&lt;/div&gt;; });現在只有name變化時，Child纔會重新渲染。 注意：如果Child接收的props包含函數或對象，需要配合useCallback、useMemo（見第2招）。 二、第2招：用useCallback和useMemo緩存函數和值 在React組件裏，每次渲染都會重新創建所有內聯函數和對象。即使內容相同，引用也不同，導致React.memo失效。 差代碼：</p><h3>const Parent = () =&gt; {</h3><p>const handleClick = () =&gt; console.log(&#x27;clicked&#x27;); // 每次渲染都是新函数 return &lt;Child onClick={handleClick} /&gt;; };好代碼：用useCallback緩存函數。</p><h3>const Parent = () =&gt; {</h3><p>const handleClick = useCallback(() =&gt; console.log(&#x27;clicked&#x27;), []); // 依赖为空，永远不变 return &lt;Child onClick={handleClick} /&gt;; };對於複雜計算的值（比如過濾大列表），用useMemo緩存結果： const visibleTodos = useMemo(() =&gt; filterTodos(todos, tab), [todos, tab]);三、第3招：虚拟列表，渲染一万条也不怕 直接渲染長列表（比如聊天記錄、商品列表）會導致瀏覽器創建上萬個DOM節點，內存爆炸，滾動卡頓。虛擬列表只渲染可視區域內的幾條，滾動時動態替換。 不用自己造輪子，用現成庫：</p><h3>- react-window（轻量）</h3><h3>- react-virtualized（功能全）</h3><p>import { FixedSizeList as List } from &#x27;react-window&#x27;; const Row = ({ index, style }) =&gt; (</p><h3>&lt;div style={style}&gt;行 {index}&lt;/div&gt;</h3><p>);</p><h3>&lt;List</h3><h3>height={400}</h3><h3>itemCount={10000}</h3><h3>itemSize={35}</h3><h3>width={300}</h3><h3>&gt;</h3><h3>{Row}</h3><p>&lt;/List&gt;一秒渲染一萬條，滾動絲滑。 四、第4招：代碼分割 + 懶加載，別一次加載所有組件 你的用戶訪問首頁，結果你把後臺管理、用戶設置、訂單詳情所有頁面的代碼都下載了。浪費流量，也拖慢首屏。 用React.lazy + Suspense： const Dashboard = lazy(() =&gt; import(&#x27;./Dashboard&#x27;)); const Settings = lazy(() =&gt; import(&#x27;./Settings&#x27;));</p><h3>function App() {</h3><h3>return (</h3><h3>&lt;Suspense fallback={&lt;div&gt;加载中...&lt;/div&gt;}&gt;</h3><h3>&lt;Routes&gt;</h3><p>&lt;Route path=&quot;/dashboard&quot; element={&lt;Dashboard /&gt;} /&gt; &lt;Route path=&quot;/settings&quot; element={&lt;Settings /&gt;} /&gt;</p><h3>&lt;/Routes&gt;</h3><h3>&lt;/Suspense&gt;</h3><p>); }每個路由的代碼單獨打包，只有訪問時才加載。 五、第5招：避免內聯對象和函數傳遞 即使不用memo，內聯對象也會導致子組件每次接收新對象，觸發重渲染。 差代碼： &lt;Child style={{ color: &#x27;red&#x27; }} /&gt;  // 每次渲染都是新對象好代碼：把對象提取到組件外部或使用useMemo。 const childStyle = { color: &#x27;red&#x27; }; // 外部定义，引用不变 &lt;Child style={childStyle} /&gt;六、额外绝招：使用useTransition标记非紧急更新 React 18引入了useTransition，可以把某些更新標記爲“低優先級”，讓高優先級交互（如輸入框打字）更流暢。 const [isPending, startTransition] = useTransition(); const [query, setQuery] = useState(&#x27;&#x27;); const [list, setList] = useState([]);</p><h3>const handleChange = (e) =&gt; {</h3><p>const value = e.target.value; setQuery(value); // 緊急更新：更新輸入框</p><h3>startTransition(() =&gt; {</h3><h3>// 非緊急更新：過濾大列表</h3><p>const filtered = hugeList.filter(item =&gt; item.includes(value)); setList(filtered); }); };這樣打字不會卡，列表過濾稍後完成。 七、工具检测：React DevTools Profiler 安裝React DevTools，打開Profiler標籤，錄製一段操作，可以看到每個組件渲染耗時。顏色越黃/紅，越需要優化。 八、總結：優化口訣 - 子組件純展示，包上React.memo。 - 函數和對象，用useCallback、useMemo緩存。 - 長列表用虛擬滾動。 - 路由懶加載，按需取。 - 內聯對象移出去，引用不變。 - 緊急更新與非緊急分開，用useTransition。 優化完，你的React應用會快得飛起。用戶會驚歎：“這網站怎麼比原生App還流暢？”</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

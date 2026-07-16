@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>前端週刊｜Vite 修復任意檔案讀取漏洞，Babel 8.0、Astro 7.0、Rsbuild 2.1、Deno 2.9 相繼釋出 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>前端週刊｜Vite 修復任意檔案讀取漏洞，Babel 8.0、Astro 7.0、Rsbuild 2.1、Deno 2.9 相繼釋出</h1>
+<div class="meta"><span class="src">掘金</span><span>· 7月16日 周四</span>
+<span>· <a href="https://juejin.cn/post/7657831024941842442" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://juejin.cn/post/7657831024941842442" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>智能棧報 2026-07-03</h3><h3>2026年6月26日 — 7月2日熱點彙總 前端開發 · AI人工智能 · 科技綜合</h3><p>一、前端開發 1. TypeScript 7.0 RC 正式發佈：編譯器用 Go 重寫，性能提升 10 倍 微軟發佈 TypeScript 7.0 RC，整個編譯器核心從 TypeScript/JavaScript 移植到 Go 語言（Project Corsa）。VS Code 代碼庫（150 萬行）類型檢查從 77.8 秒降至 7.5 秒，性能加速約 50% 來自原生代碼速度，50% 來自共享內存並行技術。與 TS 6.0 完全兼容，內存使用量減半。</p><h3>來源：TypeScript 官方博客 / IT之家</h3><p>2. Angular 22 發佈：OnPush 成爲默認變更檢測策略，Signal Forms 轉穩定 Angular 22 將 OnPush 設爲組件默認變更檢測策略，新代碼免費獲得高性能默認值，舊代碼零風險遷移。Signal Forms 正式穩定，resource() 和 httpResource() 轉穩定讓異步數據獲取留在 Signal 圖內。實驗性引入 WebMCP，讓 AI 代理可直接調用應用的 Service 和 Form。</p><h3>來源：Angular 官方 / 知乎</h3><p>3. Vite 8.1 引入「打包開發模式」，大型項目啓動速度提升 15 倍 Vite 8.1 新增實驗性「bundled dev mode」，在包含 10,000 個組件的測試應用上，啓動和熱重載速度提升 15 倍，真實項目也有顯著提升。同時 Vite 修復了 WebSocket 任意文件讀取漏洞（CVE-2026-39363），受影響版本需升級至 8.0.5+。</p><h3>來源：Vite 官方 / 騰訊雲開發者社區 / 中國礦業大學安全預警</h3><h3>4. Next.js 16.3 預覽版發佈：讓 SSR 頁面導航媲美 SPA</h3><p>Next.js 16.3 針對服務器組件常見的導航卡頓問題提供新方案，新增可選行爲在保留服務端優勢的同時讓導航體驗媲美 SPA，同時創建 Agent 技能幫助現有項目遷移。</p><h3>來源：Next.js 官方 / 騰訊雲開發者社區</h3><p>5. Babel 8.0 正式發佈，時隔八年的大版本升級 Babel 8.0 距離 7.0 已過去八年。新版本僅支持 ES 模塊，默認編譯目標從 ES5 提升至 ES2023。儘管 SWC、Oxc 等競品不斷崛起，@babel 系列包周下載量在此期間從 170 萬暴漲至 6.51 億。</p><h3>來源：Babel 官方博客 / 知乎</h3><p>6. Astro 7.0 發佈：核心編譯器從 Go 重寫爲 Rust，構建速度提升 61% Astro 7.0 正式發佈，核心編譯器從 Go 完全重寫爲 Rust，同時原生集成 Vite 8 和 Rust 編寫的 Rolldown 打包器。官方基準測試顯示大型項目冷構建時間最高縮短 61%，開發環境 HMR 延遲降至 100ms 以內。 7. Rsbuild 2.1 发布，集成 Rust 版 React Compiler Rsbuild 2.1 内置基于 Rust 重构的 React Compiler，支持 TypeScript 7，新增 TanStack Start 适配支持。</p><h3>來源：Rsbuild 官方 / 騰訊雲開發者社區</h3><h3>8. Deno 2.9 發佈：支持將 JS 項目打包爲三平臺桌面程序</h3><p>Deno 2.9 新增 deno desktop 功能，可將 JavaScript 項目打包爲 macOS、Windows、Linux 三平臺獨立桌面程序。冷啓動時間從 34ms 降至 17ms，峯值內存佔用降低 2-3 倍，HTTP 吞吐量提升約 27%。Node.js 兼容性目標升級至 Node.js 26。 9. Node.js v26.3/v26.4 雙版本更新，npm v12 默認禁止安裝腳本 Node.js 本週發佈兩個更新版本。npm v12 的一個重要安全變更——默認禁止安裝腳本（install scripts），引發社區關於安全與兼容性的廣泛討論。</p><h3>來源：Node.js 官方 / 騰訊雲開發者社區</h3><h3>10. Navigation API 進入 Baseline：前端路由十年彎路的終結</h3><p>Navigation API 正式進入&quot;Baseline Newly Available&quot;階段，Chrome、Edge、Firefox 147 和 Safari 26.2 均已支持。這個專門爲客戶端路由設計的集中式接口，替代了從來就不是爲 SPA 設計的 History API，終結了前端路由十年的補丁式演進。</p><h3>來源：網易</h3><p>二、AI 人工智能 1. OpenAI 发布 GPT-5.6 系列（Sol/Terra/Luna），但受限开放 OpenAI 發佈 GPT-5.6 系列，首次啓用天文學命名：旗艦 Sol（太陽）、均衡 Terra（地球）、輕量 Luna（月亮）。Sol 在 Terminal-Bench 2.1 上得分 91.9%（Ultra 模式），超越 Claude Mythos 5 的 88.0%，且僅用三分之一 token 在 ExploitBench 上打平 Mythos Preview。應美國政府安全審查要求，目前僅向約 20 家經審批合作方有限預覽，普通用戶暫不可用。</p><h3>來源：新智元 / 智東西 / OpenAI 官方博客</h3><p>2. Anthropic 发布 Claude Sonnet 5，Fable 5 与 Mythos 5 解禁 Anthropic 發佈新一代中端模型 Claude Sonnet 5，SWE-bench Verified 得分 92.4%（超過自家旗艦 Opus 4.6 的 80.8%），性能逼近 Opus 4.8 但價格低 60%。首發優惠期 10 MTok。同日，此前因美國政府出口管制被強制下線的 Fable 5 和 Mythos 5 正式解禁恢復訪問。</p><h3>來源：Anthropic 官方 / 量子位 / 機器之心</h3><p>3. 美國政府首次強制下架商用 AI 模型，AI 技術主權之爭升級 6 月 12 日，美國商務部向 Anthropic 下達出口管制令，要求暫停所有外國公民對 Fable 5 和 Mythos 5 的訪問，Anthropic 被迫對全球用戶關閉兩個模型——這是美國政府首次強制將商用 AI 模型下架。6 月 25 日，白宮又要求 OpenAI 限制 GPT-5.6 發佈範圍。加拿大、法國等多國宣佈加快 AI 自主能力建設。</p><h3>來源：新華社 / 清華大學國際AI治理研究院 / 半月談</h3><p>4. ChatGPT 全球市場份額首次跌破 50%，中國大模型調用量連續九周領跑 據 Sensor Tower 6 月 16 日發佈的《2026年AI行業報告》，ChatGPT 全球 AI 助手市場份額首次跌破 50%，大模型市場從單一巨頭壟斷轉向多方競爭。全球調用量前三均爲中國模型：DeepSeek-V4-Flash、小米 MiMo-V2.5、MiniMax M3。</p><h3>来源：新华社 / Sensor Tower</h3><p>5. 微軟發佈 7 款自研 MAI 系列模型，減少對 OpenAI 依賴 微軟在 Build 2026 大會發布 7 款自研 AI 模型，覆蓋通用、編程、多模態、端側全場景。其中 MAI-Thinking-1（350 億活躍參數）盲測偏好度對標 Claude Sonnet 4.6，MAI-Code-1-Flash 爲編碼專用模型。此舉大幅減少微軟對 OpenAI 模型的依賴。</p><h3>來源：CSDN / 微軟 Build 大會</h3><h3>6. MiniMax 發佈開源旗艦模型 M3：百萬上下文 + 原生多模態</h3><p>稀宇科技（MiniMax）發佈開源旗艦模型 MiniMax M3，具備&quot;前沿編程能力、百萬詞元上下文、原生多模態&quot;三項核心能力，在編碼與智能體評測中達到行業頂尖水平。</p><h3>來源：新華社 / MiniMax 官方</h3><h3>7. 智譜 GLM-5.2 登頂 Code Arena 全球可用模型第一</h3><p>智譜推出新一代旗艦模型 GLM-5.2，在全球百萬用戶參與盲測的前端開發評估系統 Code Arena 上取得全球可用模型第一，主攻編碼和長程任務，可連續數小時自主完成大型工程。 8. DeepSeek 完成首輪外部融資 510 億元，投後估值近 4000 億元 DeepSeek 打破&quot;三不原則&quot;，6 月完成首輪外部融資 510 億元，投後估值近 4000 億元。創始人梁文鋒個人出資 200 億元，掌握 84.29% 受益股份及 100% 表決權。同時大肆擴招，從&quot;模型公司&quot;演變爲&quot;AI 基礎設施+模型+產品&quot;平臺公司。</p><h3>來源：36氪</h3><h3>9. OpenAI 首款自研 AI 推理芯片 Jalapeño 流片</h3><p>OpenAI 聯合博通發佈首款自研推理 ASIC Jalapeño（3nm），AI 參與自身電路設計，9 個月完成流片並跑通 GPT-5.3-Codex，計劃年底部署。</p><h3>来源：雪球 / The Information</h3><p>10. 小米機器人 ICRA 2026 奪冠，人形機器人價格破萬 小米機器人團隊在 ICRA 2026（維也納）WBC 賽道以 94% 任務成功率奪冠。同時中國廠商掀起人形機器人降價潮：宇樹科技 R1 降至 2.99 萬元，松延動力 Bumi 定價 9998 元，首次將人形機器人拉入萬元以內。</p><h3>11. 華爲開源盤古 2.0：920 億參數 + 完整訓練工廠</h3><p>華爲開源 openPangu-2.0-Flash（920 億參數、512K 上下文、MoE 架構），不只開源模型權重，還開源了預訓練代碼、後訓練代碼及昇騰 NPU 優化算子，相當於開源了一座完整的訓練工廠。</p><h3>12. 2026 世界人工智能大會 7 月 17-20 日在上海舉行</h3><p>WAIC 2026 將在上海世博、張江、西岸三大片區舉行，主題&quot;智能夥伴，共創未來&quot;。1100 餘家全球企業參展，超 300 款 AI 產品全球首發，3000 餘項展品亮相。圖靈獎得主姚期智擔任學術大會主席。 三、科技綜合</p><h3>1. 我國成功發射海洋二號 E 衛星</h3><p>7 月 2 日 7 時 46 分，長征四號乙運載火箭在酒泉衛星發射中心成功將海洋二號 E 衛星送入預定軌道。該星將接替 2018 年發射的海洋二號 B 星，與 C 星、D 星組網運行，開啓我國海洋動力環境衛星星座二期工程新篇章，大幅提升近岸海域觀測能力。 2. SpaceX 上市首日市值突破 2.1 萬億美元，馬斯克成萬億富豪 6 月 12 日，SpaceX 在納斯達克完成全球史上最大 IPO，募資 750 億美元，首日大漲逾 19%，市值一度突破 2.1 萬億美元。馬斯克身家突破萬億美元，成爲人類歷史上首位萬億富豪。SpaceX 同時與谷歌、英偉達達成算力合作，計劃在太空構建 AI 數據中心網絡。 3. 新版《民用航空法》7 月 1 日實施，低空經濟法治化 新修訂的《民用航空法》首次在法律層面爲低空經濟築牢制度框架，確立無人機適航許可和唯一產品識別碼制度，將低空空域劃分、監管服務平臺建設寫入法律，規範 eVTOL、無人機物流運營標準。 4. 英偉達 GTC Taipei：黃仁勳發佈 Vera Rubin 平臺，宣告&quot;物理 AI&quot;時代 黃仁勳在 GTC Taipei 發佈下一代 AI 平臺 Vera Rubin，推論效能提升 10 倍、每 Token 推論成本降低 10 倍。HBM 在芯片中的成本佔比從前代的 9% 跳升至 26%。聯發科合作開發 RTX Spark SoC，1 Petaflop 算力讓兆級參數模型在筆記本端本地運行。</p><h3>5. 谷歌與 SpaceX 簽署 294 億美元算力大單</h3><p>谷歌與 SpaceX 達成 32 個月算力租賃合作（2026.10-2029.06），每月支付 9.2 億美元，合計約 294 億美元。SpaceX 將在田納西、密西西比自建數據中心，部署約 11 萬塊英偉達高端 GPU。 6. 2026 新能源汽車下鄉正式啓動，155 款車型入選 工信部等五部委在新疆塔城、海南澄邁啓動 2026 年新能源汽車下鄉活動，155 款推薦車型涵蓋微電、SUV、皮卡，配套以舊換新不限次數及一站式服務平臺。 7. 華爲 HarmonyOS 7 開發者 Beta 版發佈，終端設備突破 7000 萬 HarmonyOS 7 Developer Beta 1 系統性從底層核心能力、工具鏈性能、AI 輔助編程、全場景多設備適配等維度全面重構。鴻蒙終端設備數突破 7000 萬，註冊開發者超 1100 萬名，2026 Q1 在中國智能手機 OS 市場份額達 19%。</p><h3>8. 第二十八屆中國科協年會 7 月在北京舉辦</h3><p>本屆年會主題&quot;搶佔制高點 催生新動能&quot;，邀請戰略科學家圍繞基礎科學、腦機接口、氫能核聚變能、具身智能等作主旨報告，設置 118 場專題論壇，發佈 2026 年度重大科技問題難題。</p><h3>9. 蘋果上調摺疊屏 iPhone 備貨預期至 1000 萬臺</h3><p>蘋果已要求供應商將摺疊屏 iPhone 備貨預期從 700-800 萬臺上調至約 1000 萬臺，液態金屬鉸鏈問題已基本解決，計劃 7 月下旬啓動大規模量產。</p><h3>來源：新浪財經</h3><p>10. 全球 AI 數據中心資本開支或超 8000 億美元，回報兌現仍滯後 市場估算科技巨頭 2025-2028 年數據中心投入可能達 3 萬億美元，僅 2026 年資本開支就可能超 8000 億美元。但貝恩公司調查 951 家年收入過億企業，40% 的 AI 支出大戶只節省了 10% 甚至更少成本，投入與回報落差明顯。68% 的美國數據中心項目尚未動工，電力成爲關鍵瓶頸。</p><h3>本週核心趨勢總結</h3><h3>1. 編譯器原生化的浪潮已至前端核心地帶</h3><p>TypeScript 7.0 RC 用 Go 重寫編譯器、Astro 7.0 從 Go 轉向 Rust、Rsbuild 集成 Rust 版 React Compiler、Babel 8.0 發佈——前端基礎設施正經歷從 JavaScript 自舉到原生語言重寫的系統性遷移。性能提升以 10 倍計，不再是漸進優化，而是架構級躍遷。</p><h3>2. AI 競爭從&quot;模型智商&quot;轉向&quot;智能體成本效率&quot;</h3><p>GPT-5.6 和 Claude Sonnet 5 均將 Agent 能力作爲核心賣點，定價成爲正面戰場的武器——Sonnet 5 價格僅爲 Opus 4.8 的四成，GPT-5.6 Terra 價格僅爲 Fable 5 的一半。競爭維度從&quot;誰最強&quot;轉向&quot;誰又強又便宜&quot;。 3. AI 監管成爲產業格局變量，技術主權之爭白熱化 美國政府首次強制下架商用 AI 模型（Anthropic Fable 5/Mythos 5），首次在模型發佈前要求限制發佈範圍（GPT-5.6），ChatGPT 全球份額首度跌破 50%。加拿大、法國等多國宣佈加快 AI 自主能力建設，AI 競爭已延伸至地緣戰略層面。</p><h3>4. 中國 AI 開源模型正在重塑全球格局</h3><p>DeepSeek V4 Flash、GLM-5.2、MiniMax M3 等開源模型在編碼等核心場景逼近閉源前沿。華爲盤古 2.0 開源完整訓練工廠，DeepSeek 融資 510 億元加速基礎設施佈局。中國大模型調用量連續九周領跑全球，美國份額一年內從 72% 跌至 33%。 5. 太空算力、低空經濟、機器人三大賽道加速落地 SpaceX 上市後佈局太空 AI 數據中心、新能源車下鄉 155 款車型入選、人形機器人價格破萬、新民航法爲低空經濟立規——從天上到地面，科技正從概念驗證轉向產業規模化。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

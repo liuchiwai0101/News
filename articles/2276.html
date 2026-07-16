@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>使用 scheduler.yield() 讓出瀏覽器主執行緒，分解長任務 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>使用 scheduler.yield() 讓出瀏覽器主執行緒，分解長任務</h1>
+<div class="meta"><span class="src">w3ctech</span><span>· 7月16日 周四</span>
+<span>· <a href="https://w3ctech.com/topic/2276" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://w3ctech.com/topic/2276" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>本文英文原文：https://developer.chrome.com/blog/use-scheduler-yield 當長任務長時間佔用主線程時，頁面會變得遲鈍且響應緩慢，因爲它阻止了主線程執行其他重要工作，例如響應用戶輸入。結果是，即便是內置的表單控件，在用戶看來也可能像是出了問題——彷彿頁面卡住了一樣——更不用說那些更復雜的自定義組件了。 scheduler.yield() 是一種讓出主線程控制權的方法——允許瀏覽器運行任何待處理的高優先級工作——然後在之前中斷的地方繼續執行。這使得頁面響應更靈敏，進而有助於改善“下次繪製交互 (INP)”指標。 scheduler.yield 提供了一個符合其名稱的人性化 API：它會在 await scheduler.yield() 表達式處暫停當前函數的執行，並將控制權讓給主線程，從而分解任務。函數的其餘部分（稱爲函數的“延續”）將被安排在一個新的事件循環任務中運行。</p><h3>async function respondToUserClick() {</h3><p>giveImmediateFeedback(); await scheduler.yield(); // 让出主线程。 slowerComputation();</p><h3>}</h3><p>scheduler.yield 的具體好處在於，讓出控制權之後的延續部分，會被安排在頁面已排隊的任何其他類似任務之前運行。它將任務的延續優先級置於啓動新任務之上。 像 setTimeout 或 scheduler.postTask 這樣的函數也可以用來分解任務，但這些函數的延續通常會在任何已經排隊的新任務之後運行，這可能會導致在讓出主線程和完成其工作之間存在較長的延遲。 scheduler.yield 是“優先級任務調度 API”的一部分。作爲 Web 開發人員，我們通常不會根據明確的優先級來討論事件循環運行任務的順序，但相對優先級始終存在，例如 requestIdleCallback 回調會在任何已排隊的 setTimeout 回調之後運行，或者觸發的輸入事件監聽器通常會在使用 setTimeout(callback, 0) 排隊的任務之前運行。 優先級任務調度只是讓這一點更明確，更容易弄清楚哪個任務將在另一個任務之前運行，並且允許在需要時調整優先級以更改執行順序。 如前所述，使用 scheduler.yield() 讓出控制權後，函數的繼續執行會獲得比啓動其他任務更高的優先級。其指導思想是，任務的延續應該首先運行，然後再處理其他任務。如果任務是行爲良好的代碼，它會定期讓出控制權，以便瀏覽器可以執行其他重要操作（如響應用戶輸入），那麼它不應該因爲讓出控制權而受到懲罰，被排在其他類似任務之後。 以下是一個示例：兩個函數，使用 setTimeout 排隊在不同的任務中運行。 setTimeout(myJob); setTimeout(someoneElsesJob); 在這種情況下，兩個 setTimeout 調用緊挨在一起，但在實際頁面中，它們可能在完全不同的地方被調用，例如第一方腳本和第三方腳本獨立設置要運行的工作，或者它可能是來自不同組件的兩個任務在您的框架調度程序深處被觸發。 以下是這些工作在 DevTools 中的樣子： myJob 被標記爲一個長任務，在它運行時阻止瀏覽器執行任何其他操作。假設它來自第一方腳本，我們可以將其分解：</p><h3>function myJob() {</h3><p>// 運行第 1 部分。 myJobPart1(); // 使用 setTimeout() 讓出控制權以分解長任務，然後運行 part2。 setTimeout(myJobPart2, 0);</p><h3>}</h3><p>因爲 myJobPart2 是在 myJob 內部使用 setTimeout 安排運行的，但在 someoneElsesJob 已經被安排之後才進行調度，所以執行情況如下： 我們使用 setTimeout 分解了任務，以便瀏覽器可以在 myJob 執行期間保持響應，但現在 myJob 的第二部分僅在 someoneElsesJob 完成後運行。 在某些情況下，這可能沒問題，但通常這並不是最佳選擇。myJob 讓出主線程是爲了確保頁面可以對用戶輸入保持響應，而不是完全放棄主線程。如果 someoneElsesJob 特別慢，或者除了 someoneElsesJob 之外還安排了許多其他作業，那麼可能需要很長時間才能運行 myJob 的後半部分。當開發者在 myJob 中添加 setTimeout 時，這可能不是他們的本意。 現在引入 scheduler.yield()，它將調用它的任何函數的延續放在一個比啓動任何其他類似任務優先級稍高的隊列中。如果將 myJob 更改爲使用它：</p><h3>async function myJob() {</h3><p>// 運行第 1 部分。 myJobPart1(); // 使用 scheduler.yield() 讓出控制權以分解長任務，然後運行 part2。 await scheduler.yield(); myJobPart2();</p><h3>}</h3><p>現在執行情況如下： 瀏覽器仍然有機會保持響應，但現在 myJob 任務的延續優先於啓動新任務 someoneElsesJob，因此 myJob 在 someoneElsesJob 開始之前完成。這更接近於讓出主線程以保持響應性的期望，而不是完全放棄主線程。 作爲更大的優先級任務調度 API 的一部分，scheduler.yield() 可以很好地與 scheduler.postTask() 中可用的顯式優先級組合。如果沒有顯式設置優先級，scheduler.postTask() 回調中的 scheduler.yield() 的行爲基本上與前面的示例相同。 但是，如果設置了優先級，例如使用較低的“background”優先級：</p><h3>async function lowPriorityJob() {</h3><p>part1(); await scheduler.yield(); part2();</p><h3>}</h3><p>scheduler.postTask(lowPriorityJob, {priority: &#x27;background&#x27;}); 延續將以高於其他“background”任務的優先級進行調度——在任何待處理的“background”工作之前獲得預期的優先延續——但仍然低於其他默認或高優先級任務；它仍然是“background”工作。 這意味着，如果您使用“background” scheduler.postTask()（或使用 requestIdleCallback）安排低優先級工作，則其中 scheduler.yield() 之後的延續也將等到大多數其他任務完成並且主線程空閒時才運行，這正是您希望從低優先級作業中讓出控制權所獲得的結果。 目前，scheduler.yield() 僅在基於 Chromium 的瀏覽器中可用，因此要使用它，您需要進行特性檢測，並在其他瀏覽器中回退到輔助的讓出控制權方式。 scheduler-polyfill 是 scheduler.postTask 和 scheduler.yield 的一個小型 polyfill，它在內部使用多種方法的組合來模擬其他瀏覽器中調度 API 的大部分功能（儘管不支持 scheduler.yield() 優先級繼承）。 對於那些希望避免使用 polyfill 的人來說，一種方法是使用 setTimeout() 讓出控制權並接受失去優先延續，或者如果這是不可接受的，甚至在不受支持的瀏覽器中不讓出控制權。有關更多信息，請參閱“優化長任務”中的 scheduler.yield() 文檔。 如果您正在進行 scheduler.yield() 的特性檢測並自己添加回退方案，則還可以使用 wicg-task-scheduling 類型來獲得類型檢查和 IDE 支持。 有關 API 及其如何與任務優先級和 scheduler.postTask() 交互的更多信息，請查看 MDN 上的 scheduler.yield() 和優先級任務調度文檔。 要了解有關長任務、它們如何影響用戶體驗以及如何處理它們的更多信息，請閱讀有關優化長任務的內容。</p><h3>掃碼關注w3ctech微信公衆號</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
