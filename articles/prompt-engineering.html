@@ -45,7 +45,7 @@ font-size:12.5px;color:var(--muted);}
 <h1>Prompt 中文怎麼寫？提示工程教學、公式與實用範例 | Mason AI Lab</h1>
 <div class="meta"><span class="src">masonailab.com</span>
 <span>· <a href="https://masonailab.com/tech/prompt-engineering" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://masonailab.com/tech/prompt-engineering" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://masonailab.com/tech/prompt-engineering" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p class='list-item'>**Prompt 中文就是你用中文交給 AI 的指令、背景資料與輸出要求。** 寫得有效不靠艱深術語，先講清楚「目標、背景、資料、限制、格式」五件事即可。Prompt Engineering（提示工程）則是把這段指令反覆測試、修正，讓同類任務的答案更穩定。</p><p>如果同一個問題問三次得到三種答案，問題通常出在 AI 不知道讀者、資料邊界或交付格式，和使用中文無關。這篇提供可直接複製的中文公式，並教你從回答太空泛、格式跑掉或開始編細節等訊號倒推問題。</p><p>先用「目標、背景、資料、限制、格式」五段式寫提示詞。回答失敗時，不要立刻換模型；先看 AI 缺的是任務定義、上下文、範例、輸出格式，還是需要外部資料。OpenAI 的 提示詞文件（Prompting）也把角色、範例、測試與版本管理列為提示詞開發的核心做法；Anthropic 的 提示工程總覽則提醒，正式調整提示詞前要先定義成功標準，並能用測試案例驗證。</p><p>如果你只是第一次學 AI 提問，先讀 AI Prompt 入門教學 會比較輕；如果你已經想把同一段 Prompt 用在工作、教學、客服、研究或 API 流程，下面的寫法會更適合。</p><h3>中文 Prompt 怎麼寫？先用五段式</h3><p>把需求寫成一整段，模型很容易漏條件。把 Prompt 拆成五段，通常能立刻讓回答穩定很多：</p><pre><code>目標：我要完成什麼？
 背景：我是誰、對象是誰、使用情境是什麼？
 資料：可參考的內容、數據、草稿、限制來源是什麼？

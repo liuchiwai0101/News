@@ -45,7 +45,7 @@ font-size:12.5px;color:var(--muted);}
 <h1>使用 scheduler.yield() 讓出瀏覽器主執行緒，分解長任務</h1>
 <div class="meta"><span class="src">w3ctech</span><span>· 7月16日 周四</span>
 <span>· <a href="https://w3ctech.com/topic/2276" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://w3ctech.com/topic/2276" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://w3ctech.com/topic/2276" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>當長任務長時間佔用主線程時，頁面會變得遲鈍且響應緩慢，因爲它阻止了主線程執行其他重要工作，例如響應用戶輸入。結果是，即便是內置的表單控件，在用戶看來也可能像是出了問題——彷彿頁面卡住了一樣——更不用說那些更復雜的自定義組件了。</p><p><code>scheduler.yield()</code> 是一種讓出主線程控制權的方法——允許瀏覽器運行任何待處理的高優先級工作——然後在之前中斷的地方繼續執行。這使得頁面響應更靈敏，進而有助於改善“下次繪製交互 (INP)”指標。</p><p><code>scheduler.yield</code> 提供了一個符合其名稱的人性化 API：它會在 <code>await scheduler.yield()</code> 表達式處暫停當前函數的執行，並將控制權讓給主線程，從而分解任務。函數的其餘部分（稱爲函數的“延續”）將被安排在一個新的事件循環任務中運行。</p><pre><code>async function respondToUserClick() {
   giveImmediateFeedback();
   await scheduler.yield(); // 让出主线程。

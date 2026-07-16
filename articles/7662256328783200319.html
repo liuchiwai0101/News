@@ -45,7 +45,7 @@ font-size:12.5px;color:var(--muted);}
 <h1>Vue 3.6 正式发布、Vue 4.0 启动，Vite 8 以 Rolldown 统一打包</h1>
 <div class="meta"><span class="src">掘金</span><span>· 7月16日 周四</span>
 <span>· <a href="https://juejin.cn/post/7662256328783200319" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://juejin.cn/post/7662256328783200319" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7662256328783200319" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><h3>尤雨溪宣佈：Vue 3.6 發佈、Vue 4.0 啓動、Vite 8 已落地</h3><p>2026年7月18日，上海Vue&ViteConf 2026，尤雨溪一口氣宣佈了三件事：Vue 3.6正式發佈、Vue 4.0啓動、Vite 8已全面落地。這一天，Vue生態同時揭開了三個時代——性能時代、AI時代、分層渲染時代。</p><h3>一、Vue 3.6：正式發佈，性能換芯</h3><p>2026年7月18日，上海Vue&ViteConf 2026。尤雨溪走上講臺，宣佈了第一個消息：**Vue 3.6正式發佈**。</p><p>這一天，距離2026年2月6日發佈第一個beta版本，過去了整整五個多月。Vue團隊花了五個多月打磨beta，累計發佈了17個beta版本，最終交出了一份讓全場沸騰的答卷。</p><h3>#### 1.1 Vapor Mode：虚拟DOM成为可选项</h3><p>Vapor Mode是Vue 3.6最核心的變化。它讓開發者可以在<code><script setup></code>上加一個<code>vapor</code>屬性，組件就會**跳過虛擬DOM，直接操作真實DOM**。</p><pre><code>&lt;script setup vapor&gt;
 import { ref } from &#x27;vue&#x27;
 const count = ref(0)

@@ -45,7 +45,7 @@ font-size:12.5px;color:var(--muted);}
 <h1>React 效能優化：從「卡成狗」到「絲般順滑」的 5 個秘訣</h1>
 <div class="meta"><span class="src">SegmentFault 思否</span><span>· 7月16日 周四</span>
 <span>· <a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047725834" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>React已經很快了，但如果你不注意細節，它會做很多“無用功”：組件沒必要的重渲染、大列表全量渲染、狀態更新導致整個頁面刷新……這些問題累積起來，再好的電腦也扛不住。</p><p>今天我們不聊虛擬DOM原理，直接上代碼、上工具，告訴你哪些寫法是“性能殺手”，哪些是“救星”。優化完，你的React應用會快得讓用戶懷疑是不是裝了外掛。</p><h3>一、第1招：用`React.memo`避免“父動子也動”</h3><p>React默認：父組件更新，所有子組件都會重新渲染（即使props沒變）。這會導致大量浪費。</p><p class='list-item'>**差代碼**：</p><pre><code>const Child = ({ name }) =&gt; {
   console.log(&#x27;Child渲染了&#x27;);
   return &lt;div&gt;{name}&lt;/div&gt;;

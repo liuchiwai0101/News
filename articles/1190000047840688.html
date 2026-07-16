@@ -45,7 +45,7 @@ font-size:12.5px;color:var(--muted);}
 <h1>CSS Container Queries：徹底告別 @media 寫到手軟（附 5 個真實佈局案例）</h1>
 <div class="meta"><span class="src">SegmentFault 思否</span><span>· 7月16日 周四</span>
 <span>· <a href="https://segmentfault.com/a/1190000047840688" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://segmentfault.com/a/1190000047840688" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047840688" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>以前寫響應式組件，總要根據視口寬度寫一堆<code>@media</code>，代碼又臭又長。現在 Container Queries 讓組件根據父容器尺寸響應，代碼直接減半。本文講透語法 + 5 個可直接複用的案例。</p><h3>一、Container Queries 解決了什麼問題？</h3><p><code>@media</code> 媒體查詢基於**視口**寬度。這導致一個組件在不同父容器下無法獨立響應——同樣的卡片，在側邊欄和主內容區需要兩套樣式或者額外類名。</p><p class='list-item'>**Container Queries** 允許你定義：當**父容器**達到某個寬度時，子元素改變佈局。</p><pre><code>/* 以前：基于视口，无法区分卡片在哪个容器里 */
 @media (min-width: 600px) {
   .card { display: flex; }
