@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>不懂这几个技巧，难怪你用不好AI！_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>不懂这几个技巧，难怪你用不好AI！_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260527A090Q700" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容以<a href="https://new.qq.com/rain/a/20260527A090Q700" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Hello啊朋友們，我是Simonlin，用通俗易懂的語言，手把手帶你玩轉AI，提高10倍效率！ 說實話，我見過太多人這樣用 AI 了，看看你是不是這樣： 有一個朋友，打開 ChatGPT，輸入一句：“幫我寫篇文章。” 然後盯着屏幕等。 AI 唰唰唰輸出一大段，他看了一眼，覺得“還行吧”，複製，粘貼，完事。 過幾天，他跑來跟我說： “Simon，AI 好像也沒那麼神啊。” 我只想說：這個鍋。 AI 不能全背。 如果你還在用 2023 年的方式，用2026 年的工具，AI給的東西一定不能讓你滿意。 今天這篇文章，我結合 Karpathy、Simon Willison、swyx 這些 AI 圈頂級玩家的思路，再加上我自己這一年多踩過的坑，整理出 6 個真正能改善 AI 使用效果的技巧。 不保證你看完立刻變成 AI 大神，但至少可以避免繼續把 AI 當許願池。 一、寫提示詞，最重要的是“顯化意圖” Karpathy 最近講過一個很有意思的概念： AI 編程正在從“寫代碼”，變成“顯化意圖”。 這個說法聽起來有點玄，但翻譯成人話就是： 你不再一行行告訴 AI 怎麼做，而是把你真正想要的結果、上下文、約束和驗收標準說清楚，讓 AI 去完成中間過程。 問題是，大多數人的“顯化意圖”太粗糙了。 他們的提示詞通常長這樣：</p><h3>“幫我寫個網頁。”</h3><h3>“幫我改個 bug。”</h3><h3>“幫我做個總結。”</h3><p>.... 這種指令不能說沒用，只能說很像老闆拍你同事的肩膀： “小王，這個項目你優化一下。” 優化哪裏？目標是什麼？交付標準是什麼？有什麼不能碰？統統不知道。 這種情況，小王沒辭職已經很有職業道德了。 我以前用 Claude Code 也是這樣，一開始我會說：“幫我修這個 bug。” 結果它確實修了。 順便送我三個新 bug，當作買一送三。 後來我開始換一種方式。 我會告訴它： - 這個功能的目標是什麼。 - 當前代碼裏哪些文件相關。 - 哪些行爲不能改。 - 怎麼驗證修好了。 - 如果有多個可能方案，先分析，不要直接動手。 效果完全不一樣。 所以第一個技巧是： 別再把 AI 當搜索引擎，要把它當成你手底下一個什麼都能幹，但是不夠“聰明”的員工，把你的需求講清楚，它才能幹得好。 就好像，你給它一句夢話，它還你一篇夢遊。 ...公平得很。 二、先想清楚，再讓 AI 放大</p><h3>很多人用 AI 的第一步就是：“先問問 AI 怎麼說。”</h3><p>聽起來沒毛病，對吧？但這正是很多人用不好 AI 的原因。 MIT 有個研究提到一個挺扎心的現象： 那些一上來就依賴 AI 的人，最後產出的質量，反而可能不如先自己思考、再用 AI 擴展的人。 原因也不復雜。 AI 會給你一個“看起來很完整”的答案... 它輸出一完整，你就懶得繼續想了。 它表述一自信，你就開始點頭了。 它排版一整齊，你的大腦就自動下班了。 這就是 AI 最危險的地方： 給的東西看上去有用，實則一點用沒有。 Karpathy 的做法就很值得學。 他不是一上來讓 AI 替他想完所有東西，而是先自己寫大綱、畫結構、列約束，再讓 AI 補細節。 Simon Willison 也一直强调： vibe coding 真正有價值的地方，不是讓你無腦甩鍋給 AI，而是幫你快速建立對 AI 能力邊界的直覺。 我寫公衆號文章也是這樣。 如果我直接讓 AI 寫初稿，十有八九會出來一篇—— “在當今快速發展的數字時代，AI 正在深刻改變我們的工作與生活。” 看到這句我就想把電腦合上。 但如果我先把文章結構想清楚： 開頭用什麼場景、中間講哪幾個坑、每個坑用什麼案例、最後落到什麼觀點。 然後再讓 AI 幫我擴展、補案例、潤色語言，出來的東西就會好很多。 所以第二個技巧是： AI 是放大器，而不能代替你的大腦。 你自己腦子裏得有清晰的結構，它才能交付令你滿意的文章、代碼、方案、產品。 三、你的知識庫，不應該是資料的墳場 第三個技巧，是知識庫。 很多人一聽知識庫，就開始興奮：“我要把所有文章都存起來！”“我要把所有 PDF 都丟進去！”“我要做第二大腦！” 然後三個月後，第二大腦變成賽博垃圾場。 這事我太熟了，因爲以前我也喜歡收藏。 看到好文章——存！ 看到好 prompt——存！ 看到好工具——存！ 結果寫文章的時候，根本想不起來自己存過什麼。 Karpathy 提到的 LLM Wiki 模式，關鍵不在“存”，而在“編譯”。 也就是讓 AI 把原始材料整理成結構化 Markdown，形成可以被閱讀、被鏈接、被複用的知識網絡。 這裏面有三個動作很重要： - 第一，原始資料先進 Inbox，不要一上來就假裝它很重要。 - 第二，把有價值的內容提煉成可複用的觀點、案例、金句、方法。 - 第三，定期讓 AI 做健康檢查，看看哪裏重複了，哪裏矛盾了，哪裏缺鏈接。 這也是我現在用 Obsidian 的方式。 我不是隻把文章丟進去。 我會讓 AI 幫我提煉：這篇文章有什麼觀點？有什麼案例？以後能用在哪類公衆號文章裏？能不能變成羣分享、課程、提示詞、飛書畫板？ 一旦知識變成這種“積木”，AI 才真的能幫你組裝。 所以第三個技巧是： 別隻讓 AI 幫你保存資料，要讓 AI 幫你把資料變成可複用的知識。 知識庫不應該只負責存東西，它應該是一個大出，將各種食材組合在一起，烹飪出美味佳餚。 LLM-Wiki項目鏈接： https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f 四、不會評估 AI，就等於不會用 AI swyx 說過一句話，我很認同： 2026 年最被低估的技能，是 Evals。 Evals ，就是評估系統。 說簡單點：你怎麼知道 AI 說得對不對？你怎麼知道它有沒有編？你怎麼知道它寫的代碼有沒有埋雷？你怎麼知道它寫的文章不是一堆漂亮的廢話？ 很多人用 AI 的流程是：</p><h3>輸入——輸出——相信</h3><p>這就很危險。 AI 最大的問題不是它會錯，是在於它錯的時候也很自信。 所以，你必須有質檢流程： - 寫代碼，就跑測試。 - 寫文章，就查事實、查語氣、查信息密度。 - 做總結，就回到原文覈對。 - 做決策，就找權威來源交叉驗證。 我現在讓 AI 寫文章，一般會至少檢查三件事： 第一，事實有沒有硬傷。 第二，語氣是不是像我。 第三，每一節有沒有真實信息，而不是用漂亮話灌水。 寫代碼也一樣。 不是 AI 說“已經修復”就真的修復了。 要跑測試，要看 diff，要檢查有沒有順手改壞別的地方。 所以第四個技巧是： 用 AI 之前，先想好怎麼驗收 AI。 沒有經過評估的AI工作流，無異於裸奔。 五、盡信 AI，不如無 AI 這個技巧聽起來像廢話，但很多人真做不到。 這個月，發生了一個很典型的案例： 河北石家莊的李先生因爲行程變動要退機票，他沒有去航司官網查規則，而是問了豆包。 豆包回答得非常乾脆： “放心退，手續費不足百元，只扣 5%。” 李先生信了...直接退！ 結果被扣了 40% 手續費，整整 600 塊啊！ 更離譜的是，後續他找豆包理論，AI 還寫了份“承諾書”，說願意賠。 等真要賠錢的時候，AI 又表示： “我是 AI，沒法轉賬。” 這件事看起來，真的太魔幻了。 但它提醒我們一件事： AI 輸出看起來專業，不代表它可靠。 尤其是涉及這三類事情時，一定要二次確認：錢、健康、法律。 退票規則、合同條款、醫療建議、稅務政策、法律責任，這些東西不要只聽 AI 的，應該自己親自再去核查一下。 AI 可以幫你整理問題，可以幫你列查詢路徑，可以幫你解釋官方文檔，但最後必須有理有據，有根有基。 所以第五個技巧是： AI 是參謀，不是決策者。 你可以讓它給建議，但別把腦子一併丟給它... 不然它編得很優雅，你虧得很真實。 六、別追新工具，把一個工具用到 80 分 AI 圈有个病，叫 shiny toy syndrome。 翻譯一下就是：新玩具綜合徵。 今天 Claude 更新了，衝。 明天 Gemini 出新功能，衝。 後天又來一個國產 Agent，繼續衝。 最後工具試了一堆，每個都只會打開首頁。 我發明了一個名詞，專門用來形容這類AI玩家—— 賽博松鼠，專門囤工具。 Karpathy（沒錯，依舊Karpathy）的工具棧其實很固定： Tab 補全處理大部分小任務。 側邊助手處理大段代碼。 真正難的問題，再調用更強模型。 Simon Willison 也有類似習慣： 把自己知道怎麼做的事情“囤積”成可運行示例，下一次讓 AI 直接參考，這比每天換工具有用多了。 我的建議也很簡單： 選一個主力工具，用到 80 分。 ChatGPT、Claude、Gemini、豆包、DeepSeek，都可以。 關鍵不是你裝了幾個APP，而是你知不知道： 它擅長什麼？ 它不擅長什麼？ 它什麼時候會胡說？ 它適合寫代碼、做圖、讀文檔，還是做長文本？ 我自己現在主力用 Claude Code 處理代碼和長上下文，用 ChatGPT 做部分搜索和通用推理，用 Gemini 處理多模態。 比起“一個工具打天下”這種傳說，更重要的，是你應該知道，每個工具只要幹好自己最擅長的那部分。 所以第六個技巧是： 工具在精，不在多。 把一個工具用到 80 分，比四個工具各用 20 分，有用得多。</p><h3>總結一下</h3><p>如果你總覺得 AI “差點意思”，可以從這 6 個地方檢查： - 第一，顯化意圖。 不要給模糊指令，要給目標、上下文、約束和驗收標準。 - 第二，先想後 AI。 先自己搭結構，再讓 AI 擴展，不要一上來把思考外包。 - 第三，建設活的知識庫。 不要只收藏資料，要把資料提煉成可複用的知識積木。 - 第四，建立 evals。 沒有質檢流程，就不要輕易相信 AI 輸出。 - 第五，關鍵事情二次確認。 涉及錢、健康、法律，必須回到權威來源。 - 第六，深耕一個工具。 別每天追新玩具，把主力工具用到 80 分。 AI 不是逆天改命的魔法，也不是一無是處的垃圾。 它更像一面鏡子——你輸出什麼，它返回給你什麼。 說到底，AI 用得好不好，拼的不只是你會不會寫提示詞，拼的更是你有沒有一套完整穩定的工作流，能不能有效率地使用AI完成任務。 而這，也是會用AI的人，與不會用AI的人的區別。 如果覺得這篇文章還不錯，歡迎：點贊，推薦，轉發給你身邊正在關注 AI 的朋友，讓他少走一點彎路。 我建了一個 AI 交流羣，羣裏都是愛好 AI 的朋友，這個羣有 AI，也有愛。 我是 Simonlin，下次見。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
