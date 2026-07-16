@@ -37,18 +37,20 @@
   /* HERO — calmer deep-indigo gradient, white text stays high-contrast */
   .hero {
     background:linear-gradient(135deg,#1b266b 0%,#2f3fb0 58%,#4b34c4 100%);
-    color:#fff; padding:28px max(18px,env(safe-area-inset-right)) 22px max(18px,env(safe-area-inset-left));
+    color:#fff; padding:22px max(18px,env(safe-area-inset-right)) 20px max(18px,env(safe-area-inset-left));
   }
+  .hero-top { max-width:1080px; margin:0 auto 4px; }
   .hero-inner { max-width:1080px; margin:0 auto; display:flex; align-items:center;
     justify-content:space-between; gap:16px; flex-wrap:wrap; }
-  .hero-main { flex:1 1 auto; min-width:0; }
   .hero .kicker {
-    font-size:12.5px; letter-spacing:.2em; text-transform:uppercase;
-    opacity:.78; margin:0 0 8px; font-weight:700;
+    font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+    opacity:.78; font-weight:700; display:block;
   }
   .hero h1 { margin:0; font-size:clamp(24px,4.4vw,34px); font-weight:800; letter-spacing:.5px; line-height:1.2; }
-  .hero .sub { margin:8px 0 0; opacity:.9; font-size:13.5px; color:#e8ecff; }
-  .stats { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px; }
+  .hero .sub { margin:0; opacity:.9; font-size:13.5px; color:#e8ecff; }
+  .hero-meta { max-width:1080px; margin:10px auto 0;
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; }
+  .stats { display:inline-flex; flex-wrap:wrap; align-items:center; gap:8px; }
   .stat {
     display:inline-flex; align-items:center; gap:6px;
     background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.20);
@@ -64,7 +66,7 @@
   .nav {
     position:sticky; top:0; z-index:20; background:rgba(255,255,255,.94);
     backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
-    padding:11px max(16px,env(safe-area-inset-right)) 11px max(16px,env(safe-area-inset-left));
+    padding:11px max(18px,env(safe-area-inset-right)) 11px max(18px,env(safe-area-inset-left));
   }
   .nav-inner { max-width:1080px; margin:0 auto; display:flex; flex-wrap:wrap; gap:8px; }
   .nav-link {
@@ -80,7 +82,7 @@
 
   /* TABS — Old News switch, lives inline on the right of the hero (no extra row) */
   [hidden] { display:none !important; }
-  .tabs { display:flex; gap:6px; flex:0 0 auto; }
+  .tabs { display:flex; gap:6px; flex:0 0 auto; margin-left:auto; }
   .tab { font:inherit; font-size:13px; font-weight:700; cursor:pointer; color:rgba(255,255,255,.88);
     background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.24); border-radius:999px;
     padding:7px 13px; display:inline-flex; align-items:center; gap:6px; transition:.15s; }
@@ -199,13 +201,17 @@
     body { font-size:16px; }   /* 16px 避免 iOS 输入框聚焦时自动缩放，中文更易读 */
 
     /* HERO */
-    .hero { padding-top:24px; padding-bottom:18px; }
+    .hero { padding-top:20px; padding-bottom:16px; }
+    .hero-top { margin-bottom:3px; }
     .hero .kicker { font-size:11px; letter-spacing:.18em; }
-    .hero h1 { font-size:clamp(22px,6.4vw,30px); }
-    .hero .sub { font-size:12.5px; margin-top:7px; }
+    .hero-inner { gap:10px; }
+    .hero h1 { font-size:clamp(20px,5.5vw,28px); }
+    .hero .sub { font-size:12px; }
+    .hero-meta { margin-top:8px; gap:6px 12px; }
+    .tab { padding:6px 11px; font-size:12px; }
 
     /* STATS: 紧凑 pill，横向换行，几乎不占纵向高度 */
-    .stats { gap:7px; margin-top:12px; }
+    .stats { gap:7px; }
     .stat { padding:4px 11px; font-size:12.5px; }
     .stat .num { font-size:13.5px; }
     .stat.total .num { font-size:14px; }
@@ -258,18 +264,20 @@
 <body>
 
 <header class="hero">
+  <div class="hero-top">
+    <span class="kicker">AI HOT 晨報</span>
+  </div>
   <div class="hero-inner">
-    <div class="hero-main">
-      <p class="kicker">AI HOT 晨報</p>
-      <h1 id="hero-date">AI 日報</h1>
-      <p class="sub" id="hero-sub"></p>
-    </div>
+    <h1 id="hero-date">AI 日報</h1>
     <div class="tabs" id="tabs">
       <button class="tab on" data-view="current" type="button">最新 <span class="tcount" id="tab-cur">0</span></button>
       <button class="tab" data-view="old" type="button">舊聞 <span class="tcount" id="tab-old">0</span></button>
     </div>
   </div>
-  <div class="stats" id="hero-stats"></div>
+  <div class="hero-meta">
+    <span class="sub" id="hero-sub"></span>
+    <div class="stats" id="hero-stats"></div>
+  </div>
 </header>
 
 <div id="view-current">
