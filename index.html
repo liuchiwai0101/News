@@ -422,22 +422,37 @@ function detectCat(title) {
 
 const content = document.getElementById('content');
 
-// Build a single compact card (E layout) — title only + thin color top-bar.
-// Shared by the latest view + Old News view. Tap opens the reader.
+// Build a single card — restores the original cover image (with NEW/date badges),
+// title-only body (summary removed earlier). Tap opens the reader.
 function makeCard(item, idx, ri, isExt, featured) {
   const card = document.createElement('article');
   card.className = 'card wall';
   const cardDate = item.date || DATA.cardDate;
-  const newBadge = item.isNew ? '<span class="ct-new">NEW</span>' : '';
+  let capHtml = '';
+  if (item.isNew) {
+    capHtml = '<span class="cover-new">NEW</span>';
+  } else if (item.img && item.imgKind === 'openverse' && item.imgCreator) {
+    capHtml = '<span class="cover-cap">图：' + item.imgCreator + (item.imgLicense ? ' · ' + item.imgLicense : '') + '</span>';
+  } else if (item.img && (item.imgKind === 'og' || item.imgKind === 'content')) {
+    capHtml = '<span class="cover-cap">原题图</span>';
+  }
+  const suppCap = item.supplement ? '<span class="cover-supp">補充</span>' : '';
+  const frontCap = item.frontend ? '<span class="cover-front">前端</span>' : '';
+  let coverInner;
+  if (item.img) {
+    coverInner = '<img class="cover-img" src="' + item.img + '" alt="" loading="lazy" onerror="this.remove()">'
+      + '<div class="cover-overlay"></div>'
+      + '<span class="idx">#' + idx + '</span>'
+      + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
+  } else {
+    coverInner = '<span class="cover-ico">' + ICONS[ri] + '</span>'
+      + '<span class="idx">#' + idx + '</span>'
+      + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
+  }
   card.innerHTML =
-    '<div class="topbar" style="background:var(--c' + ri + ')"></div>'
+    '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner + '</div>'
     + '<div class="body">'
     +   '<h3>' + item.title + '</h3>'
-    +   '<div class="meta">'
-    +     '<span class="ct-idx">#' + idx + '</span>'
-    +     newBadge
-    +     '<span class="ct-date">' + cardDate + '</span>'
-    +   '</div>'
     + '</div>';
   card.dataset.aid = item.articleId || "";
   card.dataset.sname = item.sourceName || "";
@@ -446,7 +461,7 @@ function makeCard(item, idx, ri, isExt, featured) {
   return card;
 }
 
-// Build a compact deals card (E layout) — thin color top-bar + price line.
+// Build a deals card (熱門優惠) — product-style cover image + price line.
 function makeDealCard(item, idx, ri) {
   const card = document.createElement('article');
   card.className = 'card wall deal';
@@ -455,8 +470,14 @@ function makeDealCard(item, idx, ri) {
   const off = item.discount || '';
   const imgUrl = item.img || '';
   const cat = detectCat(item.title);
+  const iconSvg = CATEGORY_ICONS[cat] || CATEGORY_ICONS.generic;
+  const coverInner = '<span class="cover-icon">' + iconSvg + '</span>'
+    + (imgUrl ? '<img class="cover-img" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display=&quot;none&quot;">' : '');
   card.innerHTML =
-    '<div class="topbar" style="background:var(--c' + ri + ')"></div>'
+    '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner
+    + '<span class="cover-deal">優惠</span>'
+    + '<span class="idx">#' + idx + '</span>'
+    + '</div>'
     + '<div class="body">'
     +   '<h3>' + item.title + '</h3>'
     +   '<div class="deal-price">'
@@ -464,8 +485,7 @@ function makeDealCard(item, idx, ri) {
     +     (orig ? '<span class="dp-orig">' + orig + '</span>' : '')
     +     (off ? '<span class="dp-off">' + off + '</span>' : '')
     +   '</div>'
-    +   '<div class="meta"><span class="ct-idx">#' + idx + '</span>'
-    +     '<span class="ct-date">' + (item.sourceName || '優惠') + '</span></div>'
+    +   '<div class="deal-src">Price.com.hk 網購</div>'
     + '</div>';
   card.dataset.deal = '1';
   card.dataset.dcat = cat;
