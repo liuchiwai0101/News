@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Accelerating Text-to-Video Generation with Calibrated Sparse Attention · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Accelerating Text-to-Video Generation with Calibrated Sparse Attention</h1>
+<div class="meta"><span class="src">shd-paper.top</span>
+<span>· <a href="https://shd-paper.top/cs-CV/2026-03/05/papers/260305503v1-accelerating-text-to-video-generation-with-calibrated-sparse-attenti.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://shd-paper.top/cs-CV/2026-03/05/papers/260305503v1-accelerating-text-to-video-generation-with-calibrated-sparse-attenti.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>Accelerating Text-to-Video Generation with Calibrated Sparse Attention</h3><p class='list-item'>**作者**: Shai Yehezkel, Shahar Yadin, Noam Elata, Yaron Ostrovsky-Berman, Bahjat Kawar</p><p class='list-item'>**分类**: cs.CV</p><p class='list-item'>**发布日期**: 2026-03-05</p><h3>💡 一句話要點</h3><p class='list-item'>**CalibAtt：通過校準稀疏注意力加速文本到視頻生成**</p><p>🎯 **匹配领域**: **支柱八：物理动画 (Physics-based Animation)**</p><p class='list-item'>**關鍵詞**: `文本到視頻生成` `擴散模型` `稀疏注意力` `模型加速` `免訓練方法`</p><h3>📋 核心要點</h3><p class='list-item'>- 現有文本到視頻生成模型依賴大型Transformer，計算瓶頸在於時空注意力機制，效率有待提升。</p><p class='list-item'>- CalibAtt通過離線校準，識別並利用token連接中的稀疏性和重複模式，優化注意力計算。</p><p class='list-item'>- 實驗表明，CalibAtt在保持生成質量和文本對齊的前提下，實現了高達1.58倍的端到端加速。</p><h3>📝 摘要（中文）</h3><p>近期的擴散模型能夠生成高質量的視頻，但運行速度較慢。這些模型中基於Transformer的大型骨幹網絡受限於時空注意力機制。本文發現，在各種輸入中，很大一部分token-to-token連接始終產生可忽略不計的分數，並且它們的模式在不同的查詢中經常重複。因此，在這些情況下，可以跳過注意力計算，而對結果幾乎沒有影響。這一觀察結果對於局部token塊之間的連接仍然成立。受此啓發，我們提出了一種名爲CalibAtt的免訓練方法，該方法通過校準稀疏注意力來加速視頻生成。CalibAtt執行離線校準過程，識別在輸入中穩定的塊級稀疏性和重複模式，並將這些模式編譯爲每個層、頭和擴散時間步長的優化注意力操作。</p><p>在推理時，我們密集地計算所選的輸入相關連接，並以硬件高效的方式跳過未選擇的連接。在Wan 2.1 14B、Mochi 1和各種分辨率下的少量步驟蒸餾模型上的大量實驗表明，CalibAtt實現了高達1.58倍的端到端加速，優於現有的免訓練方法，同時保持了視頻生成質量和文本-視頻對齊。</p><h3>🔬 方法詳解</h3><p class='list-item'>**問題定義**：文本到視頻生成任務中，基於Transformer的擴散模型計算量巨大，特別是時空注意力模塊。現有方法在處理所有token連接時效率低下，存在大量冗餘計算，限制了生成速度。</p><p class='list-item'>**核心思路**：論文的核心在於發現並利用注意力機制中的稀疏性。通過離線分析，確定哪些token連接的注意力權重始終很低，從而在推理時跳過這些連接的計算。此外，還發現注意力模式在不同查詢中存在重複性，可以進一步優化。</p><p class='list-item'>**技術框架**：CalibAtt包含離線校準和在線推理兩個階段。離線校準階段，對訓練數據進行分析，識別穩定的塊級稀疏性和重複模式。然後，將這些模式編譯成優化的注意力操作，針對每個層、頭和擴散時間步長進行定製。在線推理階段，只計算選定的輸入相關連接，跳過未選擇的連接，從而加速計算。</p><p class='list-item'>**關鍵創新**：CalibAtt的關鍵創新在於提出了一種免訓練的稀疏注意力方法，無需重新訓練模型即可加速推理。通過離線校準，自動發現並利用注意力機制中的稀疏性和重複性，避免了手動設計稀疏模式的困難。</p><p class='list-item'>**關鍵設計**：CalibAtt的關鍵設計包括：1) 塊級稀疏性：將token分成塊，以減少校準的計算量。2) 離線校準：在推理前完成稀疏模式的識別和優化，避免在線計算的開銷。3) 硬件高效的跳過機制：採用專門設計的硬件操作來高效地跳過未選擇的連接。</p><h3>🖼️ 關鍵圖片</h3><h3>📊 實驗亮點</h3><p>實驗結果表明，CalibAtt在Wan 2.1 14B、Mochi 1和少量步驟蒸餾模型上實現了顯著的加速效果，最高可達1.58倍。與現有的免訓練方法相比，CalibAtt在加速的同時，保持了視頻生成質量和文本-視頻對齊，證明了其有效性和優越性。</p><h3>🎯 應用場景</h3><p>CalibAtt加速文本到視頻生成的技術可廣泛應用於內容創作、虛擬現實、遊戲開發等領域。通過提高視頻生成速度，可以降低計算成本，並促進實時視頻生成應用的發展。該方法還有潛力應用於其他Transformer模型加速，例如圖像生成、語音識別等。</p><h3>📄 摘要（原文）</h3><p>Recent diffusion models enable high-quality video generation, but suffer from slow runtimes. The large transformer-based backbones used in these models are bottlenecked by spatiotemporal attention. In this paper, we identify that a significant fraction of token-to-token connections consistently yield negligible scores across various inputs, and their patterns often repeat across queries. Thus, the attention computation in these cases can be skipped with little to no effect on the result. This observation continues to hold for connections among local token blocks. Motivated by this, we introduce CalibAtt, a training-free method that accelerates video generation via calibrated sparse attention. CalibAtt performs an offline calibration pass that identifies block-level sparsity and repetition patterns that are stable across inputs, and compiles these patterns into optimized attention operations for each layer, head, and diffusion timestep. At inference time, we compute the selected input-dependent connections densely, and skip the unselected ones in a hardware-efficient manner. Extensive experiments on Wan 2.1 14B, Mochi 1, and few-step distilled models at various resolutions show that CalibAtt achieves up to 1.58x end-to-end speedup, outperforming existing training-free methods while maintaining video generation quality and text-video alignment.</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

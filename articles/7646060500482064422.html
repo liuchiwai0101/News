@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>qiankun 微前端實戰教程：從原理到落地（附模板源碼） · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>qiankun 微前端實戰教程：從原理到落地（附模板源碼）</h1>
+<div class="meta"><span class="src">掘金</span><span>· 7月22日 周三</span>
+<span>· <a href="https://juejin.cn/post/7646060500482064422" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7646060500482064422" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>關於本教程：本教程基於一次真實的多後臺微前端落地經驗抽象而成，去除了所有項目專屬信息。所有踩坑、決策點都是實戰沉澱，不是 API 文檔複述。讀完後你應該能：判斷自己是否需要微前端，搭出一套同棧多後臺的 qiankun 方案，知道哪些坑必踩、哪些坑可繞。</p><p>讀者預設：熟悉 React + Vite + TypeScript，沒接觸過微前端。所有微前端相關概念會從零講清。</p><p>示例項目：貫穿全教程的虛構場景——一個企業內部管理平臺<code>admin-shell</code>（主應用），下掛兩個業務後臺<code>app-orders</code>（訂單管理）和<code>app-users</code>（用戶管理）。</p><h3>目錄</h3><h3>第一部分：決策篇</h3><h3>1. 什麼是微前端</h3><p>微前端是一種**把一個大型前端應用拆成多個獨立可部署單元、運行時聚合**的架構模式。</p><p>類比後端微服務：</p><p class='list-item'>**核心特徵**：</p><p class='list-item'>- 子應用**獨立開發、獨立構建、獨立部署**</p><p class='list-item'>- 子應用對外暴露統一的**生命週期接口**（mount / unmount）</p><p class='list-item'>- 主應用負責**路由調度**和**外殼渲染**</p><p class='list-item'>- 用戶感知是**一個完整的網站**</p><h3>微前端不是&quot;前端微服務&quot;的簡單類比——它</h3><p>只在瀏覽器一側完成聚合，沒有跨網絡通信，所以性能損耗遠小於微服務。</p><h3>2. 微前端能解決什麼問題</h3><p>微前端的五個典型適用場景：</p><p class='list-item'>**一句話畫像**：當你發現自己想說"我希望把 X 和 Y 當成兩個獨立的項目維護，但用戶看起來還是一個網站"，你就該考慮微前端了。</p><h3>3. 你是否真的需要微前端</h3><p>微前端不是免費午餐。它帶來三種成本：</p><p class='list-item'>- **沙箱開銷**：JS 沙箱、樣式隔離都有運行時損耗</p><p class='list-item'>- **調試複雜度**：跨應用問題排查比單體困難得多</p><p class='list-item'>- **部署鏈路變長**：dev / preview / prod 都要跑通</p><p>引入前先問自己三個反問：</p><pre><code>反問 1：我的項目真的有多個獨立業務邊界嗎？
+  └─ 如果只是想做&quot;代碼拆分&quot;，路由懶加載 + monorepo 就夠了
+反問 2：我的團隊規模真的需要解耦嗎？
+  └─ 5 人以內的單團隊通常用不到，直接 monorepo 反而更順手
+反問 3：我真的需要獨立部署嗎？
+  └─ 如果所有應用註定一起發版，微前端只增成本</code></pre><p class='list-item'>**替代方案對比**：</p><p>判斷標準：如果你的痛點只是"單倉庫太大"或"構建太慢"，先試 monorepo，它成本低得多。微前端是最後的選擇。</p><h3>4. 框架方案對比</h3><p>主流微前端框架四象限對比：</p><p class='list-item'>**本教程選 qiankun**，因爲：</p><p class='list-item'>- 同棧和跨棧都能 hold 住，遷移成本最低</p><p class='list-item'>- 幾乎所有踩坑都能 Google 到答案，社區資料密度最高</p><p class='list-item'>- 沙箱機制完善，遺留改造場景安全感強</p><p>如果你的場景是**全棧統一 Vite 7+** 、**對 bundle 體積極度敏感**，可以考慮 Module Federation。其餘情況 qiankun 是穩妥選擇。</p><h3>5. 示例項目場景</h3><p>教程貫穿一個虛構的"企業內部管理平臺"：</p><pre><code>admin-shell  （主应用 / Shell / 容器）
+├── /              门户首页（子应用入口卡片）
+├── /orders/*      子应用 app-orders（订单管理）
+└── /users/*       子应用 app-users（用户管理）</code></pre><p>技术栈：React 19 + Vite 7 + TypeScript + Tailwind CSS + Shadcn UI（**同栈场景**）。</p><p>版本口径：本教程与配套模板的验证基线是<code>React 19 / Vite 7 / qiankun 2.x</code>。曾尝试 Vite 8 +<code>@vitejs/plugin-react</code>6，但与 qiankun 生态(尤其 Vite 插件)依赖不稳,实测回退到 Vite 7 + plugin-react 5 才稳。升级 Vite 大版本前务必重跑 dev/preview/prod 全流程。</p><p>跨棧場景（如主應用 React + 子應用 Vue）的關鍵差異會在對應章節標註。</p><h3>第二部分：心智模型</h3><h3>6. qiankun 是怎麼跑起來的</h3><p>完整加載流程：</p><pre><code>子應用靜態資源 (app-orders)主應用 (admin-shell)瀏覽器子應用靜態資源 (app-orders)主應用 (admin-shell)瀏覽器用戶訪問 /orders/list路由匹配 activeRule &quot;/orders&quot;fetch 子應用 entry HTML返回 index.html解析 HTML，抽出 script/link加載 JS chunk / CSS返回資源沙箱中執行子應用腳本拿到子應用 export 的 bootstrap/mount/unmount調用 mount(container)子應用渲染到</code></pre><p>注意箭頭方向：**主應用主動 fetch 子應用資源**，子應用是"被動"的。</p><h3>7. 一句話心智</h3><p>子應用的代碼是被主應用 fetch 過來，在主應用的 origin 裏執行的。</p><p>這句話是後面所有決策的根。它推導出：</p><p>把這兩條記牢：</p><p>JS 在主應用 origin 跑，靜態資源走子應用 origin。它們不是同一回事。</p><h3>8. 三角色職責</h3><p>Shell 是"外殼/遙控器"，業務永遠在子應用裏。</p><p>Shell 一旦開始寫業務代碼，微前端架構就開始爛。</p><h3>9. 三個高頻誤解</h3><p class='list-item'>**誤解 1：以爲是 iframe 那種隔離**</p><p>qiankun 的子應用是**真實跑在主應用 DOM 裏的 React 應用**，不是 iframe。所以：</p><p class='list-item'>- 沒有跨 frame 通信問題</p><p class='list-item'>- 沒有獨立的 history（共用瀏覽器 history）</p><p class='list-item'>- 但也沒有 iframe 那種"什麼都隔離"的天然安全感</p><p class='list-item'>**誤解 2：以爲子應用靜態資源走主應用 origin**</p><p>子應用的 HTML 入口、JS chunk、CSS、圖片都是**從子應用 origin 加載的**。所以：</p><p class='list-item'>- 子應用部署側必須配 CORS（允許主應用 origin 來 fetch）</p><p class='list-item'>- 子應用靜態資源 URL 必須是**絕對路徑**，否則會被錯誤地拼到主應用 origin（第 19 節詳解）</p><p class='list-item'>**誤解 3：以爲 dev 跑通就等於 prod 跑通**</p><p>qiankun + Vite 場景下，dev 和 prod 的行爲差異**遠大於普通 SPA**：</p><p class='list-item'>- CSS 注入路徑不同（dev 是 JS 注入 style 標籤，prod 是 link 標籤）</p><p class='list-item'>- 靜態資源解析路徑不同（dev 走 Vite dev server，prod 走絕對 URL）</p><p class='list-item'>- 樣式隔離效果不同（見第 17 節）</p><p class='list-item'>**所以必須 dev → preview → prod 三步都跑通**，詳見第 20 節。</p><h3>第三部分：從零搭建</h3><h3>10. 主應用工程基線</h3><p>主应用 <code>admin-shell</code> 工程初始化：</p><pre><code>pnpm create vite@latest admin-shell --template react-ts
+cd admin-shell</code></pre><p>核心依賴：</p><pre><code># 框架
+pnpm add react@^19 react-dom@^19 react-router@^7
+# 状态与数据
+pnpm add @tanstack/react-query zustand zod
+# qiankun
+pnpm add qiankun
+# UI（按需）
+pnpm add tailwindcss @tailwindcss/vite
+pnpm add clsx tailwind-merge class-variance-authority
+pnpm add lucide-react
+# 类型与工具
+pnpm add -D typescript vite @vitejs/plugin-react</code></pre><p>依賴瘦身原則：主應用不是業務後臺，職責只有"登錄 + 殼 + 調度"。RHF / date-fns / 大表格庫等業務向依賴一律不裝，真要寫複雜業務時，那應該是子應用的事。</p><p class='list-item'>**推薦目錄結構**：</p><pre><code>admin-shell/
+├── src/
+│   ├── app/
+│   │   ├── providers.tsx              // QueryClient + Theme + Toaster
+│   │   ├── router.tsx                 // react-router 配置
+│   │   └── layout/
+│   │       ├── Shell.tsx              // 整体外壳，常驻 #subapp-viewport
+│   │       ├── TopBar.tsx             // 顶栏
+│   │       └── AppSwitcher.tsx        // 应用切换器
+│   ├── features/
+│   │   ├── auth/                      // 登录、authStore
+│   │   ├── home/
+│   │   │   ├── pages/HomePage.tsx
+│   │   │   └── components/MicroAppCard.tsx
+│   │   └── micro-apps/
+│   │       ├── registry.ts            // 子应用清单（单一数据源）
+│   │       ├── register.ts            // registerMicroApps + start
+│   │       ├── useCurrentMicroApp.ts
+│   │       └── MicroAppOutlet.tsx     // 路由占位
+│   ├── shared/
+│   │   ├── api/                       // 主应用请求封装
+│   │   ├── stores/                    // authStore
+│   │   ├── lib/utils.ts
+│   │   └── ui/                        // Shadcn 组件
+│   └── main.tsx</code></pre><h3>11. 子應用清單設計</h3><p class='list-item'>**核心原則：單一數據源**。首頁卡片和 qiankun 註冊都讀同一份清單。</p><pre><code>// src/features/micro-apps/registry.ts
+import type { LucideIcon } from &#x27;lucide-react&#x27;
+import { ShoppingCart, Users } from &#x27;lucide-react&#x27;
+export interface MicroAppEntry {
+  name: string              // qiankun 唯一标识
+  title: string             // 卡片标题
+  description: string
+  activeRule: string        // 主应用 activeRule = 子应用 router basename
+  entry: string             // 子应用 HTML 入口（环境变量驱动）
+  icon: LucideIcon
+  enabled: boolean          // 临时下线开关
+}
+export const microApps: MicroAppEntry[] = [
+  {
+    name: &#x27;app-orders&#x27;,
+    title: &#x27;订单管理&#x27;,
+    description: &#x27;订单列表、退款、对账&#x27;,
+    activeRule: &#x27;/orders&#x27;,
+    entry: import.meta.env.VITE_APP_ORDERS_ENTRY,
+    icon: ShoppingCart,
+    enabled: true,
+  },
+  {
+    name: &#x27;app-users&#x27;,
+    title: &#x27;用户管理&#x27;,
+    description: &#x27;用户列表、权限、审计日志&#x27;,
+    activeRule: &#x27;/users&#x27;,
+    entry: import.meta.env.VITE_APP_USERS_ENTRY,
+    icon: Users,
+    enabled: true,
+  },
+]</code></pre><h3>新增子應用時</h3><p>只改這一個文件，首頁卡片自動出現、qiankun 自動註冊。</p><p>進階：從硬編碼 registry 演進到 manifest 動態發現。本節的<code>registry.ts</code>是最好教學的入門形態,但當子應用變多、由不同團隊獨立部署時,“主應用改一行代碼才能上一個子應用”會變成瓶頸。</p><p>配套模板已經升級成manifest 發現:子應用各自帶一份<code>app.json</code>(title/icon/category/order),主應用啓動時<code>fetch('/manifest.json')</code>動態註冊,清單經 zod 校驗、圖標走白名單、<code>activeRule</code>撞保留前綴(<code>/__sso</code>、<code>/api</code>、<code>/assets</code>、<code>/apps</code>)會被攔。這樣“上一個子應用 = 傳一個文件夾 + 重建 manifest”,主應用零改動。</p><p>詳見第 24 節與模板的<code>src/features/micro-apps/registry.ts</code>。</p><h3>12. qiankun 註冊與啓動</h3><pre><code>// src/features/micro-apps/register.ts
+import { registerMicroApps, start } from &#x27;qiankun&#x27;
+import { microApps } from &#x27;./registry&#x27;
+let started = false
+export function bootstrapMicroApps(if (started) return
+  started = true
+  registerMicroApps(
+    microApps
+      .filter((app) =&gt; app.enabled)
+      .map((app) =&gt; ({
+        name: app.name,
+        entry: app.entry,
+        container: &#x27;#subapp-viewport&#x27;,
+        activeRule: app.activeRule,
+      })),
+  )
+  // JS 沙箱默认开启；样式隔离取舍见第 17 节
+  start({ sandbox: true })
+}</code></pre><pre><code>// src/main.tsx
+import { createRoot } from &#x27;react-dom/client&#x27;
+import { RouterProvider } from &#x27;react-router&#x27;
+import { router } from &#x27;./app/router&#x27;
+import { Providers } from &#x27;./app/providers&#x27;
+import { bootstrapMicroApps } from &#x27;./features/micro-apps/register&#x27;
+const root = document.getElementById(&#x27;root&#x27;)!
+createRoot(root).render(
+  &lt;Providers&gt;
+    &lt;RouterProvider router={router} /&gt;
+  &lt;/Providers&gt;,
+)
+// RouterProvider 挂载后再启动 qiankun
+bootstrapMicroApps()</code></pre><h3>⚠️</h3><p>顺序很重要：必须先渲染 React（让<code>#subapp-viewport</code>出现在 DOM 里），再调<code>bootstrapMicroApps</code>。否则 qiankun 找不到容器。</p><h3>13. Shell 佈局與掛載點</h3><pre><code>// src/app/layout/Shell.tsx
+import { Outlet } from &#x27;react-router&#x27;
+import { TopBar } from &#x27;./TopBar&#x27;
+export function Shell(return (
+    &lt;div className=&quot;flex min-h-screen flex-col&quot;&gt;
+      &lt;TopBar /&gt;
+      &lt;main className=&quot;flex-1&quot;&gt;
+        &lt;Outlet /&gt;
+        {/* qiankun 子应用挂载点：必须常驻 layout，不能随路由卸载 */}
+        &lt;div id=&quot;subapp-viewport&quot; /&gt;
+      &lt;/main&gt;
+    &lt;/div&gt;
+  )
+}</code></pre><p>鐵律：<code>#subapp-viewport</code>必須常駐 layout 頂層，不能隨路由切換被卸載。否則子應用 mount 時找不到容器，整個加載流程失敗。</p><h3>14. 路由佔位</h3><p>主應用的 React 路由要爲子應用預留路徑，但**不實際渲染任何內容**——qiankun 接管 <code>#subapp-viewport</code> 的渲染：</p><pre><code>// src/features/micro-apps/MicroAppOutlet.tsx
+// qiankun 接管 #subapp-viewport 的渲染，React 只占路由位
+export function MicroAppOutlet(return null
+}</code></pre><pre><code>// src/app/router.tsx
+import { createBrowserRouter } from &#x27;react-router&#x27;
+import { Shell } from &#x27;./layout/Shell&#x27;
+import { HomePage } from &#x27;@/features/home/pages/HomePage&#x27;
+import { MicroAppOutlet } from &#x27;@/features/micro-apps/MicroAppOutlet&#x27;
+export const router = createBrowserRouter([
+  {
+    element: &lt;Shell /&gt;,
+    children: [
+      { index: true, path: &#x27;/&#x27;, element: &lt;HomePage /&gt; },
+      // 通配子应用路径，React 路由匹配但不渲染内容
+      { path: &#x27;/:appName/*&#x27;, element: &lt;MicroAppOutlet /&gt; },
+    ],
+  },
+])</code></pre><p>這裏的"雙層路由"是 qiankun 最容易讓人困惑的地方：React 路由負責"展示哪個 layout"，qiankun 負責"展示哪個子應用"。兩者職責不重疊。</p><h3>15. 接入第一個子應用</h3><p>假設你已經有一個獨立運行的 Vite + React 子應用 <code>app-orders</code>，下面是接入 qiankun 的**最小改動**。</p><p class='list-item'>**第一步：裝插件**</p><pre><code>pnpm add -D vite-plugin-qiankun-lite</code></pre><h3>早期教程用的是</h3><p><code>vite-plugin-qiankun</code>，但它长期未维护、对新版 Vite 适配差。这里改用维护中的分支：它用<code>vite-plugin-qiankun-lite</code>命名 ES export桥接 qiankun 生命周期，不再需要<code>renderWithQiankun</code>/ 内联 IIFE /<code>window.proxy</code>，对 Vite 7+ 更友好。主应用仍用经典<code>qiankun</code>(<code>registerMicroApps</code>/<code>start</code>),无需改动即可加载 lite 子应用。</p><p class='list-item'>**第二步：改 vite.config.ts**</p><pre><code>// app-orders/vite.config.ts
+import { defineConfig, loadEnv, type Plugin } from &#x27;vite&#x27;
+import react from &#x27;@vitejs/plugin-react&#x27;
+import qiankun from &#x27;vite-plugin-qiankun-lite&#x27;
+// 若主应用域名开了 Cloudflare Rocket Loader,会改写 &lt;script&gt; type 让内联脚本不执行,
+// 给所有 script 加 data-cfasync=&quot;false&quot; 让它跳过(没用 Cloudflare 可删)
+function disableCloudflareRocketLoader(Plugin {
+  return {
+    name: &#x27;cf-rocket-disable&#x27;,
+    enforce: &#x27;post&#x27;,
+    transformIndexHtml(html) {
+      return html.replace(/&lt;script\b(?![^&gt;]*\bdata-cfasync=)/g, &#x27;&lt;script data-cfasync=&quot;false&quot;&#x27;)
+    },
+  }
+}
+export default defineConfig(({ mode }) =&gt; {
+  const env = loadEnv(mode, process.cwd(), &#x27;&#x27;)
+  const appName = env.VITE_APP_NAME || &#x27;app-orders&#x27;
+  // 同源部署:生产挂到主应用同源路径前缀(如 /apps/orders/),资源走绝对路径且免 CORS;
+  // 跨域部署则填子应用自己的绝对 URL。开发/独立 preview 用 &#x27;/&#x27;。见第 19 节
+  const publicBase = mode === &#x27;production&#x27; ? env.VITE_PUBLIC_BASE || &#x27;/&#x27; : &#x27;/&#x27;
+  return {
+    base: publicBase,
+    // lite 用命名 export 桥接生命周期,不再需要 useDevMode
+    plugins: [react(), qiankun({ name: appName }), disableCloudflareRocketLoader()],
+    server: {
+      port: 5173,
+      cors: true,
+      headers: { &#x27;Access-Control-Allow-Origin&#x27;: &#x27;*&#x27; },  // dev 跨域
+    },
+    preview: {
+      port: 4173,
+      cors: true,
+      headers: { &#x27;Access-Control-Allow-Origin&#x27;: &#x27;*&#x27; },  // preview 也要单独配
+    },
+  }
+})</code></pre><h3>⚠️</h3><p><code>server</code>** 块只对生效**，<code>pnpm dev</code><code>pnpm preview</code>不读它——必须单独配<code>preview</code>块。这是 Vite 自身的设计。</p><p class='list-item'>**第三步：改入口 main.tsx**</p><pre><code>// app-orders/src/main.tsx
+import { StrictMode } from &#x27;react&#x27;
+import { createRoot, type Root } from &#x27;react-dom/client&#x27;
+import { isInShell, setSubAppContext } from &#x27;@/shared/auth/subAppContext&#x27;
+import App from &#x27;./App&#x27;
+let root: Root | null = null
+function render(container?: HTMLElement) {
+  const dom = container?.querySelector(&#x27;#root&#x27;) ?? document.getElementById(&#x27;root&#x27;)
+  if (!dom) return
+  root = createRoot(dom)
+  root.render(
+    &lt;StrictMode&gt;
+      {/* 子应用样式都限定在 .subapp-root 作用域内,避免污染外壳,见第 17 节 */}
+      &lt;div className=&quot;subapp-root&quot;&gt;
+        &lt;App /&gt;
+      &lt;/div&gt;
+    &lt;/StrictMode&gt;,
+  )
+}
+// 独立运行:动态加载 standalone.css(全局 reset + 色板),只在独立时注入
+async function bootstrapStandalone(await import(&#x27;./styles/standalone.css&#x27;)
+  render()
+}
+if (!isInShell()) {
+  void bootstrapStandalone()
+}
+// qiankun 生命周期 — vite-plugin-qiankun-lite 用命名 export 桥接给主应用,
+// 不需要 renderWithQiankun / 内联 IIFE,也不依赖 window.proxy
+type ShellMountProps = Parameters&lt;typeof setSubAppContext&gt;[0] &amp; { container?: HTMLElement }
+export async function bootstrap(export async function mount(props: ShellMountProps) {
+  setSubAppContext(props)
+  render(props.container)
+}
+export async function unmount(unmount()
+  root = null
+}
+export async function update(props: ShellMountProps) {
+  setSubAppContext(props)
+}</code></pre><h3>⚠️ 判斷“是否被主應用接管”用自寫的</h3><p><code>isInShell()</code>，不要依賴插件 helper 的。原因:helper 在頂層求值的標誌,在子應用<code>__POWERED_BY_QIANKUN__</code><code>main</code>的真實 realm 裏可能拿到<code>undefined</code>。可靠做法是:主應用注入過 props 就算被接管,mount 之前按當前路徑前綴兜底判斷(見第四步的<code>subAppContext</code>)。</p><p class='list-item'>**第四步：改路由 basename（用函數延遲求值）**</p><pre><code>// app-orders/src/app/routes.ts
+import { createBrowserRouter } from &#x27;react-router&#x27;
+import { isInShell } from &#x27;@/shared/auth/subAppContext&#x27;
+// 必须是函数 — basename 在 mount 时才求值。否则模块初始化早于主应用注入,
+// 独立运行会拿到错误的 basename。
+export function createRouter(const basename = isInShell() ? import.meta.env.VITE_APP_BASENAME || &#x27;/orders&#x27; : &#x27;/&#x27;
+  return createBrowserRouter(routes, { basename })
+}</code></pre><p><code>isInShell()</code> 放在子應用的 <code>subAppContext</code> 裏（第 18 節會給完整實現），核心是不依賴插件 helper：</p><pre><code>// app-orders/src/shared/auth/subAppContext.ts(节选)
+let providedByShell = false
+export function setSubAppContext(next: SubAppContext) {
+  Object.assign(ctx, next)
+  providedByShell = true
+}
+export function isInShell(if (providedByShell) return true                 // 主应用注入过 props = 被接管
+  if (typeof window === &#x27;undefined&#x27;) return false
+  return window.location.pathname.startsWith(import.meta.env.VITE_APP_BASENAME || &#x27;/orders&#x27;)
+}</code></pre><p><code>/orders</code>必须和主应用注册子应用时的<code>activeRule</code>（manifest 里的<code>activeRule</code>/<code>VITE_APP_BASENAME</code>）完全一致。不一致 = 子应用所有内部链接 404。</p><p class='list-item'>**第五步：部署 —— 優先同源，跨域兜底**</p><p class='list-item'>**方案一：同源部署（推薦）** 。把子應用部署到主應用**同源**的路徑前綴下,比如主應用在 `https://console.example.com`,子應用就放在 `https://console.example.com/apps/orders/`,manifest 的 `entry` 指向它。子應用 `VITE_PUBLIC_BASE=/apps/orders/`(末尾帶斜槓)。這樣:</p><p class='list-item'>- 子應用資源走**同源絕對路徑**,**完全免去 CORS**</p><p class='list-item'>- 只需 SPA fallback:把 `/apps/orders/*`都 rewrite 到该子应用的`index.html`</p><p>同源是真實項目收斂到的形態——它繞開了第 19 節那一整套跨域 + 絕對 URL 的麻煩,部署鏈路最簡單。</p><p class='list-item'>**方案二:跨域部署**。子應用部署在獨立域名時,`entry` 與 `VITE_PUBLIC_BASE` 填子應用的絕對 URL,並在託管平臺同時配兩件事:</p><pre><code>// 以 vercel.json 为例，其他平台思路一致
+{
+  &quot;headers&quot;: [
+    {
+      &quot;source&quot;: &quot;/(.*)&quot;,
+      &quot;headers&quot;: [
+        { &quot;key&quot;: &quot;Access-Control-Allow-Origin&quot;, &quot;value&quot;: &quot;*&quot; },
+        { &quot;key&quot;: &quot;Access-Control-Allow-Methods&quot;, &quot;value&quot;: &quot;GET, OPTIONS&quot; },
+        { &quot;key&quot;: &quot;Access-Control-Allow-Headers&quot;, &quot;value&quot;: &quot;Content-Type&quot; }
+      ]
+    }
+  ],
+  &quot;rewrites&quot;: [
+    { &quot;source&quot;: &quot;/(.*)&quot;, &quot;destination&quot;: &quot;/index.html&quot; }
+  ]
+}</code></pre><p>跨域方案裏**兩件事缺一不可**，少一件都會讓生產環境的某個邊界場景掛掉。能同源就別跨域。</p><h3>16. 多子應用切換器</h3><p class='list-item'>**設計原則**：</p><p class='list-item'>- **首頁本身就是切換器**（卡片網格），所以頂欄在首頁保持簡潔</p><p class='list-item'>- **進入子應用後**，頂欄左側自動變成"當前應用 ▾"下拉</p><p class='list-item'>- **不要 hover 觸發**，移動端沒有 hover，誤觸率高——用點擊</p><pre><code>// src/features/micro-apps/useCurrentMicroApp.ts
+import { useLocation } from &#x27;react-router&#x27;
+import { microApps, type MicroAppEntry } from &#x27;./registry&#x27;
+export function useCurrentMicroApp(MicroAppEntry | undefined {
+  const { pathname } = useLocation()
+  return microApps.find((app) =&gt; pathname.startsWith(app.activeRule))
+}</code></pre><pre><code>// src/app/layout/AppSwitcher.tsx
+import { useCurrentMicroApp } from &#x27;@/features/micro-apps/useCurrentMicroApp&#x27;
+import { microApps } from &#x27;@/features/micro-apps/registry&#x27;
+export function AppSwitcher(const current = useCurrentMicroApp()
+  if (!current) {
+    return &lt;Logo /&gt;  // 首页：简洁 logo
+  }
+  return (
+    &lt;DropdownMenu&gt;
+      &lt;DropdownMenuTrigger&gt;{current.title} ▾&lt;/DropdownMenuTrigger&gt;
+      &lt;DropdownMenuContent&gt;
+        &lt;DropdownMenuItem onSelect={() =&gt; navigate(&#x27;/&#x27;)}&gt;返回首页&lt;/DropdownMenuItem&gt;
+        &lt;DropdownMenuSeparator /&gt;
+        {microApps.map((app) =&gt; (
+          &lt;DropdownMenuItem key={app.name} onSelect={() =&gt; navigate(app.activeRule)}&gt;
+            &lt;app.icon className=&quot;mr-2 h-4 w-4&quot; /&gt;
+            {app.title}
+          &lt;/DropdownMenuItem&gt;
+        ))}
+      &lt;/DropdownMenuContent&gt;
+    &lt;/DropdownMenu&gt;
+  )
+}</code></pre><p class='list-item'>**演進路徑**：</p><p>不要提前過度設計。先用下拉走通，等數量到瓶頸再演進——你大概率永遠到不了 30+。</p><h3>第四部分：進階決策</h3><h3>17. 樣式隔離怎麼選</h3><p>qiankun 的 <code>sandbox</code> 首先是 **JS 沙箱**；樣式隔離是 <code>sandbox</code> 裏的額外選項。不要把 <code>start({ sandbox: true })</code> 理解成“已經開啓樣式隔離”——它只是開啓 JS 沙箱，CSS 仍然會在同一個頁面環境裏生效。</p><p class='list-item'>**決策樹**：</p><p class='list-item'>**爲什麼同棧共用設計系統場景通常不開樣式隔離**：</p><p class='list-item'>- 主題切換天然同步（`<html class="dark">`全局生效）</p><p class='list-item'>- CSS 變量共享，無需手動同步</p><p class='list-item'>- 減少 qiankun 改寫 CSS 的開銷</p><p class='list-item'>**但「不開隔離」有個必踩的坑：子應用的全局樣式會泄漏進外殼**。</p><p>不開 qiankun 樣式隔離 ≠ 子應用樣式不會污染主應用。子應用自己的 <code>index.css</code> 裏那些**頂層全局規則**——<code>html / body / #root</code> 的 reset、<code>* { ... }</code> 通配、<code>:root { --background: ... }</code> 整套色板——在 qiankun 模式下會**直接掛到主應用文檔上**，蓋掉 shell 的全局樣式。</p><p>真實項目的解法是兩層（配套模板已內置）：</p><p class='list-item'>- **作用域化**：子應用根節點包一層- `.subapp-root`，- `index.css`裏的基礎樣式全部限定在- `.subapp-root`內,不寫裸- `*`/- `body`。</p><pre><code>/* index.css:始终加载,只作用于子应用自己的子树 */
+.subapp-root, .subapp-root *, .subapp-root *::before, .subapp-root *::after {
+  border-color: var(--border);
+  outline-color: color-mix(in oklch, var(--ring) 50%, transparent);
+}</code></pre><p class='list-item'>- **全局樣式只在獨立運行時注入**:把- `html / body / :root`這類頂層全局樣式和完整色板抽到單獨的- `standalone.css`,由- `main.tsx`- **僅在獨立運行時**動態- `import`(見第 15 節- `bootstrapStandalone`)。qiankun 模式下這些由 shell 提供,子應用不再注入,自然不污染。</p><pre><code>/* styles/standalone.css:仅 if (!isInShell()) 时动态 import */
+html, body, #root { min-height: 100vh; }
+body { background-color: var(--background); color: var(--foreground); }
+:root { --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); /* ...完整色板 */ }
+.dark { --background: oklch(0.145 0 0); /* ... */ }</code></pre><p>多個子應用共用一個 shell 時,把</p><p><code>.subapp-root</code>改成各自唯一的類名,避免互相覆蓋。</p><p class='list-item'>**dev 和 prod 行爲差異（必須知道）** ：</p><p>dev 跑通 ≠ prod 跑通。這是後面"dev → preview → prod 三步法"（第 20 節）的根本原因。</p><h3>18. 共享登錄態的三種方案</h3><p class='list-item'>**決策樹**：</p><p class='list-item'>**推荐：方案 B**——`props` 透传 token getter（不是裸 token）。</p><pre><code>// 主应用 register.ts
+const subAppProps = {
+  getAccessToken: async () =&gt; await authStore.getState().getToken(),
+  getUser: async () =&gt; authStore.getState().user,
+  onLogout: () =&gt; authStore.getState().logout(),
+}
+registerMicroApps(
+  microApps.map((app) =&gt; ({
+    ...app,
+    container: &#x27;#subapp-viewport&#x27;,
+    props: subAppProps,
+  })),
+)</code></pre><p class='list-item'>**爲什麼是 getter，不是裸 token**：</p><p class='list-item'>- token 會過期、會刷新，**每次取最新**纔不會用到舊值</p><p class='list-item'>- 函數引用穩定，token 字符串變了也不用重新 register</p><p class='list-item'>**子應用側統一 context 模塊**（避免 props 滿項目飛）：</p><pre><code>// app-orders/src/shared/auth/subAppContext.ts
+type SubAppContext = {
+  getAccessToken?: () =&gt; Promise&lt;string | undefined&gt;
+  getUser?: () =&gt; Promise&lt;UserProfile | undefined&gt;
+  ensureToken?: () =&gt; Promise&lt;string | undefined&gt;
+  onLogout?: () =&gt; void
+}
+const ctx: SubAppContext = {}
+let providedByShell = false
+export function setSubAppContext(next: SubAppContext) {
+  Object.assign(ctx, next)
+  providedByShell = true
+}
+// 第 15 节用到的 isInShell:主应用注入过 props 即被接管,mount 前按路径前缀兜底
+export function isInShell(if (providedByShell) return true
+  if (typeof window === &#x27;undefined&#x27;) return false
+  return window.location.pathname.startsWith(import.meta.env.VITE_APP_BASENAME || &#x27;/orders&#x27;)
+}
+export async function getAccessToken(return ctx.getAccessToken ? await ctx.getAccessToken() : undefined
+}
+export async function ensureToken(return ctx.ensureToken ? await ctx.ensureToken() : undefined
+}
+export function requestLogout(onLogout?.()
+}</code></pre><pre><code>// app-orders/src/main.tsx — qiankun-lite 命名 export
+export async function mount(props: ShellMountProps) {
+  setSubAppContext(props)
+  render(props.container)
+}
+export async function update(props: ShellMountProps) {
+  setSubAppContext(props)
+}
+export async function unmount(unmount()
+  root = null
+}</code></pre><h3>⚠️</h3><p><code>update</code>钩子也要<code>setSubAppContext</code>——qiankun 在某些重新激活场景会调<code>update</code>而不是<code>mount</code>。如果只在<code>mount</code>里赋值，<code>update</code>之后 token getter 会变成旧引用。</p><p class='list-item'>**如果你的鑑權是 OIDC SSO**，請配合閱讀獨立的 OIDC SSO 集成教程，裏面有完整的 PKCE 流程、Keycloak 配置、subAppContext 設計細節。</p><h3>19. Vite 子应用的 publicPath 陷阱</h3><p class='list-item'>**這是 Vite + qiankun 幾乎人人必踩的坑**，單獨成節講清。</p><p class='list-item'>**現象**：</p><p>dev 模式聯調通過，生產構建後控制檯報：</p><pre><code>GET http://localhost:3000/assets/index-xxx.js  net::ERR_ABORTED 404
+TypeError: Failed to fetch dynamically imported module
+single-spa minified message #31</code></pre><p>注意 URL：瀏覽器去**主應用 origin**（3000）取了**子應用的 JS chunk**。</p><p class='list-item'>**根因**：</p><p>Vite 生產產物裏的 <code>import()</code> 動態導入路徑是**根相對**的：</p><pre><code>&lt;!-- 子应用 dist/index.html --&gt;
+&lt;script&gt;import(&#x27;/assets/index-xxx.js&#x27;)&lt;/script&gt;</code></pre><p>被 qiankun 加载时，<code>/assets/index-xxx.js</code> 会以**当前文档 origin**（主应用）拼接成绝对 URL → 拼出来是主应用 origin → 404。</p><p class='list-item'>**解決方案**：把 `base` 設爲子應用的**絕對 URL**</p><pre><code>// app-orders/vite.config.ts
+export default defineConfig(({ mode }) =&gt; {
+  const env = loadEnv(mode, process.cwd(), &#x27;&#x27;)
+  const publicBase = env.VITE_PUBLIC_BASE || &#x27;/&#x27;
+  return {
+    base: publicBase,
+    // ...
+  }
+})</code></pre><pre><code># .env.local（本地 preview 时）
+VITE_PUBLIC_BASE=http://localhost:4173/
+# .env.production（部署时）
+VITE_PUBLIC_BASE=https://app-orders.example.com/</code></pre><h3>末尾</h3><p>必須帶斜槓，少一個斜槓路徑會拼錯。</p><p>這樣構建產物變成：</p><pre><code>&lt;script&gt;import(&#x27;http://localhost:4173/assets/index-xxx.js&#x27;)&lt;/script&gt;</code></pre><p>完全絕對路徑，跟當前文檔 origin 無關。</p><p class='list-item'>**爲什麼 webpack 沒這個問題**：</p><p>webpack 有运行时变量 <code>__webpack_public_path__</code>，qiankun 注入 <code>__INJECTED_PUBLIC_PATH_BY_QIANKUN__</code> 让子应用动态修改。Vite 没这套机制，只能在构建时硬编码 base。</p><p>結論：所有 Vite 子應用都必須用環境變量驅動<code>base</code>。同源部署時設爲同源路徑前綴(如<code>/apps/orders/</code>)即可——它本身就是“跟當前文檔 origin 無關的絕對路徑”,還順帶免了 CORS;跨域部署時才需要設成完整絕對 URL。兩種都記得末尾帶斜槓。</p><h3>20. 部署纪律：dev → preview → prod</h3><p class='list-item'>**爲什麼不能直接推生產**：</p><p>dev 和 prod 行爲差異大（見第 17 節 CSS 注入路徑、第 19 節 publicPath）。直接推生產等於把調試現場放到雲上——慢且貴。</p><p class='list-item'>**三步法**：</p><p>第 2 步是大多數人會跳過的，但它**必不可少**——publicPath、樣式隔離、CSS 注入路徑，這三個問題都在 prod 模式纔會顯形。</p><p class='list-item'>**新子應用接入驗收清單**：</p><p class='list-item'>- 子應用獨立運行 `pnpm dev`能正常訪問</p><p class='list-item'>- 子應用獨立運行 `pnpm preview`能正常訪問</p><p class='list-item'>- 主應用 dev + 子應用 dev，聯調能加載</p><p class='list-item'>- **主應用 dev + 子應用 preview，聯調能加載（關鍵！）**</p><p class='list-item'>- 切換主題，主子應用同步變色（如果有主題切換）</p><p class='list-item'>- 路由切換不報 `single-spa #31`錯誤</p><p class='list-item'>- 子應用刷新頁面不 404（SPA fallback 生效）</p><p class='list-item'>- 網絡面板裏所有 chunk 都從子應用 origin 加載</p><h3>第五部分：運維與排錯</h3><h3>21. 常見問題速查表</h3><h3>22. 調試技巧</h3><p class='list-item'>**主應用控制檯暴露註冊中心，方便臨時禁用**：</p><pre><code>// dev 模式开
+import { getMicroApps } from &#x27;@/features/micro-apps/registry&#x27;
+if (import.meta.env.DEV) {
+  Object.assign(window, { __micro_apps__: getMicroApps() })
+}</code></pre><p>浏览器 console：</p><pre><code>__micro_apps__.find(a =&gt; a.name === &#x27;app-orders&#x27;).enabled = false
+location.reload()</code></pre><p class='list-item'>**觀察 qiankun 生命週期**（很多奇怪問題都是鉤子沒被調）：</p><pre><code>// 主应用 register.ts
+registerMicroApps(apps, {
+  beforeLoad: [async (app) =&gt; console.log(&#x27;[qiankun] beforeLoad&#x27;, app.name)],
+  beforeMount: [async (app) =&gt; console.log(&#x27;[qiankun] beforeMount&#x27;, app.name)],
+  afterMount: [async (app) =&gt; console.log(&#x27;[qiankun] afterMount&#x27;, app.name)],
+  beforeUnmount: [async (app) =&gt; console.log(&#x27;[qiankun] beforeUnmount&#x27;, app.name)],
+})</code></pre><p class='list-item'>**Network 面板按 origin 分組**，確認每個資源是從主應用 origin 還是子應用 origin 加載。**生產環境出問題十有八九是這裏走錯了**。</p><p class='list-item'>**强制 preview 复现 prod 问题**：</p><pre><code># app-orders/
+pnpm build &amp;&amp; pnpm preview
+# 同时主应用改 entry 指向 http://localhost:4173</code></pre><h3>23. 接入新子應用的標準 checklist</h3><p>每接入一個新子應用都跑一遍：</p><p class='list-item'>**主應用側（最小改動）** ：</p><p class='list-item'>- `public/manifest.json`加一项(或子应用自带- `app.json`+- `pnpm manifest:build`聚合)</p><p class='list-item'>- 新图标先在 `src/features/micro-apps/icons.ts`白名单登记</p><p class='list-item'>- 确认 `activeRule`没撞保留前缀`/__sso`、`/api`、`/assets`、`/apps`</p><p class='list-item'>**子應用側**：</p><p class='list-item'>- `pnpm add -D vite-plugin-qiankun-lite`</p><p class='list-item'>- 改 `vite.config.ts`：加`qiankun({ name })`插件、按`mode`设 base、server/preview CORS、(可选)CF Rocket Loader 规避</p><p class='list-item'>- 改 `src/main.tsx`：命名 export`mount/unmount/update`，挂载到`props.container.querySelector('#root')`，根节点包`.subapp-root`</p><p class='list-item'>- 加 `isInShell()`到`subAppContext`，basename 用`createRouter()`延迟求值</p><p class='list-item'>- 全局 reset/色板抽到 `standalone.css`，僅獨立運行時動態 import</p><p class='list-item'>- 部署：優先同源(免 CORS)；跨域才配 CORS + SPA fallback</p><p class='list-item'>- 加 `subAppContext.ts`（props 透传鉴权 +`isInShell`）</p><p class='list-item'>- 改 `http.ts`：請求攔截器自動加 Bearer + 401 調`ensureToken()`兜底重試一次</p><p class='list-item'>**驗收（按第 20 節清單）** ：</p><p class='list-item'>- 8 項驗收清單全部勾完纔算接入完成</p><h3>第六部分：模板與源碼</h3><h3>24. 直接使用配套模板</h3><p>如果你不想從零把主應用和子應用都手寫一遍，可以直接使用我沉澱出來的兩份 GitHub Template：</p><p class='list-item'>- 主应用模板：github.com/Sophran-fbj…</p><p class='list-item'>- 子应用模板：github.com/Sophran-fbj…</p><p>用 GitHub CLI 創建新倉庫：</p><pre><code>gh repo create my-admin-shell --template Sophran-fbj/qiankun-vite-shell-template --public --clone
+gh repo create my-orders-admin --template Sophran-fbj/qiankun-vite-subapp-template --public --clone</code></pre><p>也可以在 GitHub 页面点击 **Use this template** 创建。</p><p class='list-item'>**主應用模板已經包含**：</p><p class='list-item'>- 統一外殼佈局和子應用入口頁</p><p class='list-item'>- qiankun 註冊、加載和卸載流程</p><p class='list-item'>- **manifest.json 動態發現**子應用(zod 校驗 + 圖標白名單 + 保留前綴守衛),含- `scripts/rebuild-manifest.mjs`聚合腳本</p><p class='list-item'>- OIDC 回調隔離在 `/__sso/*`,釋放`/auth`命名空間給子應用</p><p class='list-item'>- Mock 登錄和可選 OIDC 登錄模式</p><p class='list-item'>- 主应用向子应用透传 `getAccessToken`、`ensureToken`、`getUser`、`onLogout`的 props 协议</p><p class='list-item'>**子應用模板已經包含**：</p><p class='list-item'>- 獨立運行和 qiankun 運行雙模式</p><p class='list-item'>- `vite-plugin-qiankun-lite`命名 export 生命周期适配</p><p class='list-item'>- `isInShell()`統一判斷接管來源(不依賴插件 helper)</p><p class='list-item'>- `createRouter()`在 mount 时延迟求值 router- `basename`</p><p class='list-item'>- `.subapp-root`作用域 +- `standalone.css`僅獨立運行加載的樣式隔離</p><p class='list-item'>- 從主應用 props 獲取 token 的 HTTP 攔截器</p><p class='list-item'>- 401 後調用主應用 `ensureToken()`續期並重試一次</p><p class='list-item'>- 同源部署 base 处理 + Cloudflare Rocket Loader 规避;跨域所需的 CORS 和 SPA fallback 配置</p><p>推薦使用順序：</p><p class='list-item'>- 先用主應用模板創建 shell 倉庫，跑通 `pnpm install && pnpm dev`。</p><p class='list-item'>- 再用子應用模板創建業務後臺倉庫，確認它能獨立運行。</p><p class='list-item'>- 在主应用 `public/manifest.json`加一项,把子应用`entry`指向本地 preview(`http://localhost:4173/`)或部署地址。</p><p class='list-item'>- 按第 20 节的 dev → preview → prod 三步法验收。</p><p>這兩份模板不是“適配任何主應用”的萬能協議，而是本文這套接入約定的可運行版本。它適合用來做團隊內部的微前端基線：主應用統一登錄、統一調度，子應用只關心業務和少量接入協議。</p><h3>延伸閱讀</h3><p class='list-item'>- qiankun 官方文檔</p><p class='list-item'>- single-spa（qiankun 底层）</p><p class='list-item'>- vite-plugin-qiankun-lite（本教程子應用所用插件）</p><p class='list-item'>- vite-plugin-qiankun（旧版，已不推荐）</p><p>寫在最後：微前端是架構選擇，不是技術炫技。如果它沒在你的項目裏解決具體痛點，就不該引入。本教程的所有"決策樹"都是爲了讓你有意識地選擇，而不是無腦跟隨。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

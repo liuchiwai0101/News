@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Claude Tag 上線：Karpathy 口中的 LLM 第三次革命 — Aciemind 銳利之思 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Claude Tag 上線：Karpathy 口中的 LLM 第三次革命 — Aciemind 銳利之思</h1>
+<div class="meta"><span class="src">aciemind.com</span>
+<span>· <a href="https://aciemind.com/posts/claude-tag-third-interaction-revolution" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://aciemind.com/posts/claude-tag-third-interaction-revolution" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>2026 年 6 月 23 日，Anthropic 丟出了一枚震撼彈：**Claude Tag**。這不是一個新模型，也不是一個新版本的聊天介面——它是一種全新的 AI 存在形式：Claude 以團隊成員的身份，直接加入你的 Slack 頻道。</p><p>消息一出，剛加入 Anthropic 的 AI 大神 Andrej Karpathy 給出了極高評價。他將其定義為 **LLM 使用者介面的第三次重大革命**。第一次是網站（ChatGPT 式對話），第二次是桌面應用（Claude Code、Cursor 等 IDE 整合），第三次——AI 變成獨立、持久、異步的實體，擁有組織範圍內的工具與上下文，與人類團隊並肩工作。</p><p>這不是升級，是範式轉移。</p><p>如果你用過 Claude Code 或 GitHub Copilot，Claude Tag 的互動方式不會陌生。但它的本質完全不同。</p><p>具體怎麼用？在 Slack 頻道裡 @Claude，用自然語言委派任務，它會自動拆解成多個步驟、逐一執行，最後在討論串中回報結果。</p><p>張三給 Claude 佈置了任務，李四進入頻道可以直接看到進度並接手推進，王五再加入時也能理解來龍去脈。所有人圍繞**同一個 Claude** 協作，而不是各自維護自己的上下文。</p><p>Anthropic 官方給出的數據令人側目：公司產品團隊 **65% 的程式碼**已由內部版本的 Claude Tag 參與生成。除了工程場景，員工還用它追蹤產品指標、處理支援工單、定位複雜 Bug 的根源。</p><p>Claude Tag 的設計圍繞四個關鍵能力，每一項都在挑戰傳統 AI 工具的邊界。</p><p class='list-item'>**共享上下文（Multiplayer）**：在同一個 Slack 頻道內，只有一個 Claude 與所有人互動。每個人都能看到它在做什麼，也能在前一個人結束的地方繼續對話。操作完全透明，這在企業環境中至關重要。</p><p class='list-item'>**持續記憶（Learns over time）**：隨著長期參與頻道討論，Claude 會逐漸累積組織知識——理解專案背景、團隊慣例、技術棧偏好以及協作流程。使用者不必每次都從零開始解釋上下文。這是從「無狀態 API 呼叫」到「有記憶的團隊成員」的質變。</p><p class='list-item'>**主動介入（Ambient Mode）**：這是整個產品最激進的設計。開啟主動模式後，Claude 不再只是等待別人提問——它會自己冒出來。提醒被忽視的重要討論，跟進長時間沒有解決的問題，標記需要決策的事項，甚至在發現相關資訊後主動通知團隊。某種意義上，Claude 開始具備了「主動工作」的能力。</p><p class='list-item'>**非同步執行（Works asynchronously）**：任務佈置完後，使用者完全可以離開 Slack。Claude 會自己安排執行計畫，持續推進專案，在數小時甚至數天後完成並主動回報結果。這是 Agent 的本質——不是幫你打字，是幫你完成工作。</p><p>技術上，Claude Tag 固定使用 Opus 4.8 模型，配備組織級與頻道級雙重 Token 配額控制。目前僅在 Slack 平臺上以 Beta 形式提供給 Claude Enterprise 和 Team 客戶，未來將擴展到更多工作場景。</p><p>Andrej Karpathy 將 LLM 人機互動的演進歸結為三個階段：</p><p class='list-item'>**第一階段：網站**。LLM 是一個你需要主動打開瀏覽器去訪問的網站。ChatGPT 的對話框是這個時代的圖騰。互動模式是「使用者發起、模型回應、對話結束」。</p><p class='list-item'>**第二階段：應用**。LLM 變成一個你下載到電腦上的軟體，深度整合進開發環境和工作流程。Claude Code、Cursor、GitHub Copilot 是代表。互動模式是「開發中即時輔助、IDE 內嵌」。</p><p class='list-item'>**第三階段：隊友**。LLM 變成一個獨立、持久、非同步運行的實體，擁有組織內的工具和上下文，真正實現和人類「並肩工作」。Claude Tag 是開端。</p><p>Karpathy 的判斷邏輯值得細品：前兩次變革改變的是「在哪裡用 AI」，第三次變革改變的是 **「AI 以什麼身份存在於組織中」**——從工具變成了有持續記憶、主動行為、共享狀態的團隊角色。</p><p>更深一層看，Claude Tag 的「羣聊即 Prompt」機制也極具啟發性。使用者無需切換窗口、無需額外解釋背景，模型直接進入羣聊上下文，自然理解任務意圖。這大幅降低了 AI 協作的摩擦成本。</p><p>任何範式轉移都伴隨著不安。</p><p>最尖銳的質疑來自「數位監工」：當 Claude 常駐羣聊、主動追問進度，它究竟是「助手」還是「管理者的監控工具」？你把 Claude Tag 拉進五人團隊的那一刻，每個人的每一條消息都成了一條 AI 在讀的消息。輸出好，可能被解讀成「她在外包思考」；輸出平庸，可能被解讀成「你看，這就是我們擔心的」。幾乎沒有第三種結果能讓懷疑者閉嘴。</p><p>隱私與信任層的建設，將是 Claude Tag 能否活下來的關鍵變數。即便 Anthropic 從技術上設置了權限隔離、操作可查等保障機制，但信任從來不是技術問題——它是人的問題。</p><p>另一個角度看，Claude Tag 選在 Slack 首發極具策略性。Slack 覆蓋近 80% 的《財富》100 強企業、擁有 20 萬以上付費客戶，是企業非結構化資訊最活躍的來源。這不是 AI 去找場景，而是直接在場景裡原生嵌入 AI。Anthropic 賭的是：**最好的 AI 產品不是另一個 App，而是直接住進你已經在用的工具。**</p><p>Claude Tag 目前仍處於 Beta 階段，30 天後將強製取代舊版 Claude in Slack。這只是一個開始。</p><p>如果 Karpathy 的判斷是對的，我們正在見證的不只是一個新功能的上線，而是 **AI 從「被召喚的工具」變成「在場的隊友」的歷史轉折**。</p><p>而一個會主動提醒你、會記住上下文、會在深夜繼續推進任務的 AI 隊友——這件事對工作方式的衝擊，可能比所有人想像的都要深遠。</p><p class='list-item'>*本文內容基於 Anthropic 官方發布及公開資訊整理。*</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

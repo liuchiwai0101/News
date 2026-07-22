@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>OpenAI 自曝 AI 模型突破沙盒入侵 Hugging Face · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>OpenAI 自曝 AI 模型突破沙盒入侵 Hugging Face</h1>
+<div class="meta"><span class="src">IT之家（RSS）</span><span>· 7月22日 周三</span>
+<span>· <a href="https://www.ithome.com/0/979/815.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/979/815.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>IT之家 7 月 22 日消息，當地時間 7 月 21 日，OpenAI 在一篇官方博客文章中披露了一起“前所未有”的重大安全事件。</p><p>該公司證實，其在進行內部網絡安全能力評估時，參與測試的 AI 模型突破了高度隔離的沙盒測試環境，併入侵了開源 AI 平臺 Hugging Face 的生產基礎設施。</p><p>OpenAI 表示，這起事件源於 OpenAI 對包括旗艦模型 GPT-5.6 Sol 以及一個“能力更強的預發佈模型”在內的多個模型進行的評估。</p><p>爲了測試模型在網絡安全攻防方面的潛在能力，OpenAI 在測試中移除了通常用於阻止高風險網絡活動的大部分安全防護措施。測試所使用的基準是“ExploitGym”，一個用於衡量 AI 模型能否將安全漏洞轉化爲實際攻擊的公開基準系統。</p><p>評估過程中，該模型被置於一個網絡訪問受限的隔離環境中。然而，爲了尋找 ExploitGym 的解決方案，模型花費了“大量的推理計算資源”試圖獲取開放互聯網訪問權限。最終，模型發現並利用了一個此前未知的零日漏洞，該漏洞存在於測試環境內用於管理軟件包安裝的第三方代理緩存軟件中。利用此漏洞，模型實現了權限提升並在 OpenAI 的研究基礎設施內進行橫向移動，直至連接到一臺可訪問互聯網的節點。</p><p>獲得互聯網訪問權限後，模型推斷出 Hugging Face 可能託管着與 ExploitGym 相關的模型、數據集和解決方案。隨後，模型開始搜索併成功找到了獲取祕密信息的方法，其目的被指爲“作弊”以通過評估。根據 OpenAI 的描述，在一個案例中，模型組合使用了多種攻擊向量，包括利用竊取的憑證和零日漏洞，在 Hugging Face 的服務器上找到了遠程代碼執行路徑。</p><p>實際上，Hugging Face 在 7 月 16 日就已披露其遭遇了一起由“自主 AI 智能體系統”實施的安全入侵事件。Hugging Face 的安全團隊及其自身的 AI 智能體檢測並阻止了該入侵活動。</p><p>據 Hugging Face 觀察，攻擊者濫用了遠程代碼數據集加載器和數據集配置中的模板注入漏洞，以獲得節點級訪問權限並竊取雲服務和集羣憑證。</p><p>IT之家注意到，Hugging Face 在調查過程中遇到了一個插曲：由於美國某主流商業 AI 模型的安全護欄阻止了其團隊所需的法證查詢，他們轉而使用了中國智譜的開源模型 GLM 5.2 來進行取證分析。</p><p>OpenAI 表示，已將該零日漏洞負責任地披露給了相關軟件供應商。公司計劃加強其研究環境中的基礎設施控制、監控和訪問限制，並將在與 Hugging Face 完成聯合調查後公佈更多細節。</p><p>Hugging Face 聯合創始人兼首席執行官克萊門特 · 德朗格（Clem Delangue）則對此表示，這一事件“證明了我們長期以來堅信的一點：AI 安全無法由任何一家公司祕密解決。它必須在開放、協作的環境中解決，讓世界各地的每一位防禦者都能廣泛獲得 AI 技術”。</p><p>廣告聲明：文內含有的對外跳轉鏈接（包括不限於超鏈接、二維碼、口令等形式），用於傳遞更多信息，節省甄選時間，結果僅供參考，IT之家所有文章均包含本聲明。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

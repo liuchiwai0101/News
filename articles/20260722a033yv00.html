@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>OpenAI模型失控？自主逃离控制，入侵友商系统_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>OpenAI模型失控？自主逃离控制，入侵友商系统_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260722A033YV00?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260722A033YV00?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>OpenAI週二在博客中披露了一起前所未有的事件：兩個AI模型在內部測試過程中自主脫離受控環境，併入侵AI公司Hugging Face的系統。涉事模型包括最新公開模型，以及一個能力更強、尚未發佈的模型。當時，這兩個模型正在參加用於評估網絡安全能力的內部測試，測試環境並未設置通常用於限制其攻擊能力的防護措施。</p><p>根據OpenAI的說法，模型當時正在攻擊一個名爲的開源網絡安全基準。在測試過程中，模型推斷出相關答案由Hugging Face維護，隨後通過一系列操作脫離OpenAI的研究環境。它們利用內部託管第三方軟件中的零日漏洞，並消耗大量推理計算資源，最終獲得互聯網訪問權限。此後，模型入侵Hugging Face的生產基礎設施，直接從數據庫中獲取測試解決方案，以提高自己在基準測試中的得分。OpenAI將其稱爲一起涉及前沿網絡能力的“前所未有的網絡事件”，並表示正與Hugging Face合作展開調查。</p><p>Hugging Face週四在博客中表示，公司在本週早些時候遭遇網絡攻擊，並懷疑攻擊由一個自主AI代理發起。這也是目前有記錄的少數幾起AI代理自主實施攻擊的事件之一，網絡安全專家過去一年一直在警告此類風險。Hugging Face稱，公司最初嘗試使用一家美國實驗室的未具名AI模型進行防禦，但該模型自身的網絡安全限制阻礙了防禦工作。最終，公司轉而使用中國公司的開源AI模型，併成功防禦了攻擊。</p><p>OpenAI發現此次攻擊後，主動聯繫了Hugging Face。截至事件披露時，Hugging Face已經識別並遏制攻擊，並開始梳理完整經過。調查發現，模型通過利用零日漏洞獲得互聯網訪問權限，而這一過程需要消耗大量計算資源。在獲得網絡訪問後，模型前往Hugging Face尋找ExploitGym的答案，因爲它判斷該平臺可能擁有可利用的模型、數據集和解決方案。其中一個案例中，模型實施了一次複雜的多步驟攻擊，利用暴露的憑據和零日漏洞侵入Hugging Face服務器。</p><p>事件仍在持續處理中。OpenAI正在加強其研究環境的控制措施，即使這意味着在漏洞修復完成前放慢研究進度。公司目前正通過“可信訪問”網絡安全計劃與Hugging Face團隊直接合作。Hugging Face聯合創始人兼首席執行官克萊姆·德蘭格在聲明中表示：“這次事件可能是首例此類事件，它證明了我們長期以來的一個觀點：AI安全不會由任何單一公司祕密解決。它將在開放環境中通過協作解決，讓每個地方的每個防禦者都能廣泛訪問AI。”</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

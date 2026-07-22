@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>腾讯混元Hyra-1.0引爆AI圈！首个能‘自己教自己’的科研智能体来了 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>腾讯混元Hyra-1.0引爆AI圈！首个能‘自己教自己’的科研智能体来了</h1>
+<div class="meta"><span class="src">sohu.com</span>
+<span>· <a href="https://www.sohu.com/a/1052843567_122066679" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.sohu.com/a/1052843567_122066679" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>2026年7月21日，一條消息像一顆超新星在中文AI圈轟然爆發——騰訊混元正式發佈Hyra-1.0（Hunyuan Research Agent），一個不靠人類手把手調參、不靠人工標註餵養、甚至能在深夜‘自己寫論文、自己改代碼、自己打遊戲通關’的硬核科研智能體。沒錯，它不是又一個聊天機器人，而是國內首個真正意義上具備**遞歸自我改進能力**的性能導向型AI智能體。熱搜關鍵詞#騰訊混元Hyra#瞬間衝上微博熱榜TOP3，知乎相關話題單日瀏覽破890萬，B站UP主連夜剪出17個版本的‘Hyra實測vlog’——這哪是發版？分明是給整個AI研發範式扔下了一顆深水炸彈。</p><p>先別急着划走，咱把鏡頭拉遠點：2026年，全球大模型軍備競賽已進入‘智能體紀元’。OpenAI的Operator剛跑通金融投研閉環，谷歌Project Starline正悄悄接入NASA火星模擬艙，而國內——就在這個夏天，騰訊混元用Hyra-1.0亮出了中國AI的‘自主進化’答案。</p><p>什麼是‘遞歸自我改進’？說人話就是：Hyra不僅能做任務，還能對‘自己怎麼做任務’進行復盤、打分、重寫、再測試。它有三套底層引擎——自博弈（Self-Play）、自評價（Self-Evaluation）和用戶反饋閉環（Human-in-the-Loop Feedback）。舉個栗子🌰：當它被派去優化一款開放世界遊戲的NPC行爲樹時，它會先生成10套策略方案；接着讓這10個‘自己’互相PK（自博弈），用內置評分器打分（自評價）；再把TOP3方案推送給真實玩家試玩，收集點擊率、停留時長、罵聲頻次等數據（用戶反饋）；最後——它會基於這整套鏈路，反向重構自己的推理架構，升級下一輪策略生成模塊。整個過程，無需工程師敲一行微調代碼。</p><p>這已經不是‘AI助手’，而是‘AI研究員+AI工程師+AI產品經理’三位一體的數字生命雛形。</p><p>更絕的是，Hyra-1.0壓根不挑活兒。它既能鑽進量子化學模擬裏幫中科院計算所跑分子動力學，也能一頭扎進《黑神話：悟空》MOD社區，48小時內迭代出5版高擬真毛髮渲染插件；它能爲深圳某芯片初創公司自動生成RISC-V指令集兼容性測試用例，也能幫小紅書博主批量產出‘多巴胺穿搭+情緒價值文案’組合包。騰訊混元團隊透露，Hyra在內部A/B測試中，將科研任務平均交付週期壓縮了63%，工程問題首次解決率提升至89.7%，而內容類任務的‘人類偏好得分’（Human Preference Score）比GPT-4.5高出11.2個百分點——注意，這是在未接入任何外部知識庫、純靠自身推理與迭代達成的結果。</p><p>當然，有人立刻問：這玩意兒會不會‘學歪’？會不會越改越瘋？騰訊混元首席科學家在發佈會上笑着甩出一張圖：Hyra的自我進化被嵌入三重‘理性護欄’——任務目標錨定（Objective Anchoring）、可驗證性約束（Verifiability Gate）、以及最關鍵的‘人類否決權開關’（Human Veto Switch）。換句話說，它再聰明，也得守規矩；它再能改，也得聽人話。這不是限制，而是敬畏——對科學邊界的敬畏，對工程底線的敬畏，更是對‘人機協同’這一終極命題的清醒認知。</p><p>回看歷史，2017年Transformer橫空出世，開啓了預訓練大模型時代；2022年ChatGPT引爆對話革命；2024年Agent框架百花齊放；而2026年的今天，Hyra-1.0的登場，標誌着AI正從‘會答’邁向‘會想’，從‘被指揮’躍遷爲‘能自驅’。它不再滿足於當一個精準的搜索引擎或流暢的寫作搭子，它要成爲科研現場的‘第N位研究員’，成爲產品迭代的‘永不掉線的實習生’，成爲創意工廠裏的‘靈感永動機’。</p><p>有意思的是，鈦媒體App在報道中特別提到一個細節：Hyra-1.0的命名‘Hyra’，源自希臘神話中九頭蛇海德拉（Hydra）——砍掉一個頭，長出兩個新頭。但騰訊混元悄悄改了一個字母：H-Y-R-A，寓意‘Hunyuan Yields Recursive Autonomy’（混元孕育遞歸自主）。這哪裏是技術命名？分明是一句宣言：真正的智能，不該是人類意志的延長線，而應是帶着約束的、可持續生長的生命力。</p><p>當然，熱潮之下也有冷思考。有高校AI倫理實驗室指出，遞歸自我改進若缺乏跨學科驗證機制，可能在特定領域形成‘認知繭房’——比如在遊戲設計中無限優化爽感，卻忽略長期成癮風險。對此，騰訊混元已聯合北大、浙大、中科院自動化所啓動‘Hyra透明度計劃’，所有版本迭代日誌、自評價指標權重、用戶反饋脫敏樣本，將按季度開源。技術可以狂奔，但方向盤必須握在人類手裏。</p><p>最後說點煙火氣的：已經有廣州的獨立遊戲工作室開始用Hyra-1.0跑原型驗證，成都的AI繪畫團隊拿它批量生成風格遷移提示詞，連杭州一家老字號糕點廠都用它優化‘青團口味盲測問卷’的AB測試邏輯……你看，最前沿的AI，正在以最接地氣的方式，一勺一勺攪動現實世界的齒輪。</p><p>所以，別再說‘AI取代人類’這種老掉牙劇本了。真正的未來，是人類出題，Hyra破題；人類定邊界，Hyra拓疆域；人類守溫度，Hyra提精度。2026年夏天，騰訊混元Hyra-1.0不是終點，而是一面鏡子——照見我們如何定義‘智能’，也照見我們究竟想成爲怎樣的‘人類’。</p><p>熱搜關鍵詞#騰訊混元Hyra#，你搜到了嗎？</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

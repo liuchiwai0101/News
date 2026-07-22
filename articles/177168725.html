@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>回复: [论文] Accelerating Text-to-Video Generation with Calibrated Sparse Attention · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>回复: [论文] Accelerating Text-to-Video Generation with Calibrated Sparse Attention</h1>
+<div class="meta"><span class="src">zhichai.net</span>
+<span>· <a href="https://zhichai.net/topic/177168725?reply=178206666" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://zhichai.net/topic/177168725?reply=178206666" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>讓視頻生成快 1.58 倍，卻不改一行模型代碼：CalibAtt 的&quot;注意力考古學&quot;</h3><p>生成一段 720p、5 秒的視頻，Wan 2.1 14B 要跑 20 分 44 秒。其中大部分時間花在哪？不是採樣循環，不是 VAE 解碼——是 **attention**。那些密密麻麻的 token-to-token 乘法，像一場沒人看的演唱會，99% 的座位都是空的。</p><p>2026 年 3 月，Apple 和特拉維夫大學的一篇論文給出了一個訓練無關的加速方案：**CalibAtt**（Calibrated Sparse Attention）。它在 Wan 2.1 14B 上把 720p 視頻生成從 1244 秒壓到 785 秒——**1.58 倍加速，VBench 質量分不降反升**。不需要微調，不需要改架構，不需要換 checkpoint，插進現有推理管線就行。</p><p>但真正有意思的不是"又快了多少"，而是這篇論文揭示的一件事：**視頻擴散模型裏的注意力，比你想象的要規律得多——只是這種規律藏在你看不到的地方。**</p><h3>一、問題：FlashAttention 不夠，稀疏化纔行</h3><p>先說清楚瓶頸在哪。視頻擴散模型（Wan 2.1、Mochi 1）用的是 Transformer backbone，自注意力的複雜度是 $O(N^2)$。生成 720p 視頻，序列長度 $N$ 輕鬆超過 3 萬。FlashAttention 解決了內存問題（不再 materialize 完整的 $N \times N$ 矩陣），但**乘法次數沒減少**——每個 query 還是要和每個 key 算一遍。</p><p>所以下一波工作都在做"稀疏注意力"：跳過那些不重要的 query-key 連接。問題是怎麼判斷哪些"不重要"：</p><p class='list-item'>- **固定模式**（如 Radial Attention）：假設注意力隨空間距離衰減。簡單但死板，不同層/頭/時間步的注意力模式差異很大。</p><p class='list-item'>- **在線決策**（如 SpargeAttention）：推理時實時估計哪些 block 重要。靈活但有運行時開銷。</p><p class='list-item'>- **微調**（如 VSA、SLA）：訓練時讓模型學會稀疏。效果好但需要算力和數據。</p><p class='list-item'>**離線校準**。用少量樣本跑一遍，找出每個（時間步, 層, 頭）組合的穩定稀疏模式，編譯成靜態 mask，推理時直接用。</p><h3>二、四個觀察：注意力的隱藏結構</h3><p>論文最精彩的部分是第二節——對 Wan 2.1 14B 注意力圖的"考古調查"。作者發現四個規律：</p><p class='list-item'>**觀察一：大部分注意力是稀疏的。** 在 post-softmax 注意力矩陣 $\mathbf{P}$ 裏，絕大多數 token-to-token 連接的權重接近零。更重要的是，這種稀疏性在 block 級別（$B \times B$，$B=128$）依然成立——這意味着跳過整個 block 不會影響硬件效率，和 FlashAttention 的分塊計算天然兼容。</p><p class='list-item'>**觀察二：模式在不同層/頭/時間步之間不一致。** 同一層不同頭、不同層同一時間步、同一層不同時間步——注意力模式都不一樣。這意味着**不能用一個全局 mask**，必須爲每個 $(t, l, h)$ 組合單獨校準。Radial Attention 用一個固定 mask 覆蓋所有情況，效果自然打折。</p><p class='list-item'>**觀察三：模式在不同輸入之間高度一致。** 換 prompt、換初始噪聲，同一個 $(t, l, h)$ 的稀疏模式幾乎不變。這是 CalibAtt 能工作的根本前提——如果每個輸入的稀疏模式都不一樣，離線校準就沒意義。作者用 64 個校準 prompt 驗證：block 的 keep-rate 直方圖呈雙峯分佈，大部分 block 要麼"幾乎總被保留"要麼"幾乎總被跳過"。</p><p class='list-item'>**觀察四：部分注意力圖在空間行之間重複。** 視頻幀內，同一幀的不同空間行（pixel rows）的注意力模式高度相似。這意味着不需要爲每一行都算 attention——算幾行"錨點行"，廣播給其他行就行。</p><p class='list-item'>**最反直覺的發現：觀察四和觀察一是互補的。** 空間重複性高的注意力圖，block 稀疏度往往低；反之亦然。負相關。這意味着兩種加速策略可以疊加，不會打架。</p><h3>三、方法：離線校準 + 在線查表</h3><p>CalibAtt 的流程分兩步：</p><p class='list-item'>**離線校準（一次性，約 10-20 分鐘）：**</p><p>對每個 $(t, l, h)$ 組合，用 64 個校準 prompt 跑一遍。對每個 prompt：</p><p class='list-item'>1. 计算 post-softmax attention $\mathbf{P}$ 2. 划分成 $B \times B$ block，计算每个 block 的"能量"：$\mathbf{E}_{r,c} = \frac{1}{B} \sum_{i \in \mathcal{I}_r} \sum_{j \in \mathcal{J}_c} \mathbf{P}_{ij}$ 3. 对每个 query block-row $r$，贪心地选最少的 key block 使累计能量达到阈值 $\epsilon(t)$</p><p>然后跨 prompt 聚合：$\bar{\mathbf{M}}^{(t,l,h)} = \frac{1}{|\mathcal{D}|} \sum_p \mathbf{M}_p^{(t,l,h)}$，用阈值 $\rho = 0.5$ 二值化。</p><p>能量閾值 $\epsilon(t)$ 是時間步相關的——早期時間步（高噪聲）用高閾值（0.99），後期可以放鬆（0.84）。指數衰減調度：$\epsilon(t) = A + (C-A) \exp(-kt/T)$。這符合已知規律：早期時間步的誤差會傳播放大，不能太激進。</p><p>同時，對每個 $(t, l, h)$ 計算空間相似度分數 $s^{(t,l,h)}$——如果超過 $\gamma = 0.87$，標記爲"空間重複"head，推理時只算 $k=5$ 個錨點行。</p><p class='list-item'>**在線推理（每次生成）：**</p><p>查表。根據當前 $(t, l, h)$ 取出對應的 mask 或重複標記：</p><p class='list-item'>- 非重複 head：用預計算的 skip list 告訴 FlashAttention3 kernel 哪些 block 要算、哪些跳過</p><p class='list-item'>- 重複 head：只算 $k=5$ 個錨點行的 attention，廣播給同幀其他行</p><p class='list-item'>**零運行時決策開銷。**這是和 SpargeAttention 等在線方法的關鍵區別——在線方法要實時估計 block 重要性，本身就要算東西。CalibAtt 的所有決策都在離線做完了。</p><h3>四、實驗：1.58 倍加速，質量不降</h3><p>在三個模型上的結果：</p><p class='list-item'>**質量不降反升。** CalibAtt 在 Wan 2.1 14B 480p 上的 VBench Total 是 80.40，比 dense baseline 的 80.29 還高一點。720p 上 79.69 vs 79.35，同樣略升。這不是誤差——稀疏化相當於一種隱式正則化，跳過的那些"低能量"連接可能本身就攜帶噪聲。</p><p class='list-item'>**稀疏度远高于对手。** 62.5% vs SVG2 的 46.3% vs SpargeAttention 的 49.9%。CalibAtt 跳过的 block 多出 15-35%，但质量更好——说明它的 mask 更"准确"。</p><p class='list-item'>**在 Mochi 1 上加速有限。** 1.16×，遠低於 Wan 2.1。原因是 Mochi 1 的 attention 在總推理時間裏佔比更小（VAE 和其他計算佔比更大），所以 attention 加速的收益被稀釋了。</p><p class='list-item'>**在少步蒸餾模型上也有效。** LightX2V（4 步 Wan 2.1）上 CalibAtt 依然有效，雖然加速比略低——因爲只有 4 個時間步，校準的粒度變粗了。</p><h3>五、爲什麼 CalibAtt 比固定 mask 好</h3><p>Radial Attention 的假設是"注意力隨空間距離指數衰減"——一個先驗，對所有 $(t, l, h)$ 一視同仁。但論文的觀察二明確否定了這個假設：不同層、頭、時間步的注意力模式差異巨大。</p><p>CalibAtt 的哲學是：**不要假設，去測量。** 每個模型有自己的注意力習慣，用 64 個 prompt 跑一遍就知道了。這種"測量驅動"的方法還有一個好處——**超參數不敏感**。論文附錄顯示，$\rho$ 從 0.3 到 0.7、$\epsilon$ 的調度參數大幅變化，效果波動都很小。因爲一旦你測出了真實的稀疏模式，怎麼閾值化都是水到渠成。</p><p>相比之下，SVG2 需要手動排除某些層和時間步（"這些地方不能稀疏化"），RadialAttention 需要調窗口大小——都是模型相關的啓發式。CalibAtt 的校準是自動的，換模型只需要重新跑一遍校準。</p><h3>六、空間重複：被忽視的加速維度</h3><p>觀察四（空間行重複）是這篇論文的隱藏彩蛋。在此之前，沒有人系統性地指出"視頻注意力在幀內空間行之間重複"。這個現象的本質是什麼？</p><p>視頻幀的 token 排列是 row-major：一幀 $H \times W$ 個 token，按行展開。如果注意力主要捕捉的是"幀間"關係（當前幀的 token 關注其他幀的 token），那麼同一幀內不同行的注意力模式確實應該相似——因爲它們關注的是同一組"其他幀"，只是 query 位置不同。</p><p>這解釋了爲什麼空間重複和 block 稀疏負相關：**block 稀疏的 head 主要在做幀內注意力**（不同行關注不同位置），**空間重複的 head 主要在做幀間注意力**（所有行關注同一組其他幀）。兩種模式對應兩種不同的注意力功能，所以加速策略不衝突。</p><p>這個洞察對未來的工作有啓發意義：如果能在訓練時顯式分離"幀內"和"幀間"注意力頭，可能不需要校準就能直接應用不同的加速策略。</p><h3>七、侷限與展望</h3><p>論文誠實地列出了局限：</p><p class='list-item'>1. **校準成本**：一次性 10-20 分鐘，但需要 GPU 和代表性 prompt 集</p><p class='list-item'>2. **對 KV cache 的兼容性未驗證**：當前實驗在 diffusion 模型上，自迴歸模型的 KV cache 場景需要額外研究</p><p class='list-item'>3. **空間重複的廣播操作**：當前實現用 PyTorch 的 gather/scatter，不是最優的 CUDA kernel</p><p>從更宏觀的角度看，CalibAtt 代表了一類"**測量而非假設**"的加速方法。在 LLM 時代，我們習慣了用先驗（locality、decay、sparsity pattern）來設計加速方案。但模型越來越大、越來越複雜，先驗越來越不可靠。CalibAtt 的做法是：**花 20 分鐘測一下，比你猜 20 小時強。**</p><p>論文沒有提供公開代碼倉庫，但方法描述足夠詳細，有 CUDA kernel 經驗的團隊應該可以復現。對於在跑視頻擴散模型推理的團隊來說，這是一個幾乎零成本的 1.5 倍加速——值得認真讀。</p><p class='list-item'>*论文：arXiv:2603.05503 — Accelerating Text-to-Video Generation with Calibrated Sparse Attention (Yehezkel et al., Apple & Tel Aviv University, 2026)*</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
