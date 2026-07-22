@@ -135,6 +135,13 @@
   .card.wall .ct-date { font-size:11px; color:var(--muted); margin-left:auto; white-space:nowrap; }
   .card.wall.deal .body { padding:11px 12px 12px; }
 
+  /* TAB PANELS — each section grouped under its own heading */
+  .tab-panel { margin-bottom:26px; }
+  .panel-head { display:flex; align-items:center; gap:10px; margin:2px 0 14px; }
+  .panel-head .bar { width:5px; height:20px; border-radius:3px; flex:0 0 auto; }
+  .panel-head h3 { margin:0; font-size:19px; font-weight:800; color:var(--ink); }
+  .panel-head .cnt { color:var(--muted); font-size:13px; font-weight:600; }
+
   /* COVER — generated visual band (stands in for a thumbnail) */
   .card .cover { position:relative; height:96px; background:var(--g0);
     display:flex; align-items:flex-end; padding:10px 14px; overflow:hidden; }
@@ -499,51 +506,74 @@ function makeDealCard(item, idx, ri) {
   return card;
 }
 
-// ===== E 緊湊卡片牆: 過濾 chips + 緊湊網格 + 保留點開詳情 =====
+// ===== E 緊湊卡片牆: tab 分組（每分類一個 tab）+ 緊湊網格 + 保留點開詳情 =====
 const navInner = document.querySelector('.nav-inner');
 
-// Category filter chips — 限時情報王 first
-const allCats = [{label:'全部', key:'__all__'}].concat(
+// Tabs — 限時情報王 first, plus 全部 (grouped overview)
+const tabs = [{label:'全部', key:'__all__'}].concat(
   DATA.sections.map(function(s){ return {label:s.label, key:s.label}; })
 );
 navInner.innerHTML = '';
-allCats.forEach(function(c, ci){
+tabs.forEach(function(t, ti){
   const a = document.createElement('button');
   a.type = 'button';
-  a.className = 'nav-link' + (ci === 0 ? ' on' : '');
-  a.setAttribute('data-cat', c.key);
-  const cnt = (c.key === '__all__') ? DATA.flat.length
-    : (DATA.sections.filter(function(s){ return s.label === c.key; })[0] || {items:[]}).items.length;
-  a.innerHTML = c.label + ' <span class="nav-count">' + cnt + '</span>';
+  a.className = 'nav-link' + (ti === 0 ? ' on' : '');
+  a.setAttribute('data-cat', t.key);
+  const cnt = (t.key === '__all__') ? DATA.flat.length
+    : (DATA.sections.filter(function(s){ return s.label === t.key; })[0] || {items:[]}).items.length;
+  a.innerHTML = t.label + ' <span class="nav-count">' + cnt + '</span>';
   navInner.appendChild(a);
 });
 
-// Compact card wall (E): thin color top-bar, 8px gaps, title-only cards.
-// Sections render in order so 限時情報王 stays on top (first column block).
-const wall = document.createElement('div');
-wall.className = 'grid wall';
+// Build a panel (section heading + compact card grid) for one section
 let globalIdx = 0;
-DATA.sections.forEach(function(sec, si){
+function buildPanel(sec, si){
   const ri = sec.ci != null ? sec.ci : si;
   const isDeal = sec.kind === 'deals';
+  const panel = document.createElement('div');
+  panel.className = 'tab-panel';
+  panel.setAttribute('data-cat', sec.label);
+  const head = document.createElement('div');
+  head.className = 'panel-head';
+  head.innerHTML = '<span class="bar" style="background:var(--c' + ri + ')"></span>'
+    + '<h3>' + sec.label + '</h3>'
+    + '<span class="cnt">' + sec.items.length + ' 条</span>';
+  panel.appendChild(head);
+  const grid = document.createElement('div');
+  grid.className = 'grid wall';
   sec.items.forEach(function(item){
     globalIdx++;
     const card = isDeal ? makeDealCard(item, globalIdx, ri) : makeCard(item, globalIdx, ri, sec.kind === 'external', false);
     card.setAttribute('data-cat', sec.label);
-    wall.appendChild(card);
+    grid.appendChild(card);
   });
-});
-content.appendChild(wall);
+  panel.appendChild(grid);
+  return panel;
+}
 
-// Filter chips behaviour
+// 全部 panel: all section panels stacked (grouped by section)
+const allPanel = document.createElement('div');
+allPanel.className = 'tab-panel';
+allPanel.setAttribute('data-cat', '__all__');
+DATA.sections.forEach(function(sec, si){ allPanel.appendChild(buildPanel(sec, si)); });
+content.appendChild(allPanel);
+
+// Per-section panels (hidden until their tab is selected)
+DATA.sections.forEach(function(sec, si){
+  const p = buildPanel(sec, si);
+  p.style.display = 'none';
+  content.appendChild(p);
+});
+
+// Tab switching — show only the selected section panel (or all when 全部)
 navInner.addEventListener('click', function(e){
   const btn = e.target.closest('.nav-link');
   if (!btn) return;
   document.querySelectorAll('.nav-link').forEach(function(b){ b.classList.toggle('on', b === btn); });
   const cat = btn.getAttribute('data-cat');
-  document.querySelectorAll('.grid.wall .card').forEach(function(card){
-    const show = (cat === '__all__') || (card.getAttribute('data-cat') === cat);
-    card.style.display = show ? '' : 'none';
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    const show = (cat === '__all__') || (p.getAttribute('data-cat') === cat);
+    p.style.display = show ? '' : 'none';
   });
 });
 
