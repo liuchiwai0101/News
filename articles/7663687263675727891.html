@@ -45,8 +45,164 @@ font-size:12.5px;color:var(--muted);}
 <h1>鸿蒙 ArkUI 入门：从一脸懵到跑通 demo</h1>
 <div class="meta"><span class="src">掘金</span><span>· 7月22日 周三</span>
 <span>· <a href="https://juejin.cn/post/7663687263675727891" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7663687263675727891" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7663687263675727891" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>鴻蒙 ArkUI 入門：從一臉懵到能跑通 demo，大概只要一杯咖啡的時間</h3><h3>寫在前面</h3><p>如果你最近被「鴻蒙開發」這四個字反覆砸中腦門，大概率是因爲老闆在羣裏轉發了某個「2026 年鴻蒙崗位暴漲 200%」的推文，然後丟下一句「這周搞個 demo 出來看看」。</p><p>別慌。本文的目標不是讓你三天成爲鴻蒙大師，而是讓你**在一杯咖啡的時間內**，搞懂 ArkUI 到底是個啥、能幹啥、怎麼跑通第一個能點能用的頁面。代碼我全寫好了，託管在 AtomGit 上，clone 下來就能跑。</p><p>適合人羣：有前端/移動端基礎、第一次接觸 HarmonyOS 的同學。 不適合人羣：想看「鴻蒙底層 binder 實現」的硬核玩家——出門左轉 OpenHarmony 源碼。</p><h3>一、ArkUI 是個啥？一句話講清楚</h3><p class='list-item'>**ArkUI 是鴻蒙的聲明式 UI 框架。**</p><p>如果這句話你還是覺得抽象，那就換個說法：**它之於鴻蒙，相當於 SwiftUI 之於 iOS、Jetpack Compose 之於 Android、React 之於 Web。**</p><p>聲明式 UI 的核心思想就一句：</p><p>你告訴框架「我要什麼樣的界面」，而不是「一步步教框架怎麼畫出界面」。</p><p>舉個最直接的對比。</p><p class='list-item'>**命令式（传统 Android）：**</p><pre><code>val textView = TextView(context)
+textView.text = &quot;Hello&quot;
+textView.setTextColor(Color.RED)
+container.addView(textView)</code></pre><p>你像個保姆一樣，一步步告訴系統：創建一個 TextView、把文字設成 Hello、顏色設成紅色、塞到容器裏。</p><p class='list-item'>**声明式（ArkUI）：**</p><pre><code>Text(&#x27;Hello&#x27;)
+  .fontColor(Color.Red)</code></pre><p>你只描述「最終長什麼樣」，框架自己去算怎麼創建、怎麼更新。</p><p>聽起來好像沒省多少代碼？那你再想想：當數據變了，命令式你得手動找到那個 TextView 再 setText；聲明式呢？數據一變，界面**自動**重繪。這就叫「數據驅動 UI」，一旦用上就回不去了。</p><h3>二、三個核心概念，搞懂就能寫頁面</h3><p>ArkUI 的世界很小，記住這三件套就夠入門了：</p><h3>#### 1. 组件（Component）—— UI 的乐高积木</h3><p>ArkUI 内置了一堆组件：<code>Text</code>、<code>Button</code>、<code>Image</code>、<code>Column</code>、<code>Row</code>、<code>List</code>、<code>TextInput</code>……每个组件就是一块积木。</p><pre><code>Text(&#x27;我是一個文本&#x27;)
+Button(&#x27;我是一個按鈕&#x27;)
+Column({ space: 8 }) { /* 子組件們排成一列 */ }</code></pre><h3>#### 2. 狀態（State）—— 界面的「源頭活水」</h3><p>這是聲明式 UI的靈魂。數據變了，界面自動更新。但 ArkUI 對「什麼數據能驅動 UI」有嚴格規定，必須用裝飾器標記：</p><p>新手最常踩的坑：**改了變量，界面沒更新？99% 是你忘了加  @State。**</p><h3>#### 3. 事件（Event）—— 讓界面「活」起來</h3><p>按鈕被點了、輸入框文字變了、列表滑到底了……這些都是事件。</p><pre><code>Button(&#x27;+1&#x27;)
+  .onClick(() =&gt; {
+    this.count++   // @State count 变化 → 界面自动重绘
+  })</code></pre><p>搞懂這三件套，你已經能寫出 80% 的頁面了。下面動手。</p><h3>三、動手：一個計數器 + 待辦列表 demo</h3><p>我不寫「Hello World」那種看完就忘的例子。我們來做一個稍微有點用處的小 demo：</p><p class='list-item'>- 頂部一個**計數器卡片**，可以 +1 / -1 / 重置</p><p class='list-item'>- 中間一個**輸入框 + 添加按鈕**</p><p class='list-item'>- 下面一個**待辦列表**，可以勾選完成、刪除</p><p class='list-item'>- 底部顯示**統計**（共幾條、剩幾條）</p><p>效果長這樣（示意圖）：</p><pre><code>┌─────────────────────────────────┐
+│      ArkUI 入门 Demo            │
+│  ┌─────────────────────────┐    │
+│  │   今日点击次数           │    │
+│  │         3                │    │
+│  │   [-1] [+1] [重置]       │    │
+│  └─────────────────────────┘    │
+│  [添加一条待办…]      [添加]    │
+│  共 3 条   剩 2 条              │
+│  ┌─────────────────────────┐    │
+│  │ ☑ 学习 ArkUI 声明式语法  │    │
+│  │ ☐ 理解 @State/@Link     │    │
+│  │ ☐ 跑通第一个 demo        │    │
+│  └─────────────────────────┘    │
+└─────────────────────────────────┘</code></pre><h3>#### 3.1 完整代碼</h3><p>代碼結構很標準，一個 <code>UIAbility</code> 入口 + 一個主頁面：</p><p class='list-item'>**入口文件  EntryAbility.ets：**</p><pre><code>import { UIAbility, AbilityConstant, Want } from &#x27;@kit.AbilityKit&#x27;;
+import { hilog } from &#x27;@kit.PerformanceAnalysisKit&#x27;;
+import { window } from &#x27;@kit.ArkUI&#x27;;
+const DOMAIN = &#x27;ArkUIDemo&#x27;;
+export default class EntryAbility extends UIAbility {
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    hilog.info(DOMAIN, &#x27;EntryAbility&#x27;, &#x27;onCreate: 应用进程创建&#x27;);
+  }
+  onWindowStageCreate(windowStage: window.WindowStage): void {
+    hilog.info(DOMAIN, &#x27;EntryAbility&#x27;, &#x27;onWindowStageCreate: 加载 Index 页面&#x27;);
+    windowStage.loadContent(&#x27;pages/Index&#x27;, (err) =&gt; {
+      if (err.code) {
+        hilog.error(DOMAIN, &#x27;EntryAbility&#x27;, &#x27;loadContent 失败: %{public}s&#x27;, err.message);
+        return;
+      }
+      hilog.info(DOMAIN, &#x27;EntryAbility&#x27;, &#x27;loadContent 成功&#x27;);
+    });
+  }
+}</code></pre><p class='list-item'>**主頁面  Index.ets（核心代碼）：**</p><pre><code>// 数据模型
+interface TodoItem {
+  id: number;
+  text: string;
+  done: boolean;
+}
+// 子组件：计数器卡片
+// 演示 @State 局部状态 + 按钮事件
+@Component
+export struct CounterCard {
+  @State count: number = 0
+  @Prop label: string = &#x27;点击次数&#x27;
+  build(Column({ space: 12 }) {
+      Text(this.label).fontSize(14).fontColor(&#x27;#888&#x27;)
+      Text(`${this.count}`).fontSize(36).fontWeight(FontWeight.Bold).fontColor(&#x27;#007DFF&#x27;)
+      Row({ space: 8 }) {
+        Button(&#x27;- 1&#x27;).backgroundColor(&#x27;#F5F5F5&#x27;).fontColor(&#x27;#333&#x27;)
+          .onClick(() =&gt; { if (this.count &gt; 0) this.count-- })
+        Button(&#x27;+ 1&#x27;).backgroundColor(&#x27;#007DFF&#x27;).fontColor(&#x27;#fff&#x27;)
+          .onClick(() =&gt; this.count++)
+        Button(&#x27;重置&#x27;).backgroundColor(&#x27;#FF4D4F&#x27;).fontColor(&#x27;#fff&#x27;)
+          .onClick(() =&gt; this.count = 0)
+      }
+    }
+    .padding(20).backgroundColor(&#x27;#fff&#x27;).borderRadius(12).width(&#x27;100%&#x27;)
+  }
+}
+// 子组件：单条待办
+// 演示父子通信：@Link 双向绑定 + 删除回调
+@Component
+export struct TodoRow {
+  @Link item: TodoItem
+  onRemove: (id: number) =&gt; void = () =&gt; {}
+  build(Row({ space: 12 }) {
+      Checkbox()
+        .select(this.item.done)
+        .onChange((v: boolean) =&gt; this.item.done = v)
+      Text(this.item.text)
+        .fontSize(16)
+        .decoration({ type: this.item.done ? TextDecorationType.LineThrough : TextDecorationType.None })
+        .fontColor(this.item.done ? &#x27;#bbb&#x27; : &#x27;#333&#x27;)
+        .layoutWeight(1)
+      Button(&#x27;✕&#x27;).backgroundColor(&#x27;#fff&#x27;).fontColor(&#x27;#FF4D4F&#x27;)
+        .onClick(() =&gt; this.onRemove(this.item.id))
+    }
+    .padding({ left: 12, right: 12, top: 10, bottom: 10 })
+    .backgroundColor(&#x27;#fff&#x27;).borderRadius(8).width(&#x27;100%&#x27;)
+  }
+}
+// 主页面
+// 演示 @State + ForEach 列表渲染 + TextInput 输入
+@Entry
+@Component
+struct Index {
+  @State todos: TodoItem[] = [
+    { id: 1, text: &#x27;学习 ArkUI 声明式语法&#x27;, done: true },
+    { id: 2, text: &#x27;理解 @State / @Link / @Prop&#x27;, done: false },
+    { id: 3, text: &#x27;跑通第一个 demo&#x27;, done: false },
+  ]
+  @State inputText: string = &#x27;&#x27;
+  private nextId: number = 4
+  private addTodo(): void {
+    const text = this.inputText.trim()
+    if (text.length === 0) return
+    this.todos.push({ id: this.nextId++, text, done: false })
+    this.inputText = &#x27;&#x27;
+  }
+  private removeTodo(id: number): void {
+    this.todos = this.todos.filter(t =&gt; t.id !== id)
+  }
+  private get remaining(): number {
+    return this.todos.filter(t =&gt; !t.done).length
+  }
+  build(Column({ space: 16 }) {
+      Text(&#x27;ArkUI 入门 Demo&#x27;).fontSize(22).fontWeight(FontWeight.Bold).margin({ top: 16 })
+      CounterCard({ label: &#x27;今日点击次数&#x27; })
+      Row({ space: 8 }) {
+        TextInput({ placeholder: &#x27;添加一条待办…&#x27;, text: this.inputText })
+          .layoutWeight(1)
+          .onChange((v: string) =&gt; this.inputText = v)
+        Button(&#x27;添加&#x27;).backgroundColor(&#x27;#007DFF&#x27;).fontColor(&#x27;#fff&#x27;)
+          .onClick(() =&gt; this.addTodo())
+      }.width(&#x27;100%&#x27;)
+      Row({ space: 8 }) {
+        Text(`共 ${this.todos.length} 条`)
+        Text(`剩 ${this.remaining} 条`).fontColor(&#x27;#FF4D4F&#x27;)
+      }.width(&#x27;100%&#x27;).fontSize(13).fontColor(&#x27;#888&#x27;)
+      List({ space: 8 }) {
+        ForEach(this.todos, (todo: TodoItem) =&gt; {
+          ListItem() {
+            TodoRow({
+              item: $todo,                          // @Link 双向绑定
+              onRemove: (id: number) =&gt; this.removeTodo(id)
+            })
+          }
+        }, (todo: TodoItem) =&gt; todo.id.toString())   // keyGenerator
+      }
+      .layoutWeight(1).width(&#x27;100%&#x27;)
+    }
+    .padding(16).backgroundColor(&#x27;#F5F5F5&#x27;).height(&#x27;100%&#x27;).width(&#x27;100%&#x27;)
+  }
+}</code></pre><h3>#### 3.2 這段代碼在幹啥？逐塊拆解</h3><p class='list-item'>**① 數據模型**</p><pre><code>interface TodoItem { id: number; text: string; done: boolean }</code></pre><p>TypeScript 接口，定義一條待辦長什麼樣。沒什麼神祕的，就是一份「契約」。</p><p class='list-item'>**②  CounterCard 子组件**</p><p class='list-item'>- `@State count`：組件內部狀態，變了 UI 自動重繪</p><p class='list-item'>- `@Prop label`：父組件傳進來的字符串，只讀</p><p class='list-item'>- `build()`方法：描述這個組件「長什麼樣」</p><p><code>build()</code> 是 ArkUI 组件的**唯一出口**——所有 UI 必须写在 <code>build()</code> 里，就像 React 的 <code>render()</code>。</p><p class='list-item'>**③  TodoRow 子组件**</p><p class='list-item'>- `@Link item`：和父組件- **共用一份**- `TodoItem`，父子任意一方改，另一方都同步</p><p class='list-item'>- `$todo`這種帶- `$`的寫法，是 ArkUI 的「引用傳遞」語法，等價於傳指針</p><p class='list-item'>- `onRemove`是個回調函數，子組件點 ✕ 時，調父組件的- `removeTodo`</p><p class='list-item'>**④  Index 主页面**</p><p class='list-item'>- `@State todos`和- `@State inputText`：驱动整个页面的两份状态</p><p class='list-item'>- `ForEach(this.todos, ...)`：列表渲染，第三個參數是- `keyGenerator`，- **強烈建議顯式傳**，否則列表一變動，性能和狀態都可能出問題</p><p class='list-item'>- `TextInput`的- `onChange`把输入同步到- `@State inputText`，这就是「受控组件」模式</p><h3>四、狀態管理：被名字嚇退的新手第一名</h3><p>很多人卡在 <code>@State</code> / <code>@Prop</code> / <code>@Link</code> 三個裝飾器上。其實你只要記住一個比喻就行：</p><p><code>@State</code>是你自己的錢包，<code>@Prop</code>是別人給你看的錢包照片，<code>@Link</code>是你和別人共用的同一個錢包。</p><p>具體區別：</p><p>一個常見錯誤：</p><pre><code>// ❌ 错：没加 @State，count 改了界面不刷新
+let count: number = 0
+Button(&#x27;+1&#x27;).onClick(() =&gt; count++)
+// ✅ 对：加 @State
+@State count: number = 0
+Button(&#x27;+1&#x27;).onClick(() =&gt; this.count++)</code></pre><p>記住這個坑，能省掉你兩個小時的調試時間。</p><h3>五、列表渲染：ForEach 的三個坑</h3><p>ArkUI 的列表渲染用 <code>ForEach</code>，看着像 React 的 <code>map</code>，但坑点不一样：</p><p class='list-item'>**坑 1：忘了寫  keyGenerator（第三個參數）**</p><pre><code>// ❌ 没有第三个参数，框架只能用 index 当 key，列表一变动就可能状态错乱
+ForEach(this.todos, (t: TodoItem) =&gt; { ... })
+// ✅ 显式传 key
+ForEach(this.todos, (t: TodoItem) =&gt; { ... }, (t: TodoItem) =&gt; t.id.toString())</code></pre><p class='list-item'>**坑 2：直接改數組但界面沒刷新**</p><pre><code>// ❌ 错：push 是有效的，但有时 ArkUI 不会立刻感知
+this.todos.push(newItem)
+// ✅ 更稳的写法：重新赋值
+this.todos = [...this.todos, newItem]
+// 或
+this.todos.push(newItem)
+this.todos = this.todos.slice()   // 触发引用变化</code></pre><p class='list-item'>**坑 3： ForEach 外面套了 List，但 List 沒設高度**</p><p><code>List</code> 在 <code>Column</code> 裏默認會撐滿，但如果你給 <code>List</code> 設了固定高度又不夠大，列表項會被裁掉。新手 demo 階段用 <code>layoutWeight(1)</code> 就夠了。### 六、運行步驟（DevEco Studio）</p><p class='list-item'>- 安装 DevEco Studio（鸿蒙官方 IDE，基于 IntelliJ）</p><p class='list-item'>- `File → Open`选本仓库的- `code/`目录</p><p class='list-item'>- 等待 Gradle sync 完成（第一次會比較久，正常）</p><p class='list-item'>- 點工具欄的運行按鈕 ▶，或終端執行：</p><h3>&lt;code&gt;hvigorw assembleHap&lt;/code&gt;</h3><p class='list-item'>- 選模擬器或真機，看到「ArkUI 入門 Demo」標題出現，就跑通了</p><p>沒有真機？DevEco 自帶本地模擬器，</p><p><code>Tools → Device Manager</code>启动一个就行。</p><h3>七、踩坑總結（都是血淚）</h3><h3>八、完整代碼倉庫</h3><p>本文所有代碼都已託管到 **AtomGit**，歡迎 clone、提 issue、點 star：</p><h3>🔗 **仓库地址**：atomgit.com/JaneConan/a…</h3><p>倉庫包含：</p><p class='list-item'>- 完整的 ArkUI demo 工程（計數器 + 待辦列表）</p><p class='list-item'>- `EntryAbility.ets`UIAbility 入口</p><p class='list-item'>- `Index.ets`主页面（含子组件- `CounterCard`/- `TodoRow`）</p><p class='list-item'>- 可直接用 DevEco Studio 打開運行</p><h3>九、下一步該學什麼？</h3><p>跑通這個 demo 之後，你的 ArkUI 之路纔剛剛開始。建議按這個順序往下：</p><p class='list-item'>- `@Watch`- `@State`变化，做副作用（类似 Vue 的- `watch`）</p><p class='list-item'>- `@Provide`/- `@Consume`</p><p class='list-item'>- `@Builder`- `@Component`更轻</p><p class='list-item'>- **Navigation 導航**：多頁面路由，鴻蒙的方案和 React Router 思路類似</p><p class='list-item'>- **網絡請求**：對接後端 API，把 demo 做成真應用- `@ohos.net.http`</p><h3>寫在最後</h3><p>鴻蒙生態目前正處在「崗位多、人少」的紅利期，但紅利只留給**真上手**的人。看十篇博客不如自己跑通一個 demo，跑通一個 demo 不如自己改一個需求。</p><p>代碼已經給你了，倉庫鏈接在上面。**現在關掉這篇文章，打開 DevEco Studio，把 demo 跑起來。**</p><p>跑通了，回來評論區打個「1」，我看看有多少人真的動手了。🚀</p><p>作者：JaneConan 仓库：atomgit.com/JaneConan/a… 协议：Apache-2.0，随便用，别告我</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

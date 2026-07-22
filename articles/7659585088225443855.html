@@ -45,8 +45,51 @@ font-size:12.5px;color:var(--muted);}
 <h1>euv：基于 Rust + WASM 的现代前端 UI 框架</h1>
 <div class="meta"><span class="src">掘金</span><span>· 7月22日 周三</span>
 <span>· <a href="https://juejin.cn/post/7659585088225443855" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7659585088225443855" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7659585088225443855" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>euv 框架入門指南</h3><h3>euv 是什麼？</h3><p>euv 是一個基於 **Rust** 和 **WebAssembly (WASM)** 的現代前端 UI 框架。它將 Rust 的高性能和類型安全性帶入瀏覽器，使開發者能夠構建快速、可靠的 Web 應用。euv 的核心採用了**虛擬 DOM** 來實現高效的 UI 更新，並使用**響應式信號**進行狀態管理——在理念上類似於 React 和 Solid 等框架，但具有 Rust 生態系統的獨特優勢。</p><h3>#### 核心特性</h3><p class='list-item'>- **Rust + WASM**：用 Rust 編寫前端代碼，編譯爲 WebAssembly，在瀏覽器中獲得接近原生的性能。</p><p class='list-item'>- **虛擬 DOM**：高效的 DOM diffing 和 patching，最小化昂貴的瀏覽器操作。</p><p class='list-item'>- **響應式信號**：細粒度的響應式系統，自動追蹤依賴關係，只更新需要變更的部分。</p><p class='list-item'>- **宏驅動 DSL**：- `html!`和- `class!`宏提供了熟悉的 HTML 風格語法，可直接在 Rust 代碼中使用。</p><p class='list-item'>- **組件系統**：通過強類型的 Props 構建可複用、可組合的 UI 組件。</p><p class='list-item'>- **內置動畫**：開箱即用的 CSS 關鍵幀動畫，如- `euv-spin`、- `euv-fade-in`等。</p><p class='list-item'>- **浏览器 API 支持**：一等支持- `Window`、- `Document`、- `Storage`、- `Clipboard`、- `Navigator`等浏览器 API。</p><p class='list-item'>- **异步支持**：通过- `spawn_local`实现无缝异步操作，- `JsFuture`、- `Promise`、- `Response`等可通过预lude 获取。</p><h3>安裝</h3><p>使用 euv 非常簡單。由於它是一個 Rust crate，你可以通過 Cargo 將其添加到項目中：</p><pre><code>cargo add euv</code></pre><p>這個命令會將 euv 作爲依賴添加到你的 <code>Cargo.toml</code> 中。請確保你已經設置了一個兼容 WASM 的項目（例如使用 <code>wasm-pack</code> 或 <code>trunk</code> 進行構建和提供服務）。</p><h3>你的第一個 euv 應用</h3><p>讓我們用 euv 構建經典的 "Hello, World!" 應用。這將介紹幾個基本概念：<code>html!</code> 宏、<code>mount</code> 函數和組件模式。</p><pre><code>use euv::*;
+fn app() -&gt; VirtualNode {
+    html! {
+        div {
+            h1 { &quot;Hello, euv!&quot; }
+        }
+    }
+}
+mount(&quot;#app&quot;, app);</code></pre><p>讓我們逐行分析：</p><p class='list-item'>-</p><p><code>use euv::*</code><code>html!</code>宏、<code>mount</code>函数、<code>VirtualNode</code>类型以及许多其他工具。</p><p class='list-item'>-</p><p><code>fn app() -> VirtualNode</code><code>VirtualNode</code>的根组件函数开始。这个函数描述了 UI 的外观。</p><p class='list-item'>-</p><p><code>html! { ... }</code><code>html!</code>宏讓你在 Rust 中直接編寫類似 HTML 的語法。在宏內部，可以嵌套元素、添加文本內容，並以聲明式的方式組合 UI。</p><p class='list-item'>-</p><p><code>mount("#app", app)</code></p><h3>掛載到不同的選擇器</h3><p><code>mount</code> 函數支持多種類型的 CSS 選擇器：</p><pre><code>// 挂载到 id=&quot;app&quot; 的元素
+mount(&quot;#app&quot;, app);
+// 挂载到 &lt;body&gt; 元素
+mount(&quot;body&quot;, app);
+// 挂载到 class=&quot;root&quot; 的元素
+mount(&quot;.root&quot;, app);
+// 挂载到第一个 &lt;main&gt; 元素
+mount(&quot;main&quot;, app);</code></pre><p>選擇最適合你項目 HTML 結構的選擇器。最常見的選擇是像 <code>"#app"</code> 這樣的 ID 選擇器。</p><h3>應用的基本結構</h3><p>每個 euv 應用都遵循一致的模式：</p><pre><code>use euv::*;
+// 定义根组件
+fn app() -&gt; VirtualNode {
+    html! {
+        div {
+            // 你的 UI 内容
+            h1 { &quot;Welcome to euv&quot; }
+            p { &quot;Build fast web apps with Rust and WASM.&quot; }
+        }
+    }
+}
+// 将应用挂载到 DOM
+mount(&quot;#app&quot;, app);</code></pre><p><code>html!</code> 宏是 euv 模板系統的核心。它允許你編寫：</p><p class='list-item'>- **嵌套元素**：- `div { p { "text" } }`</p><p class='list-item'>- **文本內容**：只需在元素名稱後的花括號內放置字符串</p><p class='list-item'>- **属性**：- `input { type: "text", placeholder: "Enter name" }`</p><p class='list-item'>- **事件处理器**：- `button { onclick: move |event| { /* handler */ } "Click" }`</p><p class='list-item'>- **条件渲染**：- `if { condition } { /* visible */ } else { "" }`</p><p class='list-item'>- **列表渲染**：- `for item in { items.get() } { li { item } }`</p><h3>一個稍微複雜的示例</h3><p>讓我們看一個更完整的示例，展示狀態和交互功能：</p><pre><code>use euv::*;
+fn app() -&gt; VirtualNode {
+    let count: Signal&lt;i32&gt; = use_signal(|| 0);
+    html! {
+        div {
+            h1 { &quot;My First euv App&quot; }
+            p { &quot;The counter will go here&quot; }
+            button {
+                onclick: move |event: Event| {
+                    count.set(count.get() + 1);
+                }
+                &quot;Increment&quot;
+            }
+        }
+    }
+}
+mount(&quot;#app&quot;, app);</code></pre><p>在這個示例中：</p><p class='list-item'>- 我們使用 `use_signal`創建了一個初始值爲`0`的響應式信號`count`。</p><p class='list-item'>- 按鈕有一個 `onclick`事件處理器，通過`count.get()`讀取當前值，並用`count.set(...)`更新它。</p><p class='list-item'>- 當信號發生變化時，euv 會自動重新渲染 UI 中受影響的部分。</p><h3>下一步</h3><p>現在你已經創建了第一個 euv 應用，以下是接下來可以探索的主題：</p><p class='list-item'>- **響應式信號**：瞭解- `use_signal`、- `computed!`和- `watch!`如何驅動 euv 的響應式系統。</p><p class='list-item'>- **虛擬 DOM**：深入理解- `VirtualNode`的工作原理。</p><p class='list-item'>- **組件**：使用 Props 和子節點構建可複用的 UI 組件。</p><p class='list-item'>- **樣式設計**：使用- `class!`宏定義 CSS 類和動畫。</p><p class='list-item'>- **事件處理**：掌握交互式應用的事件處理模式。</p><p class='list-item'>- **條件渲染與列表渲染**：根據狀態動態渲染 UI。</p><p>euv 將 Rust 的類型安全優勢與現代聲明式 UI 範式相結合。無論是構建小型交互式組件還是功能完備的單頁應用，euv 都能提供高效且愉快的開發體驗。</p><p>祝你使用 euv 編程愉快！</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
