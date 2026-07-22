@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>AI 开发实战：反向思维让 AI 写出风格统一的代码 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>AI 开发实战：反向思维让 AI 写出风格统一的代码</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 7月22日 周三</span>
+<span>· <a href="https://segmentfault.com/a/1190000047723275" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047723275" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>經常用 AI 搓前端頁面的朋友，一定對那抹“深邃藍”和“基佬紫”不陌生。</p><p>只要你不給 Prompt 設限，AI 彷彿全員深愛“賽博朋克漸變風”。第一眼驚豔，看多了想吐——滿屏都是溢出來的“AI 味兒”。更別提當你讓它寫第二個頁面時，那代碼邏輯就像是換了個祖宗，風格南轅北轍。</p><p>那麼，如何打破這種“開盲盒”式的開發體驗？如何讓 AI 像正經大廠程序員一樣，守規矩、懂審美、還出活？</p><p>今天我帶你玩點不一樣的：從 0 到 1 演示如何通過“反向思維”，讓 AI 乖乖吐出一整套風格統一、邏輯閉環的代碼。</p><p>那麼，如何操作才能擺脫這種千篇一律的色彩風格呢？當然是有辦法的，聽我慢慢娓娓道來……</p><p>有很多朋友想要從零開發某個應用，但是總是會發現：要麼無從下手，要麼好不容易寫好了一個頁面，然而讓 AI 去寫另外的一個頁面時，發現和之前的頁面風格完全不同！那麼，到底有沒有辦法讓 AI “懂得代碼規範” 寫出一樣風格的代碼呢？</p><p>今天，我就從 0 到 1 一步一步講解如何讓 AI 幫你寫出一套完整的項目代碼。</p><h3>放棄傳統思想，現在藉助 AI 開發應用，思路得發生轉變</h3><p>以前，我們如果想要從 0 開發一個 APP，我們大致會經歷過如下階段：</p><p class='list-item'>- 產品同學構思業務邏輯並畫好產品原型圖</p><p class='list-item'>- 產品同學召集UI、前端、後端一起開會講明需求</p><p class='list-item'>- UI 同學對照原型圖設計出 UI</p><p class='list-item'>- 前端同學根據 UI 去設計前端頁面</p><p class='list-item'>- 後端同學結合原型圖、UI圖設計數據庫、後端架構、制定 API 接口</p><p class='list-item'>- 前後端同學進行接口聯調</p><p class='list-item'>- 測試同學進行前後端產品成果測試</p><p class='list-item'>- 產品同學驗收</p><p>然而，當我們藉助 AI 來開發應用時，我們的開發流程就會有所轉變，以下是我的開發流程：</p><p class='list-item'>- 構想清楚這個產品的功能、定位客戶人羣、交互方式並寫好功能文檔</p><p class='list-item'>- 讓 AI 幫我確定清楚適合的色彩風格並直接寫好前端代碼並寫好 mock 數據</p><p class='list-item'>- 自己根據頁面和 mock 數據去調試功能</p><p class='list-item'>- 功能調試沒問題之後，讓 AI 根據 mock 數據寫出後端所需要的 API 接口文檔</p><p class='list-item'>- 讓 AI 根據接口文檔去創建數據庫建表語句（自己略微調整）</p><p class='list-item'>- 讓 AI 根據接口文檔去寫接口</p><p class='list-item'>- 將前端的 mock 數據換成真實的 API 接口，自己測試功能</p><p class='list-item'>- 有問題的地方直接截圖給到 AI 讓 AI 幫忙解決，直到沒有問題即可</p><p>你會發現操作流程上也沒有少幾個步驟，但是當你仔細一琢磨之後，你會發現：</p><p class='list-item'>- 以前至少需要產品、UI、前端、後端、測試等崗位的同學相互合作才能做的事情，現在只需要一個人就能幹完</p><p class='list-item'>- 如果你想一個人幹整套項目，最好的方式是先從頁面開始，再反向去寫接口可以事半功倍</p><h3>展示效果</h3><p>說再多，都沒有直接展示成果來得乾脆，下面是我最近用 AI 寫的一個微信小程序，前端代碼 100% 用 AI 寫的，後端接口 80% 用的 AI</p><p>現在我已將代碼都開源了，感興趣的朋友可以去觀摩觀摩，也請幫忙點個 Star 支持一下，謝謝！</p><p>小程序端： https://github.com/pudongping/momento-miniapp</p><p>API 接口： https://github.com/pudongping/momento-api</p><h3>羅列需求</h3><p>首先，我們不要着急寫代碼，先把自己想要實現的功能羅列清楚，我自己寫了一個 markdown 直接發給了 AI</p><p>下面是我寫的內容：</p><pre><code>## 1、首頁看板
+最頂部可下拉切換賬本
+功能點：
+1、溫馨背景牆：
+背景區域，支持上傳自定義圖片（如夫妻合照、全家福）。
+交互邏輯說明：
+默認： 溫馨插畫。
+自定義： 點擊可從相冊上傳。
+---
+在背景圖頂部顯示
+頂部背景區域，展示倒計時信息。
+紀念日提醒：距離結婚紀念日、生日等重要紀念日還有多少天的倒計時提醒（每一條紀念日上下滾動提醒）
+顯眼提醒：如果用戶在設置中勾選了“首頁顯示”，系統自動計算並篩選出距離今天最近的一個節日，在背景圖中央顯眼位置顯示：“距離 [事件名] 還有 [X] 天”。
+2、預算紅綠燈：
+在背景圖下方展示本月預算進度條。（基於家庭總支出的視覺化預警。）
+在“我的”設置頁面中會設置每個月的總預算（比如10000元）。首頁展示一個進度條，綠色代表安全，黃色代表預警，紅色代表超支。
+綠色狀態： 支出 &lt; 50%預算。
+黃色狀態： 支出 &gt;= 50% 且 &lt; 80%。
+紅色狀態： 支出 &gt;= 80%（甚至爆表）。
+進度條文案： 顯示“本月剩餘可用：¥XXXX”。
+預算紅綠燈不要做成生硬的交通燈，可以做成一個“呼吸感”的漸變光圈或者半透明的水位線，這樣視覺上會更靈動。
+3、當前月份的總支出、總收入
+4、時間軸賬單流
+類似朋友圈的時間軸，按“天”爲單位排列。默認只會展示當前一個月的賬單，下拉刷新，上拉加載更多歷史數據。，像刷朋友圈一樣查看過往賬單。（這裏的數據分頁爲“遊標”分頁，需要前端傳遞已經加載出來的最後一條賬單的id給到接口）
+賬單列表：
+- 日期頭： 顯示日期 + 當日星期 + 當日總支出（卡片形式）
+- 每條賬單展示：標籤、金額（支出紅色，收入綠色，支出爲- 收入爲+）、備註
+- 支持按天展開/收起查看該天的所有賬單
+- 賬單旁邊顯示刪除按鈕，點擊後彈出二次確認框，確認後刪除該條賬單
+- 支持點擊賬單進入編輯頁面，修改該條賬單的信息
+- 每條賬單旁邊都會顯示用戶頭像和暱稱（如果暱稱超過4個字符，超過部分則用三個點 ... 代替）
+- 按“天”的時間軸展示，像朋友圈一樣，下拉查看每一筆。下拉加載更多，像刷朋友圈一樣查看過往賬單。
+- 搜索功能：支持按標籤、備註、金額、類型（支出，收入）、時間區間搜索賬單
+## 記賬
+記賬功能：
+- 智能標籤： 預設家庭常用標籤（買菜、房貸、孩子、餐飲、交通、其他）不同的標籤用不同的顏色區分。系統級標籤不可刪除、不可修改。列表末尾有“+自定義”，用戶也可以自定義標籤顏色和名稱
+- 可以選擇支出/收入類型（默認爲支出）
+- 備註： 支持輸入備註信息（非必填）
+- 金額： 支持輸入金額，支持小數點後兩位（必填，單位爲元）
+- 日期： 默認爲當天，支持選擇以前的日期（通過日曆選擇）
+- 保存後，自動返回首頁看板，新增的賬單會出現在時間軸
+- 定期/週期賬單：對於房貸、車貸、物業費這種固定支出，設置“自動記賬”模板，可設置每年（每年哪一天）、每季度（每季度哪一天）、每月（具體哪一天）、每星期（具體星期幾）、每天（具體什麼時間）自動扣款日。到了指定日期，系統自動生成一筆賬單，並備註爲“自動記入”。
+---
+## 3、我的
+- 用戶通過微信小程序授權登錄。接口通過雪花算法生成分佈式ID作爲用戶的唯一性標識 UID
+- 登錄成功之後，接口會返回默認暱稱和頭像，用戶可以在個人中心修改暱稱和頭像
+1、個人信息修改（暱稱、頭像）
+2、顯示 uid（雪花算法得到的分佈式ID）、uid 旁邊有個“複製”點擊“複製”之後可以複製 uid 到剪切板
+3、預算設置
+設置“紅綠燈”的總金額。    輸入每月家庭預算總限額，單位：元。
+4、節日設置
+設置首頁倒計時的數據源頭。
+- 添加節日名稱、日期。比如結婚紀念日、生日、春節等（可設置多個）
+- 每一個節日都可以設置是否在首頁顯示，默認爲顯示
+- 每一個節日都可以進行編輯、刪除
+5、賬本管理
+當用戶登錄成功之後，需要添加賬本（可以自定義賬本名稱），賬本添加成功之後，可以在賬本中邀請其他用戶，輸入對方 UID，發送邀請。
+邀請請求發出之後，在該賬本中可以看到被邀請人的頭像、暱稱，狀態爲“等待加入”
+被邀請人打開小程序並登錄之後，可以在“我的”-“賬單管理”位置看到一條提示消息：“邀請人暱稱”於年月日時分秒邀請您加入“賬本名稱”共同管理賬單。
+消息旁邊有“同意”、“拒絕”兩個按鈕
+當被邀請人點擊了“同意”按鈕之後，則加入了該賬本。賬本管理中就會顯示出邀請人的賬本名稱、加入成員數量、創建時間（年月日時分秒）、此時被邀請人在該賬本中的狀態爲“已加入”、在邀請人那邊被邀請人的狀態爲“已綁定”
+當被邀請人點擊了“拒絕”按鈕之後，則不加入該賬本，在邀請人側則顯示“被拒絕”狀態。
+在同一個賬本中，每個用戶記錄的賬單都是可見的。
+可以對賬本設置“默認”標籤，這樣在首頁、添加賬單時，則添加到默認標籤的賬本中，當然，如果用戶存在於多個賬本中，則可以在首頁、添加賬單時對賬本進行切換。
+自己創建的賬本和自己加入別人創建的賬本是有顏色區分的，優先展示自己創建的賬本，如果自己沒有創建賬本，再優先展示加入的賬本
+被邀請人可以退出加入的賬本，邀請人不能退出自己創建的賬本，只能刪除賬本。（刪除效果是滑動刪除）「退出」、「刪除」都會有二次確認。</code></pre><p>當然了，這也是最費時間的步驟，但是是必不可少的步驟。</p><h3>定調</h3><p>你會發現上面的小程序樣式、色彩都是有自己的風格的，那麼到底是怎麼做到的呢？</p><p>很簡單！在寫這個項目之前，我直接讓他固定好了全局樣式</p><p>色系：</p><p class='list-item'>- 主色：#FF9A5A（暖橘）-> #FFD166（淺金）的漸變</p><p class='list-item'>- 輔助色：#F5F5F5（淺灰白）</p><p class='list-item'>- 文字色：#333333 (主標題), #666666 (副標題/備註)</p><p>風格：模仿蘋果 iOS 的 UI （高級感、溫馨、圓潤、極簡）</p><h3>寫提示詞</h3><p>當你將上面的內容都發給 AI 並讓 AI 牢牢記住你的要求之後，你就可以直接將下面的提示詞發給他，讓他幫你寫代碼了</p><pre><code>Subject：微信小程序《時光賬記》前端開發任務
+Context：我正在開發一款名爲《時光賬記》的微信小程序，目的是創建賬本，然後在賬本下可以記賬，請幫我完成小程序前端代碼。
+所有數據請求請使用 Mock 數據模擬，請在項目根目錄下創建一個 mock 文件夾，將所有的 API 返回數據寫在獨立的 JS 文件裏，方便我後期替換成真正的 API。
+1、接口協議規範：所有 API 請求的返回格式必須嚴格遵守： {&quot;code&quot;: 0, &quot;msg&quot;: &quot;提示語&quot;, &quot;data&quot;: null}
+- 當 `code == 0` 時，表示接口請求正常，此時可以從 `data` 中拿到業務數據
+- 當 `code != 0` 時，表示接口異常，需要通過 toast 彈出 msg 中的提示內容
+- 所有的時間，接口都會返回秒級別的時間戳，前端需要自行進行格式化處理
+- 如果用戶已經登錄，需要將用戶登錄的 token 數據放入到請求頭中到 token 字段中
+2、前端所有和接口網絡請求有關的方法，都要以 `Api` 爲後綴，比如在前端中有一個方法是封裝去請求接口獲取用戶信息時 `getUserInfoApi` 方便我好分辨這個方法是和網絡請求有聯繫的
+3、全局樣式設置：
+色系：
+- 主色：#FF9A5A（暖橘）-&gt; #FFD166（淺金）的漸變 
+- 輔助色：#F5F5F5（淺灰白）
+- 文字色：#333333 (主標題), #666666 (副標題/備註)
+風格：模仿蘋果 iOS 的 UI （高級感、溫馨、圓潤、極簡）
+先幫我把項目的目錄結構搭好，並寫好全局的 API 請求封裝（針對 code 判斷邏輯）。
+先幫我創建 tabbar
+- 首頁
+- 記賬（一個大大的加號）
+- 我的</code></pre><p>慢慢的，你就會發現他寫的每一個頁面都是一樣的風格。剩下的，你就專心跟他對話讓 AI 幫你調整細節就好了～</p><p>但是，你會發現另外一個問題，當你某天退出了編輯器之後，重新打開項目再讓 AI 幫你寫代碼時，你就會發現他又會隨意發揮了。下一篇文章跟大家聊聊如何讓 AI 不管何時介入項目，寫出的代碼都是統一風格的，敬請期待～</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

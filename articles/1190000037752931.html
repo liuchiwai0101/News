@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>手把手带你入门前端工程化（超详细教程） · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>手把手带你入门前端工程化（超详细教程）</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 7月22日 周三</span>
+<span>· <a href="https://segmentfault.com/a/1190000037752931" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000037752931" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>本文將分成以下 7 個小節：</p><p class='list-item'>- 技術選型</p><p class='list-item'>- 統一規範</p><p class='list-item'>- 測試</p><p class='list-item'>- 部署</p><p class='list-item'>- 監控</p><p class='list-item'>- 性能優化</p><p class='list-item'>- 重構</p><p>部分小節提供了非常詳細的實戰教程，讓大家動手實踐。</p><p>另外我還寫了一個前端工程化 demo 放在 github 上。這個 demo 包含了 js、css、git 驗證，其中 js、css 驗證需要安裝 VSCode，具體教程在下文中會有提及。</p><h3>技術選型</h3><p>對於前端來說，技術選型挺簡單的。就是做選擇題，三大框架中選一個。個人認爲可以依據以下兩個特點來選：</p><p class='list-item'>- 選你或團隊最熟的，保證在遇到棘手的問題時有人能填坑。</p><p class='list-item'>- 選市場佔有率高的。換句話說，就是選好招人的。</p><p>第二點對於小公司來說，特別重要。本來小公司就不好招人，要是還選一個市場佔有率不高的框架（例如 Angular），簡歷你都看不到幾個...</p><p>UI 組件庫更簡單，github 上哪個 star 多就用哪個。star 多，說明用的人就多，很多坑別人都替你踩過了，省事。</p><h3>統一規範</h3><h3>代碼規範</h3><p>先來看看統一代碼規範的好處：</p><p class='list-item'>- 規範的代碼可以促進團隊合作</p><p class='list-item'>- 規範的代碼可以降低維護成本</p><p class='list-item'>- 規範的代碼有助於 code review（代碼審查）</p><p class='list-item'>- 養成代碼規範的習慣，有助於程序員自身的成長</p><h3>#### 如何制訂代碼規範</h3><p>建議找一份好的代碼規範，在此基礎上結合團隊的需求作個性化修改。</p><p>下面列舉一些 star 較多的 js 代碼規範：</p><p>css 代碼規範也有不少，例如：</p><h3>#### 如何檢查代碼規範</h3><p>使用 eslint 可以檢查代碼符不符合團隊制訂的規範，下面來看一下如何配置 eslint 來檢查代碼。</p><p class='list-item'>- 下載依賴</p><pre><code>// eslint-config-airbnb-base 使用 airbnb 代码规范
+npm i -D babel-eslint eslint eslint-config-airbnb-base eslint-plugin-import</code></pre><p class='list-item'>- 配置 `.eslintrc`文件</p><pre><code>{
+    &quot;parserOptions&quot;: {
+        &quot;ecmaVersion&quot;: 2019
+    },
+    &quot;env&quot;: {
+        &quot;es6&quot;: true,
+    },
+    &quot;parser&quot;: &quot;babel-eslint&quot;,
+    &quot;extends&quot;: &quot;airbnb-base&quot;,
+}</code></pre><p class='list-item'>- 在 `package.json`的`scripts`加上這行代碼`"lint": "eslint --ext .js test/ src/"`。然後執行`npm run lint`即可開始驗證代碼。代碼中的`test/ src/`是指你要進行校驗的代碼目錄，這裏指明瞭要檢查`test`、`src`目錄下的代碼。</p><p>不過這樣檢查代碼效率太低，每次都得手動檢查。並且報錯了還得手動修改代碼。</p><p>爲了改善以上缺點，我們可以使用 VSCode。使用它並加上適當的配置可以在每次保存代碼的時候，自動驗證代碼並進行格式化，省去了動手的麻煩。</p><p>css 檢查代碼規範則使用 <code>stylelint</code> 插件。</p><p>由於篇幅有限，具體如何配置請看我的另一篇文章ESlint + stylelint + VSCode自動格式化代碼(2020)。</p><h3>git 規範</h3><p>git 規範包括兩點：分支管理規範、git commit 規範。</p><h3>#### 分支管理規範</h3><p>一般項目分主分支（master）和其他分支。</p><p>當有團隊成員要開發新功能或改 BUG 時，就從 master 分支開一個新的分支。例如項目要從客戶端渲染改成服務端渲染，就開一個分支叫 ssr，開發完了再合併回 master 分支。</p><p>如果改一個 BUG，也可以從 master 分支開一個新分支，並用 BUG 號命名（不過我們小團隊嫌麻煩，沒這樣做，除非有特別大的 BUG）。</p><h3>#### git commit 规范</h3><pre><code>&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;
+&lt;BLANK LINE&gt;
+&lt;body&gt;
+&lt;BLANK LINE&gt;
+&lt;footer&gt;</code></pre><p>大致分爲三個部分(使用空行分割):</p><p class='list-item'>- 標題行: 必填, 描述主要修改類型和內容</p><p class='list-item'>- 主題內容: 描述爲什麼修改, 做了什麼樣的修改, 以及開發的思路等等</p><p class='list-item'>- 頁腳註釋: 可以寫註釋，BUG 號鏈接</p><h3>#### type: commit 的类型</h3><p class='list-item'>- feat: 新功能、新特性</p><p class='list-item'>- fix: 修改 bug</p><p class='list-item'>- perf: 更改代碼，以提高性能</p><p class='list-item'>- refactor: 代碼重構（重構，在不影響代碼內部行爲、功能下的代碼修改）</p><p class='list-item'>- docs: 文檔修改</p><p class='list-item'>- style: 代碼格式修改, 注意不是 css 修改（例如分號修改）</p><p class='list-item'>- test: 測試用例新增、修改</p><p class='list-item'>- build: 影響項目構建或依賴項修改</p><p class='list-item'>- revert: 恢復上一次提交</p><p class='list-item'>- ci: 持續集成相關文件修改</p><p class='list-item'>- chore: 其他修改（不在上述類型中的修改）</p><p class='list-item'>- release: 發佈新版本</p><p class='list-item'>- workflow: 工作流相關文件修改</p><p class='list-item'>- scope: commit 影响的范围, 比如: route, component, utils, build...</p><p class='list-item'>- subject: commit 的概述</p><p class='list-item'>- body: commit 具體修改內容, 可以分爲多行.</p><p class='list-item'>- footer: 一些備註, 通常是 BREAKING CHANGE 或修復的 bug 的鏈接.</p><h3>示例</h3><h3>##### fix（修复BUG）</h3><p>如果修復的這個BUG隻影響當前修改的文件，可不加範圍。如果影響的範圍比較大，要加上範圍描述。</p><p>例如這次 BUG 修復影響到全局，可以加個 global。如果影響的是某個目錄或某個功能，可以加上該目錄的路徑，或者對應的功能名稱。</p><pre><code>// 示例1
+fix(global):修復checkbox不能複選的問題
+// 示例2 下面圓括號裏的 common 爲通用管理的名稱
+fix(common): 修復字體過小的BUG，將通用管理下所有頁面的默認字體大小修改爲 14px
+// 示例3
+fix: value.length -&gt; values.length</code></pre><h3>##### feat（添加新功能或新頁面）</h3><pre><code>feat: 添加網站主頁靜態頁面
+這是一個示例，假設對點檢任務靜態頁面進行了一些描述。
+ 
+這裏是備註，可以是放BUG鏈接或者一些重要性的東西。</code></pre><h3>##### chore（其他修改）</h3><p>chore 的中文翻譯爲日常事務、例行工作，顧名思義，即不在其他 commit 類型中的修改，都可以用 chore 表示。</p><p><code>chore: 將表格中的查看詳情改爲詳情</code>其他類型的 commit 和上面三個示例差不多，就不說了。</p><h3>#### 验证 git commit 规范</h3><p>驗證 git commit 規範，主要通過 git 的 <code>pre-commit</code> 鉤子函數來進行。當然，你還需要下載一個輔助工具來幫助你進行驗證。</p><h3>下載輔助工具</h3><p><code>npm i -D husky</code>在 <code>package.json</code> 加上下面的代码</p><pre><code>&quot;husky&quot;: {
+  &quot;hooks&quot;: {
+    &quot;pre-commit&quot;: &quot;npm run lint&quot;,
+    &quot;commit-msg&quot;: &quot;node script/verify-commit.js&quot;,
+    &quot;pre-push&quot;: &quot;npm test&quot;
+  }
+}</code></pre><p>然後在你項目根目錄下新建一個文件夾 <code>script</code>，並在下面新建一個文件 <code>verify-commit.js</code>，輸入以下代碼：</p><pre><code>const msgPath = process.env.HUSKY_GIT_PARAMS
+const msg = require(&#x27;fs&#x27;)
+.readFileSync(msgPath, &#x27;utf-8&#x27;)
+.trim()
+const commitRE = /^(feat|fix|docs|style|refactor|perf|test|workflow|build|ci|chore|release|workflow)(\(.+\))?: .{1,50}/
+if (!commitRE.test(msg)) {
+    console.log()
+    console.error(`
+        不合法的 commit 消息格式。
+        请查看 git commit 提交规范：https://github.com/woai3c/Front-end-articles/blob/master/git%20commit%20style.md
+    `)
+    process.exit(1)
+}</code></pre><p>現在來解釋下各個鉤子的含義：</p><p class='list-item'>- `"pre-commit": "npm run lint"`，在- `git commit`前执行- `npm run lint`检查代码格式。</p><p class='list-item'>- `"commit-msg": "node script/verify-commit.js"`，在- `git commit`时执行脚本- `verify-commit.js`验证 commit 消息。如果不符合脚本中定义的格式，将会报错。</p><p class='list-item'>- `"pre-push": "npm test"`，在你執行- `git push`將代碼推送到遠程倉庫前，執行- `npm test`進行測試。如果測試失敗，將不會執行這次推送。</p><h3>項目規範</h3><p>主要是項目文件的組織方式和命名方式。</p><p>用我們的 Vue 項目舉個例子。</p><pre><code>├─public
+├─src
+├─test</code></pre><p>一個項目包含 public（公共資源，不會被 webpack 處理）、src（源碼）、test（測試代碼），其中 src 目錄，又可以細分。</p><pre><code>├─api （接口）
+├─assets （静态资源）
+├─components （公共组件）
+├─styles （公共样式）
+├─router （路由）
+├─store （vuex 全局数据）
+├─utils （工具函数）
+└─views （页面）</code></pre><p>文件名稱如果過長則用 - 隔開。</p><h3>UI 規範</h3><p>UI 規範需要前端、UI、產品溝通，互相商量，最後制定下來，建議使用統一的 UI 組件庫。</p><p>制定 UI 規範的好處：</p><p class='list-item'>- 統一頁面 UI 標準，節省 UI 設計時間</p><p class='list-item'>- 提高前端開發效率</p><h3>測試</h3><p>測試是前端工程化建設必不可少的一部分，它的作用就是找出 bug，越早發現 bug，所需要付出的成本就越低。並且，它更重要的作用是在將來，而不是當下。</p><p>設想一下半年後，你的項目要加一個新功能。在加完新功能後，你不確定有沒有影響到原有的功能，需要測試一下。由於時間過去太久，你對項目的代碼已經不瞭解了。在這種情況下，如果沒有寫測試，你就得手動一遍一遍的去試。而如果寫了測試，你只需要跑一遍測試代碼就 OK 了，省時省力。</p><p>寫測試還可以讓你修改代碼時沒有心理負擔，不用一直想着改這裏有沒有問題？會不會引起 BUG？而寫了測試就沒有這種擔心了。</p><p>在前端用得最多的就是單元測試（主要是端到端測試我用得很少，不熟），這裏着重講解一下。</p><h3>單元測試</h3><p>單元測試就是對一個函數、一個組件、一個類做的測試，它針對的粒度比較小。</p><p>它應該怎麼寫呢？</p><p class='list-item'>- 根據正確性寫測試，即正確的輸入應該有正常的結果。</p><p class='list-item'>- 根據異常寫測試，即錯誤的輸入應該是錯誤的結果。</p><h3>#### 對一個函數做測試</h3><p>例如一個取絕對值的函數 <code>abs()</code>，輸入 <code>1,2</code>，結果應該與輸入相同；輸入 <code>-1,-2</code>，結果應該與輸入相反。如果輸入非數字，例如 <code>"abc"</code>，應該拋出一個類型錯誤。</p><h3>#### 對一個類做測試</h3><p>假設有這樣一個類：</p><pre><code>class Math {
+    abs() {
+    }
+    sqrt() {
+    }
+    pow() {
+    }
+    ...
+}</code></pre><p>單元測試，必須把這個類的所有方法都測一遍。</p><h3>#### 對一個組件做測試</h3><p>組件測試比較難，因爲很多組件都涉及了 DOM 操作。</p><p>例如一個上傳圖片組件，它有一個將圖片轉成 base64 碼的方法，那要怎麼測試呢？一般測試都是跑在 node 環境下的，而 node 環境沒有 DOM 對象。</p><p>我們先來回顧一下上傳圖片的過程：</p><p class='list-item'>- 点击 `<input type="file" />`，选择图片上传。</p><p class='list-item'>- 觸發 `input`的`change`事件，獲取`file`對象。</p><p class='list-item'>- 用 `FileReader`将图片转换成 base64 码。</p><p>這個過程和下面的代碼是一樣的：</p><pre><code>document.querySelector(&#x27;input&#x27;).onchange = function fileChangeHandler(e) {
+    const file = e.target.files[0]
+    const reader = new FileReader()
+    reader.onload = (res) =&gt; {
+        const fileResult = res.target.result
+        console.log(fileResult) // 输出 base64 码
+    }
+    reader.readAsDataURL(file)
+}</code></pre><p>上面的代碼只是模擬，真實情況下應該是這樣使用</p><pre><code>document.querySelector(&#x27;input&#x27;).onchange = function fileChangeHandler(e) {
+    const file = e.target.files[0]
+    tobase64(file)
+}
+function tobase64(file) {
+    return new Promise((resolve, reject) =&gt; {
+        const reader = new FileReader()
+        reader.onload = (res) =&gt; {
+            const fileResult = res.target.result
+            resolve(fileResult) // 输出 base64 码
+        }
+        reader.readAsDataURL(file)
+    })
+}</code></pre><p>可以看到，上面代碼出現了 window 的事件對象 <code>event</code>、<code>FileReader</code>。也就是說，只要我們能夠提供這兩個對象，就可以在任何環境下運行它。所以我們可以在測試環境下加上這兩個對象：</p><pre><code>// 重写 File
+window.File = function () {}
+// 重写 FileReader
+window.FileReader = function () {
+    this.readAsDataURL = function () {
+        this.onload
+            &amp;&amp; this.onload({
+                target: {
+                    result: fileData,
+                },
+            })
+    }
+}</code></pre><p>然後測試可以這樣寫：</p><pre><code>// 提前写好文件内容
+const fileData = &#x27;data:image/test&#x27;
+// 提供一个假的 file 对象给 tobase64() 函数
+function test() {
+    const file = new File()
+    const event = { target: { files: [file] } }
+    file.type = &#x27;image/png&#x27;
+    file.name = &#x27;test.png&#x27;
+    file.size = 1024
+    it(&#x27;file content&#x27;, (done) =&gt; {
+        tobase64(file).then(base64 =&gt; {
+            expect(base64).toEqual(fileData) // &#x27;data:image/test&#x27;
+            done()
+        })
+    })
+}
+// 执行测试
+test()</code></pre><p>通過這種 hack 的方式，我們就實現了對涉及 DOM 操作的組件的測試。我的 vue-upload-imgs 庫就是通過這種方式寫的單元測試，有興趣可以瞭解一下。</p><h3>TDD 測試驅動開發</h3><p>TDD 就是根據需求提前把測試代碼寫好，然後根據測試代碼實現功能。</p><p>TDD 的初衷是好的，但如果你的需求經常變（你懂的），那就不是一件好事了。很有可能你天天都在改測試代碼，業務代碼反而沒怎麼動。</p><p>所以到現在爲止，三年多的程序員生涯，我還沒嘗試過 TDD 開發。</p><p>雖然環境如此艱難，但有條件的情況下還是應該試一下 TDD 的。例如在你自己負責一個項目又不忙的時候，可以採用此方法編寫測試用例。</p><h3>測試框架推薦</h3><p>我常用的測試框架是 jest，好處是有中文文檔，API 清晰明瞭，一看就知道是幹什麼用的。</p><h3>部署</h3><p>在沒有學會自動部署前，我是這樣部署項目的：</p><p class='list-item'>- 执行测试 `npm run test`。</p><p class='list-item'>- 构建项目 `npm run build`。</p><p class='list-item'>- 將打包好的文件放到靜態服務器。</p><p>一次兩次還行，如果天天都這樣，就會把很多時間浪費在重複的操作上。所以我們要學會自動部署，徹底解放雙手。</p><p>自動部署（又叫持續部署 Continuous Deployment，英文縮寫 CD）一般有兩種觸發方式：</p><p class='list-item'>- 輪詢。</p><p class='list-item'>- 监听 `webhook`事件。</p><h3>輪詢</h3><p>輪詢，就是構建軟件每隔一段時間自動執行打包、部署操作。</p><p>這種方式不太好，很有可能軟件剛部署完我就改代碼了。爲了看到新的頁面效果，不得不等到下一次構建開始。</p><p>另外還有一個副作用，假如我一天都沒更改代碼，構建軟件還是會不停的執行打包、部署操作，白白的浪費資源。</p><p>所以現在的構建軟件基本採用監聽 <code>webhook</code> 事件的方式來進行部署。</p><h3>監聽 `webhook` 事件</h3><p>webhook 鉤子函數，就是在你的構建軟件上進行設置，監聽某一個事件（一般是監聽 <code>push</code> 事件），當事件觸發時，自動執行定義好的腳本。</p><p>例如 <code>Github Actions</code>，就有这个功能。</p><p>對於新人來說，僅看我這一段講解是不可能學會自動部署的。爲此我特地寫了一篇自動化部署教程，不需要你提前學習自動化部署的知識，只要照着指引做，就能實現前端項目自動化部署。</p><p>前端項目自動化部署——超詳細教程（Jenkins、Github Actions），教程已經奉上，各位大佬看完後要是覺得有用，不要忘了點贊，感激不盡。</p><h3>監控</h3><p>監控，又分性能監控和錯誤監控，它的作用是預警和追蹤定位問題。</p><h3>性能監控</h3><p>性能監控一般利用 <code>window.performance</code> 來進行數據採集。</p><p>Performance 接口可以获取到当前页面中与性能相关的信息，它是 High Resolution Time API 的一部分，同时也融合了 Performance Timeline API、Navigation Timing API、 User Timing API 和 Resource Timing API。</p><p>這個 API 的屬性 <code>timing</code>，包含了頁面加載各個階段的起始及結束時間。</p><p>爲了方便大家理解 <code>timing</code> 各個屬性的意義，我在知乎找到一位網友對於 <code>timing</code> 寫的簡介（忘了姓名，後來找不到了，見諒），在此轉載一下。</p><pre><code>timing: {
+        // 同一個瀏覽器上一個頁面卸載(unload)結束時的時間戳。如果沒有上一個頁面，這個值會和fetchStart相同。
+    navigationStart: 1543806782096,
+    // 上一個頁面unload事件拋出時的時間戳。如果沒有上一個頁面，這個值會返回0。
+    unloadEventStart: 1543806782523,
+    // 和 unloadEventStart 相對應，unload事件處理完成時的時間戳。如果沒有上一個頁面,這個值會返回0。
+    unloadEventEnd: 1543806782523,
+    // 第一個HTTP重定向開始時的時間戳。如果沒有重定向，或者重定向中的一個不同源，這個值會返回0。
+    redirectStart: 0,
+    // 最後一個HTTP重定向完成時（也就是說是HTTP響應的最後一個比特直接被收到的時間）的時間戳。
+    // 如果沒有重定向，或者重定向中的一個不同源，這個值會返回0. 
+    redirectEnd: 0,
+    // 瀏覽器準備好使用HTTP請求來獲取(fetch)文檔的時間戳。這個時間點會在檢查任何應用緩存之前。
+    fetchStart: 1543806782096,
+    // DNS 域名查詢開始的UNIX時間戳。
+        //如果使用了持續連接(persistent connection)，或者這個信息存儲到了緩存或者本地資源上，這個值將和fetchStart一致。
+    domainLookupStart: 1543806782096,
+    // DNS 域名查詢完成的時間.
+    //如果使用了本地緩存（即無 DNS 查詢）或持久連接，則與 fetchStart 值相等
+    domainLookupEnd: 1543806782096,
+    // HTTP（TCP） 域名查詢結束的時間戳。
+        //如果使用了持續連接(persistent connection)，或者這個信息存儲到了緩存或者本地資源上，這個值將和 fetchStart一致。
+    connectStart: 1543806782099,
+    // HTTP（TCP） 返回瀏覽器與服務器之間的連接建立時的時間戳。
+        // 如果建立的是持久連接，則返回值等同於fetchStart屬性的值。連接建立指的是所有握手和認證過程全部結束。
+    connectEnd: 1543806782227,
+    // HTTPS 返回瀏覽器與服務器開始安全鏈接的握手時的時間戳。如果當前網頁不要求安全連接，則返回0。
+    secureConnectionStart: 1543806782162,
+    // 返回瀏覽器向服務器發出HTTP請求時（或開始讀取本地緩存時）的時間戳。
+    requestStart: 1543806782241,
+    // 返回瀏覽器從服務器收到（或從本地緩存讀取）第一個字節時的時間戳。
+        //如果傳輸層在開始請求之後失敗並且連接被重開，該屬性將會被數製成新的請求的相對應的發起時間。
+    responseStart: 1543806782516,
+    // 返回瀏覽器從服務器收到（或從本地緩存讀取，或從本地資源讀取）最後一個字節時
+        //（如果在此之前HTTP連接已經關閉，則返回關閉時）的時間戳。
+    responseEnd: 1543806782537,
+    // 當前網頁DOM結構開始解析時（即Document.readyState屬性變爲“loading”、相應的 readystatechange事件觸發時）的時間戳。
+    domLoading: 1543806782573,
+    // 當前網頁DOM結構結束解析、開始加載內嵌資源時（即Document.readyState屬性變爲“interactive”、相應的readystatechange事件觸發時）的時間戳。
+    domInteractive: 1543806783203,
+    // 當解析器發送DOMContentLoaded 事件，即所有需要被執行的腳本已經被解析時的時間戳。
+    domContentLoadedEventStart: 1543806783203,
+    // 當所有需要立即執行的腳本已經被執行（不論執行順序）時的時間戳。
+    domContentLoadedEventEnd: 1543806783216,
+    // 當前文檔解析完成，即Document.readyState 變爲 &#x27;complete&#x27;且相對應的readystatechange 被觸發時的時間戳
+    domComplete: 1543806783796,
+    // load事件被髮送時的時間戳。如果這個事件還未被髮送，它的值將會是0。
+    loadEventStart: 1543806783796,
+    // 當load事件結束，即加載事件完成時的時間戳。如果這個事件還未被髮送，或者尚未完成，它的值將會是0.
+    loadEventEnd: 1543806783802
+}</code></pre><p>通過以上數據，我們可以得到幾個有用的時間</p><pre><code>// 重定向耗时
+redirect: timing.redirectEnd - timing.redirectStart,
+// DOM 渲染耗时
+dom: timing.domComplete - timing.domLoading,
+// 页面加载耗时
+load: timing.loadEventEnd - timing.navigationStart,
+// 页面卸载耗时
+unload: timing.unloadEventEnd - timing.unloadEventStart,
+// 请求耗时
+request: timing.responseEnd - timing.requestStart,
+// 获取性能信息时当前时间
+time: new Date().getTime(),</code></pre><p>還有一個比較重要的時間就是**白屏時間**，它指從輸入網址，到頁面開始顯示內容的時間。</p><p>將以下腳本放在 <code></head></code> 前面就能獲取白屏時間。</p><pre><code>&lt;script&gt;
+    whiteScreen = new Date() - performance.timing.navigationStart
+&lt;/script&gt;</code></pre><p>通過這幾個時間，就可以得知頁面首屏加載性能如何了。</p><p>另外，通過 <code>window.performance.getEntriesByType('resource')</code> 這個方法，我們還可以獲取相關資源（js、css、img...）的加載時間，它會返回頁面當前所加載的所有資源。</p><h3>它一般包括以下幾個類型</h3><p class='list-item'>- sciprt</p><p class='list-item'>- link</p><p class='list-item'>- img</p><p class='list-item'>- css</p><p class='list-item'>- fetch</p><p class='list-item'>- other</p><p class='list-item'>- xmlhttprequest</p><h3>我們只需用到以下幾個信息</h3><pre><code>// 资源的名称
+name: item.name,
+// 资源加载耗时
+duration: item.duration.toFixed(2),
+// 资源大小
+size: item.transferSize,
+// 资源所用协议
+protocol: item.nextHopProtocol,</code></pre><p>現在，寫幾行代碼來收集這些數據。</p><pre><code>// 收集性能信息
+const getPerformance = () =&gt; {
+    if (!window.performance) return
+    const timing = window.performance.timing
+    const performance = {
+        // 重定向耗时
+        redirect: timing.redirectEnd - timing.redirectStart,
+        // 白屏时间
+        whiteScreen: whiteScreen,
+        // DOM 渲染耗时
+        dom: timing.domComplete - timing.domLoading,
+        // 页面加载耗时
+        load: timing.loadEventEnd - timing.navigationStart,
+        // 页面卸载耗时
+        unload: timing.unloadEventEnd - timing.unloadEventStart,
+        // 请求耗时
+        request: timing.responseEnd - timing.requestStart,
+        // 获取性能信息时当前时间
+        time: new Date().getTime(),
+    }
+    return performance
+}
+// 获取资源信息
+const getResources = () =&gt; {
+    if (!window.performance) return
+    const data = window.performance.getEntriesByType(&#x27;resource&#x27;)
+    const resource = {
+        xmlhttprequest: [],
+        css: [],
+        other: [],
+        script: [],
+        img: [],
+        link: [],
+        fetch: [],
+        // 获取资源信息时当前时间
+        time: new Date().getTime(),
+    }
+    data.forEach(item =&gt; {
+        const arry = resource[item.initiatorType]
+        arry &amp;&amp; arry.push({
+            // 资源的名称
+            name: item.name,
+            // 资源加载耗时
+            duration: item.duration.toFixed(2),
+            // 资源大小
+            size: item.transferSize,
+            // 资源所用协议
+            protocol: item.nextHopProtocol,
+        })
+    })
+    return resource
+}</code></pre><h3>#### 小結</h3><p>通過對性能及資源信息的解讀，我們可以判斷出頁面加載慢有以下幾個原因：</p><p class='list-item'>- 資源過多</p><p class='list-item'>- 網速過慢</p><p class='list-item'>- DOM元素過多</p><p>除了用戶網速過慢，我們沒辦法之外，其他兩個原因都是有辦法解決的，性能優化將在下一節《性能優化》中會講到。</p><h3>錯誤監控</h3><p>現在能捕捉的錯誤有三種。</p><p class='list-item'>- 資源加載錯誤，通過 `addEventListener('error', callback, true)`在捕獲階段捕捉資源加載失敗錯誤。</p><p class='list-item'>- js 執行錯誤，通過 `window.onerror`捕捉 js 錯誤。</p><p class='list-item'>- promise 錯誤，通過 `addEventListener('unhandledrejection', callback)`捕捉 promise 錯誤，但是沒有發生錯誤的行數，列數等信息，只能手動拋出相關錯誤信息。</p><p>我們可以建一個錯誤數組變量 <code>errors</code> 在錯誤發生時，將錯誤的相關信息添加到數組，然後在某個階段統一上報，具體如何操作請看代碼</p><pre><code>// 捕获资源加载失败错误 js css img...
+addEventListener(&#x27;error&#x27;, e =&gt; {
+    const target = e.target
+    if (target != window) {
+        monitor.errors.push({
+            type: target.localName,
+            url: target.src || target.href,
+            msg: (target.src || target.href) + &#x27; is load error&#x27;,
+            // 错误发生的时间
+            time: new Date().getTime(),
+        })
+    }
+}, true)
+// 监听 js 错误
+window.onerror = function(msg, url, row, col, error) {
+    monitor.errors.push({
+        type: &#x27;javascript&#x27;,
+        row: row,
+        col: col,
+        msg: error &amp;&amp; error.stack? error.stack : msg,
+        url: url,
+        // 错误发生的时间
+        time: new Date().getTime(),
+    })
+}
+// 监听 promise 错误 缺点是获取不到行数数据
+addEventListener(&#x27;unhandledrejection&#x27;, e =&gt; {
+    monitor.errors.push({
+        type: &#x27;promise&#x27;,
+        msg: (e.reason &amp;&amp; e.reason.msg) || e.reason || &#x27;&#x27;,
+        // 错误发生的时间
+        time: new Date().getTime(),
+    })
+})</code></pre><h3>#### 小結</h3><p>通過錯誤收集，可以瞭解到網站錯誤發生的類型及數量，從而可以做相應的調整，以減少錯誤發生。</p><p>完整代碼和 DEMO 請看我另一篇文章前端性能和錯誤監控的末尾，大家可以複製代碼（HTML文件）在本地測試一下。</p><h3>數據上報</h3><h3>#### 性能數據上報</h3><p>性能數據可以在頁面加載完之後上報，儘量不要對頁面性能造成影響。</p><pre><code>window.onload = () =&gt; {
+    // 在浏览器空闲时间获取性能及资源信息
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback
+    if (window.requestIdleCallback) {
+        window.requestIdleCallback(() =&gt; {
+            monitor.performance = getPerformance()
+            monitor.resources = getResources()
+        })
+    } else {
+        setTimeout(() =&gt; {
+            monitor.performance = getPerformance()
+            monitor.resources = getResources()
+        }, 0)
+    }
+}</code></pre><p>當然，你也可以設一個定時器，循環上報。不過每次上報最好做一下對比去重再上報，避免同樣的數據重複上報。</p><h3>#### 錯誤數據上報</h3><p>我在DEMO裏提供的代碼，是用一個 <code>errors</code> 數組收集所有的錯誤，再在某一階段統一上報（延時上報）。</p><p>其實，也可以改成在錯誤發生時上報（即時上報）。這樣可以避免在收集完錯誤延時上報還沒觸發，用戶卻已經關掉網頁導致錯誤數據丟失的問題。</p><pre><code>// 监听 js 错误
+window.onerror = function(msg, url, row, col, error) {
+    const data = {
+        type: &#x27;javascript&#x27;,
+        row: row,
+        col: col,
+        msg: error &amp;&amp; error.stack? error.stack : msg,
+        url: url,
+        // 错误发生的时间
+        time: new Date().getTime(),
+    }
+    
+    // 即时上报
+    axios.post({ url: &#x27;xxx&#x27;, data, })
+}</code></pre><h3>SPA</h3><p><code>window.performance</code> API 是有缺点的，在 SPA 切换路由时，<code>window.performance.timing</code> 的数据不会更新。</p><p>所以我們需要另想辦法來統計切換路由到加載完成的時間。</p><p>拿 Vue 舉例，一個可行的辦法就是切換路由時，在路由的全局前置守衛 <code>beforeEach</code> 裏獲取開始時間，在組件的 <code>mounted</code> 鉤子裏執行 <code>vm.$nextTick </code> 函數來獲取組件的渲染完畢時間。</p><pre><code>router.beforeEach((to, from, next) =&gt; {
+    store.commit(&#x27;setPageLoadedStartTime&#x27;, new Date())
+})</code></pre><pre><code>mounted() {
+    this.$nextTick(() =&gt; {
+        this.$store.commit(&#x27;setPageLoadedTime&#x27;, new Date() - this.$store.state.pageLoadedStartTime)
+    })
+}</code></pre><p>除了性能和錯誤監控，其實我們還可以做得更多。</p><h3>用戶信息收集</h3><h3>#### navigator</h3><p>使用 <code>window.navigator</code> 可以收集到用戶的設備信息，操作系統，瀏覽器信息...</p><h3>#### UV（Unique visitor）</h3><p>是指通過互聯網訪問、瀏覽這個網頁的自然人。訪問您網站的一臺電腦客戶端爲一個訪客。00:00-24:00內相同的客戶端只被計算一次。一天內同個訪客多次訪問僅計算一個UV。</p><p>在用戶訪問網站時，可以生成一個隨機字符串+時間日期，保存在本地。在網頁發生請求時（如果超過當天24小時，則重新生成），把這些參數傳到後端，後端利用這些信息生成 UV 統計報告。</p><h3>#### PV（Page View）</h3><p>即頁面瀏覽量或點擊量，用戶每1次對網站中的每個網頁訪問均被記錄1個PV。用戶對同一頁面的多次訪問，訪問量累計，用以衡量網站用戶訪問的網頁數量。</p><h3>#### 頁面停留時間</h3><p class='list-item'>**傳統網站**</p><p>用戶在進入 A 頁面時，通過後臺請求把用戶進入頁面的時間捎上。過了 10 分鐘，用戶進入 B 頁面，這時後臺可以通過接口捎帶的參數可以判斷出用戶在 A 頁面停留了 10 分鐘。**SPA**</p><p>可以利用 router 來獲取用戶停留時間，拿 Vue 舉例，通過 <code>router.beforeEach</code> <code>destroyed</code> 這兩個鉤子函數來獲取用戶停留該路由組件的時間。</p><h3>#### 瀏覽深度</h3><p>通過 <code>document.documentElement.scrollTop</code> 屬性以及屏幕高度，可以判斷用戶是否瀏覽完網站內容。</p><h3>#### 頁面跳轉來源</h3><p>通過 <code>document.referrer</code> 屬性，可以知道用戶是從哪個網站跳轉而來。</p><h3>#### 小結</h3><p>通過分析用戶數據，我們可以瞭解到用戶的瀏覽習慣、愛好等等信息，想想真是恐怖，毫無隱私可言。</p><h3>前端監控部署教程</h3><p>前面說的都是監控原理，但要實現還是得自己動手寫代碼。爲了避免麻煩，我們可以用現有的工具 sentry 去做這件事。</p><p>sentry 是一個用 python 寫的性能和錯誤監控工具，你可以使用 sentry 提供的服務（免費功能少），也可以自己部署服務。現在來看一下如何使用 sentry 提供的服務實現監控。</p><h3>#### 註冊賬號</h3><p>打开 <code>https://sentry.io/signup/</code> 网站，进行注册。</p><p>選擇項目，我選的 Vue。</p><h3>#### 安装 sentry 依赖</h3><p>選完項目，下面會有具體的 sentry 依賴安裝指南。</p><p>根据提示，在你的 Vue 项目执行这段代码 <code>npm install --save @sentry/browser @sentry/integrations @sentry/tracing</code>，安装 sentry 所需的依赖。</p><p>再将下面的代码拷到你的 <code>main.js</code>，放在 <code>new Vue()</code> 之前。</p><pre><code>import * as Sentry from &quot;@sentry/browser&quot;;
+import { Vue as VueIntegration } from &quot;@sentry/integrations&quot;;
+import { Integrations } from &quot;@sentry/tracing&quot;;
+Sentry.init({
+  dsn: &quot;xxxxx&quot;, // 这里是你的 dsn 地址，注册完就有
+  integrations: [
+    new VueIntegration({
+      Vue,
+      tracing: true,
+    }),
+    new Integrations.BrowserTracing(),
+  ],
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});</code></pre><p>然後點擊第一步中的 <code>skip this onboarding</code>，進入控制檯頁面。</p><p>如果忘了自己的 DSN，请点击左边的菜单栏选择 <code>Settings</code> -> <code>Projects</code> -> 点击自己的项目 -> <code>Client Keys(DSN)</code>。</p><h3>#### 創建第一個錯誤</h3><p>在你的 Vue 項目執行一個打印語句 <code>console.log(b)</code>。</p><p>這時點開 sentry 主頁的 issues 一項，可以發現有一個報錯信息 <code>b is not defined</code>：</p><p>這個報錯信息包含了錯誤的具體信息，還有你的 IP、瀏覽器信息等等。</p><p>但奇怪的是，我們的瀏覽器控制檯並沒有輸出報錯信息。</p><p>這是因爲被 sentry 屏蔽了，所以我們需要加上一個選項 <code>logErrors: true</code>。</p><p>然後再查看頁面，發現控制檯也有報錯信息了：</p><h3>#### 上传 sourcemap</h3><p>一般打包後的代碼都是經過壓縮的，如果沒有 sourcemap，即使有報錯信息，你也很難根據提示找到對應的源碼在哪。</p><p>下面來看一下如何上傳 sourcemap。</p><p>首先创建 auth token。</p><p>這個生成的 token 一會要用到。</p><p>安装 <code>sentry-cli</code> 和 <code>@sentry/webpack-plugin</code>：</p><pre><code>npm install sentry-cli-binary -g
+npm install --save-dev @sentry/webpack-plugin</code></pre><p>安裝完上面兩個插件後，在項目根目錄創建一個 <code>.sentryclirc</code> 文件（不要忘了在 <code>.gitignore</code> 把這個文件添加上，以免暴露 token），內容如下：</p><pre><code>[auth]
+token=xxx
+[defaults]
+url=https://sentry.io/
+org=woai3c
+project=woai3c</code></pre><p>把 xxx 替換成剛纔生成的 token。</p><p><code>org</code> 是你的組織名稱。</p><p><code>project</code> 是你的項目名稱，根據下面的提示可以找到。</p><p>在項目下新建 <code>vue.config.js</code> 文件，把下面的內容填進去：</p><pre><code>const SentryWebpackPlugin = require(&#x27;@sentry/webpack-plugin&#x27;)
+const config = {
+    configureWebpack: {
+        plugins: [
+            new SentryWebpackPlugin({
+                include: &#x27;./dist&#x27;, // 打包后的目录
+                ignore: [&#x27;node_modules&#x27;, &#x27;vue.config.js&#x27;, &#x27;babel.config.js&#x27;],
+            }),
+        ],
+    },
+}
+// 只在生产环境下上传 sourcemap
+module.exports = process.env.NODE_ENV == &#x27;production&#x27;? config : {}</code></pre><p>填完以后，执行 <code>npm run build</code>，就可以看到 <code>sourcemap</code> 的上传结果了。</p><p>我們再來看一下沒上傳 sourcemap 和上傳之後的報錯信息對比。</p><p class='list-item'>**未上传 sourcemap**</p><p class='list-item'>**已上传 sourcemap**</p><p>可以看到，上傳 sourcemap 後的報錯信息更加準確。</p><h3>#### 切換中文環境和時區</h3><p>選完刷新即可。</p><h3>#### 性能監控</h3><p>打開 performance 選項，就能看到你每個項目的運行情況。具體的參數解釋請看文檔 Performance Monitoring。</p><h3>性能優化</h3><p>性能優化主要分爲兩類：</p><p class='list-item'>- 加載時優化</p><p class='list-item'>- 運行時優化</p><p>例如壓縮文件、使用 CDN 就屬於加載時優化；減少 DOM 操作，使用事件委託屬於運行時優化。</p><p>在解決問題之前，必須先找出問題，否則無從下手。所以在做性能優化之前，最好先調查一下網站的加載性能和運行性能。</p><h3>手動檢查</h3><h3>#### 檢查加載性能</h3><p>一個網站加載性能如何主要看白屏時間和首屏時間。</p><p class='list-item'>- 白屏時間：指從輸入網址，到頁面開始顯示內容的時間。</p><p class='list-item'>- 首屏時間：指從輸入網址，到頁面完全渲染的時間。</p><p>將以下腳本放在 <code></head></code> 前面就能獲取白屏時間。</p><pre><code>&lt;script&gt;
+    new Date() - performance.timing.navigationStart
+&lt;/script&gt;</code></pre><p>在 <code>window.onload</code> 事件里执行 <code>new Date() - performance.timing.navigationStart</code> 即可获取首屏时间。</p><h3>#### 檢查運行性能</h3><p>配合 chrome 的開發者工具，我們可以查看網站在運行時的性能。</p><p>打開網站，按 F12 選擇 performance，點擊左上角的灰色圓點，變成紅色就代表開始記錄了。這時可以模仿用戶使用網站，在使用完畢後，點擊 stop，然後你就能看到網站運行期間的性能報告。如果有紅色的塊，代表有掉幀的情況；如果是綠色，則代表 FPS 很好。</p><p>另外，在 performance 標籤下，按 ESC 會彈出來一個小框。點擊小框左邊的三個點，把 rendering 勾出來。</p><p>這兩個選項，第一個是高亮重繪區域，另一個是顯示幀渲染信息。把這兩個選項勾上，然後瀏覽網頁，可以實時的看到你網頁渲染變化。</p><h3>利用工具檢查</h3><h3>#### 監控工具</h3><p>可以部署一個前端監控系統來監控網站性能，上一節中講到的 sentry 就屬於這一類。</p><h3>#### chrome 工具 Lighthouse</h3><p>如果你安裝了 Chrome 52+ 版本，請按 F12 打開開發者工具。</p><p>它不僅會對你網站的性能打分，還會對 SEO 打分。</p><h3>如何做性能優化</h3><p>網上關於性能優化的文章和書籍多不勝數，但有很多優化規則已經過時了。所以我寫了一篇性能優化文章前端性能優化 24 條建議(2020)，分析總結出了 24 條性能優化建議，強烈推薦。</p><h3>重構</h3><p>《重構2》一書中對重構進行了定義：</p><p>所謂重構（refactoring）是這樣一個過程：在不改變代碼外在行爲的前提下，對代碼做出修改，以改進程序的內部結構。重構是一種經千錘百煉形成的有條不紊的程序整理方法，可以最大限度地減小整理過程中引入錯誤的概率。本質上說，重構就是在代碼寫好之後改進它的設計。</p><p>重構和性能優化有相同點，也有不同點。</p><p>相同的地方是它們都在不改變程序功能的情況下修改代碼；不同的地方是重構爲了讓代碼變得更加易讀、理解，性能優化則是爲了讓程序運行得更快。</p><p>重構可以一邊寫代碼一邊重構，也可以在程序寫完後，拿出一段時間專門去做重構。沒有說哪個方式更好，視個人情況而定。</p><p>如果你專門拿一段時間來做重構，建議你在重構一段代碼後，立即進行測試。這樣可以避免修改代碼太多，在出錯時找不到錯誤點。</p><h3>重構的原則</h3><p class='list-item'>- 事不過三，三則重構。即不能重複寫同樣的代碼，在這種情況下要去重構。</p><p class='list-item'>- 如果一段代碼讓人很難看懂，那就該考慮重構了。</p><p class='list-item'>- 如果已經理解了代碼，但是非常繁瑣或者不夠好，也可以重構。</p><p class='list-item'>- 過長的函數，需要重構。</p><p class='list-item'>- 一個函數最好對應一個功能，如果一個函數被塞入多個功能，那就要對它進行重構了。</p><h3>重構手法</h3><p>在《重構2》這本書中，介紹了多達上百個重構手法。但我覺得有兩個是比較常用的：</p><p class='list-item'>- 提取重複代碼，封裝成函數</p><p class='list-item'>- 拆分太長或功能太多的函數</p><p>#### 提取重複代碼，封裝成函數</p><p>假设有一个查询数据的接口 <code>/getUserData?age=17&city=beijing</code>。现在需要做的是把用户数据：<code>{ age: 17, city: 'beijing' }</code> 转成 URL 参数的形式：</p><pre><code>let result = &#x27;&#x27;
+const keys = Object.keys(data)  // { age: 17, city: &#x27;beijing&#x27; }
+keys.forEach(key =&gt; {
+    result += &#x27;&amp;&#x27; + key + &#x27;=&#x27; + data[key]
+})
+result.substr(1) // age=17&amp;city=beijing</code></pre><p>如果只有這一個接口需要轉換，不封裝成函數是沒問題的。但如果有多個接口都有這種需求，那就得把它封裝成函數了：</p><pre><code>function JSON2Params(data) {
+    let result = &#x27;&#x27;
+    const keys = Object.keys(data)
+    keys.forEach(key =&gt; {
+        result += &#x27;&amp;&#x27; + key + &#x27;=&#x27; + data[key]
+    })
+    return result.substr(1)
+}</code></pre><h3>#### 拆分太長或功能太多的函數</h3><p>假設現在有一個註冊功能，用僞代碼表示：</p><pre><code>function register(data) {
+    // 1. 驗證用戶數據是否合法
+    /**
+     * 驗證賬號
+     * 驗證密碼
+     * 驗證短信驗證碼
+     * 驗證身份證
+     * 驗證郵箱
+     */
+    // 2. 如果用戶上傳了頭像，則將用戶頭像轉成 base64 碼保存
+    /**
+     * 新建 FileReader 對象
+     * 將圖片轉換成 base64 碼
+     */
+    // 3. 調用註冊接口
+    // ...
+}</code></pre><p>這個函數包含了三個功能，驗證、轉換、註冊。其中驗證和轉換功能是可以提取出來單獨封裝成函數的：</p><pre><code>function register(data) {
+    // 1. 验证用户数据是否合法
+    // verify()
+    // 2. 如果用户上传了头像，则将用户头像转成 base64 码保存
+    // tobase64()
+    // 3. 调用注册接口
+    // ...
+}</code></pre><p>如果你對重構有興趣，強烈推薦你閱讀《重構2》這本書。</p><p>參考資料：</p><h3>總結</h3><p>寫這篇文章主要是爲了對我這一年多工作經驗作總結，因爲我基本上都在研究前端工程化以及如何提升團隊的開發效率。希望這篇文章能幫助一些對前端工程化沒有經驗的新手，通過這篇文章入門前端工程化。</p><p>如果這篇文章對你有幫助，請點一下贊，感激不盡。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
