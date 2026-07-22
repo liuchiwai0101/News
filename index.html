@@ -110,16 +110,30 @@
     color:var(--muted); font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
   .group-divider::before, .group-divider::after { content:""; flex:1; height:1px; background:var(--line); }
 
-  /* GRID — JS masonry: variable card heights, left-to-right order preserved */
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    grid-auto-rows:8px; gap:20px; align-items:start; }
+  /* GRID — E 緊湊卡片牆: 4 列緊湊網格, 8px 間距, 細色條代替大圖 */
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; align-items:start; }
+  @media (max-width:1100px){ .grid { grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:760px){ .grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:460px){ .grid { grid-template-columns:1fr; } }
+
   .card {
     position:relative; background:var(--card); border:1px solid var(--line);
-    border-radius:16px; overflow:hidden; box-shadow:var(--shadow); cursor:pointer;
-    display:flex; flex-direction:column; transition:.18s;
+    border-radius:11px; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.05);
+    cursor:pointer; display:flex; flex-direction:column; transition:.15s;
   }
-  .card:hover { transform:translateY(-3px); box-shadow:0 4px 10px rgba(15,23,42,.08),0 18px 40px rgba(15,23,42,.10); border-color:#cbd5e7; }
-  .card.featured { grid-column:span 2; }
+  .card.wall:hover { transform:translateY(-2px); box-shadow:var(--shadow); border-color:#cbd5e7; }
+
+  /* compact card (E layout) — title only, thin color top-bar */
+  .card.wall { min-height:0; }
+  .card .topbar { height:4px; width:100%; background:var(--c0); flex:0 0 auto; }
+  .card.wall .body { padding:11px 12px 12px; display:flex; flex-direction:column; flex:1; }
+  .card.wall h3 { font-size:14px; line-height:1.38; margin:0 0 9px; font-weight:700; color:var(--ink);
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .card.wall .meta { display:flex; align-items:center; gap:7px; margin-top:auto; }
+  .card.wall .ct-idx { font-size:11px; color:var(--muted); font-weight:700; }
+  .card.wall .ct-new { font-size:10px; font-weight:800; color:#fff; background:#dc2626; padding:1px 7px; border-radius:999px; letter-spacing:.04em; }
+  .card.wall .ct-date { font-size:11px; color:var(--muted); margin-left:auto; white-space:nowrap; }
+  .card.wall.deal .body { padding:11px 12px 12px; }
 
   /* COVER — generated visual band (stands in for a thumbnail) */
   .card .cover { position:relative; height:96px; background:var(--g0);
@@ -276,18 +290,9 @@
     .section-head h2 { font-size:19px; }
     .section-head .bar { height:21px; }
 
-    /* CARDS: 单列；禁用 masonry，让卡片自然堆叠；摘要限制 5 行避免卡片过长 */
-    .grid { grid-template-columns:1fr; gap:15px; grid-auto-rows:auto; }
-    .card { grid-row-end:auto !important; }
-    .card.featured { grid-column:span 1; }
-    .card .cover { height:96px; padding:10px 12px; }
-    .card.featured .cover { height:120px; padding:12px 14px; }
-    .card .cover-ico { width:60px; height:60px; right:10px; }
-    .card.featured .cover-ico { width:96px; height:96px; right:14px; }
-    .card h3 { font-size:15px; }
-    .card.featured h3 { font-size:17px; }
-    .card p { font-size:14px; margin-bottom:13px;
-      display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; }
+    /* CARDS (wall): 窄屏保持 2 列緊湊, 超窄 1 列 */
+    .card.wall h3 { font-size:14.5px; }
+    .card.wall .body { padding:10px 11px 11px; }
 
     /* FOOTER */
     .foot { font-size:13.5px; }
@@ -301,29 +306,7 @@
     .card h3 { font-size:16px; }
   }
 
-  /* ===== OPS CONSOLE (table view) ===== */
-  .nav-link.on { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .kpi-strip { display:flex; flex-wrap:wrap; gap:12px; margin:0 0 22px; }
-  .kpi { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px; min-width:118px; box-shadow:var(--shadow); }
-  .kpi-hl { background:var(--accent-soft); border-color:var(--accent); }
-  .kpi-num { font-size:26px; font-weight:800; color:var(--ink); line-height:1; }
-  .kpi-hl .kpi-num { color:var(--accent); }
-  .kpi-lab { font-size:12.5px; color:var(--muted); margin-top:6px; font-weight:600; }
-  .ops-wrap { background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); overflow:hidden; }
-  .ops-table { width:100%; border-collapse:collapse; font-size:14px; }
-  .ops-table thead th { text-align:left; font-size:12.5px; font-weight:700; color:var(--muted); background:#f7f9fc; padding:12px 16px; border-bottom:1px solid var(--line); }
-  .ops-table tbody td { padding:13px 16px; border-bottom:1px solid var(--line); vertical-align:middle; color:var(--body); }
-  .ops-table tbody tr:last-child td { border-bottom:none; }
-  .ops-table tbody tr.card { display:table-row; cursor:pointer; background:var(--card); border:none; box-shadow:none; border-radius:0; overflow:visible; transition:background .15s; }
-  .ops-table tbody tr.card:hover { background:#f3f6fc; transform:none; }
-  .ops-table .op-title h3 { margin:0; font-size:14.5px; font-weight:700; line-height:1.4; color:var(--ink); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-  .ops-table .op-date { color:var(--muted); white-space:nowrap; font-size:13px; }
-  .ops-table .op-new { font-size:11px; font-weight:800; color:#fff; background:#dc2626; padding:2px 9px; border-radius:999px; letter-spacing:.05em; }
-  .ops-empty { padding:30px; text-align:center; color:var(--muted); }
-  @media (max-width:640px) {
-    .ops-table thead th:nth-child(3), .ops-table tbody td:nth-child(3) { display:none; }
-    .ops-table .op-title h3 { font-size:14px; }
-  }
+  /* ===== OPS CONSOLE (table view) — removed in favour of compact card wall (E) ===== */
 </style>
 </head>
 <body>
@@ -439,64 +422,41 @@ function detectCat(title) {
 
 const content = document.getElementById('content');
 
-// Build a single card element (shared by the latest + Old News views)
+// Build a single compact card (E layout) — title only + thin color top-bar.
+// Shared by the latest view + Old News view. Tap opens the reader.
 function makeCard(item, idx, ri, isExt, featured) {
   const card = document.createElement('article');
-  card.className = 'card' + (featured ? ' featured' : '');
-  const sum = item.summary || '';
+  card.className = 'card wall';
   const cardDate = item.date || DATA.cardDate;
-  let capHtml = '';
-  if (item.isNew) {
-    capHtml = '<span class="cover-new">NEW</span>';
-  } else if (item.img && item.imgKind === 'openverse' && item.imgCreator) {
-    capHtml = '<span class="cover-cap">图：' + item.imgCreator + (item.imgLicense ? ' · ' + item.imgLicense : '') + '</span>';
-  } else if (item.img && (item.imgKind === 'og' || item.imgKind === 'content')) {
-    capHtml = '<span class="cover-cap">原题图</span>';
-  }
-  const suppCap = item.supplement ? '<span class="cover-supp">補充</span>' : '';
-  const frontCap = item.frontend ? '<span class="cover-front">前端</span>' : '';
-  let coverInner;
-  if (item.img) {
-    coverInner = '<img class="cover-img" src="' + item.img + '" alt="" loading="lazy" onerror="this.remove()">'
-      + '<div class="cover-overlay"></div>'
-      + '<span class="idx">#' + idx + '</span>'
-      + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
-  } else {
-    coverInner = '<span class="cover-ico">' + ICONS[ri] + '</span>'
-      + '<span class="idx">#' + idx + '</span>'
-      + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
-  }
-  const aUrl = item.articleUrl || item.sourceUrl;
-  const aId = item.articleId || "";
+  const newBadge = item.isNew ? '<span class="ct-new">NEW</span>' : '';
   card.innerHTML =
-    '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner + '</div>'
+    '<div class="topbar" style="background:var(--c' + ri + ')"></div>'
     + '<div class="body">'
-    + '<h3>' + item.title + '</h3>'
+    +   '<h3>' + item.title + '</h3>'
+    +   '<div class="meta">'
+    +     '<span class="ct-idx">#' + idx + '</span>'
+    +     newBadge
+    +     '<span class="ct-date">' + cardDate + '</span>'
+    +   '</div>'
     + '</div>';
-  card.dataset.aid = aId;
+  card.dataset.aid = item.articleId || "";
   card.dataset.sname = item.sourceName || "";
   card.dataset.summary = item.summary || "";
   card.dataset.keypoints = JSON.stringify(item.keypoints || []);
   return card;
 }
 
-// Build a deals card (熱門優惠) — product-style image card.
+// Build a compact deals card (E layout) — thin color top-bar + price line.
 function makeDealCard(item, idx, ri) {
   const card = document.createElement('article');
-  card.className = 'card deal';
+  card.className = 'card wall deal';
   const price = item.price || '';
   const orig = item.origPrice || '';
   const off = item.discount || '';
   const imgUrl = item.img || '';
   const cat = detectCat(item.title);
-  const iconSvg = CATEGORY_ICONS[cat] || CATEGORY_ICONS.generic;
-  const coverInner = '<span class="cover-icon">' + iconSvg + '</span>'
-    + (imgUrl ? '<img class="cover-img" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display=&quot;none&quot;">' : '');
   card.innerHTML =
-    '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner
-    + '<span class="cover-deal">優惠</span>'
-    + '<span class="idx">#' + idx + '</span>'
-    + '</div>'
+    '<div class="topbar" style="background:var(--c' + ri + ')"></div>'
     + '<div class="body">'
     +   '<h3>' + item.title + '</h3>'
     +   '<div class="deal-price">'
@@ -504,7 +464,8 @@ function makeDealCard(item, idx, ri) {
     +     (orig ? '<span class="dp-orig">' + orig + '</span>' : '')
     +     (off ? '<span class="dp-off">' + off + '</span>' : '')
     +   '</div>'
-    +   '<div class="deal-src">Price.com.hk 網購</div>'
+    +   '<div class="meta"><span class="ct-idx">#' + idx + '</span>'
+    +     '<span class="ct-date">' + (item.sourceName || '優惠') + '</span></div>'
     + '</div>';
   card.dataset.deal = '1';
   card.dataset.dcat = cat;
@@ -518,8 +479,7 @@ function makeDealCard(item, idx, ri) {
   return card;
 }
 
-// ===== Ops-console view: filter chips + KPI strip + dense table =====
-// (replaces the previous masonry card grid; keeps the tap-to-open reader)
+// ===== E 緊湊卡片牆: 過濾 chips + 緊湊網格 + 保留點開詳情 =====
 const navInner = document.querySelector('.nav-inner');
 
 // Category filter chips — 限時情報王 first
@@ -538,61 +498,22 @@ allCats.forEach(function(c, ci){
   navInner.appendChild(a);
 });
 
-// KPI strip — per-section counts + 今日新增
-let newCount = 0;
-DATA.sections.forEach(function(s){ s.items.forEach(function(it){ if (it.isNew) newCount++; }); });
-const kpi = document.createElement('div');
-kpi.className = 'kpi-strip';
-[{l:'今日新增', n:newCount, hl:true}].concat(
-  DATA.sections.map(function(s){ return {l:s.label, n:s.items.length}; })
-).forEach(function(k){
-  const d = document.createElement('div');
-  d.className = 'kpi' + (k.hl ? ' kpi-hl' : '');
-  d.innerHTML = '<div class="kpi-num">' + k.n + '</div><div class="kpi-lab">' + k.l + '</div>';
-  kpi.appendChild(d);
-});
-content.appendChild(kpi);
-
-// Dense table
-const tableWrap = document.createElement('div');
-tableWrap.className = 'ops-wrap';
-const table = document.createElement('table');
-table.className = 'ops-table';
-table.innerHTML = '<thead><tr>'
-  + '<th>標題</th><th>分類</th><th>來源</th><th>時間</th><th>狀態</th>'
-  + '</tr></thead>';
-const tbody = document.createElement('tbody');
+// Compact card wall (E): thin color top-bar, 8px gaps, title-only cards.
+// Sections render in order so 限時情報王 stays on top (first column block).
+const wall = document.createElement('div');
+wall.className = 'grid wall';
+let globalIdx = 0;
 DATA.sections.forEach(function(sec, si){
   const ri = sec.ci != null ? sec.ci : si;
+  const isDeal = sec.kind === 'deals';
   sec.items.forEach(function(item){
-    const tr = document.createElement('tr');
-    tr.className = 'card';
-    tr.setAttribute('data-cat', sec.label);
-    const src = item.sourceName || '';
-    const date = item.date || DATA.cardDate || '';
-    tr.dataset.aid = item.articleId || '';
-    tr.dataset.sname = src;
-    tr.dataset.summary = item.summary || '';
-    tr.dataset.keypoints = JSON.stringify(item.keypoints || []);
-    const status = item.isNew
-      ? '<span class="op-new">NEW</span>'
-      : '<span style="color:var(--muted);font-size:12px;">—</span>';
-    tr.innerHTML =
-      '<td class="op-title"><h3>' + item.title + '</h3></td>'
-      + '<td>' + sec.label + '</td>'
-      + '<td>' + src + '</td>'
-      + '<td class="op-date">' + date + '</td>'
-      + '<td>' + status + '</td>';
-    tbody.appendChild(tr);
+    globalIdx++;
+    const card = isDeal ? makeDealCard(item, globalIdx, ri) : makeCard(item, globalIdx, ri, sec.kind === 'external', false);
+    card.setAttribute('data-cat', sec.label);
+    wall.appendChild(card);
   });
 });
-if (tbody.children.length) {
-  table.appendChild(tbody);
-  tableWrap.appendChild(table);
-} else {
-  tableWrap.innerHTML = '<div class="ops-empty">暫無資料</div>';
-}
-content.appendChild(tableWrap);
+content.appendChild(wall);
 
 // Filter chips behaviour
 navInner.addEventListener('click', function(e){
@@ -600,9 +521,9 @@ navInner.addEventListener('click', function(e){
   if (!btn) return;
   document.querySelectorAll('.nav-link').forEach(function(b){ b.classList.toggle('on', b === btn); });
   const cat = btn.getAttribute('data-cat');
-  document.querySelectorAll('.ops-table tbody tr.card').forEach(function(tr){
-    const show = (cat === '__all__') || (tr.getAttribute('data-cat') === cat);
-    tr.style.display = show ? '' : 'none';
+  document.querySelectorAll('.grid.wall .card').forEach(function(card){
+    const show = (cat === '__all__') || (card.getAttribute('data-cat') === cat);
+    card.style.display = show ? '' : 'none';
   });
 });
 
@@ -743,25 +664,8 @@ document.addEventListener('click', function(e){
 });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !reader.hidden) closeReader(); });
 
-// Masonry: set each card's row span from its rendered height (variable sizes, order preserved)
-// On mobile (single column), disable masonry and let cards stack naturally to avoid overlap.
-function layoutMasonry(){
-  const isSingleColumn = window.innerWidth <= 640;
-  document.querySelectorAll('.card').forEach(function(c){
-    if (isSingleColumn) {
-      c.style.gridRowEnd = 'auto';
-      return;
-    }
-    const gap = 20, unit = 8;
-    const h = c.getBoundingClientRect().height;
-    c.style.gridRowEnd = 'span ' + Math.ceil((h + gap) / (unit + gap));
-  });
-}
-layoutMasonry();
-window.addEventListener('resize', function(){ clearTimeout(window.__mt); window.__mt = setTimeout(layoutMasonry, 120); });
-// Re-run after images / fonts load to correct any height drift.
-window.addEventListener('load', function(){ layoutMasonry(); });
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutMasonry);
+// E 緊湊卡片牆: 固定列數 + 自然高度, 不需要 JS masonry。保留函式以相容切換邏輯。
+function layoutMasonry(){ /* no-op for compact wall */ }
 
 // Footer
 document.getElementById('foot').innerHTML =
@@ -769,7 +673,7 @@ document.getElementById('foot').innerHTML =
   + '（<a href="' + DATA.canonical + '" target="_blank" rel="noopener noreferrer">' + DATA.canonical + '</a>）</div>'
   + '<div style="margin-top:6px">生成时间：' + DATA.generatedHuman + ' · 由 AI HOT 接口自动聚合</div>'
   + '<div style="margin-top:6px">配图优先采用各报道原文题图（OG 图，版权归原媒体所有）；原文无图时回退至 <a href="https://openverse.org" target="_blank" rel="noopener noreferrer">Openverse</a>（CC 开放授权）主题示意图。</div>'
-  + '<div style="margin-top:6px">第 6 栏「限時情報王」内容聚合自 <a href="https://www.newmobilelife.com" target="_blank" rel="noopener noreferrer">NewMobileLife（流動日報）</a>，版权与原文均归原媒体所有。</div>';
+  + '<div style="margin-top:6px">首栏「限時情報王」内容聚合自 <a href="https://www.newmobilelife.com" target="_blank" rel="noopener noreferrer">NewMobileLife（流動日報）</a>，版权与原文均归原媒体所有。</div>';
 </script>
 </body>
 </html>
