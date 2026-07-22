@@ -468,7 +468,7 @@ function makeDealCard(item, idx, ri) {
   const cat = detectCat(item.title);
   const iconSvg = CATEGORY_ICONS[cat] || CATEGORY_ICONS.generic;
   const coverInner = '<span class="cover-icon">' + iconSvg + '</span>'
-    + (imgUrl ? '<img class="cover-img" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display='none'">' : '');
+    + (imgUrl ? '<img class="cover-img" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display=&quot;none&quot;">' : '');
   card.innerHTML =
     '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner
     + '<span class="cover-deal">優惠</span>'
@@ -607,7 +607,7 @@ function openReader(card) {
     const dicon = CATEGORY_ICONS[dcat] || CATEGORY_ICONS.generic;
     let imgHtml;
     if (dimg) {
-      imgHtml = '<div class="reader-deal-img"><img src="' + dimg + '" alt="" loading="lazy" onerror="dealImgFallback(this,'' + dcat + '')"></div>';
+      imgHtml = '<div class="reader-deal-img"><img src="' + dimg + '" alt="" loading="lazy" onerror="dealImgFallback(this,\'' + dcat + '\')"></div>';
     } else {
       imgHtml = '<div class="reader-deal-img reader-deal-icon">' + dicon + '</div>';
     }
