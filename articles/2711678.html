@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Nuxt 4.0 发布：稳定性、性能与更顺滑的开发体验 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Nuxt 4.0 发布：稳定性、性能与更顺滑的开发体验</h1>
+<div class="meta"><span class="src">掘金</span><span>· 7月23日 周四</span>
+<span>· <a href="https://cloud.tencent.com/developer/article/2711678" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://cloud.tencent.com/developer/article/2711678" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>本篇依然來自於我們的 《前端週刊》 項目！
+由團隊成員 **掘金安東尼** 翻譯，歡迎大家持續追蹤全球最新前端資訊!!</p><p>當一個框架發佈大版本時，我們總會期待它帶來一些“炸裂”的新功能。但 Nuxt 4 這次走的完全不是這個路子。它沒有大肆渲染噱頭，而是把重心放在了**長期穩定性、性能優化，以及更順滑的開發者體驗**上。</p><p>對於還在用 Nuxt 3 的開發者來說，Nuxt 4 意味着：</p><p>無論你是在考慮遷移到 Nuxt 4，想體驗更完善的 TypeScript 集成，還是對新的數據獲取邏輯感興趣，這篇內容都會拆解重點，並告訴你在升級過程中要避開的坑。</p><p><code>app/</code> 目錄在全新的 Nuxt 4 項目裏，最明顯的變化就是：所有熟悉的目錄（components、pages、layouts……）都搬進了 ** app/** 文件夾。 這樣一來，應用代碼和項目根目錄就完全分開，結構更直觀。</p><p class='list-item'>**Nuxt 3 结构：**</p><pre><code>my-nuxt-app/
+├─ components/
+├─ layouts/
+├─ pages/
+├─ plugins/
+├─ public/
+├─ server/
+├─ app.vue
+└─ nuxt.config.ts</code></pre><p class='list-item'>**Nuxt 4 结构：**</p><pre><code>my-nuxt-app/
+├─ app/
+│  ├─ components/
+│  ├─ layouts/
+│  ├─ pages/
+│  ├─ plugins/
+│  └─ app.vue
+├─ public/
+├─ server/
+└─ nuxt.config.ts</code></pre><p>別小看這個調整，它帶來了兩大好處：</p><p><code>app/</code> 內代碼和 <code>node_modules/</code>、<code>.git/</code>、<code>server/</code> 等根目錄文件分開，Vite 的監聽範圍變小，HMR 更快。尤其在 Windows 和 Linux 上，文件 I/O 的瓶頸能被大大緩解。
+ 👉 需要說明的是，這並不是強制遷移。Nuxt 4 依然兼容 Nuxt 3 的舊結構。</p><p>遷移其實非常輕鬆：</p><pre><code>&lt;code&gt;app/&lt;/code&gt;
+ &lt;code&gt;app.vue&lt;/code&gt;、&lt;code&gt;error.vue&lt;/code&gt; 也丟進 &lt;code&gt;app/&lt;/code&gt; 完成！Nuxt 會自動識別新結構。
+ 不過，別忘了更新腳本、CI/CD 配置和測試工具裏的路徑，不然可能踩坑。</code></pre><p class='list-item'>**自定義腳本 / CI/CD** `package.json`、GitHub Actions 等配置裏的硬編碼路徑需要更新。 例如：</p><pre><code>// 旧
+&quot;scripts&quot;: {
+  &quot;lint&quot;: &quot;eslint ./pages&quot;
+}
+// 新
+&quot;scripts&quot;: {
+  &quot;lint&quot;: &quot;eslint ./app/pages&quot;
+}</code></pre><p class='list-item'>**配置文件** `.nuxtignore`、測試框架（Vitest、Jest）、Storybook 等配置也要檢查路徑是否過時。</p><p>Nuxt 4 另一大核心升級是 **TypeScript 配置徹底重做**。</p><p>在 Nuxt 3 中，單一的 <code>tsconfig.json</code> 容易導致 **類型“串味”**（比如服務端的 Node 類型滲透到客戶端），從而埋下 bug。 Nuxt 4 把類型系統拆分成 **app/**、**server/** 和 **shared/** 三個虛擬項目，嚴格隔離。</p><p>好處就是：</p><p><code>tsconfig.json</code> 也更乾淨，Nuxt 內部幫你處理路徑映射
+ 雖然更嚴格的類型檢查會暴露之前潛伏的錯誤，但這對長期穩定性是個巨大提升。</p><p>Nuxt 3 的 <code>tsconfig.json</code> 相对繁琐：</p><pre><code>{
+  &quot;extends&quot;: &quot;./.nuxt/tsconfig.json&quot;,
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;baseUrl&quot;: &quot;.&quot;,
+    &quot;paths&quot;: {
+      &quot;~/*&quot;: [&quot;./*&quot;],
+      &quot;@/*&quot;: [&quot;./*&quot;]
+    }
+  },
+  &quot;include&quot;: [
+    &quot;./components/**/*&quot;,
+    &quot;./pages/**/*&quot;
+  ]
+}</code></pre><p>Nuxt 4 中則更簡潔：</p><pre><code>{
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true
+  }
+}</code></pre><p class='list-item'>**揭示隱藏錯誤**</p><p>更嚴格的類型檢查會把以前沒注意到的坑揪出來。舉個例子，如果你在瀏覽器端的代碼裏不小心用到了 Node 模塊（比如 <code>fs</code> 這種只能在服務端用的東西），Nuxt 3 可能不會提醒你，直到運行時才直接崩掉。Nuxt 4 就不一樣了，它會在你寫代碼的時候立刻報錯，把問題攔在上線之前。</p><pre><code>// server/utils/log-to-file.ts
+import fs from &#x27;node:fs&#x27;
+export function logToFile(msg: string) {
+  fs.appendFileSync(&#x27;server.log&#x27;, msg + &#x27;\n&#x27;)
+}
+// 客户端组件
+import { logToFile } from &#x27;~/server/utils/log-to-file&#x27;
+logToFile(&#x27;Button clicked&#x27;) // ❌ Nuxt 3 运行时崩溃</code></pre><p>Nuxt 4 会在编译阶段直接报错： <code>Cannot find module 'node:fs' ...</code></p><p>如果你在開發 Nuxt 模塊：</p><pre><code>&lt;code&gt;package.json&lt;/code&gt; 中用条件导出（browser / node）保证类型解析正确
+ Nuxt 4 改变了 &lt;code&gt;useAsyncData&lt;/code&gt; 与 &lt;code&gt;useFetch&lt;/code&gt; 的默认行为。</code></pre><p><code>data</code> 置爲 <code>null</code>，pending=true 時明確表示數據無效 → 強調顯式加載狀態
+ 示例：</p><pre><code>&lt;div v-if=&quot;!pending &amp;&amp; data&quot;&gt;
+  &lt;h1&gt;{{ data.title }}&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div v-else&gt;
+  Loading...
+&lt;/div&gt;</code></pre><p>如果你仍想用“stale-while-revalidate”模式，可手動實現：</p><pre><code>const displayData = ref(data.value)
+watch(data, (newData) =&gt; {
+  if (newData) displayData.value = newData
+})</code></pre><p>在 Nuxt 4 裏，數據刷新時可能會出現“UI 閃一下”的情況——原本的內容突然消失，變成一個加載圈，看起來挺突兀。解決辦法很簡單：要麼用骨架屏來佔位，讓頁面結構不變；要麼在新數據回來之前，先把舊數據頂上去，避免頁面空白。</p><p>在一個到處追逐“炫酷特性”的生態裏，Nuxt 4 反而選擇了**成熟與內功**：更清晰、更快的項目結構、更嚴謹的 TypeScript 系統、更合理的數據獲取邏輯；</p><p>Nuxt 4 的價值不在於單點功能，而是這些改進加在一起帶來的質變。它更像是一種**長期投資**：讓大規模應用的開發更快、更穩、更順暢。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

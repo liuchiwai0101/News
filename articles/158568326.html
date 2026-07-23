@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>2026 前端无障碍优化避坑指南（附 ARIA 实战） · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>2026 前端无障碍优化避坑指南（附 ARIA 实战）</h1>
+<div class="meta"><span class="src">CSDN</span><span>· 7月23日 周四</span>
+<span>· <a href="https://blog.csdn.net/master_chenchen/article/details/158568326" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/master_chenchen/article/details/158568326" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>#### 別讓用戶摸黑走路！2026前端無障礙優化避坑指南（附ARIA實戰騷操作）</h3><p>先別急着划走，我知道看到"無障礙"三個字很多人第一反應就是：這玩意兒跟我有啥關係？我又不是給盲人做網站的。</p><p>打住，這個認知得先掰過來。</p><p>2024年世界衛生組織的數據擺在那兒，全球有超過13億人患有某種形式的殘疾，佔總人口的16%左右。但這只是冰山一角。你仔細想想，臨時手骨折打石膏的上班族是不是你的用戶？老了眼花的爸媽輩是不是你的用戶？地鐵上被擠成沙丁魚只能單手操作手機的是不是你的用戶？甚至大夏天在戶外被太陽曬得屏幕啥都看不清的你自己，是不是你的用戶？</p><p>無障礙設計（Accessibility，簡稱a11y）從來不是"特殊人羣的特權"，而是**所有人的剛需**。就像你修馬路的時候肯定會留盲道，但推嬰兒車的、拉行李箱的、甚至單純走路看手機不看路的，都會用到那個坡道。無障礙功能就是個坡道，只不過這個坡道是在數字世界裏。</p><p>而且法律的大棒是真的在往下揮。2026年歐盟的《歐洲無障礙法案》（European Accessibility Act）已經全面落地，要求所有在歐盟市場流通的數字產品和服務必須符合EN 301 549標準，這個標準基本就是WCAG 2.1 AA級要求的翻版。美國那邊ADA（Americans with Disabilities Act）訴訟案每年都在漲，2023年光網站無障礙訴訟就超過4000起，平均和解金在5萬到50萬美元之間。國內雖然起步晚，但《無障礙環境建設法》2023年9月1日已經正式實施，涉及政務、公共服務、電商、金融等領域的網站和APP都在逐步納入監管範圍。</p><p>所以這事兒已經從"道德加分項"變成了"法律紅線"。你寫的每一行代碼都可能成爲呈堂證供，這話一點不誇張。</p><p>所以這篇文章咱們就掰開了揉碎了聊，從WCAG 2.2的新標準到具體的代碼怎麼寫，從鍵盤導航到顏色對比度，從調試工具到團隊協作，爭取讓你看完就能上手改代碼。別整那些虛的，直接上乾貨。</p><p>WCAG（Web Content Accessibility Guidelines）是W3C搞的一套網頁內容無障礙指南，目前最新版本是2.2，2023年10月正式成爲W3C推薦標準。如果你還在照着2.0或者2.1的老黃曆寫代碼，趕緊更新知識庫，2.2加了幾個挺重要的新要求。</p><p class='list-item'>2.2裏面新增了一個2.4.11標準叫"Focus Not Obscured (Minimum)“，要求當UI組件獲得鍵盤焦點時，至少有一部分是可見的，不能被其他內容完全擋住。還有一個更強的2.4.12"Focus Not Obscured (Enhanced)”，要求焦點元素必須完全可見。</p><p>這事兒咋理解呢？想象一下你做了個粘性導航欄（sticky header），用戶往下滾動頁面後按Tab鍵，焦點跑到頁面中間某個按鈕上去了，結果被固定在頂部的導航欄遮得嚴嚴實實。用戶根本不知道自己在哪兒，這就是違規。</p><p>還有2.4.13"Focus Appearance"，對焦點指示器的樣式提出了具體要求。以前大家隨便搞個outline: none然後用box-shadow糊弄一下，現在不行了。標準要求焦點指示器的面積至少得有2個CSS像素粗，而且顏色對比度得夠。</p><pre><code>/* 这种写法在WCAG 2.2下可能不合格 */
+button:focus {
+  outline: none;
+  box-shadow: 0 0 2px blue; /* 太细了，才2px而且对比度可能不够 */
+}
+/* 相对靠谱的写法 */
+button:focus-visible {
+  outline: 3px solid #0056b3; /* 至少2px，颜色对比度要够 */
+  outline-offset: 2px; /* 让焦点框和元素有点间距，更清晰 */
+}
+/* 或者如果你想搞点花活但保持合规 */
+.custom-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #0056b3; /* 双层阴影，对比度杠杠的 */
+}</code></pre><p class='list-item'>2.5.7"Dragging Movements"是個新增標準，要求所有需要拖拽操作的功能，必須提供單指針的替代操作方式，而且不需要精準定位。</p><p>啥意思呢？你做了個拖拽排序的列表，鼠標用戶拖着爽，但用鍵盤的、用Switch設備的、甚至手抖的帕金森患者怎麼辦？你得提供"上移"、"下移"這樣的按鈕作爲替代方案。</p><pre><code>&lt;!-- 不好的例子：只能拖拽 --&gt;
+&lt;ul class=&quot;sortable-list&quot;&gt;
+  &lt;li draggable=&quot;true&quot;&gt;项目A&lt;/li&gt;
+  &lt;li draggable=&quot;true&quot;&gt;项目B&lt;/li&gt;
+  &lt;li draggable=&quot;true&quot;&gt;项目C&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- 好的例子：拖拽+按钮双保险 --&gt;
+&lt;ul class=&quot;sortable-list&quot;&gt;
+  &lt;li&gt;
+    &lt;span&gt;项目A&lt;/span&gt;
+    &lt;button aria-label=&quot;将项目A上移&quot;&gt;↑&lt;/button&gt;
+    &lt;button aria-label=&quot;将项目A下移&quot;&gt;↓&lt;/button&gt;
+    &lt;button aria-label=&quot;拖拽排序&quot; class=&quot;drag-handle&quot;&gt;⋮⋮&lt;/button&gt;
+  &lt;/li&gt;
+  &lt;!-- 其他项目同理 --&gt;
+&lt;/ul&gt;</code></pre><p class='list-item'>2.2還強化了認知和學習障礙相關的支持。比如3.2.6"Consistent Help"，要求幫助機制（比如聯繫客服、FAQ鏈接）在每個頁面上的相對位置保持一致。別今天放右上角，明天放左下角，後天藏進漢堡菜單，認知障礙用戶會瘋的。</p><p>還有2.4.12那個焦點可見性的要求，其實也是幫助注意力缺陷的用戶定位自己在哪兒。</p><p>講真，每次看到滿屏的<code><div onclick="..."></code>我都想嘆氣。HTML5給我們提供了那麼多語義化標籤，爲啥非得跟div過不去呢？</p><p>ARIA（Accessible Rich Internet Applications）確實強大，但記住一句金句：**首選原生HTML，實在沒招了再請ARIA大神**。原生的語義化標籤自帶無障礙屬性，瀏覽器和輔助技術（Assistive Technologies，比如屏幕閱讀器）都認，不需要你額外聲明。</p><pre><code>&lt;!-- 求你别这么写了 --&gt;
+&lt;div class=&quot;button&quot; onclick=&quot;submitForm()&quot;&gt;提交&lt;/div&gt;
+&lt;!-- 原生button不香吗？ --&gt;
+&lt;button type=&quot;submit&quot;&gt;提交&lt;/button&gt;</code></pre><p>原生<code><button></code>自帶多少好東西你知道嗎？鍵盤可聚焦（tabindex自動管理）、Enter和Space鍵觸發點擊事件、自動參與表單提交、屏幕閱讀器直接報"按鈕"。你用div模擬的話，這些全得自己手寫，漏一個就是Bug。</p><p>再比如導航：</p><pre><code>&lt;!-- 老派的div写法 --&gt;
+&lt;div class=&quot;nav&quot;&gt;
+  &lt;div class=&quot;nav-item&quot;&gt;首页&lt;/div&gt;
+  &lt;div class=&quot;nav-item&quot;&gt;产品&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 语义化写法 --&gt;
+&lt;nav aria-label=&quot;主导航&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&quot;/&quot; aria-current=&quot;page&quot;&gt;首页&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/products&quot;&gt;产品&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre><p><code><nav></code>標籤告訴屏幕閱讀器這是個導航區域，<code><ul></code>和<code><li></code>告訴它這是個列表，<code><a></code>告訴它這是鏈接。<code>aria-current="page"</code>更是點睛之筆，讓屏幕閱讀器能播報"當前頁面：首頁"，用戶知道自己身在何處。</p><p>我見過太多頁面標題層級跟過山車似的，H1直接跳到H4，中間H2H3全失蹤，或者一個頁面塞五六個H1。屏幕閱讀器用戶靠標題導航（按H鍵跳轉到下一個標題），你這種結構就是人爲製造迷宮。</p><pre><code>&lt;!-- 災難現場 --&gt;
+&lt;h1&gt;歡迎來到我的網站&lt;/h1&gt;
+...
+&lt;h4&gt;最新文章&lt;/h4&gt; &lt;!-- 等等，H2和H3去哪兒了？ --&gt;
+...
+&lt;h1&gt;關於我們&lt;/h1&gt; &lt;!-- 又一個H1？ --&gt;</code></pre><p>正確的層級應該是：</p><pre><code>&lt;h1&gt;文章标题&lt;/h1&gt;
+  &lt;h2&gt;引言&lt;/h2&gt;
+  &lt;h2&gt;正文第一部分&lt;/h2&gt;
+    &lt;h3&gt;小节A&lt;/h3&gt;
+    &lt;h3&gt;小节B&lt;/h3&gt;
+  &lt;h2&gt;正文第二部分&lt;/h2&gt;
+  &lt;h2&gt;结论&lt;/h2&gt;</code></pre><p>一個頁面只有一個H1（通常是頁面主標題），然後按層級往下走，別跳級，別亂來。</p><p>經典問題：什麼時候用<code><button></code>，什麼時候用<code><a></code>？</p><p>簡單口訣：**點一下跳轉是鏈接，點一下幹活是按鈕**。</p><pre><code>&lt;!-- 错误：用链接干按钮的活 --&gt;
+&lt;a href=&quot;#&quot; onclick=&quot;openModal()&quot;&gt;打开弹窗&lt;/a&gt;
+&lt;!-- 正确 --&gt;
+&lt;button type=&quot;button&quot; onclick=&quot;openModal()&quot;&gt;打开弹窗&lt;/button&gt;
+&lt;!-- 错误：用按钮干链接的活 --&gt;
+&lt;button onclick=&quot;window.location=&#x27;/about&#x27;&quot;&gt;关于我们&lt;/button&gt;
+&lt;!-- 正确 --&gt;
+&lt;a href=&quot;/about&quot;&gt;关于我们&lt;/a&gt;</code></pre><p>爲啥這麼講究？因爲屏幕閱讀器對鏈接和按鈕的播報不一樣，用戶的預期也不一樣。鏈接意味着"我要離開當前頁面或者跳到某個錨點"，按鈕意味着"我要在當前頁面觸發某個動作"。混用的話，用戶會懵。</p><p>表單是無障礙的重災區。最常見的問題就是label標籤缺失或者關聯錯誤。</p><pre><code>&lt;!-- 孤儿输入框，屏幕阅读器不知道这是啥 --&gt;
+&lt;input type=&quot;text&quot; placeholder=&quot;请输入用户名&quot;&gt;
+&lt;!-- 正确做法1：显式关联 --&gt;
+&lt;label for=&quot;username&quot;&gt;用户名&lt;/label&gt;
+&lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot;&gt;
+&lt;!-- 正确做法2：隐式关联（label包裹input） --&gt;
+&lt;label&gt;
+  用户名
+  &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;
+&lt;/label&gt;</code></pre><p>placeholder不能代替label！placeholder是提示文本，用戶一開始輸入它就消失了，而且有些屏幕閱讀器不讀placeholder。label纔是正主兒。</p><p>複雜表單還得考慮錯誤提示：</p><pre><code>&lt;div class=&quot;form-group&quot;&gt;
+  &lt;label for=&quot;email&quot;&gt;邮箱地址&lt;/label&gt;
+  &lt;input 
+    type=&quot;email&quot; 
+    id=&quot;email&quot; 
+    name=&quot;email&quot;
+    aria-required=&quot;true&quot;
+    aria-invalid=&quot;true&quot;
+    aria-describedby=&quot;email-error&quot;
+  &gt;
+  &lt;span id=&quot;email-error&quot; class=&quot;error-message&quot; role=&quot;alert&quot;&gt;
+    请输入有效的邮箱地址，例如：user@example.com
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre><p>這裏<code>aria-invalid="true"</code>告訴屏幕閱讀器這個輸入框當前值無效，<code>aria-describedby</code>把錯誤提示和輸入框關聯起來，這樣當焦點進入輸入框時，屏幕閱讀器會播報label文本+當前值+錯誤提示。</p><p>ARIA是個雙刃劍。用對了能救命，用錯了能埋雷。</p><p>記住優先級：</p><p class='list-item'>- **第一選擇**：原生HTML語義化標籤</p><p class='list-item'>- **第二選擇**：HTML不夠用時，用ARIA補充</p><p class='list-item'>- **第三選擇**：完全自定義組件時，用ARIA重建語義</p><p>舉個例子，HTML原生的<code><dialog></code>元素已經支持得很好了（除了Safari某些老版本），你就沒必要自己用div+ARIA造個對話框。但如果你要做個複雜的樹形選擇器（Tree View），原生HTML沒有對應標籤，這時候ARIA就派上用場了。</p><p>最經典的濫用就是把div僞裝成button：</p><pre><code>&lt;!-- 灾难现场：看起来是按钮，用起来是灾难 --&gt;
+&lt;div role=&quot;button&quot; onclick=&quot;doSomething()&quot;&gt;点击我&lt;/div&gt;</code></pre><p>這代碼問題大了去了。雖然加了<code>role="button"</code>告訴屏幕閱讀器這是個按鈕，但：</p><p class='list-item'>- 它不能被鍵盤聚焦（沒有tabindex）</p><p class='list-item'>- 即使加了tabindex，按Enter或Space也不會觸發點擊</p><p class='list-item'>- 沒有disabled狀態的支持</p><p class='list-item'>- 沒有按鈕的默認樣式</p><pre><code>&lt;!-- 稍微像样点的自定义按钮，但还是很麻烦 --&gt;
+&lt;div 
+  role=&quot;button&quot; 
+  tabindex=&quot;0&quot;
+  onclick=&quot;doSomething()&quot;
+  onkeydown=&quot;if(event.key===&#x27;Enter&#x27;||event.key===&#x27; &#x27;)doSomething()&quot;
+  aria-disabled=&quot;false&quot;
+&gt;
+  点击我
+&lt;/div&gt;</code></pre><p>看到沒，爲了模擬一個原生button，你得寫多少代碼？而且這還是簡化版，真要做得完善，代碼量翻倍。所以再說一遍：**能用原生就別用ARIA**。</p><p>頁面裏經常有動態更新的內容，比如：</p><p class='list-item'>- 表單提交後的成功/失敗提示</p><p class='list-item'>- 實時搜索的結果數量</p><p class='list-item'>- 聊天應用的新消息</p><p class='list-item'>- 股票價格的變動</p><p>這些如果不處理，屏幕閱讀器用戶完全不知道發生了什麼。<code>aria-live</code>就是幹這個的。</p><pre><code>&lt;!--  polite：等用户当前操作完成后再播报，不打断 --&gt;
+&lt;div aria-live=&quot;polite&quot; aria-atomic=&quot;true&quot; id=&quot;status-region&quot;&gt;
+  &lt;!-- 这里的内容变化会被温柔地播报 --&gt;
+&lt;/div&gt;
+&lt;!-- assertive：立刻播报，会打断当前操作，慎用 --&gt;
+&lt;div aria-live=&quot;assertive&quot; aria-atomic=&quot;true&quot; id=&quot;error-region&quot;&gt;
+  &lt;!-- 紧急错误信息 --&gt;
+&lt;/div&gt;</code></pre><p><code>aria-atomic="true"</code>表示把整個區域當成一個整體播報，而不是隻播報變化的部分。</p><p>實戰例子：</p><pre><code>// 搜索功能的无障碍支持
+function performSearch(query) {
+  const statusRegion = document.getElementById(&#x27;search-status&#x27;);
+  const resultsRegion = document.getElementById(&#x27;search-results&#x27;);
+  
+  // 先播报&quot;正在搜索&quot;
+  statusRegion.textContent = `正在搜索&quot;${query}&quot;...`;
+  
+  fetch(`/api/search?q=${query}`)
+    .then(res =&gt; res.json())
+    .then(data =&gt; {
+      // 渲染结果...
+      renderResults(data);
+      
+      // 温柔地播报结果（polite模式不会打断用户）
+      statusRegion.textContent = `找到${data.length}个结果`;
+      
+      // 把焦点移到结果区域，方便键盘用户继续操作
+      resultsRegion.focus();
+    })
+    .catch(err =&gt; {
+      // 错误信息用assertive，因为用户需要立刻知道
+      statusRegion.setAttribute(&#x27;aria-live&#x27;, &#x27;assertive&#x27;);
+      statusRegion.textContent = &#x27;搜索出错，请稍后重试&#x27;;
+      // 恢复为polite模式
+      setTimeout(() =&gt; {
+        statusRegion.setAttribute(&#x27;aria-live&#x27;, &#x27;polite&#x27;);
+      }, 1000);
+    });
+}</code></pre><p>ARIA有很多表示狀態的屬性，常見的有：</p><p class='list-item'>- `aria-expanded`：展開/摺疊狀態（手風琴菜單、下拉框）</p><p class='list-item'>- `aria-selected`：選中狀態（選項卡、列表項）</p><p class='list-item'>- `aria-pressed`：按下狀態（切換按鈕）</p><p class='list-item'>- `aria-hidden`：隐藏状态（注意和CSS的display:none区别）</p><p class='list-item'>- `aria-disabled`：禁用状态</p><p>這些狀態必須和實際UI保持一致，否則就是詐騙。</p><pre><code>&lt;!-- 手风琴组件的正确姿势 --&gt;
+&lt;div class=&quot;accordion&quot;&gt;
+  &lt;h3&gt;
+    &lt;button 
+      aria-expanded=&quot;false&quot;
+      aria-controls=&quot;section1-content&quot;
+      id=&quot;section1-button&quot;
+    &gt;
+      第一节标题
+    &lt;/button&gt;
+  &lt;/h3&gt;
+  &lt;div 
+    id=&quot;section1-content&quot;
+    role=&quot;region&quot;
+    aria-labelledby=&quot;section1-button&quot;
+    hidden
+  &gt;
+    第一节的内容...
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  const button = document.getElementById(&#x27;section1-button&#x27;);
+  const content = document.getElementById(&#x27;section1-content&#x27;);
+  
+  button.addEventListener(&#x27;click&#x27;, () =&gt; {
+    const isExpanded = button.getAttribute(&#x27;aria-expanded&#x27;) === &#x27;true&#x27;;
+    
+    // 状态切换
+    button.setAttribute(&#x27;aria-expanded&#x27;, !isExpanded);
+    
+    // UI同步更新
+    if (isExpanded) {
+      content.hidden = true;
+    } else {
+      content.hidden = false;
+    }
+  });
+&lt;/script&gt;</code></pre><p>關鍵點：</p><p class='list-item'>- `aria-expanded`在button上，因为button是控制元素</p><p class='list-item'>- `aria-controls`建立控制和被控制內容的關聯</p><p class='list-item'>- `hidden`屬性（HTML5原生）同時隱藏內容和將其從無障礙樹中移除，比重載CSS的display:none更乾淨</p><p class='list-item'>- 狀態變化時，兩者必須同步</p><p>鍵盤導航是無障礙的核心中的核心。很多行動障礙用戶無法使用鼠標，只能依賴鍵盤、Switch設備或者語音控制。如果你的網站鍵盤走不通，等於直接把門焊死了。</p><p>Tab鍵的聚焦順序默認是按照DOM結構的順序來的。如果你用CSS的<code>order</code>屬性或者<code>float</code>、<code>position</code>把視覺順序搞得和DOM順序不一致，鍵盤用戶就會體驗到"瞬移"的酸爽。</p><pre><code>&lt;!-- 视觉上是A、B、C，但DOM顺序是C、A、B，Tab键顺序就乱了 --&gt;
+&lt;div style=&quot;display: flex;&quot;&gt;
+  &lt;div style=&quot;order: 2&quot;&gt;A&lt;/div&gt;
+  &lt;div style=&quot;order: 3&quot;&gt;B&lt;/div&gt;
+  &lt;div style=&quot;order: 1&quot;&gt;C&lt;/div&gt;
+&lt;/div&gt;</code></pre><p>解決辦法：要麼調整DOM順序匹配視覺順序，要麼用<code>tabindex</code>強行干預（但不推薦，容易出亂子）。</p><p><code>tabindex</code>有三个值要注意：</p><p class='list-item'>- `tabindex="-1"`：元素可以被JavaScript聚焦（element.focus()），但不在Tab鍵順序裏。適合模態框容器這種需要被聚焦但不需要被Tab到的元素。</p><p class='list-item'>- `tabindex="0"`：元素加入Tab鍵順序，按DOM順序來。適合自定義交互組件。</p><p class='list-item'>- `tabindex="1"`或更大：強行插隊，數值越小越靠前。- **千萬別用**，這會破壞自然的Tab順序，讓用戶發瘋。</p><p>模態框（Modal/Dialog）是最需要焦點管理的地方。打開模態框時，焦點應該移到模態框內；關閉時，焦點應該回到觸發按鈕。更重要的是，當模態框打開時，用戶不應該能通過Tab鍵跑到模態框外面去跟背後的頁面交互。</p><pre><code>// 简易版焦点陷阱实现
+class Modal {
+  constructor(element) {
+    this.modal = element;
+    this.focusableElements = [];
+    this.firstFocusable = null;
+    this.lastFocusable = null;
+    this.previousFocus = null;
+  }
+  
+  open() {
+    // 记住打开前的焦点位置
+    this.previousFocus = document.activeElement;
+    
+    // 找到模态框内所有可聚焦元素
+    this.focusableElements = this.modal.querySelectorAll(
+      &#x27;button, [href], input, select, textarea, [tabindex]:not([tabindex=&quot;-1&quot;])&#x27;
+    );
+    
+    this.firstFocusable = this.focusableElements[0];
+    this.lastFocusable = this.focusableElements[this.focusableElements.length - 1];
+    
+    // 显示模态框
+    this.modal.hidden = false;
+    
+    // 焦点移到第一个可聚焦元素（通常是关闭按钮或标题）
+    this.firstFocusable.focus();
+    
+    // 绑定键盘事件
+    this.handleKeyDown = (e) =&gt; this.trapFocus(e);
+    document.addEventListener(&#x27;keydown&#x27;, this.handleKeyDown);
+  }
+  
+  close() {
+    this.modal.hidden = true;
+    document.removeEventListener(&#x27;keydown&#x27;, this.handleKeyDown);
+    
+    // 焦点回到之前的位置
+    if (this.previousFocus) {
+      this.previousFocus.focus();
+    }
+  }
+  
+  trapFocus(e) {
+    // Tab键被按下
+    if (e.key === &#x27;Tab&#x27;) {
+      // Shift+Tab（反向）
+      if (e.shiftKey) {
+        if (document.activeElement === this.firstFocusable) {
+          e.preventDefault();
+          this.lastFocusable.focus(); // 循环到最后一个
+        }
+      } else {
+        // 正向Tab
+        if (document.activeElement === this.lastFocusable) {
+          e.preventDefault();
+          this.firstFocusable.focus(); // 循环到第一个
+        }
+      }
+    }
+    
+    // ESC键关闭模态框
+    if (e.key === &#x27;Escape&#x27;) {
+      this.close();
+    }
+  }
+}
+// 使用
+const myModal = new Modal(document.getElementById(&#x27;my-modal&#x27;));
+document.getElementById(&#x27;open-btn&#x27;).addEventListener(&#x27;click&#x27;, () =&gt; myModal.open());</code></pre><p>幾個常見組件的鍵盤交互規範：</p><p class='list-item'>**下拉菜单（Select/Dropdown）：**</p><p class='list-item'>- Space/Enter：打开菜单</p><p class='list-item'>- Escape：關閉菜單</p><p class='list-item'>- Up/Down Arrow：在選項間移動</p><p class='list-item'>- Home/End：跳到第一個/最後一個選項</p><p class='list-item'>- Tab（菜單打開時）：關閉菜單並移動到下一個聚焦元素</p><pre><code>&lt;div class=&quot;custom-select&quot;&gt;
+  &lt;button 
+    aria-haspopup=&quot;listbox&quot;
+    aria-expanded=&quot;false&quot;
+    aria-labelledby=&quot;select-label&quot;
+    id=&quot;select-button&quot;
+  &gt;
+    请选择选项
+  &lt;/button&gt;
+  &lt;ul 
+    role=&quot;listbox&quot;
+    aria-labelledby=&quot;select-label&quot;
+    hidden
+    id=&quot;select-listbox&quot;
+  &gt;
+    &lt;li role=&quot;option&quot; aria-selected=&quot;false&quot;&gt;选项A&lt;/li&gt;
+    &lt;li role=&quot;option&quot; aria-selected=&quot;false&quot;&gt;选项B&lt;/li&gt;
+    &lt;li role=&quot;option&quot; aria-selected=&quot;false&quot;&gt;选项C&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre><p class='list-item'>**手风琴（Accordion）：**</p><p class='list-item'>- Enter/Space：展開/摺疊當前項</p><p class='list-item'>- Down Arrow：移動到下一項（可選）</p><p class='list-item'>- Up Arrow：移動到上一項（可選）</p><p class='list-item'>- Home：移動到第一項（可選）</p><p class='list-item'>- End：移動到最後一項（可選）</p><p class='list-item'>**标签页（Tabs）：**</p><p class='list-item'>- Left/Up Arrow：移動到上一個標籤</p><p class='list-item'>- Right/Down Arrow：移動到下一個標籤</p><p class='list-item'>- Home：移動到第一個標籤</p><p class='list-item'>- End：移動到最後一個標籤</p><p class='list-item'>- Tab：進入當前標籤頁的內容區域</p><p>長頁面的導航欄通常有一堆鏈接，鍵盤用戶每次進頁面都要按幾十次Tab才能到主內容，體驗極差。跳過鏈接就是給這些老手的快捷鍵。</p><pre><code>&lt;!-- 放在body的第一个子元素 --&gt;
+&lt;a href=&quot;#main-content&quot; class=&quot;skip-link&quot;&gt;跳转到主内容&lt;/a&gt;
+&lt;!-- 导航栏... --&gt;
+&lt;main id=&quot;main-content&quot; tabindex=&quot;-1&quot;&gt;
+  &lt;!-- 主内容 --&gt;
+&lt;/main&gt;</code></pre><pre><code>/* 默认隐藏，聚焦时显示 */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+  transition: top 0.3s;
+}
+.skip-link:focus {
+  top: 0;
+}</code></pre><p>這樣用戶按Tab鍵第一個聚焦的就是這個鏈接，按Enter直接跳到主內容區，省得聽幾十秒導航欄朗讀。</p><p>設計師最愛的"極簡風"、“高級感”，在無障礙眼裏往往是"看不清"、“分不清”。</p><p>WCAG 2.2要求：</p><p class='list-item'>- **普通文本**：對比度至少4.5:1（AA級）或7:1（AAA級）</p><p class='list-item'>- **大號文本**（18pt以上或14pt以上粗體）：對比度至少3:1（AA級）或4.5:1（AAA級）</p><p class='list-item'>- **UI組件和圖形**：對比度至少3:1</p><p>別在那兒卡着3.9:1試探法律邊緣，萬一用戶顯示器色偏或者亮度調低，立馬就不達標了。</p><p>推薦工具：</p><p class='list-item'>- WebAIM Contrast Checker（在线）</p><p class='list-item'>- Stark（Figma插件）</p><p class='list-item'>- axe DevTools（浏览器插件）</p><pre><code>/* 不合格的&quot;高级灰&quot; */
+.text-muted {
+  color: #999; /* 在白色背景上对比度只有2.8:1 */
+}
+/* 合格的灰色 */
+.text-muted-accessible {
+  color: #767676; /* 对比度4.6:1，刚刚过线 */
+}
+/* 更安全的深灰 */
+.text-safe {
+  color: #595959; /* 对比度7:1，AAA级 */
+}</code></pre><p>色盲用戶（全球男性約8%，女性約0.5%）如果只能依賴顏色區分狀態，會直接懵圈。比如表單的錯誤狀態只標紅邊框，成功狀態只標綠邊框，色盲用戶可能根本分不清。</p><pre><code>&lt;!-- 错误：只靠颜色 --&gt;
+&lt;input type=&quot;email&quot; class=&quot;error&quot;&gt; &lt;!-- 红边框，但色盲用户看可能是灰的 --&gt;
+&lt;!-- 正确：颜色+图标+文字 --&gt;
+&lt;div class=&quot;form-group&quot;&gt;
+  &lt;label for=&quot;email&quot;&gt;邮箱&lt;/label&gt;
+  &lt;input 
+    type=&quot;email&quot; 
+    id=&quot;email&quot;
+    class=&quot;error&quot;
+    aria-invalid=&quot;true&quot;
+    aria-describedby=&quot;email-error&quot;
+  &gt;
+  &lt;span id=&quot;email-error&quot; class=&quot;error-message&quot;&gt;
+    &lt;svg aria-hidden=&quot;true&quot; class=&quot;error-icon&quot;&gt;...&lt;/svg&gt;
+    邮箱格式不正确，请检查是否包含@符号
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre><pre><code>.error {
+  border-color: #d32f2f; /* 红色 */
+  background-color: #ffebee; /* 浅红背景 */
+}
+.error-message {
+  color: #d32f2f;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+/* 甚至可以考虑加个纹理或者左边框增强辨识度 */
+.error {
+  border-left: 3px solid #d32f2f;
+}</code></pre><p>現在很多網站支持深色模式（<code>prefers-color-scheme: dark</code>），但自動反色有時候會出幺蛾子。比如把重要的藍色鏈接反成了淺藍，對比度反而下降了；或者把黃色警告反成了深黃，和背景融爲一體。</p><pre><code>@media (prefers-color-scheme: dark) {
+  :root {
+    /* 别简单反色，要重新计算对比度 */
+    --text-primary: #ffffff; /* 纯白在深色背景上对比度够 */
+    --text-secondary: #b0b0b0; /* 浅灰，对比度得检查 */
+    --link-color: #4dabf7; /* 亮蓝，确保和深色背景对比度够 */
+    --error-color: #ff6b6b; /* 亮红 */
+  }
+  
+  /* 特别注意 */
+  .warning-box {
+    background: #332b00; /* 深黄背景 */
+    color: #ffd43b; /* 亮黄文字，确保对比度 */
+    border: 1px solid #ffd43b;
+  }
+}</code></pre><p>理論講完了，上點真刀真槍的代碼。</p><p>倒計時如果只顯示數字，屏幕閱讀器會讀成"5 4 3 2 1"，用戶完全不知道這是什麼。</p><pre><code>&lt;!-- 翻车现场 --&gt;
+&lt;div class=&quot;countdown&quot;&gt;
+  &lt;span&gt;05&lt;/span&gt;:&lt;span&gt;23&lt;/span&gt;:&lt;span&gt;45&lt;/span&gt;
+&lt;/div&gt;</code></pre><pre><code>&lt;!-- 救援方案 --&gt;
+&lt;div class=&quot;countdown&quot; role=&quot;timer&quot; aria-live=&quot;polite&quot; aria-atomic=&quot;true&quot;&gt;
+  &lt;span aria-hidden=&quot;true&quot;&gt;
+    &lt;span class=&quot;countdown-number&quot;&gt;05&lt;/span&gt;:
+    &lt;span class=&quot;countdown-number&quot;&gt;23&lt;/span&gt;:
+    &lt;span class=&quot;countdown-number&quot;&gt;45&lt;/span&gt;
+  &lt;/span&gt;
+  &lt;span class=&quot;visually-hidden&quot;&gt;
+    距离活动结束还剩5小时23分钟45秒
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre><pre><code>/* 视觉隐藏但屏幕阅读器可读 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}</code></pre><p>JavaScript更新时：</p><pre><code>function updateCountdown(hours, minutes, seconds) {
+  const visualPart = countdown.querySelector(&#x27;[aria-hidden=&quot;true&quot;]&#x27;);
+  const hiddenPart = countdown.querySelector(&#x27;.visually-hidden&#x27;);
+  
+  // 更新视觉数字
+  const numbers = visualPart.querySelectorAll(&#x27;.countdown-number&#x27;);
+  numbers[0].textContent = String(hours).padStart(2, &#x27;0&#x27;);
+  numbers[1].textContent = String(minutes).padStart(2, &#x27;0&#x27;);
+  numbers[2].textContent = String(seconds).padStart(2, &#x27;0&#x27;);
+  
+  // 更新隐藏文本（屏幕阅读器会温柔地播报，因为aria-live=&quot;polite&quot;）
+  hiddenPart.textContent = `距离活动结束还剩${hours}小时${minutes}分钟${seconds}秒`;
+}</code></pre><p>數據表格是屏幕閱讀器的噩夢，如果表頭關聯沒做好，用戶聽到的是"1234 5678 9012 3456"，根本不知道哪列是哪列。</p><pre><code>&lt;!-- 翻车：没有表头关联 --&gt;
+&lt;table&gt;
+  &lt;tr&gt;&lt;td&gt;姓名&lt;/td&gt;&lt;td&gt;年龄&lt;/td&gt;&lt;td&gt;城市&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;张三&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;北京&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;!-- 救援：完整的表头关联 --&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope=&quot;col&quot; id=&quot;th-name&quot;&gt;姓名&lt;/th&gt;
+      &lt;th scope=&quot;col&quot; id=&quot;th-age&quot;&gt;年龄&lt;/th&gt;
+      &lt;th scope=&quot;col&quot; id=&quot;th-city&quot;&gt;城市&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td headers=&quot;th-name&quot;&gt;张三&lt;/td&gt;
+      &lt;td headers=&quot;th-age&quot;&gt;25&lt;/td&gt;
+      &lt;td headers=&quot;th-city&quot;&gt;北京&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;!-- 更多行... --&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre><p><code>scope="col"</code>告訴屏幕閱讀器這是列頭，<code>headers</code>屬性把單元格和表頭ID關聯起來。這樣屏幕閱讀器會播報"姓名：張三，年齡：25，城市：北京"。</p><p>如果表格特别复杂（有跨行跨列表头），还得用<code>scope="row"</code>、<code>scope="colgroup"</code>、<code>scope="rowgroup"</code>，甚至<code>id</code>+<code>headers</code>的多对多关联。</p><p>SPA頁面切換時URL變了但頁面沒刷新，屏幕閱讀器不知道頁面已經變了，用戶以爲卡死了。</p><pre><code>// React Router示例
+import { useEffect } from &#x27;react&#x27;;
+import { useLocation } from &#x27;react-router-dom&#x27;;
+function useFocusManagement() {
+  const location = useLocation();
+  
+  useEffect(() =&gt; {
+    // 页面切换后，把焦点移到h1或者main区域
+    const pageTitle = document.querySelector(&#x27;h1&#x27;);
+    const mainContent = document.querySelector(&#x27;main&#x27;);
+    
+    if (pageTitle) {
+      pageTitle.setAttribute(&#x27;tabindex&#x27;, &#x27;-1&#x27;);
+      pageTitle.focus();
+      // 播报页面标题
+      document.title = `${pageTitle.textContent} - 我的网站`;
+    } else if (mainContent) {
+      mainContent.setAttribute(&#x27;tabindex&#x27;, &#x27;-1&#x27;);
+      mainContent.focus();
+    }
+    
+    // 可选：用aria-live播报页面切换
+    const announcer = document.getElementById(&#x27;page-announcer&#x27;);
+    if (announcer &amp;&amp; pageTitle) {
+      announcer.textContent = `已导航到${pageTitle.textContent}页面`;
+    }
+  }, [location]);
+}
+// 在App组件里使用
+function App() {
+  useFocusManagement();
+  return (
+    &lt;&gt;
+      &lt;div id=&quot;page-announcer&quot; aria-live=&quot;polite&quot; aria-atomic=&quot;true&quot; className=&quot;visually-hidden&quot;&gt;&lt;/div&gt;
+      {/* 路由配置... */}
+    &lt;/&gt;
+  );
+}</code></pre><p>關鍵點：</p><p class='list-item'>- 路由切換後主動管理焦點</p><p class='list-item'>- 更新页面标题（document.title）</p><p class='list-item'>- 用aria-live溫柔地播報頁面變化</p><p>alt文本（替代文本）是無障礙最基礎但也最容易踩坑的地方。</p><p class='list-item'>**錯誤示範：**</p><p class='list-item'>- `alt=""`（空alt，圖片會被屏幕閱讀器忽略，如果是內容圖片就慘了）</p><p class='list-item'>- `alt="图片"`（废话）</p><p class='list-item'>- `alt="圖片1"`（更廢話）</p><p class='list-item'>- 寫小作文（alt裏寫300字散文）</p><p class='list-item'>**正確姿勢：**</p><pre><code>&lt;!-- 裝飾性圖片：alt爲空，讓屏幕閱讀器忽略 --&gt;
+&lt;img src=&quot;decorative-line.png&quot; alt=&quot;&quot;&gt;
+&lt;!-- 內容性圖片：描述圖片內容，不是描述它長啥樣 --&gt;
+&lt;img src=&quot;golden-retriever.jpg&quot; alt=&quot;一隻金毛犬在草地上打滾&quot;&gt;
+&lt;!-- 功能性圖片（比如圖標按鈕）：描述功能 --&gt;
+&lt;button&gt;
+  &lt;img src=&quot;search-icon.svg&quot; alt=&quot;搜索&quot;&gt;
+&lt;/button&gt;
+&lt;!-- 複雜圖表：簡要描述+詳細數據放在別處 --&gt;
+&lt;img src=&quot;sales-chart.png&quot; alt=&quot;2024年Q1銷售額增長趨勢圖，詳細數據見下方表格&quot;&gt;
+&lt;table&gt;
+  &lt;!-- 詳細數據表格 --&gt;
+&lt;/table&gt;
+&lt;!-- 頭像類：描述人物特徵，幫助用戶區分 --&gt;
+&lt;img src=&quot;avatar-zhangsan.jpg&quot; alt=&quot;張三的頭像，戴眼鏡的年輕男性&quot;&gt;</code></pre><p>如果圖片裏有文字，alt裏要包含那些文字內容。如果圖片是鏈接的唯一內容，alt要描述鏈接目標。</p><p>無障礙調試不能只靠肉眼，你得用輔助技術實際體驗。</p><p class='list-item'>**NVDA（NonVisual Desktop Access）**</p><p class='list-item'>- Windows平臺，免費開源</p><p class='list-item'>- 下载地址：nvaccess.org</p><p class='list-item'>- 快捷鍵：Insert鍵是NVDA鍵（類似Ctrl/Alt）</p><p class='list-item'>- 基礎操作：</p><p class='list-item'>- NVDA+上箭頭：朗讀當前行</p><p class='list-item'>- NVDA+Tab：朗讀當前焦點元素</p><p class='list-item'>- H：跳到下一個標題</p><p class='list-item'>- 數字1-6：跳到對應級別的標題</p><p class='list-item'>- L：跳到下一個列表</p><p class='list-item'>- T：跳到下一個表格</p><p class='list-item'>- F：跳到下一個表單域</p><p class='list-item'>- E：跳到下一個編輯框</p><p class='list-item'>- B：跳到下一個按鈕</p><p class='list-item'>**JAWS（Job Access With Speech）**</p><p class='list-item'>- Windows平臺，商業軟件，貴但功能強</p><p class='list-item'>- 很多盲人用戶用這個，如果你要測試兼容性，值得投資</p><p class='list-item'>**VoiceOver**</p><p class='list-item'>- macOS和iOS自帶，免費</p><p class='list-item'>- 开启：Cmd+F5（macOS）</p><p class='list-item'>- 基本操作類似NVDA，但手勢不同</p><p class='list-item'>**TalkBack**</p><p class='list-item'>- Android自带</p><p class='list-item'>- 開啓：設置->無障礙->TalkBack</p><p class='list-item'>**axe DevTools**</p><p class='list-item'>- Deque公司出品，業界標準</p><p class='list-item'>- 能自動檢測可訪問性問題</p><p class='list-item'>- 紅色錯誤必須修，黃色警告建議修</p><p class='list-item'>- 注意：自動化只能抓到30%左右的問題，剩下的得人工測</p><p class='list-item'>**Lighthouse**</p><p class='list-item'>- Chrome DevTools自带</p><p class='list-item'>- 跑分看看就行，別迷信。100分不代表真的無障礙，只是沒觸發它的檢測規則</p><p class='list-item'>**WAVE（Web Accessibility Evaluation Tool）**</p><p class='list-item'>- WebAIM出品</p><p class='list-item'>- 會在頁面上直接標註問題，直觀</p><p>最簡單也最有效的測試方法：把鼠標拔了，只用Tab、Shift+Tab、Enter、Space、箭頭鍵操作你的頁面。能不能完成核心流程？焦點會不會亂跑？模態框能不能正常開關？</p><p>自動化測試能 catch 的東西有限：</p><p class='list-item'>- ✅ 能檢測：圖片缺alt、對比度不足、表單缺label、重複的ID</p><p class='list-item'>- ❌ 檢測不了：Tab順序是否合理、自定義組件鍵盤交互是否正確、焦點管理是否得當</p><p>所以人工測試永遠是必須的，特別是用真實的屏幕閱讀器走一遍。</p><p>性能和無障礙有時候是衝突的，處理不好會互相傷害。</p><p>屏幕閱讀器依賴DOM來播報內容。如果你的JS包太大，渲染阻塞嚴重，屏幕閱讀器用戶會聽到"空白"、"正在加載"很久，或者乾脆讀不到動態加載的內容。</p><p class='list-item'>**優化策略：**</p><p class='list-item'>- 代碼分割，路由懶加載</p><p class='list-item'>- 關鍵CSS內聯，非關鍵CSS異步加載</p><p class='list-item'>- 骨架屏（Skeleton Screen）用aria-hidden隱藏，避免屏幕閱讀器讀"佔位符佔位符佔位符"</p><pre><code>&lt;!-- 骨架屏的无障碍处理 --&gt;
+&lt;div aria-live=&quot;polite&quot; aria-busy=&quot;true&quot; id=&quot;content-region&quot;&gt;
+  &lt;!-- 骨架屏内容，对屏幕阅读器隐藏 --&gt;
+  &lt;div aria-hidden=&quot;true&quot; class=&quot;skeleton&quot;&gt;
+    &lt;div class=&quot;skeleton-title&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;skeleton-text&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// 内容加载完成后
+function loadContent() {
+  const region = document.getElementById(&#x27;content-region&#x27;);
+  region.setAttribute(&#x27;aria-busy&#x27;, &#x27;false&#x27;);
+  
+  // 替换内容...
+  region.innerHTML = actualContent;
+  
+  // 焦点管理
+  region.focus();
+}
+&lt;/script&gt;</code></pre><p><code>aria-busy="true"</code>告訴屏幕閱讀器這個區域正在更新，先別急着播報。</p><p>如果圖片懶加載，alt文本也得跟着懶加載，否則用戶滾動到那兒，屏幕閱讀器讀了個寂寞。</p><pre><code>&lt;!-- 错误的懒加载：alt在data属性里，加载后才放到img上 --&gt;
+&lt;img data-src=&quot;photo.jpg&quot; data-alt=&quot;描述文字&quot; alt=&quot;&quot;&gt;
+&lt;!-- 正确的懒加载：alt先放好，src懒加载 --&gt;
+&lt;img 
+  data-src=&quot;photo.jpg&quot; 
+  alt=&quot;一只金毛犬在草地上打滚&quot;
+  loading=&quot;lazy&quot;
+&gt;</code></pre><p>或者用<code>aria-label</code>兜底：</p><pre><code>&lt;div role=&quot;img&quot; aria-label=&quot;一只金毛犬在草地上打滚&quot; data-lazy-image=&quot;photo.jpg&quot;&gt;
+  &lt;!-- 占位符 --&gt;
+&lt;/div&gt;</code></pre><p>太炫酷的閃爍動畫可能誘發光敏性癲癇。WCAG 2.3.1要求：</p><p class='list-item'>- 一秒內閃爍超過3次的內容要避免</p><p class='list-item'>- 或者閃爍區域足夠小（小於25%的10度視野，約341x256像素在1024x768屏幕上）</p><pre><code>/* 尊重用户的减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* 或者针对性地关闭特定动画 */
+.animated-banner {
+  animation: slide 5s infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animated-banner {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+}</code></pre><p>JavaScript裏也能檢測：</p><pre><code>const prefersReducedMotion = window.matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;);
+if (prefersReducedMotion.matches) {
+  // 关闭动画，直接显示最终状态
+  disableAnimations();
+}
+// 监听变化（用户可能在系统设置里随时改）
+prefersReducedMotion.addEventListener(&#x27;change&#x27;, (e) =&gt; {
+  if (e.matches) {
+    disableAnimations();
+  } else {
+    enableAnimations();
+  }
+});</code></pre><p>無障礙不是前端一個人的事，但前端往往是最後的守門員。</p><p>甩數據：</p><p class='list-item'>- 中國殘疾人聯合會數據：我國有8500萬殘疾人，佔總人口的6.34%</p><p class='list-item'>- 加上臨時性障礙（手傷、情境性障礙），影響人羣超過3億</p><p class='list-item'>- 老年人口（60歲以上）超過2.8億，視力聽力下降是普遍現象</p><p class='list-item'>- 這加起來快一半人口了，你說偏門？</p><p>再甩法律：</p><p class='list-item'>- 《無障礙環境建設法》2023年9月1日實施</p><p class='list-item'>- 歐盟EAA法案2025年6月28日全面執行（現在是2026年了，已經生效）</p><p class='list-item'>- 美國ADA訴訟平均和解金5-50萬美元</p><p>直接在Figma/Sketch裏裝插件（Stark、Contrast等），截圖標紅反饋。別等開發階段才發現，那時候改成本高。</p><p>如果設計師堅持"這樣好看"，給他看模擬色盲效果的工具（比如Chrome DevTools的Rendering -> Emulate vision deficiencies），讓他體驗一下自己設計的"高級灰"在色盲用戶眼裏是啥樣。</p><p>有時候後端接口返回的數據結構不適合直接渲染無障礙友好的HTML，前端得做轉換層。</p><pre><code>// 后端返回的混乱数据
+const backendData = {
+  items: [
+    { name: &#x27;张三&#x27;, info: &#x27;25岁-北京-工程师&#x27; }, // 信息揉在一起
+    { name: &#x27;李四&#x27;, info: &#x27;30岁-上海-设计师&#x27; }
+  ]
+};
+// 前端转换层：拆分成无障碍友好的结构
+function transformForAccessibility(data) {
+  return data.items.map(item =&gt; {
+    const [age, city, job] = item.info.split(&#x27;-&#x27;);
+    return {
+      name: item.name,
+      age: age.replace(&#x27;岁&#x27;, &#x27;&#x27;),
+      city,
+      job,
+      // 生成适合屏幕阅读器的描述文本
+      screenReaderLabel: `${item.name}，${age}，居住于${city}，职业是${job}`
+    };
+  });
+}
+// 渲染
+function renderAccessibleList(data) {
+  const list = document.createElement(&#x27;ul&#x27;);
+  
+  transformForAccessibility(data).forEach(person =&gt; {
+    const li = document.createElement(&#x27;li&#x27;);
+    li.innerHTML = `
+      &lt;article aria-label=&quot;${person.screenReaderLabel}&quot;&gt;
+        &lt;h3&gt;${person.name}&lt;/h3&gt;
+        &lt;dl&gt;
+          &lt;dt&gt;年龄&lt;/dt&gt;&lt;dd&gt;${person.age}岁&lt;/dd&gt;
+          &lt;dt&gt;城市&lt;/dt&gt;&lt;dd&gt;${person.city}&lt;/dd&gt;
+          &lt;dt&gt;职业&lt;/dt&gt;&lt;dd&gt;${person.job}&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/article&gt;
+    `;
+    list.appendChild(li);
+  });
+  
+  return list;
+}</code></pre><p>別讓測試同學只測功能不測體驗。驗收標準裏明確寫上：</p><p class='list-item'>- 所有圖片有alt文本</p><p class='list-item'>- 所有表單有label關聯</p><p class='list-item'>- 鍵盤可完成核心流程</p><p class='list-item'>- 顏色對比度符合WCAG AA標準</p><p class='list-item'>- 用屏幕閱讀器可完成核心流程</p><p>無障礙這事兒吧，說大不大，說小不小。你把它當"項目結束後的甜點"，它就是座大山，改起來痛不欲生。你把它當"從第一行代碼就開始的主食"，它就是順手的事，每寫一段代碼順手檢查一下，積少成多。</p><p>現在改代碼還來得及。別等到收到律師函，或者真的有個盲人用戶投訴到客服，老闆把你叫去辦公室問"這玩意兒爲啥屏幕閱讀器讀不了"，那時候再哭着補作業就晚了。</p><p>哪怕今天你只修好了一個表單的label，給一張圖片加了合適的alt，或者把那個該死的div換成了button，你也比昨天的自己更像個靠譜的開發。代碼是寫給人用的，不是寫給機器看的。機器能跑通是底線，所有人能用纔是目標。</p><p>下次你手指懸在鍵盤上，準備敲<code><div onclick="..."></code>的時候，手抖一下，想一想：這玩意兒真的需要存在嗎？原生button是不是就能搞定？如果必須用div，ARIA屬性我加全了嗎？鍵盤能操作嗎？屏幕閱讀器能讀懂嗎？</p><p>想清楚了再下手。你的用戶會感謝你的，哪怕他們看不見屏幕，也能感受到這份用心。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

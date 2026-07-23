@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>PavilionMfe：500 行实现的微前端框架 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>PavilionMfe：500 行实现的微前端框架</h1>
+<div class="meta"><span class="src">掘金</span><span>· 7月23日 周四</span>
+<span>· <a href="https://juejin.cn/post/7658248179762364450/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7658248179762364450/" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>一個基於 Module Federation 的微前端框架，核心 500 行搞定沙箱隔離、CSS 作用域和生命週期管理。</p><h3>爲什麼又要造一個微前端框架？</h3><p>市面上的微前端方案已經不少了——qiankun、micro-app、wujie、Module Federation 原生方案……每個都有自己的設計哲學。但我們在實際生產項目中遇到了幾個痛點：</p><p class='list-item'>- **qiankun 的沙箱性能開銷**：每次子應用切換都要完整的- `activate`/- `deactivate`，對於需要頻繁切換的多標籤頁場景不夠絲滑</p><p class='list-item'>- **CSS 隔離方案的特異性污染**：Shadow DOM 太封閉，CSS Modules 需要改造代碼，BEM 命名約定靠人工遵守</p><p class='list-item'>- **子應用運行時"被污染"**：大多數方案要求子應用引入框架特定的 SDK，子應用不再純淨</p><p class='list-item'>- **路由衝突**：多個子應用共存時，- `popstate`事件會同時觸發所有活躍子應用的路由器</p><p>於是我們提取了生產環境中的核心模塊，做成了 PavilionMfe——**一個運行時只有 5 個包、子應用零依賴的微前端框架**。</p><h3>架構總覽</h3><pre><code>┌──────────────────────────────────────────────────────┐
+│                    主应用 (Main App)                   │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────┐      │
+│  │  Router   │  │ EventBus │  │  Log System    │      │
+│  │ 生命周期   │  │ 跨子应用通信 │  │ 分模块配置     │      │
+│  └────┬─────┘  └────┬─────┘  └────────────────┘      │
+│       │             │                                  │
+│  ┌────▼─────────────▼───────────────────────────────┐  │
+│  │              #pavilion-mfe-container              │  │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐        │  │
+│  │  │ 子应用 A   │  │ 子应用 B   │  │ 子应用 C   │       │  │
+│  │  │ (Vue 3)   │  │ (React)   │  │ (Vue 2)   │       │  │
+│  │  │ + Sandbox │  │ + Sandbox │  │ + Sandbox │       │  │
+│  │  │ +CSS Scope│  │ +CSS Scope│  │ +CSS Scope│       │  │
+│  │  └──────────┘  └──────────┘  └──────────┘        │  │
+│  └──────────────────────────────────────────────────┘  │
+│                                                        │
+│          Module Federation 运行时预加载插件               │
+└──────────────────────────────────────────────────────┘</code></pre><h3>包依賴關係——自底向上的分層設計</h3><pre><code>bridge (零依赖)    sandbox (零依赖)    tabs (零依赖)
+    │                   │                   │
+    │                   ▼                   │
+    │               router ─────────────────┘
+    │                   │
+    ▼                   ▼
+  runtime (聚合层, MF Remote 共享)
+    │
+    ▼
+  vite (Vite 插件, 仅构建时依赖)</code></pre><p>設計原則很明確：**底層包零依賴**，上層按需組合。<code>sandbox</code>、<code>bridge</code>、<code>tabs</code> 三個包可以獨立使用，<code>router</code> 依賴它們提供完整的路由調度能力，<code>runtime</code> 是聚合層通過 MF Remote 確保單例，<code>vite</code> 僅構建時起作用。</p><h3>核心設計：用 500 行代碼解決四個難題</h3><h3>1. JS 沙箱：棧式副作用追蹤</h3><p>傳統的 Proxy 沙箱（如 qiankun）需要爲每個子應用創建獨立的 <code>window</code> 代理，開銷不小。PavilionMfe 的思路不同：**不隔離 window，而是追蹤和清理副作用**。</p><pre><code>// 核心实现：模块级 activeStack + 一次性全局补丁
+const activeStack: Sandbox[] = []
+let globalsPatched = false
+function patchGlobals(void {
+  if (globalsPatched) return  // 只执行一次
+  globalsPatched = true
+  globalThis.setTimeout = ((handler, timeout, ...args) =&gt; {
+    const id = origSetTimeout(handler, timeout, ...args)
+    const active = activeStack[activeStack.length - 1]
+    if (active) active._timeouts.add(id)  // 归属于栈顶沙箱
+    return id
+  }) as any
+  // 同理拦截 setInterval / addEventListener / removeEventListener
+}</code></pre><p>核心思路：</p><p class='list-item'>- `activeStack`是模塊級的數組，記錄當前活躍的沙箱棧</p><p class='list-item'>- `patchGlobals()`- **只执行一次**，拦截- `setTimeout`/- `setInterval`/- `addEventListener`/- `removeEventListener`</p><p class='list-item'>- 每個副作用被分配到**棧頂沙箱**——天然支持多實例併發</p><p class='list-item'>- `deactivate()`时自动清理所有归属于该沙箱的 timers / listeners / globals</p><pre><code>const sandbox = new Sandbox(&#x27;my-app&#x27;)
+sandbox.activate()    // 推入栈顶，开始追踪
+// ... 子应用运行，setTimeout/addEventListener 自动追踪
+sandbox.deactivate()  // 弹出栈，清除 3 个 timer、2 个 interval、5 个 listener</code></pre><p>日誌輸出直觀展示清理過程：</p><pre><code>[PavilionMfe] sandbox   sandbox-deactivate appCode=demo-app  timers=3  intervals=1  listeners=2</code></pre><h3>2. CSS 作用域：`:where()` 的零特異性魔法</h3><p>CSS 隔離最頭疼的是**特異性問題**。假設你給子應用加了一個 <code>.app</code> 前綴：</p><pre><code>/* 加了前缀后特异性变了！ */
+.pavilion-demo .card { color: red; }  /* 特异性 0,2,0 */
+.card { color: blue; }               /* 特异性 0,1,0 — 被覆盖了 */</code></pre><p>PavilionMfe 的解决方案是使用 <code>:where()</code> 伪类：</p><pre><code>/* 输入 */
+.card { color: red; }
+@keyframes fadeIn { from { opacity: 0; } }
+/* PostCSS 输出 — :where() 零特异性 */
+:where(.pavilion-mfe-demo-app) .card { color: red; }
+@keyframes pavilion-mfe-demo-app-fadeIn { from { opacity: 0; } }</code></pre><p><code>:where()</code> 的關鍵特性：**它包裹的選擇器不貢獻任何特異性**。所以：</p><p class='list-item'>- 作用域後的 `.card`仍然是`0,1,0`，不會覆蓋庫的默認樣式</p><p class='list-item'>- 子應用開發者不需要改變任何 CSS 書寫習慣</p><p class='list-item'>- `@keyframes`名稱也自動前綴化，防止動畫名衝突</p><p>PostCSS 插件實現只有 130 行，構建時運行，子應用零感知。</p><h3>3. 路由隔離：popstate 代理攔截</h3><p>多個子應用共存的場景下，瀏覽器前進/後退會觸發 **所有** 子應用的 <code>popstate</code> 監聽器。PavilionMfe 的做法是**代理攔截**：</p><pre><code>// sandbox 的 addEventListener 补丁中
+if (type === &#x27;popstate&#x27; &amp;&amp; routeMatcher) {
+  const appCode = active.appCode
+  const proxyHandler = (event: Event) =&gt; {
+    // 只有当前子应用的路由匹配时，才触发原 handler
+    if (routeMatcher(appCode, location.pathname)) {
+      handler(event)
+    } else {
+      // 非活跃子应用：仅记录日志，不触发
+      console.log(&#x27;popstate-blocked&#x27;, appCode, location.pathname)
+    }
+  }
+  active._listeners.push({ target: globalThis, type, handler: proxyHandler })
+  origAddEventListener(type, proxyHandler)
+}</code></pre><p>每個子應用的 <code>popstate</code> 監聽器被替換爲一個代理——只有當 <code>routeMatcher</code> 判定當前路徑屬於該子應用時，纔會真正觸發回調。非活躍子應用完全不會收到導航事件，從源頭避免路由衝突。</p><p>日誌中你可以清楚看到攔截過程：</p><pre><code>[PavilionMfe] sandbox   popstate-blocked appCode=demo-app  path=/react/dashboard</code></pre><h3>4. Keep-Alive 緩存：不銷燬框架實例</h3><p>大型子應用（Element Plus 組件庫 + 業務代碼）的初始化可能耗時數百毫秒。在多標籤頁場景下反覆銷燬重建體驗很差。</p><pre><code>const pavilionMfeRouter = createPavilionMfeRouter({
+  apps: [{
+    name: &#x27;demo-app&#x27;,
+    keepAlive: true,  // 开启缓存
+    // ...
+  }],
+  maxCache: 5,  // 全局 LRU 驱逐上限
+})</code></pre><p>緩存策略的精細設計：</p><p class='list-item'>- **切換離開**：只隱藏 DOM（- `display: none`），- **不銷燬框架實例**，沙箱也不 deactivate</p><p class='list-item'>- **切換回來**：- `display: block`，- **跳過 mount()**，狀態完整保留（表單數據、滾動位置等）</p><p class='list-item'>- **LRU 驅逐**：超過- `maxCache`時，最早緩存的子應用纔會完整執行- `deactivate() + unmount()`</p><p>状态机增加 <code>CACHED</code> 状态：</p><pre><code>MOUNTED → (unmount/离开) → CACHED → (restore/回来) → MOUNTED</code></pre><h3>子應用的極簡契約</h3><p>子應用只需要導出一個對象——**三個生命週期函數，零框架依賴**：</p><pre><code>// main.ts — Vue 3 子应用
+export default {
+  mount: async (ctx, el) =&gt; {
+    const app = createApp(App)
+    app.use(router)
+    app.mount(el)
+    return () =&gt; app.unmount()  // 返回清理函数
+  },
+  unmount: async (ctx, el) =&gt; {
+    el.innerHTML = &#x27;&#x27;
+  },
+}
+// 独立运行时自启动
+if (!window.__PAVILION_MFE_ENV__) {
+  createApp(App).use(router).mount(&#x27;#app&#x27;)
+}</code></pre><p>對於 Vue 2、React 也是同樣的模式，只需改變框架調用方式。關鍵是 <code>mount</code> 返回一個清理函數，框架在合適的時機調用它。</p><h3>開發者體驗</h3><h3>分模塊日誌</h3><pre><code>import { configureLog } from &#x27;@pavilion-mfe/router&#x27;
+configureLog({
+  modules: {
+    router:  true,   // 路由事件 + 子应用生命周期
+    sandbox: true,   // 沙箱激活/停用 + popstate 拦截
+    preload: true,   // MF 远程注册 + 预加载状态
+    bridge:  true,   // EventBus emit/subscribe
+  },
+})</code></pre><p>輸出風格統一、可讀性強：</p><pre><code>[PavilionMfe] router  router-start       subApps=3
+[PavilionMfe] router  sub-app-load       appCode=demo-app  ms=320
+[PavilionMfe] sandbox sandbox-activate   appCode=demo-app
+[PavilionMfe] router  sub-app-mount      appCode=demo-app  ms=45</code></pre><h3>路由事件系統</h3><pre><code>pavilion-mfe:before-routing   → 路由切换前
+pavilion-mfe:after-routing    → 路由切换完成
+pavilion-mfe:sub-app-switch   → 活跃子应用变化
+pavilion-mfe:sub-app-error    → 子应用加载/挂载失败</code></pre><p>可以用於埋點、全局加載狀態、權限守衛等場景。</p><h3>註冊中心</h3><pre><code>// mfe.json — 路由 + 构建的单一声明
+{
+  &quot;apps&quot;: [
+    { &quot;appCode&quot;: &quot;demo-app&quot;, &quot;routes&quot;: [&quot;/demo&quot;], &quot;devPort&quot;: 6020 },
+    { &quot;appCode&quot;: &quot;react-app&quot;, &quot;routes&quot;: [&quot;/react&quot;], &quot;devPort&quot;: 6030 },
+    { &quot;appCode&quot;: &quot;vue2-app&quot;,  &quot;routes&quot;: [&quot;/vue2&quot;], &quot;devPort&quot;: 6040 }
+  ]
+}</code></pre><p>一份配置同時驅動路由註冊、MF 遠程模塊聲明和開發端口分配。</p><h3>對比其他方案</h3><p>PavilionMfe 的優勢在於：</p><p class='list-item'>- **子應用完全純淨**：運行時不含任何- `@pavilion-mfe/*`代碼</p><p class='list-item'>- **構建工具只支持 Vite**：享受 ESM 原生 + MF 的極致性能</p><p class='list-item'>- **包體積小**：核心 5 個包，底層零依賴</p><p>侷限：</p><p class='list-item'>- 僅支持 Vite 構建（不支持 Webpack）</p><p class='list-item'>- Module Federation 的共享依賴配置需要一定學習成本</p><p class='list-item'>- 浏览器兼容性依赖 `:where()`（Chrome 88+）</p><h3>適用場景</h3><p>PavilionMfe 特别适合：</p><p class='list-item'>- **管理後臺類應用**：多標籤頁、頻繁切換子應用</p><p class='list-item'>- **Vite 技術棧團隊**：和 Vite 生態深度整合</p><p class='list-item'>- **多團隊協作**：子應用獨立倉庫、獨立發佈，零耦合</p><p class='list-item'>- **多框架混合**：同一主應用中運行 Vue 2、Vue 3、React 子應用</p><h3>項目運行實例</h3><h3>結語</h3><p>PavilionMfe 的設計哲學是**"子應用不感知框架"**。我們相信好的微前端方案應該像瀏覽器一樣——你不需要知道自己在 iframe 裏運行，框架也無權侵入你的代碼。</p><p>核心 500 行搞定沙箱，130 行搞定 CSS 作用域，300 行搞定路由調度。在追求"小而美"的路上，我們用 <code>:where()</code> 替代了重型的 Shadow DOM，用棧式追蹤替代了 Proxy 代理，用 popstate 代理替代了路由劫持。</p><p>如果你也在維護一個多團隊的管理後臺，不妨試試 PavilionMfe。</p><h3>GitHub: pavilion-mfe License: MIT</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

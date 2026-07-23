@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>2026 年最值得关注的 4 个 JavaScript 新特性 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>2026 年最值得关注的 4 个 JavaScript 新特性</h1>
+<div class="meta"><span class="src">fly63</span><span>· 7月23日 周四</span>
+<span>· <a href="https://fly63.com/article/detial/13440" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://fly63.com/article/detial/13440" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>2026 年最值得關注的 4 個 JavaScript 新特性</h3><p>JavaScript 經過這麼多年的發展，終於迎來了一批真正能落地的重磅特性。到了 2026 年，很多我們以前依賴第三方庫才能解決的問題，現在瀏覽器原生就支持了。這意味着代碼能寫得更少，項目打包體積更小，運行效率也更高。</p><p>下面就來聊聊 2026 年最值得關注的 4 個 JavaScript 新特性，它們正在實實在在地改變前端開發的方式。</p><h3>1. 狀態管理終於統一了：原生 Signals</h3><p>以前做前端開發，最頭疼的問題之一就是狀態管理。React 有自己的一套，Vue 有另一套，代碼想在框架間複用基本不可能。這個情況現在徹底改變了。TC39 委員會已經把 **Signals** 提案推進到了 Stage 3，目標就是把它變成 JavaScript 語言本身的一部分 。</p><p>簡單來說，Signal 就是一個特殊的數據容器。當它裏面存的值變了，所有用到這個值的地方都會自動跟着更新。</p><pre><code>// 不用安装任何包，直接写
+const count = new Signal.State(0);
+const doubleCount = new Signal.Computed(() =&gt; count.get() * 2);
+// 当 count 改变时，这里会自动重新运行
+Effect.subscribe(() =&gt; {
+    console.log(`计数：${count.get()}，两倍是：${doubleCount.get()}`);
+});
+count.set(5); // 控制台会自动打印新结果</code></pre><p>這段代碼展示了它的核心用法。Signal.State 定義了一個可變的狀態，Signal.Computed 定義了一個根據其他 Signal 自動計算的值。最關鍵的是最後的 Effect.subscribe，它建立了一個“響應式”的副作用，當 count 變化時，傳入的回調函數會自動執行 。</p><p class='list-item'>**爲什麼這對我們有幫助？**</p><p>最大的好處是**統一**。無論你用的是 React、Vue 還是 Solid，未來都可以直接操作同一個 Signal 對象。這意味着狀態管理邏輯可以真正做到“一次編寫，到處運行”。對於項目來說，這也意味着不再需要引入 Redux、Vuex 這類體積龐大的狀態管理庫，直接就用瀏覽器自帶的方案，打包體積能明顯下降 。</p><h3>2. 告別回調地獄：管道操作符（|&gt;）</h3><p>處理多層嵌套的函數調用，代碼讀起來總是很費勁。比如你要對一個數據做三次轉換，傳統寫法是 const result = three(two(one(data)))，這種從裏往外讀的代碼，邏輯稍微複雜點就很容易把人繞暈。</p><p>管道操作符 |> 就是爲了解決這個問題來的。它讓你能把數據像在生產線上一樣，一步步往下傳着處理。</p><pre><code>function getName(user) { return user.name; }
+function toUpperCase(str) { return str.toUpperCase(); }
+function addGreeting(str) { return `你好，${str}`; }
+const user = { name: &#x27;张三&#x27; };
+// 用管道操作符，读起来顺多了
+const result = user 
+  |&gt; getName(%) 
+  |&gt; toUpperCase(%) 
+  |&gt; addGreeting(%);
+console.log(result); // 输出：你好，张 SAN</code></pre><p>在這個例子裏，% 是管道操作符的佔位符，代表上一個步驟的輸出結果。數據從 user 開始，一步步被加工，每一步做什麼都清清楚楚，代碼可讀性提高了不少。</p><h3>3. 在瀏覽器裏跑 AI：WebNN API</h3><p>過去在瀏覽器裏做 AI 推理，通常需要把數據傳到後端服務器，算完再傳回來。這不僅慢，還存在用戶隱私泄露的風險。現在有了 **WebNN API**，情況不一樣了。</p><p>WebNN 是一個新的 Web 標準，它允許網頁直接調用設備底層的算力，比如 CPU、GPU，甚至是專門的 AI 加速芯片 NPU，在本地運行 AI 模型 。</p><pre><code>// 检查浏览器是否支持
+if (navigator.ml) {
+    const context = await navigator.ml.createContext();
+    const builder = new MLGraphBuilder(context);
+    
+    // 这里可以构建一个简单的模型，比如输入一张图片，判断是不是猫
+    // 具体代码会复杂一些，但核心就是调用本地硬件进行计算
+    
+    // const output = await context.compute(graph, inputs);
+    console.log(&#x27;AI 模型已准备就绪，可以本地运行！&#x27;);
+} else {
+    console.log(&#x27;你的浏览器还不支持 WebNN。&#x27;);
+}</code></pre><p class='list-item'>**這意味着什麼？**</p><p>這意味着你可以實現很多以前做不到的功能。比如做一個視頻會議軟件，可以在本地直接用 AI 給用戶背景虛化，而不需要把每一幀視頻都傳到服務器。或者做一個筆記應用，可以在本地實時翻譯用戶輸入的文字。數據完全留在用戶本地，既保護了隱私，又因爲沒有網絡延遲，體驗也更流暢 。英特爾和高通等硬件廠商也都在積極推動 WebNN 的落地，未來的 PC 和手機都會原生支持這種能力 。</p><h3>4. 徹底告別日期庫：Temporal API</h3><p>JavaScript 的 Date 對象有多難用，凡是做過項目的人應該都深有體會。時區處理麻煩、日期計算容易出錯，而且對象本身是可變的，一不小心就會改掉原始值。這就是爲什麼幾乎每個項目都要安裝 moment.js 或 day.js 這類第三方庫。</p><p>在 2026 年，這個問題終於有了終極解決方案：**Temporal API**。它已經在 Chrome 144 中正式推出，並且 TC39 也已經將其推進到了 Stage 4，確定會包含在 ECMAScript 2026 正式標準中 。</p><pre><code>// 告别 day.js，直接用原生的
+const today = Temporal.Now.plainDateISO(); // 获取当前日期
+const nextWeek = today.add({ days: 7 }); // 直接加7天
+console.log(`今天是 ${today}，一周后是 ${nextWeek}`);
+// 处理带时区的时间
+const zonedTime = Temporal.ZonedDateTime.from({
+    timeZone: &#x27;Asia/Shanghai&#x27;,
+    year: 2026,
+    month: 3,
+    day: 17,
+    hour: 10
+});
+console.log(zonedTime.toString());</code></pre><p>Temporal 解決了 Date 的所有歷史遺留問題。它的對象都是**不可變**的，每次操作都會返回一個新對象，不會影響原來的值。同時，它對時區和日曆的支持也是頭等公民，處理國際化時間變得非常可靠 。</p><p>從 Chrome 144 開始，Temporal 已經穩定可用，隨着瀏覽器覆蓋率的提升，我們完全可以移除項目中的日期處理庫，讓打包體積再減小几十 KB 。</p><h3>總結</h3><p>回顧 2026 年的這幾個新特性，可以看到一個很明確的趨勢：JavaScript 正在變得越來越強大和完善。原本需要藉助各種第三方庫才能完成的工作，正在逐漸被語言本身和瀏覽器原生 API 取代。</p><p>對我們開發者來說，核心競爭力已經不是熟練背誦某個框架的 API，而是如何把這些原生能力組合起來，更簡單、更高效地去解決實際的業務問題。多關注這些底層的變化，寫的代碼才能更輕量、更經得起時間考驗。</p><p>本文內容僅供個人學習、研究或參考使用，不構成任何形式的決策建議、專業指導或法律依據。未經授權，禁止任何單位或個人以商業售賣、虛假宣傳、侵權傳播等非學習研究目的使用本文內容。如需分享或轉載，請保留原文來源信息，不得篡改、刪減內容或侵犯相關權益。感謝您的理解與支持！</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
