@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b266b">
-<meta name="build" content="20260723094443">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260723094443">
+<meta name="build" content="20260723100930">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260723100930">
 <title>AI HOT 日报 · 2026-07-23</title>
 <style>
   :root {
@@ -523,8 +523,10 @@ tabs.forEach(function(t, ti){
   navInner.appendChild(a);
 });
 
-// Build a panel (section heading + compact card grid) for one section
-let globalIdx = 0;
+// Build a panel (section heading + compact card grid) for one section.
+// Index is LOCAL to each panel so every tab/section restarts at #1
+// (per the 2026-07-23 refinement: a single selected tab must show #1..N,
+//  not the global continuous number left over from the 全部 panel build).
 function buildPanel(sec, si){
   const ri = sec.ci != null ? sec.ci : si;
   const isDeal = sec.kind === 'deals';
@@ -539,9 +541,10 @@ function buildPanel(sec, si){
   panel.appendChild(head);
   const grid = document.createElement('div');
   grid.className = 'grid wall';
+  let secIdx = 0;
   sec.items.forEach(function(item){
-    globalIdx++;
-    const card = isDeal ? makeDealCard(item, globalIdx, ri) : makeCard(item, globalIdx, ri, sec.kind === 'external', false);
+    secIdx++;
+    const card = isDeal ? makeDealCard(item, secIdx, ri) : makeCard(item, secIdx, ri, sec.kind === 'external', false);
     card.setAttribute('data-cat', sec.label);
     grid.appendChild(card);
   });
