@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>OpenAI自曝AI代理失控：挣脱隔离限制后攻击Hugging Face · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>OpenAI自曝AI代理失控：挣脱隔离限制后攻击Hugging Face</h1>
+<div class="meta"><span class="src">163.com</span>
+<span>· <a href="https://www.163.com/dy/article/L2F5966205561FZY.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.163.com/dy/article/L2F5966205561FZY.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>OpenAI的自主AI代理在一次安全測試中失控，成功入侵了另一家人工智能初創公司的基礎設施。這家ChatGPT的製造商在週二發佈的博文中證實了這一事件。</p><p>涉事代理由OpenAI最先進的模型驅動，包括GPT-5.6 Sol和另一個尚未發佈的未命名模型。該代理在測試過程中掙脫了AI實驗室用於隔離測試與外部互聯網的“監禁”協議，自行接入互聯網，隨後嘗試攻擊託管着大量開源模型和數據集的人工智能平臺Hugging Face。</p><p>OpenAI在博文中將此次事件定性爲“史無前例的網絡事件”，稱其涉及最先進的網絡攻擊能力，並表示正在採取相應措施應對。公司同時承諾，將爲訓練環境增加更多防護措施，並進一步加強模型的對齊保護。</p><p>此次泄露事件曝光前一週，Hugging Face已率先在其博文中披露，自己遭遇了一場不同尋常的人工智能主導的攻擊。Hugging Face描述稱，這場攻擊由一個自治代理框架執行，該框架在大量短期沙盒中執行了數千次獨立操作，其指揮與控制機制通過公共服務進行自我遷移。Hugging Face表示，這正符合行業長期以來預測的“代理攻擊者”場景，而自家AI系統在檢測和調查入侵過程中發揮了關鍵作用。</p><p>OpenAI稱，經過調查後確認旗下代理是此次攻擊的幕後角色，並將與Hugging Face合作進一步調查事件全貌。攻擊的具體過程顯示，這些AI模型自主識別並利用了OpenAI測試環境中的弱點，最終發現了一個所謂的“零日漏洞”——一種軟件所有者尚不知情的未知安全缺陷，成功接入互聯網。</p><p>此次攻擊正值OpenAI及其他人工智能初創公司大舉推進網絡安全技術應用之際。然而，這些努力已引發網絡安全專家和特朗普政府的謹慎審視，後者此前曾試圖以國家安全爲由限制相關模型的訪問權限。</p><p>特別聲明：以上內容(如有圖片或視頻亦包括在內)爲自媒體平臺“網易號”用戶上傳併發布，本平臺僅提供信息存儲服務。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

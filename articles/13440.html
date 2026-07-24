@@ -43,7 +43,7 @@ font-size:12.5px;color:var(--muted);}
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
 <h1>2026 年最值得关注的 4 个 JavaScript 新特性</h1>
-<div class="meta"><span class="src">fly63</span><span>· 7月23日 周四</span>
+<div class="meta"><span class="src">fly63</span><span>· 7月24日 周五</span>
 <span>· <a href="https://fly63.com/article/detial/13440" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://fly63.com/article/detial/13440" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><h3>2026 年最值得關注的 4 個 JavaScript 新特性</h3><p>JavaScript 經過這麼多年的發展，終於迎來了一批真正能落地的重磅特性。到了 2026 年，很多我們以前依賴第三方庫才能解決的問題，現在瀏覽器原生就支持了。這意味着代碼能寫得更少，項目打包體積更小，運行效率也更高。</p><p>下面就來聊聊 2026 年最值得關注的 4 個 JavaScript 新特性，它們正在實實在在地改變前端開發的方式。</p><h3>1. 狀態管理終於統一了：原生 Signals</h3><p>以前做前端開發，最頭疼的問題之一就是狀態管理。React 有自己的一套，Vue 有另一套，代碼想在框架間複用基本不可能。這個情況現在徹底改變了。TC39 委員會已經把 **Signals** 提案推進到了 Stage 3，目標就是把它變成 JavaScript 語言本身的一部分 。</p><p>簡單來說，Signal 就是一個特殊的數據容器。當它裏面存的值變了，所有用到這個值的地方都會自動跟着更新。</p><pre><code>// 不用安装任何包，直接写

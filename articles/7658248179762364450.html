@@ -43,7 +43,7 @@ font-size:12.5px;color:var(--muted);}
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
 <h1>PavilionMfe：500 行实现的微前端框架</h1>
-<div class="meta"><span class="src">掘金</span><span>· 7月23日 周四</span>
+<div class="meta"><span class="src">掘金</span><span>· 7月24日 周五</span>
 <span>· <a href="https://juejin.cn/post/7658248179762364450/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7658248179762364450/" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>一個基於 Module Federation 的微前端框架，核心 500 行搞定沙箱隔離、CSS 作用域和生命週期管理。</p><h3>爲什麼又要造一個微前端框架？</h3><p>市面上的微前端方案已經不少了——qiankun、micro-app、wujie、Module Federation 原生方案……每個都有自己的設計哲學。但我們在實際生產項目中遇到了幾個痛點：</p><p class='list-item'>- **qiankun 的沙箱性能開銷**：每次子應用切換都要完整的- `activate`/- `deactivate`，對於需要頻繁切換的多標籤頁場景不夠絲滑</p><p class='list-item'>- **CSS 隔離方案的特異性污染**：Shadow DOM 太封閉，CSS Modules 需要改造代碼，BEM 命名約定靠人工遵守</p><p class='list-item'>- **子應用運行時"被污染"**：大多數方案要求子應用引入框架特定的 SDK，子應用不再純淨</p><p class='list-item'>- **路由衝突**：多個子應用共存時，- `popstate`事件會同時觸發所有活躍子應用的路由器</p><p>於是我們提取了生產環境中的核心模塊，做成了 PavilionMfe——**一個運行時只有 5 個包、子應用零依賴的微前端框架**。</p><h3>架構總覽</h3><pre><code>┌──────────────────────────────────────────────────────┐
