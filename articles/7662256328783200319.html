@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>Vue 3.6 正式发布、Vue 4.0 启动，Vite 8 以 Rolldown 统一打包 · 流動日報譯文</title>
+<title>尤雨溪宣布：Vue 3.6 发布、Vue 4.0 启动、Vite 8 已落地 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,11 +42,17 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>Vue 3.6 正式发布、Vue 4.0 启动，Vite 8 以 Rolldown 统一打包</h1>
-<div class="meta"><span class="src">掘金</span><span>· 7月16日 周四</span>
+<h1>尤雨溪宣布：Vue 3.6 发布、Vue 4.0 启动、Vite 8 已落地</h1>
+<div class="meta"><span class="src">掘金</span><span>· 7月24日 周五</span>
 <span>· <a href="https://juejin.cn/post/7662256328783200319" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7662256328783200319" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7662256328783200319" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>尤雨溪宣佈：Vue 3.6 發佈、Vue 4.0 啓動、Vite 8 已落地</h3><p>2026年7月18日，上海Vue&ViteConf 2026，尤雨溪一口氣宣佈了三件事：Vue 3.6正式發佈、Vue 4.0啓動、Vite 8已全面落地。這一天，Vue生態同時揭開了三個時代——性能時代、AI時代、分層渲染時代。</p><h3>一、Vue 3.6：正式發佈，性能換芯</h3><p>2026年7月18日，上海Vue&ViteConf 2026。尤雨溪走上講臺，宣佈了第一個消息：**Vue 3.6正式發佈**。</p><p>這一天，距離2026年2月6日發佈第一個beta版本，過去了整整五個多月。Vue團隊花了五個多月打磨beta，累計發佈了17個beta版本，最終交出了一份讓全場沸騰的答卷。</p><h3>#### 1.1 Vapor Mode：虚拟DOM成为可选项</h3><p>Vapor Mode是Vue 3.6最核心的變化。它讓開發者可以在<code><script setup></code>上加一個<code>vapor</code>屬性，組件就會**跳過虛擬DOM，直接操作真實DOM**。</p><pre><code>&lt;script setup vapor&gt;
+import { ref } from &#x27;vue&#x27;
+const count = ref(0)
+&lt;/script&gt;
+&lt;template&gt;
+  &lt;button @click=&quot;count++&quot;&gt;点击了 {{ count }} 次&lt;/button&gt;
+&lt;/template&gt;</code></pre><p>啓用Vapor Mode後，渲染速度提升最高達**97%**，包體積縮小**20-50%**，首次加載JS體積減少約**三分之二**。**100ms內即可掛載10萬個組件**——Vue與SolidJS站在了同一個性能梯隊。</p><p>Vapor Mode採用per-component設計，可以**按組件選擇**——Vapor組件可以和虛擬DOM組件在同一個組件樹中自由共存，通過<code>vaporInteropPlugin</code>插件實現無縫互操作。</p><h3>#### 1.2 alien-signals：响应式引擎更换</h3><p>alien-signals是Vue 3.6的另一大核心變化。這個**壓縮後只有1KB**的庫，被直接移植回了Vue 3.6的核心代碼庫。</p><p>alien-signals採用了**Push-Pull混合算法**：當響應式狀態發生變化時，信號沿着依賴圖向下“推送”變更信息，將依賴此狀態的計算屬性標記爲“髒”；當計算屬性或視圖實際需要讀取更新後的值時，才按需向上“拉取”並重新計算結果。</p><p class='list-item'>**大多數情況下，一個狀態變化並不會導致所有依賴它的計算屬性都被讀取。Push-Pull算法避免了“先全部重算再判斷是否需要”的低效路徑，只在真正需要時才執行重算。**</p><p>根據benchmark數據：Vue 3.6相比3.4快約**4倍**，相比3.5快約**1.8倍**，computed吞吐量高出**30倍以上**，內存佔用降低**65%**。在真實基準測試中，包含10,000個組件的複雜列表，alien-signals驅動的應用幀率穩定性遠超Vue 3.5。</p><p class='list-item'>**Vue 3.6，同時換掉了渲染引擎和響應式引擎。**</p><h3>#### 1.3 与React 19的对比</h3><p>2026年，React 19和Vue 3.6都完成了重大架構升級。React 19走的是“服務端組件+自動編譯優化”的路線——通過RSC、Actions API和React Compiler，將原本需手動處理的狀態管理、表單邏輯和渲染優化交由框架自動完成。</p><p>Vue 3.6走的是“響應式底層重構+編譯時渲染優化”的路線——通過alien-signals重構響應式引擎，通過Vapor Mode跳過虛擬DOM。</p><p>兩條路完全不同，但目標一致：**減少開發者心智負擔，提升應用性能上限**。</p><h3>#### 1.4 升級成本：幾乎爲零</h3><p>Vue 3.6**沒有破壞性變更**。從Vue 3.5升級到3.6，不需要修改任何現有代碼：</p><pre><code>npm install vue@latest</code></pre><p class='list-item'>**一次 npm install，免費獲得4倍性能提升。**</p><h3>二、尤雨溪宣佈：Vue 4.0啓動</h3><p>比Vue 3.6發佈更震撼的，是尤雨溪宣佈的第二個消息：**Vue 4.0正式啓動**。</p><p>#### 2.1 为什么要有Vue 4.0？</p><p>尤雨溪明確指出，Vue 4.0的核心目標是將**Vapor Mode穩定化並擴大支持範圍**，探索**編譯時響應式與WebAssembly實驗性支持**，提供更完整的**跨版本遷移工具**。</p><h3>#### 2.2 遷移成本會極低</h3><p>Evan You在很多場合反覆強調：**“Vue 4遷移成本會控制在極低”**。之所以能做到，是因爲Vue 3在設計之初就爲漸進式升級做好了鋪墊。</p><h3>#### 2.3 時間線推測</h3><p>根據目前釋放的信號，Vue 4.0預計在**2026年下半年進入Beta階段**（當前規劃Q3左右），有望在**年底前推出RC版本**。</p><h3>三、Vite 8：已全面落地</h3><h3>#### 3.1 從雙引擎到單引擎</h3><p>Vite 8最核心的變化是：**用Rolldown統一取代了此前開發環境用的esbuild和生產環境用的Rollup**。</p><p>Rolldown是基於Rust的高性能JavaScript打包工具，**比Rollup快10-30倍**。Vite 8保持完整的插件兼容性。</p><h3>#### 3.2 真實項目數據</h3><p class='list-item'>- **Linear**：46秒 →- **6秒**（↓87%）</p><p class='list-item'>- **Ramp**：构建时间- **减少57%**</p><p class='list-item'>- **Beehiiv**：构建时间- **减少64%**</p><p class='list-item'>- **某開發者**：4分鐘 →- **30秒**（8倍）</p><p class='list-item'>- **某百萬行項目**：12分鐘 →- **2分鐘**（6倍）</p><h3>#### 3.3 Vite+：下一步</h3><p>尤雨溪在演講中還提到了Vite+——一個以Rust實現的端到端前端工具鏈。Vite+將編譯器、打包器、服務器、部署工具鏈全部用Rust原生重寫，目標是讓前端開發**從創建項目到部署上線，全程保持在毫秒級響應**。</p><h3>四、把三件事放在一起看</h3><h3>#### 趨勢一：前端正在進入“編譯時+運行時”雙引擎時代</h3><p>Vapor Mode是編譯時優化，alien-signals是運行時優化，Vite 8+Rollup是構建時優化。**Vue正在把“慢”的部分下沉到基礎設施層，把“快”留給開發者體驗層。**</p><h3>#### 趨勢二：前端正在從“給人用”走向“給AI用”</h3><p>Vue 3.6的Vapor Mode讓AI生成的代碼跑得更快、更輕。Vite 8讓AI構建項目的速度提升10-30倍。Vue 4.0的Vapor Mode穩定化，將爲AI Agent提供更高效的組件渲染引擎。</p><p>Vue 3.6的Vapor Mode和alien-signals，正在把Vue變成一臺對AI Agent極其友好的“性能機器”。</p><h3>#### 趨勢三：前端框架正在經歷“底層換芯”</h3><p>從TypeScript 7.0用Go重寫，到Astro 7用Rust重寫編譯器，再到Vite 8用Rust的Rolldown取代Go的esbuild+rollup——**前端工具鏈正在從“JavaScript寫工具”全面轉向“Rust寫工具”。** Vue 3.6的alien-signals正是這一趨勢在響應式層面的體現。</p><h3>寫在最後</h3><p>2026年7月18日，上海Vue&ViteConf 2026，尤雨溪用一天時間宣佈了三件事：</p><p>Vue 3.6正式發佈——Vapor Mode讓虛擬DOM成爲可選項，alien-signals讓響應式系統快4倍。</p><p>Vue 4.0啓動——下一個大版本已經開始。</p><p>Vite 8已全面落地——Rolldown讓構建速度提升10-30倍。</p><p>這三件事合在一起，傳遞了一個清晰的信號：**Vue正在從一個“漸進式框架”進化成一個“性能機器+AI友好平臺”。**</p><p class='list-item'>**Vue 3.6，不是一次普通的版本更新。它是Vue生態從“給人類開發者用”走向“給AI和人類一起用”的分水嶺。**</p><p>Vue 3.6已經可以用了。Vue 4.0正在路上了。而你，準備好了嗎？</p><p>評論區聊聊：你準備什麼時候升級Vue 3.6？Vapor Mode你最想用在哪個項目裏？</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
