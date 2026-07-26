@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Meta 的 React Compiler 1.0 将自动记忆化引入到生产环境 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Meta 的 React Compiler 1.0 将自动记忆化引入到生产环境</h1>
+<div class="meta"><span class="src">InfoQ 中文</span><span>· 2025-12-15</span>
+<span>· <a href="https://www.infoq.cn/article/ezhuva5qqelfoe5joozr" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.infoq.cn/article/ezhuva5qqelfoe5joozr" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>React是一個被廣泛採用的用於構建用戶界面的 JavaScript 庫，隨着 React Compiler 1.0 的穩定發佈，React 達到了一個里程碑，這個版本建立在近十年的工程工作和編譯器學習的基礎之上，改變了開發人員優化 React 應用程序的方式。</p><p>React Compiler 1.0 是一個構建時工具，通過自動記憶化來優化 React 應用程序，同時支持 React 和 React Native，而無需重寫代碼。該編譯器已經在Meta的主要應用程序中經過了實戰測試，現在完全準備好投入生產。該工具分析組件數據流和可變性，以消除不必要的渲染，覆蓋手動 <code>useMemo</code> 和 <code>useCallback</code> 實現無法處理的條件路徑。</p><p>編譯器通過 <code>eslint-plugin-react-hooks</code> 中的推薦預設集成了診斷功能，同時爲Expo、Vite和Next.js提供了第一方模板。Expo SDK 54 默認啓用了編譯器，而 Vite 和 Next.js 爲新應用程序提供了啓用編譯器的啓動器。Next.js 16 將 React Compiler 支持列爲穩定的，團隊建議在啓用編譯器時使用 15.3.1 或更高版本的 Next.js。</p><p>在生產環境中，性能得到了顯著的。Meta 報告稱，初始加載速度提高了高達 12%，在 Meta Quest Store 中的交互速度提高了 2.5 倍以上，儘管結果因應用程序而異。來自Sanity Studio和Wakelet的真實案例研究展示了採用編譯器後可衡量的性能提升，開發者報告組件渲染效率有了明顯的改善。</p><p>額外的真實度量指標提供了編譯器影響的詳細見解。Sanity Studio 在他們的2024年 11 月變更日誌中記錄了使用 React Compiler 預編譯他們的包後的重大收益：</p><p>到目前爲止，已經編譯了 1411 個組件中的 1231 個，從而使渲染時間和延遲減少了 20%到 30%。。當我們重構剩下的 180 個組件以支持自動記憶時，我們預計會有更大的改進。</p><p>Wakelet 在他們的案例研究中分享了將編譯器推向 100%用戶後的綜合生產指標：</p><p>總體而言，我們的 LCP 提高了 10%（從 2.6 秒提高到 2.4 秒），我們的 INP 提高了約 15%（從 275 毫秒降到 240 毫秒）。通過更細粒度的測試，我們發現在純 React 元素（如 Radix 下拉菜單）中獲得的收益最大，其中 INP 加速接近 30%。</p><p>獨立開發者 Nadia Makarevich 在一個大約有 15,000 行代碼的真實應用程序上進行了測試，結果參差不齊。初始加載性能的影響很小，啓用編譯器之前和之後的 Lighthouse 分數幾乎保持一致。然而，交互性能的提升因用例而異。在一個測量主題切換交互的測試中，總阻塞時間從 280 毫秒降至零。在另一個涉及複選框篩選交互的測試中，阻塞時間從 130 毫秒減少到 90 毫秒，儘管編譯器未能消除由於來自外部庫的非記憶對象引用而導致的所有重新渲染。</p><p>編譯器的開發歷史可以追溯到 React 團隊在 2017 年對編譯器的首次探索，即Prepack。儘管該項目最終被終止，但所學到的知識爲 Hooks 的設計提供了信息，Hooks 是爲未來編譯器而創建的。在 2021 年，當前編譯器方法的第一次迭代被演示，導致可在 React Conf 2024 上發佈的實驗版本和隨後發佈的全年 beta 版本。</p><p>與流行庫的兼容性問題仍然存在。GitHub討論顯示，react-hook-form用戶報告某些函數，包括 useWatch 和 getValues，在編譯器下可能會遇到問題。</p><p>React 團隊通過一個可選的react-compiler-runtime包，正式支持 React 17 及更高版本的應用程序上的編譯器，使團隊可以逐步採用，而不是升級到 React 19。鼓勵當前使用早期版本的開發者使用react-compiler-healthcheck工具檢查兼容性，並查看與 1.0 版本一起發佈的逐步採用指南。遷移文檔建議從 React 18.3 開始，該版本包括對 React 19 兼容性所需的棄用 API 的警告。</p><p>React Compiler 爲現有的 React 生態系統帶來了優化，而無需更改框架，它將這種能力添加到 React 的以運行時爲中心的體系結構中。編譯器代表了 React 性能優化哲學的轉變，從手動開發者干預轉向自動化構建時分析，儘管團隊建議在效果依賴項需要精確控制的地方保留 <code>useMemo</code> 和 <code>useCallback</code> 作爲應急出口。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>前端性能优化：LCP 从 4s 到 0.9s 的 5 个核心手段 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>前端性能优化：LCP 从 4s 到 0.9s 的 5 个核心手段</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 2026-07-10</span>
+<span>· <a href="https://segmentfault.com/a/1190000047836255" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047836255" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>一、LCP 的定義與優化目標</h3><p class='list-item'>**LCP（Largest Contentful Paint）** 衡量頁面最大內容元素（通常是圖片、視頻、大文本塊）的渲染時間。優化目標：**≤ 2.5 秒**。</p><p>影響 LCP 的主要因素：</p><p class='list-item'>- 資源加載慢（圖片、字體）</p><p class='list-item'>- 渲染阻塞（CSS、JS）</p><p class='list-item'>- 客戶端渲染延遲</p><p>下面按優先級列出 5 個最有效的優化手段。</p><h3>二、優化手段 1：圖片優化（WebP + 響應式 + 懶加載）</h3><h3>原理</h3><p class='list-item'>- 使用現代圖片格式（WebP/AVIF）體積更小</p><p class='list-item'>- 不同設備加載不同尺寸，減少無效傳輸</p><p class='list-item'>- 非首屏圖片懶加載</p><h3>具體配置</h3><p class='list-item'>**WebP 替换（Nginx 自动协商）**：</p><pre><code>location ~* \.(jpg|jpeg|png)$ {
+  add_header Vary Accept;
+  if ($http_accept ~* &quot;image/webp&quot;) {
+    rewrite (.*) $1.webp break;
+  }
+}</code></pre><p class='list-item'>**響應式圖片（HTML）**：</p><pre><code>&lt;img
+  srcset=&quot;hero-480w.webp 480w, hero-960w.webp 960w, hero-1440w.webp 1440w&quot;
+  sizes=&quot;(max-width: 600px) 480px, (max-width: 1200px) 960px, 1440px&quot;
+  src=&quot;hero-fallback.jpg&quot;
+  alt=&quot;description&quot;
+  loading=&quot;eager&quot;
+&gt;</code></pre><p class='list-item'>**懶加載**：</p><p><code><img src="product-1.jpg" loading="lazy" alt="product"></code>### 收益</p><p>首屏圖片傳輸體積減少 50%~70%，LCP 直接降低 1~2 秒。</p><h3>三、優化手段 2：字體優化（font-display + 預加載）</h3><h3>原理</h3><p class='list-item'>- 默認情況下，自定義字體下載期間瀏覽器會隱藏文字（FOIT），阻塞渲染</p><p class='list-item'>- `font-display: swap`先顯示系統字體，字體加載後替換</p><p class='list-item'>- 預加載關鍵字體可提前下載</p><h3>CSS 配置</h3><pre><code>@font-face {
+  font-family: &#x27;MainFont&#x27;;
+  src: url(&#x27;/fonts/main.woff2&#x27;) format(&#x27;woff2&#x27;);
+  font-display: swap;
+}</code></pre><h3>HTML 預加載</h3><p><code><link rel="preload" href="/fonts/main.woff2" as="font" type="font/woff2" crossorigin></code>### 收益</p><p>消除字體阻塞，FCP 提前 0.5~1 秒，間接改善 LCP。</p><h3>四、優化手段 3：JavaScript 分割與異步加載</h3><h3>原理</h3><p class='list-item'>- 大型 JS bundle 會阻塞解析和渲染</p><p class='list-item'>- 代碼分割 + defer 讓非關鍵 JS 不阻塞首屏</p><h3>Webpack 配置（splitChunks）</h3><pre><code>// webpack.config.js
+module.exports = {
+  optimization: {
+    splitChunks: {
+      chunks: &#x27;all&#x27;,
+      minSize: 20000,
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: &#x27;vendors&#x27;,
+          priority: 10,
+        },
+      },
+    },
+  },
+};</code></pre><h3>動態導入</h3><pre><code>// 需要时才加载
+import(&#x27;./heavy-module&#x27;).then(module =&gt; {
+  module.init();
+});</code></pre><h3>第三方腳本延遲</h3><pre><code>// 在 load 事件后加载
+window.addEventListener(&#x27;load&#x27;, () =&gt; {
+  const script = document.createElement(&#x27;script&#x27;);
+  script.src = &#x27;https://analytics.example.com/tracker.js&#x27;;
+  document.head.appendChild(script);
+});</code></pre><h3>收益</h3><p>首屏 JS 體積減少 60%~80%，主線程空閒提前，LCP 改善 0.5~1 秒。</p><h3>五、優化手段 4：CSS 內聯關鍵樣式 + 異步加載非關鍵樣式</h3><h3>原理</h3><p class='list-item'>- 外部 CSS 文件會阻塞渲染</p><p class='list-item'>- 首屏需要的樣式（關鍵 CSS）內聯到 `<head>`</p><p class='list-item'>- 完整 CSS 文件異步加載，不阻塞</p><h3>提取關鍵 CSS（使用 `critical` 工具）</h3><pre><code>npm install -g critical
+critical index.html --inline --base dist/ &gt; index-critical.html</code></pre><h3>異步加載完整 CSS</h3><pre><code>&lt;link rel=&quot;preload&quot; href=&quot;/full.css&quot; as=&quot;style&quot; onload=&quot;this.onload=null;this.rel=&#x27;stylesheet&#x27;&quot;&gt;
+&lt;noscript&gt;&lt;link rel=&quot;stylesheet&quot; href=&quot;/full.css&quot;&gt;&lt;/noscript&gt;</code></pre><h3>收益</h3><p>消除 CSS 阻塞，FCP 提前 0.3~0.8 秒。</p><h3>六、優化手段 5：服務器壓縮與 CDN 預熱</h3><h3>原理</h3><p class='list-item'>- Brotli 压缩比 Gzip 高 20%~30%</p><p class='list-item'>- CDN 預熱讓用戶首次訪問即命中邊緣節點</p><h3>Nginx Brotli 配置（需编译 brotli 模块）</h3><pre><code>brotli on;
+brotli_comp_level 6;
+brotli_types text/plain text/css application/javascript application/json image/svg+xml;</code></pre><h3>CDN 預熱（阿里雲示例）</h3><p><code>aliyun cdn PushObjectCache --ObjectPath "https://example.com/static/main.js"</code>### 收益</p><p>傳輸體積減少 20%~30%，RTT 高的地區尤其明顯。</p><h3>七、優化優先級總結</h3><p>按此順序執行，2 天內可將 LCP 從 4 秒以上降至 1.5 秒以內。</p><h3>八、檢測工具</h3><p class='list-item'>- **Lighthouse**（Chrome DevTools）</p><p class='list-item'>- **WebPageTest**（https://www.webpagetest.org）</p><p class='list-item'>- **Chrome Performance 面板**</p><p>以上所有配置均可直接複製使用。如有具體場景問題，歡迎討論。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

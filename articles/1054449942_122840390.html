@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>蚂蚁百灵杀疯了！124B参数干翻1T旗舰，还开源免费，Agent创业门槛骤降 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>蚂蚁百灵杀疯了！124B参数干翻1T旗舰，还开源免费，Agent创业门槛骤降</h1>
+<div class="meta"><span class="src">sohu.com</span>
+<span>· <a href="https://www.sohu.com/a/1054449942_122840390" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.sohu.com/a/1054449942_122840390" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>螞蟻百靈Ling-3.0-flash：124B總參/5.1B激活，用"小模型"撬動"大智能"</p><p>2026年7月24日，螞蟻百靈團隊發佈了一款讓業界"瞳孔地震"的模型——**Ling-3.0-flash，總參數量124B，激活參數量僅5.1B，在傳統推理、指令遵循與長文本等核心指標上，對標甚至超越上一代旗艦Ring-2.6-1T**。用不到1/8的參數量，跑出了1T模型的效果，還開源加免費API。</p><p>AIHOT編輯的推薦語直擊要害："螞蟻百靈用124B總參、5.1B激活做到對標1T模型，還開源加免費API，想要低成本跑強Agent的團隊可以立刻試。"</p><p>這不僅僅是一個"新模型發佈"的新聞，它背後藏着模型架構的範式變遷——**從"大力出奇跡"到"巧力出奇跡"，螞蟻百靈正在用混合線性注意力+稀疏MoE的組合拳，重新定義"高效智能"的邊界**。</p><p class='list-item'>**"螞蟻百靈用124B總參、5.1B激活做到對標1T模型，還開源加免費API，想要低成本跑強Agent的團隊可以立刻試。"——AIHOT編輯推薦語**</p><h3>1 5.1B激活參數憑什麼對標1T？三個技術&quot;殺手鐧&quot;</h3><p>先看一組數據：Ling-3.0-flash總參124B，激活參數只有5.1B——也就是說，**每次推理時實際"幹活"的神經元，只有總參數的4%**。而它要挑戰的Ring-2.6-1T，總參數量是它的8倍。這就像用一輛Smart的引擎，跑出了重卡的載重。</p><p>怎麼做到的？三個核心技術：</p><p class='list-item'>**第一，原生混合線性注意力架構。**傳統Transformer的自注意力機制，計算複雜度隨序列長度平方級增長——輸入1024個token，要算1024×1024次。而線性注意力把複雜度壓到了線性級別，輸入1024個token，只算1024×k次（k是常數）。這意味着**長文本輸入時，TTFT（首個Token生成時間）降低60%至80%以上**——處理一份100頁的PDF，傳統模型可能要等5秒纔開始輸出，Ling-3.0-flash不到1秒就能出第一個字。</p><p class='list-item'>**第二，1/64稀疏MoE。**MoE（混合專家）不新鮮，但1/64的稀疏度是真正的"極端"。這意味着模型有64個"專家"子網絡，每次推理只激活1個——**相當於一個124B的"專家團隊"，但每次只請最擅長這道題的那位專家出馬**。其他63位專家"待命但不耗電"，這纔是激活參數只有5.1B的祕密。</p><p class='list-item'>**第三，10,000+可交互訓練環境。**這不是傳統的"喂數據→訓練→評估"流水線。Ling-3.0-flash在訓練過程中與超過1萬個交互式環境動態交互——**模型在訓練中就能"動手做實驗"，而不是被動"看答案"**。這種訓練方式讓模型在推理、工具調用、多步規劃等Agent場景中表現尤爲突出。</p><p>從"堆參數"到"拼效率"——螞蟻百靈證明，聰明比大力更重要</p><h3>2 爲什麼螞蟻要做大模型？藏在&quot;百靈&quot;名字裏的野心</h3><p>很多人會問：螞蟻不是做支付的嗎？怎麼做起大模型了？</p><p>答案是：**螞蟻百靈（LING）不是"跨界"，而是"迴歸"**。螞蟻本質上是一家數據智能公司——每天處理數億筆交易、風控決策、信貸評估、理財推薦，這些場景天然需要強大的AI能力。而"百靈"這個名字，暗示了它的定位：**不是做"通用聊天機器人"，而是做"智能體的大腦"**。</p><p>從技術路線看，螞蟻百靈選擇了一條與主流不同的路：不做Dense大模型（如GPT-4），而是All in MoE+線性注意力。這條路有三個優勢：**推理成本低**（激活參數少，單次推理只需少量GPU）、**長文本友好**（線性注意力讓長輸入不再"卡脖子"）、**Agent原生**（10,000+交互訓練環境賦予了模型天然的"動手能力"）。</p><p>更重要的是，螞蟻百靈選擇了開源+免費API。這意味着**任何創業團隊、中小企業、獨立開發者，都可以用極低的成本跑起一個"強Agent"**。在AI應用大爆發的2026年，這不是"做慈善"，而是"做生態"——讓更多人用螞蟻的模型構建Agent，螞蟻的AI能力就滲透到了千行百業。</p><h3>Ling-3.0-flash 核心数据</h3><p class='list-item'>- **總參數量：**124B</p><p class='list-item'>- **激活參數量：**5.1B（僅4%激活）</p><p class='list-item'>- **架構：**原生混合線性注意力 + 1/64稀疏MoE</p><p class='list-item'>- **訓練環境：**10,000+可交互環境</p><p class='list-item'>- **長文本TTFT：**降低60%-80%以上</p><p class='list-item'>- **對標對象：**Ring-2.6-1T（上一代旗艦，總參1T）</p><p class='list-item'>- **開源狀態：**開源 + 免費API</p><h3>3 5.1B激活參數的行業衝擊：Agent的&quot;iPhone時刻&quot;？</h3><p>Ling-3.0-flash最深遠的影響，不是"又一個模型SOTA了"，而是**它把"強Agent"的門檻打下來了**。</p><p>在此之前，要跑一個"能用"的Agent，門檻不低。如果用GPT-4級模型，API費用一個月輕鬆上千；如果用開源模型自己部署，動輒需要8卡A100/H100，硬件成本幾十萬起步。而Ling-3.0-flash的5.1B激活參數，意味着**一張消費級顯卡（如RTX 4090）就能跑起來，而且推理速度極快**。</p><p>這帶來了幾個直接的行業變化：</p><p class='list-item'>**第一，Agent創業門檻驟降。**以前做AI Agent，模型成本是大頭；現在模型幾乎免費（開源+免費API），創業團隊可以把精力放在產品、場景和用戶體驗上。這就像當年雲計算讓創業公司"用得起服務器"——現在Ling-3.0-flash讓AI創業公司"用得起強模型"。</p><p class='list-item'>**第二，端側AI加速落地。**5.1B激活參數在端側設備上運行完全可行。結合《端側智能2026》報告中提到的"密度定律"（模型能力密度每3.5個月翻番），Ling-3.0-flash這類高效模型的出現，正在讓"手機跑大模型"從實驗變成現實。</p><p class='list-item'>**第三，MoE架構的"勝利宣言"。**從DeepSeek到螞蟻百靈，中國AI公司在MoE架構上的持續突破，正在改變"只有堆參數才能提升智能"的行業共識。Ling-3.0-flash證明：**聰明的架構設計，比盲目的參數擴張更有價值**。</p><h3>從&quot;大模型&quot;到&quot;強Agent&quot;——螞蟻百靈讓AI Agent的門檻從&quot;企業級&quot;降到&quot;個人級&quot;</h3><h3>4 冷靜看待：5.1B的&quot;天花板&quot;在哪裏？</h3><p>儘管Ling-3.0-flash的數據令人振奮，但幾個現實問題值得冷靜思考：</p><p class='list-item'>**第一，5.1B的"知識密度"夠不夠？**激活參數只有5.1B，雖然推理效率極高，但在需要"廣博知識面"的場景（如開放域問答、跨學科推理），小參數模型的知識儲備天然不如大參數模型。Ling-3.0-flash在"對標1T模型"的基準測試中表現優異，但實際生產環境中的長尾場景仍需驗證。</p><p class='list-item'>**第二，MoE的"專家選擇"可能出錯。**1/64稀疏MoE意味着每次只激活1個專家。如果路由機制選錯了專家，回答質量就會打折扣。雖然團隊聲稱路由準確率很高，但在極端情況下（如高度跨領域的複雜問題），單一專家可能不夠用。</p><p class='list-item'>**第三，生態建設需要時間。**開源+免費API是好的開始，但一個模型要被廣泛採用，需要工具鏈、社區、文檔、案例的全方位支持。螞蟻百靈能否成爲AI Agent的"基礎設施"，還要看後續的生態建設力度。</p><h3>模型架構的&quot;範式變遷&quot;：從Dense到MoE</h3><p class='list-item'>**Dense模型（傳統路線）：**所有參數同時激活，推理時"全員上陣"。優點是知識面廣、表現穩定；缺點是計算成本高、推理速度慢。</p><p class='list-item'>**MoE模型（新興路線）：**總參數大但每次只激活少數"專家"。優點是推理效率高、成本低、可擴展性強；缺點是專家路由可能出錯、知識覆蓋可能有盲區。</p><p class='list-item'>**Ling-3.0-flash的創新：**在MoE基礎上疊加線性注意力，同時解決"推理效率"和"長文本處理"兩大痛點。它代表的不是"小模型打敗大模型"，而是"聰明架構打敗笨重架構"。</p><p class='list-item'>**Ling-3.0-flash的意義不在於"5.1B參數比1T參數強"，而在於"5.1B激活參數就夠了"。當模型可以用更少的計算資源實現同等的智能，AI應用的成本曲線就會發生質變——從"越強越貴"變成"越強越便宜"。這纔是AI真正普惠化的開始。**</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>为什么 Claude Code 没有一句废话？扒光它的底层提示词，我悟了！ · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>为什么 Claude Code 没有一句废话？扒光它的底层提示词，我悟了！</h1>
+<div class="meta"><span class="src">sohu.com</span>
+<span>· <a href="https://www.sohu.com/a/1014681807_121118947" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.sohu.com/a/1014681807_121118947" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>用 Claude Code 还是 Codex?</p><p>爲什麼 Claude Code 不像 GPT-5.4那樣廢話連篇，爲什麼它寫的代碼比較剋制？</p><p>除了其本身的工程設計之外，很重要的原因就是其精妙的系統提示詞的設計。</p><p>有人專門維護了 Claude Code 所有歷史版本的系統提示詞，通過這套系統提示詞，可以清晰地看到Claude Code 的設計理念。</p><h3>提示词地址： https://cchistory.mariozechner.at/</h3><h3>① 角色定義（最頂層）</h3><h3>原文（精簡之後的）</h3><p>You are a Claude agent... helps users with software engineering tasks.</p><p>你是一個 Claude 代理，主要幫助用戶完成軟件工程相關任務。</p><h3>作用</h3><p>這是**身份鎖定**，它決定了模型：</p><p class='list-item'>- 優先“做代碼相關事情”</p><p class='list-item'>- 而不是泛聊天 / 寫作文</p><p>影響非常大，後面所有行爲都圍繞“工程助手”展開。</p><h3>② 安全邊界（紅線）</h3><h3>原文</h3><p>Assist with authorized security testing... Refuse destructive techniques...</p><p>允許：授權的安全測試、防禦、CTF</p><p>拒絕：破壞性攻擊、DoS、大規模攻擊、供應鏈攻擊等</p><h3>作用</h3><h3>這是**法律/安全護欄**</h3><p>控制模型：</p><p class='list-item'>- 不會變成黑客工具</p><p class='list-item'>- 但保留“安全研究”能力</p><h3>屬於強約束（hard rule）</h3><h3>③ 輸出規則（你看到的內容）</h3><h3>原文</h3><p>All text you output... use markdown...</p><p>你輸出的所有內容都會直接展示給用戶，可以用 markdown。</p><h3>作用</h3><h3>明確“沒有隱藏層”</h3><p>模型不能：</p><p class='list-item'>- 假裝有內部狀態</p><p class='list-item'>- 輸出不可見內容</p><h3>④ 工程任務默認理解</h3><h3>原文</h3><p>If unclear, interpret as software engineering tasks...</p><p>如果用戶說得不清楚，要按“工程任務”來理解。</p><h3>作用</h3><h3>這是**自動補全意圖**</h3><p>比如：</p><h3>用户说：改 methodName</h3><p>模型理解：去代碼裏改，而不是解釋命名</p><h3>⑤ 不要改沒讀過的代碼（關鍵規則）</h3><h3>原文</h3><p>Do not propose changes to code you haven't read.</p><p>沒讀過的代碼，不要改。</p><h3>作用</h3><h3>防止“幻覺式修改”</h3><p>強制流程：</p><h3>Code</h3><h3>Read → Understand → Edit</h3><p>這是代碼代理質量的核心之一。</p><h3>⑥ 不要亂建文件</h3><h3>原文</h3><p>Do not create files unless absolutely necessary.</p><p>除非必要，不要新建文件。</p><h3>作用</h3><h3>防止代碼庫污染</h3><p>AI 常見問題：</p><p class='list-item'>- 到處新建 helper 文件</p><p class='list-item'>- 生成重複結構</p><p>這條在壓制這種行爲。</p><h3>⑦ 避免過度工程（非常重要）</h3><h3>原文</h3><p>Avoid over-engineering...</p><p>不要過度設計：</p><p class='list-item'>- 不要加沒要求的功能</p><p class='list-item'>- 不要提前抽象</p><p class='list-item'>- 不要做“未來優化”</p><h3>作用</h3><h3>這是**壓制 AI 發散能力**</h3><p>AI天然傾向：</p><p class='list-item'>- 重構</p><p class='list-item'>- 優化</p><p class='list-item'>- 抽象</p><p>這段在強行限制它：</p><p class='list-item'>**只做“剛好夠用”的修改**</p><h3>⑧ 安全編碼要求</h3><h3>原文</h3><p>Be careful not to introduce vulnerabilities...</p><p>不要引入安全漏洞（XSS、SQL注入等）。</p><h3>作用</h3><h3>防止生成“能跑但危險”的代碼</h3><h3>⑨ 不要做多餘驗證</h3><h3>原文</h3><p>Don't add error handling... unless needed.</p><p>不要亂加：</p><p class='list-item'>- 錯誤處理</p><p class='list-item'>- fallback</p><p class='list-item'>- validation</p><h3>作用</h3><h3>這是反直覺但很重要</h3><p>AI常見問題：</p><p class='list-item'>- 到处 try/catch</p><p class='list-item'>- 加一堆 if 判斷</p><p>這裏直接限制：</p><p class='list-item'>**只在邊界加驗證（用戶輸入 / API）**</p><h3>⑩ 高風險操作必須確認</h3><h3>原文</h3><p>Destructive operations... ask for confirmation.</p><p>危險操作必須先問用戶，比如：</p><p class='list-item'>- 刪除文件</p><p class='list-item'>- force push</p><p class='list-item'>- 改 CI</p><h3>作用</h3><h3>控制“執行權限”</h3><p>把模型變成：</p><p class='list-item'>- 默認謹慎</p><p class='list-item'>- 不自作主張</p><h3>⑪ 工具使用規則（最核心工程能力）</h3><h3>原文</h3><p>Do NOT use Bash when a dedicated tool exists...</p><p>有專用工具就不要用 Bash：</p><h3>作用</h3><h3>這是**架構級設計**</h3><p>讓代理：</p><p class='list-item'>- 操作可審計</p><p class='list-item'>- 權限可控</p><p class='list-item'>- 行爲結構化</p><h3>而不是 bash亂跑</h3><h3>⑫ 並行工具調用</h3><h3>原文</h3><p>Make tool calls in parallel when possible.</p><p>能並行就並行調用工具。</p><h3>作用</h3><h3>提升性能</h3><p>讓代理更像：</p><p class='list-item'>- 多線程工程師</p><h3>而不是一步一步慢慢查</h3><h3>⑬ TodoWrite（任务拆解）</h3><h3>原文</h3><p>Break down work with TodoWrite...</p><p>把任務拆成步驟，並逐個完成。</p><h3>作用</h3><h3>防止 AI“中途迷路”</h3><p>強制：</p><h3>Code</h3><h3>計劃 → 執行 → 標記完成</h3><h3>⑭ Agent 子代理機制</h3><h3>原文</h3><p>Launch specialized agents...</p><p>可以啓動子代理（Explore / Plan 等）做複雜任務。</p><h3>作用</h3><h3>這是**多代理架構**</h3><p>主代理：</p><p class='list-item'>- 做決策</p><p>子代理：</p><p class='list-item'>- 做探索 / 規劃</p><h3>⑮ 輸出風格限制</h3><h3>原文</h3><p>Be short and concise.</p><p>要簡短直接。</p><h3>作用</h3><h3>抑制“廢話 AI”</h3><h3>⑯ Git 操作規範（非常細）</h3><h3>原文</h3><p>NEVER update git config... NEVER force push...</p><p>Git 規則：</p><p class='list-item'>- 不要強推</p><p class='list-item'>- 不要 reset --hard</p><p class='list-item'>- 不要 amend（除非要求）</p><h3>作用</h3><h3>防止“毀倉庫”</h3><p>這是實際工程中最危險的地方。</p><h3>⑰ Commit 流程（標準化）</h3><h3>原文</h3><p>Run git status, diff, log...</p><p>提交前必須：</p><p class='list-item'>- 1看狀態</p><p class='list-item'>- 2看 diff</p><p class='list-item'>- 3看歷史</p><h3>作用</h3><p>让 commit：</p><p class='list-item'>- 有上下文</p><p class='list-item'>- 有風格一致性</p><h3>⑱ PR 流程（完整工作流）</h3><h3>原文</h3><p>gh pr create...</p><p>創建 PR 要：</p><p class='list-item'>- 分析所有 commit</p><p class='list-item'>- 写 summary</p><p class='list-item'>- 写 test plan</p><h3>作用</h3><p>讓 AI 不只是寫代碼，而是參與完整開發流程</p><h3>⑲ Memory 系統（長期記憶）</h3><h3>原文</h3><p>persistent memory system...</p><p>有一個本地記憶系統，存：</p><p class='list-item'>- 用戶信息</p><p class='list-item'>- 偏好</p><p class='list-item'>- 項目背景</p><p class='list-item'>- 外部資源</p><h3>作用</h3><h3>讓代理“越用越懂你”</h3><p>而不是每次重來。</p><h3>⑳ Memory 分类</h3><h3>原文</h3><h3>user / feedback / project / reference</h3><p>四類記憶：</p><p class='list-item'>- user：用戶是誰</p><p class='list-item'>- feedback：你喜歡怎麼合作</p><p class='list-item'>- project：項目背景</p><p class='list-item'>- reference：外部链接</p><h3>作用</h3><h3>結構化長期記憶</h3><h3>㉑ 不該存的東西</h3><h3>原文</h3><p>Do NOT store code patterns...</p><p>不要存：</p><p class='list-item'>- 代碼結構</p><p class='list-item'>- git 历史</p><p class='list-item'>- 臨時任務</p><h3>作用</h3><h3>防止 memory 污染</h3><h3>㉒ Memory 寫入方式</h3><h3>原文</h3><h3>write markdown file + update MEMORY.md</h3><p>記憶必須：</p><p class='list-item'>- 1單獨文件</p><p class='list-item'>- 2再寫索引</p><h3>作用</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

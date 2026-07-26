@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>前端工程化实战：打造可维护、高效的项目架构 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>前端工程化实战：打造可维护、高效的项目架构</h1>
+<div class="meta"><span class="src">51CTO</span><span>· 2026-03-09</span>
+<span>· <a href="https://blog.51cto.com/wds0/14500529" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.51cto.com/wds0/14500529" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>隨着 Web 項目的規模越來越大，前端開發不僅僅是寫頁面和交互，**工程化能力已經成爲衡量前端水平的重要指標**。</p><p>本文將從實戰經驗出發，分享一套 **前端工程化思路和實踐技巧**，幫助你構建可維護、高效、可擴展的項目。</p><h3>一、前端工程化是什麼？</h3><p>前端工程化，本質上是通過工具、規範和流程，讓前端開發變得：</p><p class='list-item'>- **可維護**：團隊協作不容易出錯</p><p class='list-item'>- **可擴展**：業務增長後容易迭代</p><p class='list-item'>- **高效**：提升開發、構建和部署速度</p><p>常見包含：</p><p class='list-item'>- 項目目錄規範</p><p class='list-item'>- 模塊化與組件化</p><p class='list-item'>- 自動化構建工具</p><p class='list-item'>- 持續集成 / 持續部署（CI/CD）</p><p class='list-item'>- 性能監控與優化</p><h3>二、項目目錄規範</h3><p>一個清晰的目錄結構能讓團隊快速上手，也利於長期維護。</p><p>推薦目錄結構：</p><pre><code>src/
+  assets/     # 图片、字体、样式等资源
+  components/ # 公共组件
+  pages/      # 页面级组件
+  services/   # 接口请求
+  utils/      # 工具函数
+  hooks/      # 自定义 hooks 或 composables
+  store/      # 状态管理
+  router/     # 路由配置</code></pre><p>Tips: 小項目可以精簡，大項目建議分模塊管理。</p><h3>三、模塊化與組件化</h3><h3>1. 模塊化</h3><p>JS 文件儘量採用 **ES Module** 語法：</p><pre><code>// utils/math.js
+export function add(a, b) {
+  return a + b
+}</code></pre><pre><code>// main.js
+import { add } from &#x27;./utils/math&#x27;
+console.log(add(2, 3))</code></pre><p>優點：</p><p class='list-item'>- 清晰依賴關係</p><p class='list-item'>- 支持按需加載</p><p class='list-item'>- 可複用</p><h3>2. 組件化</h3><p>React / Vue / Svelte / Solid 等框架都推荐组件化。</p><p>原則：</p><p class='list-item'>- **單一職責**：一個組件只做一件事</p><p class='list-item'>- **可複用**：組件獨立，參數化</p><p class='list-item'>- **可組合**：小組件組合成大組件</p><p>Vue 示例：</p><pre><code>&lt;template&gt;
+  &lt;button @click=&quot;onClick&quot;&gt;{{ label }}&lt;/button&gt;
+&lt;/template&gt;
+&lt;script setup&gt;
+defineProps({ label: String })
+const emit = defineEmits([&#x27;click&#x27;])
+function onClick() {
+  emit(&#x27;click&#x27;)
+}
+&lt;/script&gt;</code></pre><h3>四、自動化構建</h3><p>現代前端項目構建依賴 **Webpack / Vite / Rollup**。</p><p>目標：</p><p class='list-item'>- 轉換 ES6+ 語法</p><p class='list-item'>- 压缩 JS/CSS</p><p class='list-item'>- 支持熱更新</p><p class='list-item'>- 支持代碼分割</p><p>#### Vite 示例：</p><pre><code>import { defineConfig } from &#x27;vite&#x27;
+import vue from &#x27;@vitejs/plugin-vue&#x27;
+export default defineConfig({
+  plugins: [vue()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: [&#x27;vue&#x27;, &#x27;vue-router&#x27;]
+        }
+      }
+    }
+  }
+})</code></pre><p>效果：</p><p class='list-item'>- 首屏加載快</p><p class='list-item'>- 公共庫單獨打包</p><p class='list-item'>- 開發環境 HMR 極速響應</p><h3>五、狀態管理與數據流</h3><p>大型項目狀態複雜，推薦：</p><p class='list-item'>- **Vue**：Pinia / Vuex</p><p class='list-item'>- **React**：Redux / Zustand / Recoil</p><p>原則：</p><p class='list-item'>- 局部狀態優先組件內部管理</p><p class='list-item'>- 全局狀態只存必要數據</p><p class='list-item'>- 避免頻繁跨組件更新</p><h3>六、接口管理與 API 封裝</h3><p>封裝接口可以減少重複代碼，統一處理錯誤和 loading 狀態。</p><p>示例：</p><pre><code>// services/api.js
+import axios from &#x27;axios&#x27;
+const instance = axios.create({
+  baseURL: &#x27;/api&#x27;,
+  timeout: 5000
+})
+instance.interceptors.response.use(
+  res =&gt; res.data,
+  err =&gt; Promise.reject(err)
+)
+export function getUser(id) {
+  return instance.get(`/user/${id}`)
+}</code></pre><p>好處：</p><p class='list-item'>- 集中管理接口</p><p class='list-item'>- 易於切換環境</p><p class='list-item'>- 可統一做緩存、錯誤處理</p><h3>七、持續集成與部署（CI/CD）</h3><p>現代前端項目建議配置 CI/CD 流程：</p><p class='list-item'>- **CI**：自動跑測試、代碼檢查</p><p class='list-item'>- **CD**：自動部署到測試/生產環境</p><p>推薦工具：</p><p class='list-item'>- GitHub Actions</p><p class='list-item'>- GitLab CI</p><p class='list-item'>- Jenkins</p><p>示例（GitHub Actions 部署 Vue 项目）：</p><pre><code>name: Deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: &#x27;18&#x27;
+      - run: npm ci
+      - run: npm run build
+      - run: npm run deploy</code></pre><h3>八、性能監控與優化</h3><p>工程化不僅僅是開發流程，還包括**持續監控**。</p><p>常見方案：</p><p class='list-item'>- Lighthouse / Web Vitals</p><p class='list-item'>- Sentry / LogRocket 错误监控</p><p class='list-item'>- 用戶行爲埋點</p><p>優化思路：</p><p class='list-item'>- 首屏加載優化</p><p class='list-item'>- 圖片懶加載</p><p class='list-item'>- JS 按需加載</p><p class='list-item'>- Virtual DOM / 虚拟列表</p><p class='list-item'>- Web Worker 异步计算</p><h3>總結</h3><p>前端工程化，是讓團隊開發更**高效、項目更可維護、產品更穩定**的關鍵。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
