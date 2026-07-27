@@ -45,8 +45,203 @@ font-size:12.5px;color:var(--muted);}
 <h1>29 个 CSS 新特性一网打尽：每个都标注 Stage + 实战案例</h1>
 <div class="meta"><span class="src">稀土掘金</span><span>· 2026-03-05</span>
 <span>· <a href="https://juejin.cn/post/7613374664555429915" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7613374664555429915" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7613374664555429915" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>各位攻城獅們，之前寫了《 這5個CSS新特性已經強到離譜，攻城獅直呼內行》，收藏量不少，並且有大佬反饋建議附加Stage標註版。那這...我必須安排上。 今天特意整理了29個CSS新特性，附加Stage標註版，有需要的大佬建議收藏。</p><p>根據最新的CSS規範、瀏覽器發展以及社區的討論，目前湧現的CSS新特性可以大致分爲**佈局與結構**、**交互與邏輯**、**視覺與表現**、**數據查詢與動畫**以及**組件與表單**五大類。</p><h3>🧱 佈局與結構</h3><p class='list-item'>- **CSS 嵌套 (Nesting)**：原生支持類似Sass的嵌套語法，提升代碼可讀性和組織性，減少預處理器依賴。</p><p class='list-item'>- **Subgrid**：讓網格項繼承父網格的軌道定義，解決子內容與父網格對齊的難題，尤其適合複雜表單和雜誌風格排版。</p><p class='list-item'>- `:has()`父選擇器</p><p class='list-item'>- **Masonry 瀑布流佈局**：作爲CSS Grid的一部分進行標準化，旨在用一行代碼（如- `grid-template-rows: masonry;`）解決Pinterest式佈局。</p><p class='list-item'>- **錨點定位 (Anchor Positioning)**：徹底取代Popper.js，原生實現彈窗、工具提示、下拉菜單等元素相對於其他元素的複雜定位。</p><p class='list-item'>-</p><h3>W3C規範階段說明</h3><p class='list-item'>- **ED (Editor's Draft，編輯草案)**：編輯人員的工作副本，可能隨時變化，不代表工作組共識</p><p class='list-item'>- **WD (Working Draft，工作草案)**：設計階段，工作組根據反饋迭代規範</p><p class='list-item'>- **CR (Candidate Recommendation，候選推薦標準)**：測試階段，需兩個獨立實現才能進入下一階段</p><p class='list-item'>- **REC (Recommendation，正式推薦標準)**：完成狀態，代表維護階段</p><h3>#### 1. CSS 嵌套 (Nesting)</h3><h3>css</h3><pre><code>.card {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  &amp; h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  &amp; p {
+    color: #333;
+    &amp; span {
+      font-weight: bold;
+    }
+  }
+}
+/* Stage: REC 【正式推荐标准，可放心用于生产环境】（附加说明：已被CSS Snapshot 2026收录为稳定规范[](https://drafts.csswg.org/css-2026/)，现代浏览器全支持）*/</code></pre><h3>#### 2. Subgrid</h3><h3>css</h3><pre><code>.grid-parent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.grid-child {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid; /* 继承父网格的行轨道 */
+}
+/* Stage: CR 【候选推荐标准，需要两个独立实现，基本稳定】（附加说明：CSS Grid Level 3的一部分，Interop项目推动下已基本稳定）*/</code></pre><h3>#### 3. &lt;code&gt;:has()&lt;/code&gt; 父选择器</h3><h3>css</h3><pre><code>/* 如果表單字段有無效輸入，高亮其父容器 */
+.field:has(:invalid) {
+  border-color: red;
+  background: #ffeeee;
+}
+/* 包含特定圖標的卡片 */
+.card:has(.icon-star) {
+  border: 2px solid gold;
+}
+/* Stage: REC 【正式推薦標準，可放心用於生產環境】（附加說明：選擇器Level 4規範，已修復解析問題，現代瀏覽器全支持）*/</code></pre><h3>#### 4. Masonry 瀑布流布局</h3><h3>css</h3><pre><code>.masonry-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: masonry; /* 瀑布流模式 */
+}
+/* Stage: ED 【编辑草案，实验性，可能变化】 （附加说明：CSS Grid Level 3的扩展，目前仅Safari实验性支持）*/</code></pre><h3>#### 5. 锚点定位 (Anchor Positioning)</h3><h3>html</h3><pre><code>&lt;button id=&quot;anchor&quot;&gt;点击我&lt;/button&gt;
+&lt;div class=&quot;tooltip&quot;&gt;我是提示框&lt;/div&gt;</code></pre><h3>css</h3><pre><code>#anchor {
+  anchor-name: --my-anchor;
+}
+.tooltip {
+  position: absolute;
+  position-anchor: --my-anchor;
+  top: anchor(bottom);
+  left: anchor(center);
+  translate: -50% 8px;
+}
+/* Stage: WD 【工作草案，设计阶段，需关注浏览器支持】（附加说明：CSS Anchor Positioning规范，Chrome已支持，Safari/Firefox开发中）*/</code></pre><h3>⚡️交互與邏輯</h3><p class='list-item'>- **滾動驅動動畫 (Scroll-driven Animations)**：用CSS代替Intersection Observer和scroll事件監聽，實現視差滾動、閱讀進度條等高性能動畫，動畫進度與滾動進度直接關聯。</p><p class='list-item'>- `@starting-style`規則- `display`從- `none`切換過來的元素提供起始樣式，用於實現進入和退出過渡動畫。</p><p class='list-item'>- `if()`條件語句</p><p class='list-item'>- **状态查询 (Scroll State Queries)**：通过- `@container scroll-state`查询元素是否处于吸附(stuck)、捕捉(snapped)或溢出状态，告别IntersectionObserver。</p><p class='list-item'>- `sibling-index()`和- `sibling-count()`</p><p class='list-item'>- `interpolate-size`属性和- `calc-size()`函数- `height: auto`这类 intrinsic 尺寸，解决了长久以来的动画难题。</p><p class='list-item'>-</p><h3>W3C流程規範階段</h3><h3>#### 6. 滾動驅動動畫</h3><h3>css</h3><pre><code>@keyframes grow {
+  from { scale: 0.5; }
+  to { scale: 1.5; }
+}
+.progress-bar {
+  animation: grow linear;
+  animation-timeline: scroll(); /* 滚动驱动 */
+}
+/* Stage: WD 【工作草案，设计阶段，需关注浏览器支持】（附加说明：Scroll-driven Animations规范，Chrome已支持）*/</code></pre><h3>#### 7. &lt;code&gt;@starting-style&lt;/code&gt; 规则</h3><h3>css</h3><pre><code>.popover {
+  opacity: 0;
+  transition: opacity 0.3s;
+  @starting-style {
+    opacity: 0; /* 进入动画起点 */
+  }
+}
+.popover:popover-open {
+  opacity: 1;
+}
+/* Stage: CR 【候选推荐标准，需要两个独立实现，基本稳定】（附加说明：CSS Transitions Level 2的一部分，Baseline 2024新推出）*/</code></pre><h3>#### 8. &lt;code&gt;if()&lt;/code&gt; 条件语句</h3><h3>css</h3><pre><code>.card {
+  background-color: if(style(--theme: dark), #333, white);
+  padding: if(supports(display: grid), 2rem, 1rem);
+}
+/* Stage: ED【编辑草案，实验性，可能变化】 （附加说明：CSS Conditional Values规范草案，Chrome实验性支持）*/</code></pre><h3>#### 9. 状态查询 (Scroll State Queries)</h3><h3>css</h3><pre><code>@container scroll-state(stuck: top) {
+  .header {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Conditional Rules Level 5，Chrome 144/Edge 144已支持）*/</code></pre><p>#### 10. <code>sibling-index()</code> 和 <code>sibling-count()</code></p><h3>css</h3><pre><code>li {
+  animation: fade-in 0.3s calc(0.1s * sibling-index()) both;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+/* Stage: ED 【编辑草案，实验性，可能变化】（附加说明：实验性功能，浏览器兼容性差，建议用`:nth-child`替代）*/</code></pre><p>#### 11. <code>interpolate-size</code> 和 <code>calc-size()</code></p><h3>css</h3><pre><code>.accordion {
+  interpolate-size: allow-keywords;
+  height: 0;
+  transition: height 0.3s;
+}
+.accordion.open {
+  height: calc-size(auto, size); /* 从0到auto平滑过渡 */
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Values and Units规范，仍在完善百分比处理）*/</code></pre><h3>🎨 視覺與表現</h3><p class='list-item'>- `@function`自定義函數</p><p class='list-item'>- `corner-shape`和- `shape()`函數- `corner-shape`可創建花哨的形狀（如" squircles"），而- `shape()`函數能用更CSS原生的方式繪製複雜裁剪路徑。</p><p class='list-item'>- `text-wrap: balance`和- `pretty`- `balance`可平衡標題行長度，- `pretty`可避免段落末尾出現孤行。</p><p class='list-item'>- `field-sizing`屬性- `textarea`）根據內容自動調整尺寸。</p><p class='list-item'>- **高級**：在原有的基礎上擴展，允許讀取HTML任意屬性的值，並支持類型轉換（如顏色、數字），極大增強動態性。- `attr()`函數</p><p class='list-item'>- `contrast-color()`函数</p><p class='list-item'>- `zoom`属性</p><p class='list-item'>-</p><h3>W3C流程規範階段</h3><h3>#### 12. &lt;code&gt;@function&lt;/code&gt; 自定义函数</h3><h3>css</h3><pre><code>@function --calc-rem(--px) {
+  result: calc(var(--px) / 16 * 1rem);
+}
+.box {
+  padding: --calc-rem(32); /* 输出 2rem */
+}
+/* Stage: ED【编辑草案，实验性，可能变化】 （附加说明：CSS Functions规范草案，提案阶段）*/</code></pre><p>#### 13. <code>corner-shape</code> 和 <code>shape()</code> 函数</p><h3>css</h3><pre><code>.squircle {
+  corner-shape: superellipse; /* 圆角矩形变种 */
+  border-radius: 2rem;
+}
+.custom-shape {
+  clip-path: shape(&quot;M 0 0 L 100 0 L 50 100 Z&quot;);
+}
+/* Stage: ED【编辑草案，实验性，可能变化】 （附加说明：CSS Shapes Level 2，仍在设计阶段）*/</code></pre><p>#### 14. <code>text-wrap: balance</code> 和 <code>pretty</code></p><h3>css</h3><pre><code>h2 {
+  text-wrap: balance; /* 平衡行長度，避免標題換行太醜 */
+}
+p {
+  text-wrap: pretty; /* 避免段落末尾孤行 */
+}
+/* Stage: CR【候選推薦標準，需要兩個獨立實現，基本穩定】  （附加說明：CSS Text Level 4，跨瀏覽器支持良好）*/</code></pre><h3>#### 15. &lt;code&gt;field-sizing&lt;/code&gt; 属性</h3><h3>css</h3><pre><code>textarea {
+  field-sizing: content; /* 根据内容自动调整高度 */
+  min-height: 3em;
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Basic User Interface Level 4，Chrome已支持）*/</code></pre><h3>#### 16. 高级 &lt;code&gt;attr()&lt;/code&gt; 函数</h3><h3>html</h3><pre><code>&lt;div data-color=&quot;red&quot; data-size=&quot;50&quot;&gt;内容&lt;/div&gt;</code></pre><h3>css</h3><pre><code>div {
+  background-color: attr(data-color type(&lt;color&gt;), blue);
+  width: attr(data-size type(&lt;length&gt;), 100px);
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Values and Units Level 5，Interop 2026重点之一）*/</code></pre><h3>#### 17. &lt;code&gt;contrast-color()&lt;/code&gt; 函数</h3><h3>css</h3><pre><code>.button {
+  background: #007bff;
+  color: contrast-color(background); /* 自动选择白色或黑色 */
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Color Level 5，动态对比度计算）*/</code></pre><h3>#### 18. &lt;code&gt;zoom&lt;/code&gt; 属性</h3><h3>css</h3><pre><code>.zoomable {
+  zoom: 1.5; /* 縮放元素，影響佈局（類似放大鏡） */
+}
+/* Stage: 非標準【未納入W3C規範，但瀏覽器已實現】 （附加說明：雖成Baseline新可用，但非W3C標準規範）*/</code></pre><h3>📊 數據查詢與動畫</h3><p class='list-item'>- **容器查詢 (**：不再侷限於視口，而是根據- `@container`)- **父容器**的尺寸或樣式來改變子元素的樣式，實現真正的組件化響應式設計。</p><p class='list-item'>- **樣式查詢 (**：容器查詢的進階版，可以根據父容器的CSS屬性（如- `@container style()`)- `font-style: italic`）或自定義變量來應用樣式。</p><p class='list-item'>- `light-dark()`函数</p><p class='list-item'>- `linear()`緩動函數- `cubic-bezier()`複雜度的彈跳等特效)。</p><p class='list-item'>- **視圖過渡 (View Transitions)**：提供了頁面狀態變化時的平滑過渡效果，支持同頁面和跨文檔（多頁應用）過渡。</p><p class='list-item'>- **嵌套視圖過渡組**：在視圖過渡中保持元素樹狀結構，維持- `overflow: clip`或 3D 變換等效果。</p><p class='list-item'>-</p><h3>W3C流程規範階段</h3><h3>#### 19. 容器查詢</h3><h3>css</h3><pre><code>.card-container {
+  container-type: inline-size;
+}
+@container (min-width: 400px) {
+  .card {
+    display: flex; /* 宽容器时变为水平布局 */
+  }
+}
+/* Stage: CR【候选推荐标准，需要两个独立实现，基本稳定】 （附加说明：CSS Containment Level 3，Interop推动后稳定）*/</code></pre><h3>#### 20. 樣式查詢</h3><h3>css</h3><pre><code>@container style(--highlight: true) {
+  .item {
+    background: yellow;
+  }
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Containment Level 3扩展，支持度逐步提升）*/</code></pre><h3>#### 21. &lt;code&gt;light-dark()&lt;/code&gt; 函数</h3><h3>css</h3><pre><code>:root {
+  color-scheme: light dark;
+}
+body {
+  background: light-dark(white, black);
+  color: light-dark(black, white);
+}
+/* Stage: CR【候选推荐标准，需要两个独立实现，基本稳定】 （附加说明：CSS Color Level 5，跨浏览器支持）*/</code></pre><h3>#### 22. &lt;code&gt;linear()&lt;/code&gt; 缓动函数</h3><h3>css</h3><pre><code>.bounce {
+  transition: transform 0.5s linear(0, 0.2, 0.8, 1); /* 自定義緩動曲線 */
+}
+/* Stage: CR【候選推薦標準，需要兩個獨立實現，基本穩定】 （附加說明：CSS Easing Level 2，可創建複雜緩動曲線）*/</code></pre><h3>#### 23. 視圖過渡</h3><h3>html</h3><pre><code>&lt;main&gt;
+  &lt;div id=&quot;detail&quot; style=&quot;view-transition-name: detail;&quot;&gt;...&lt;/div&gt;
+&lt;/main&gt;</code></pre><h3>js</h3><pre><code>// 配合JS触发过渡
+document.startViewTransition(() =&gt; updateDOM());</code></pre><h3>css</h3><pre><code>/* 配合视图过渡的样式可自定义 */
+::view-transition-old(detail) { ... }
+::view-transition-new(detail) { ... }
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS View Transitions Level 1，Interop 2026重点）*/</code></pre><h3>#### 24. 嵌套視圖過渡組</h3><h3>css</h3><pre><code>.parent {
+  view-transition-group: parent;
+}
+.child {
+  view-transition-group: child;
+  view-transition-group-parent: parent; /* 嵌套关系 */
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS View Transitions Level 2，演进中）*/</code></pre><h3>📦 組件與表單</h3><p class='list-item'>- **可自定義的**：通過- `<select>`元素- `appearance: base-select`徹底解鎖- `<select>`元素的樣式定製，包括按鈕和下拉框，支持富內容選項。</p><p class='list-item'>- **Popover 和 Invokers API**：通過HTML屬性（如- `popover`）聲明式地創建彈窗、提示框，並配合- `command`等屬性進行控制。</p><p class='list-item'>- **滾動標記和按鈕**：通過- `::scroll-marker`和- `::scroll-button()`僞元素，無需JS即可創建輪播圖的導航點和滾動按鈕。</p><p class='list-item'>- **媒體僞類**：- `:playing`、- `:paused`、- `:buffering`等僞類，讓開發者可以基於- `<audio>`或- `<video>`的播放狀態來設置樣式。</p><p class='list-item'>- **自定義高亮僞類**：除了- `::selection`，現在還有- `::search-text`（查找匹配）、- `::target-text`（文本片段）、- `::spelling-error`等僞類用於高亮特定狀態的文本。</p><p class='list-item'>-</p><h3>W3C流程規範階段</h3><h3>#### 25. 可自定义的 &lt;code&gt;&lt;select&gt;&lt;/code&gt;</h3><h3>css</h3><pre><code>select {
+  appearance: base-select; /* 解锁完全样式定制 */
+}
+option::before {
+  content: &quot;✓&quot;;
+  display: none;
+}
+option:checked::before {
+  display: inline;
+}
+/* Stage: WD 【工作草案，设计阶段，需关注浏览器支持】（附加说明：CSS Basic User Interface Level 4，Chrome实验性支持）*/</code></pre><h3>#### 26. Popover 和 Invokers API</h3><h3>html</h3><pre><code>&lt;button popovertarget=&quot;my-popover&quot;&gt;打开弹窗&lt;/button&gt;
+&lt;div id=&quot;my-popover&quot; popover&gt;我是弹窗内容&lt;/div&gt;</code></pre><h3>css</h3><pre><code>[popover] {
+  margin: auto;
+  padding: 1rem;
+  border-radius: 8px;
+}
+/* Stage: CR【候选推荐标准，需要两个独立实现，基本稳定】 （附加说明：HTML Living Standard，Interop项目已覆盖）*/</code></pre><h3>#### 27. 滾動標記和按鈕</h3><h3>css</h3><pre><code>.scroll-container {
+  scroll-marker-group: ::scroll-markers; /* 生成导航点 */
+}
+::scroll-button(left) {
+  content: &quot;←&quot;;
+}
+/* Stage: WD【工作草案，设计阶段，需关注浏览器支持】 （附加说明：CSS Overflow Level 4，实验阶段）*/</code></pre><h3>#### 28. 媒體僞類</h3><h3>css</h3><pre><code>video:playing {
+  opacity: 1;
+}
+video:paused {
+  opacity: 0.7;
+}
+/* Stage: CR【候选推荐标准，需要两个独立实现，基本稳定】 （附加说明：Selectors Level 4，播放状态伪类）*/</code></pre><h3>#### 29. 自定義高亮僞類</h3><h3>css</h3><pre><code>::search-text {
+  background-color: yellow;
+  color: black;
+}
+::spelling-error {
+  text-decoration: wavy red underline;
+}
+/* Stage: CR 【候选推荐标准，需要两个独立实现，基本稳定】（附加说明：CSS Pseudo-Elements Level 4，文本高亮增强）*/</code></pre><h3>寫到最後</h3><p>關於這些特性屬於哪個階段（W3C Process），根據最新的CSS快照和瀏覽器實現情況，它們大致可以分爲兩類：</p><p class='list-item'>-</p><p class='list-item'>**穩定成熟（CR/REC階段，可生產使用）**：- 佈局類：**CSS 嵌套**、**Subgrid**、`:has()`</p><p class='list-item'>- 基础增强： `@starting-style``text-wrap: balance``linear()`缓动</p><p class='list-item'>- 視覺與響應：`light-dark()`**容器查詢**（尺寸查詢全支持）。</p><p class='list-item'>- 佈局類：</p><p class='list-item'>-</p><p class='list-item'>**實驗與演進（WD/ED階段，可超前學習）**：- **Interop 2026 重點聚焦**：- **錨點定位**、- **高級**、- `attr()`- **滾動驅動動畫**、- `shape()`函數- **視圖過渡**、- `@scope`</p><p class='list-item'>- **Chrome 領先實現**：- `if()`- `@function`- **可自定義**、- `<select>`- `field-sizing`- **狀態查詢**等目前在Chrome中可用，但跨瀏覽器支持尚在途中。</p><p>對於實戰項目，建議的策略是：</p><p class='list-item'>- **大膽使用**：- **CSS 嵌套、**。它們能立刻改善你的開發體驗和代碼質量，且兼容性已足夠好。- `:has()`、Subgrid、容器查詢</p><p class='list-item'>- **結合場景**：如果你的項目需要大量彈窗，可以開始嘗試- **錨點定位**（配合Popover API），同時做好降級或polyfill。</p><p class='list-item'>- **保持關注**：- **滾動驅動動畫、**代表了CSS邏輯化的未來，密切關注瀏覽器兼容性趨勢，一旦時機成熟便可大規模應用。- `if()`、- `@function`</p><p>如果這篇文章讓你對 CSS 刮目相看，**點個贊，收藏起來**，讓更多朋友看到——CSS 真的起飛了。</p><p class='list-item'>**#CSS新特效 #前端 #Web開發 #設計 #Interop2026 #乾貨**</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

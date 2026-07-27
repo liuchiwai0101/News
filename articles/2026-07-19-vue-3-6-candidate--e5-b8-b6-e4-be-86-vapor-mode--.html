@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Vue 3.6 首个候选版发布：Vapor Mode 与 alien-signals 响应式重构 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Vue 3.6 首个候选版发布：Vapor Mode 与 alien-signals 响应式重构</h1>
+<div class="meta"><span class="src">Charlie27&#x27;s Blog</span><span>· 2026-07-19</span>
+<span>· <a href="https://www.charlie27.com/2026/07/2026-07-19-vue-3-6-candidate-%e5%b8%b6%e4%be%86-vapor-mode-%e8%88%87-alien-signals-%e5%8f%8d%e6%87%89%e5%bc%8f%e9%87%8d%e6%a7%8b%ef%bc%8cwhatwg-%e5%90%8c%e6%ad%a5%e7%99%bc%e5%b8%83-7" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.charlie27.com/2026/07/2026-07-19-vue-3-6-candidate-%e5%b8%b6%e4%be%86-vapor-mode-%e8%88%87-alien-signals-%e5%8f%8d%e6%87%89%e5%bc%8f%e9%87%8d%e6%a7%8b%ef%bc%8cwhatwg-%e5%90%8c%e6%ad%a5%e7%99%bc%e5%b8%83-7" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>GitHub Releases (vuejs/core) · 2026-07-18</h3><p>Vue 核心團隊於 <code>2026-07-18</code> 發布 <code>v3.6.0-rc.1</code>，這是 3.6 版本正式進入候選階段的第一個版本。**本次釋出的兩大主軸**是全新編譯模式 Vapor Mode，以及 <code>@vue/reactivity</code> 套件的底層重構。兩者都以「選擇性啟用」的方式導入，不影響既有專案的執行方式。</p><h3>核心改動：Vapor Mode</h3><p>Vapor Mode 是一種新的單檔案元件（SFC）編譯模式，目標是**縮小基礎打包體積並提升執行效能**。開發者可以用 <code><script setup vapor></code> 撰寫元件，或使用純模板的 SFC；官方在第三方基準測試中宣稱其效能已可與 Solid、Svelte 5 等框架打平。</p><pre><code>&lt;script setup vapor&gt;
+import { ref } from &#x27;vue&#x27;
+const count = ref(0)
+&lt;/script&gt;
+&lt;template&gt;
+  &lt;button @click=&quot;count++&quot;&gt;{{ count }}&lt;/button&gt;
+&lt;/template&gt;</code></pre><p>Vapor 元件不經過虛擬 DOM（VNode），因此**不支援 Options API**，也與依賴 VNode 或元件實例代理（instance proxy）的功能不相容，例如 <code>app.config.globalProperties</code>、<code>getCurrentInstance()</code>、逐元素生命週期事件、<code>v-memo</code> 與元件模板 ref 屬性。</p><p>純 Vapor 應用需改用 <code>createVaporApp()</code> 建立；若要在同一個應用中混用傳統 VDOM 元件與 Vapor 元件，則需要額外掛載 <code>vaporInteropPlugin</code>。</p><h3>核心改動：反應式核心改用 alien-signals</h3><p><code>@vue/reactivity</code> 這次做了**大規模重構，改以 alien-signals 演算法為基礎**。alien-signals 最早是 Vue 核心維護者在獨立專案中實驗的 push-pull 混合式訊號演算法，靈感來自 Preact 的雙向鏈結串列設計；相較於 Vue 3.5 採用的純 pull-based 算法，push-pull 混合能減少不必要的重新計算。</p><p>為了效能極限最佳化，其核心演算法刻意不使用 Array、Set、Map 等結構，也避免函式遞迴，並以疊代式堆疊（stack-based）取代遞迴呼叫來實作內部的 <code>propagate</code> 與 <code>checkDirty</code>。這次是把該演算法反向移植回 Vue 本體，使 Proxy 之外的響應追蹤路徑更輕量、記憶體佔用更低。</p><h3>影響範圍</h3><p>本版另含**十二項針對 hydration 與 runtime-vapor 的錯誤修正**，涵蓋 hydration 過程中的 slot 處理與互操作、動態元件的 VNode anchor 保留，以及 Transition 支援的改善。由於這是 rc.1（release candidate 第一版）而非正式版，且 Vapor Mode 與 alien-signals 兩項改動皆為選擇性啟用，現有專案升級時預期不需要更動程式碼即可維持原行為；真正要使用 Vapor Mode 的專案則需要評估上述 Options API 與實例代理相關功能的相容性。</p><h3>WHATWG HTML commits · 2026-07-17</h3><p>WHATWG 於 <code>2026-07-17</code> 提交 <code>746f2ed</code>「Review Draft Publication: July 2026」，為 HTML Living Standard 產生當月的審閱草案快照。這類提交本身通常只是把規格文件的當前狀態封存成一份可供外部審閱、引用的固定版本，不代表新增功能，但同一批次前後幾天內，編輯 Anne van Kesteren 同時推送了多筆修正解析演算法與自訂元素行為的規格提交。</p><h3>規格細節：自訂元素建構器映射表修正</h3><p>其中一筆修正 <code>e05b3e5</code>「Restore active custom element constructor map entries after construction」，處理的是**自訂元素在多重登錄表（custom element registry）下的重入升級（re-entrant upgrade）問題**。</p><p>規格內部維護一張以建構器（constructor）為鍵值的映射表，記錄目前正在執行升級的自訂元素對應哪個登錄表；問題在於，若同一個建構器被不同登錄表重複使用，內層升級會覆寫外層升級留下的映射項目，且該項目在讀取後、或升級完成時會被無條件移除，導致外層的 <code>super()</code> 呼叫讀到錯誤的登錄表。修正做法是在覆寫前先保存舊項目，事後還原，並停止在讀取時就清除它，讓外層登錄表能撐過內層的重入升級存活下來。此修正對應 DOM PR #1494、WPT 測試 #61364，並關閉了 issue <code>#12691</code>。</p><h3>規格細節：解析演算法的措辭釐清</h3><p>同批次還有三筆與 HTML 解析器（tree construction）相關的編輯修正。</p><p><code>85f453b</code>「Create nodes in the realm of the document they are created for」釐清節點建立時應歸屬哪一個 JavaScript realm；<code>9377fd6</code>「Remove inaccurate statement about the insertion mode and CDATA sections」移除一段關於插入模式（insertion mode）與 CDATA 區段的不精確描述；<code>56674fb</code>「Clarify that foreign content is not an insertion mode」則呼應了長年未解的 issue #4015，明確指出「外來內容（foreign content，即解析器切換到 SVG／MathML 語境的狀態）」在規格中並不是一個正式的插入模式，而是其他插入模式（如 in body、in table）在處理 token 時額外檢查的旁支條件。</p><p>插入模式本身是解析器狀態機的核心變數，決定 tokenizer 產出的每個 token 該如何被插入 DOM 樹。</p><p class='list-item'>- `e05b3e5`— 修正自訂元素建構器映射表在重入升級下的還原邏輯</p><p class='list-item'>- `85f453b`— 釐清節點建立所屬的 JavaScript realm</p><p class='list-item'>- `9377fd6`— 移除插入模式與 CDATA 區段的不精確敘述</p><p class='list-item'>- `56674fb`— 明確「外來內容」不是獨立的插入模式</p><h3>影響範圍</h3><p>這批提交**多屬編輯性與正確性修正**，不改變主流瀏覽器目前已實作的可觀察行為，但會影響瀏覽器引擎團隊對照規格撰寫或修正 Web Platform Tests 的依據，尤其是自訂元素登錄表這類較新、實作間仍在收斂細節的功能。對一般前端開發者而言，這些變動不需要調整程式碼，但若專案中使用了多重自訂元素登錄表（scoped custom element registries）並出現建構器重入的情境，可以留意各瀏覽器後續是否依此修正調整行為。</p><p>原始來源：Review Draft Publication: July 2026、custom element 建構器映射修正</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

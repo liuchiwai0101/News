@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>学会这3个方法，你也能在微信拥有自己的AI智能体-腾讯云开发者社区-腾讯云 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>学会这3个方法，你也能在微信拥有自己的AI智能体-腾讯云开发者社区-腾讯云</h1>
+<div class="meta"><span class="src">cloud.tencent.com</span>
+<span>· <a href="https://cloud.tencent.com/developer/article/2714445" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://cloud.tencent.com/developer/article/2714445" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>你有沒有想過，不懂代碼，也能在微信裏做一個自己的 AI 智能體？</p><p>只要把工作中重複、耗時、已有固定方法的事情整理出來，就能把它變成專屬 AI 助手。</p><p>今天，我會帶你用「小微智能體」搭建 3 個案例：</p><p>但真正重要的，不是這 3 個案例，而是背後的 3 種方法：</p><p>掌握這 3 種方法，文案助手可以變成作文批改，智能客服可以變成教師 QA，答題智能體也能變成課堂練習。</p><p>接下來我展開詳細講講這3個方法背後的邏輯與應用。</p><p>先看第一個案例全域文案智能體，它屬於典型的“生成型智能體”。</p><p>用戶提供一個主題、產品或者需求，智能體按照提前設定的標準，生成對應的內容。</p><p>這種智能體的關鍵，不是模型有多強，而是你能不能把工作要求說清楚。</p><p>你需要告訴它：</p><p>用戶會提供什麼信息？智能體需要完成哪些任務？最終需要輸出哪些內容？每部分內容應該符合什麼標準？</p><p>例如，不能只告訴它：“幫我做一個文案智能體。”</p><p>而應該告訴它：“用戶輸入產品名稱、核心賣點和目標人羣后，分別生成朋友圈文案、小紅書種草文案、抖音口播文案、公衆號文案和知乎文案。不同平臺的內容要符合對應平臺的表達習慣，不能只是簡單複製同一段內容。”</p><p>操作步驟：進入「小微智能體」-【通用智能體】-【輸入需求】。</p><p>兩種描述看起來差別不大，最終效果卻會完全不同。</p><p>前者只是告訴 AI 一個模糊方向，後者則提供了一套明確的工作要求。</p><p>語文老師可以把它改造成作文批改智能體。</p><p>輸入是學生作文，輸出是作文亮點、存在問題、修改建議、好詞好句和教師評語。</p><p>效果如下：</p><p>銷售可以把它改造成客戶跟進話術智能體。</p><p>輸入是客戶身份、溝通記錄和當前意向，輸出是跟進建議、溝通話術和下一步行動。</p><p>運營可以把它改造成活動方案智能體。</p><p>輸入是活動目標、預算和用戶人羣，輸出是活動主題、玩法、傳播內容和執行流程。</p><p>行業不同，具體任務不同，但背後的方法完全一樣：</p><p class='list-item'>**把自己平時完成這項工作的標準，轉化成智能體可以理解的要求。**</p><p>這類智能體不是主要依靠自由生成，而是根據你提供的資料回答問題。</p><p>它的核心價值，不是會說多少話，而是是否真正瞭解你的產品、業務和規則。</p><p>如果智能體不知道產品功能、收費方式和使用流程，即使模型能力再強，也只能根據常識猜測。</p><p>所以，知識型智能體最重要的不是寫一段非常複雜的提示詞，而是整理好知識庫。</p><p>你可以把以下內容放進知識庫：</p><p>產品介紹和使用說明、用戶經常諮詢的問題、收費標準和服務規則、標準操作流程、容易出現誤解的內容、需要人工處理的特殊情況。</p><p>知識庫最好採用一問一答的方式整理。</p><p>例如：</p><p>Q：如何修改已經發布的智能體？</p><p>A：進入智能體對話頁面，點擊“更多”，依次選擇“高級設置”和“修改信息”。</p><p>Q：知識庫裏沒有的問題怎麼辦？</p><p>A：不要根據常識猜測，可以提示用戶聯繫人工確認。</p><p>操作步驟：進入「小微智能體」-【通用智能體】-【輸入需求】-【上傳知識庫配置】。</p><p>知識整理得越清楚，智能體的回答就越穩定。</p><p>老師可以把它改造成教師 QA 智能體。</p><p>把作業要求、作文規範、閱讀打卡規則和家長常見問題放進知識庫。</p><p>企業可以把它改造成內部制度助手。</p><p>把報銷制度、請假流程、入職說明和常用表格放進知識庫。</p><p>課程團隊可以把它改造成課程顧問。</p><p>把課程介紹、適合人羣、學習安排和常見問題放進知識庫。</p><p>這類智能體背後的方法是：</p><p class='list-item'>**把散落在聊天記錄、文檔和自己腦海裏的經驗，整理成可以反覆調用的知識。**</p><p>你教給它什麼，它就能回答什麼。</p><p>最後一個案例MBTI 答題智能體，它屬於典型的“流程型智能體”。</p><p>它不會一次性給出結果，而是先提出問題，收集用戶回答，再根據規則完成判斷，最後輸出結果。</p><p>操作步驟：進入「小微智能體」-【通用智能體】-【自定義生成】。</p><p>這類智能體最重要的，是提前設計好交互流程。</p><p>提示詞如下：</p><p>這裏面最重要的部分是題目格式中的“-”符號，後續這個是轉換成可以點擊的選擇題的格式。</p><p>以及結果不要輸出“-”符號，要不然會被錯誤解析成可以點擊的格式。</p><pre><code># 角色
+你是一位專業且權威的MBTI性格測試專家，具備深厚的心理學知識和豐富的實踐經驗，能夠通過科學有效的方式爲用戶進行MBTI性格測試。
+## 技能
+### 技能1: 開展性格測試
+1. 每次僅向用戶提出1道精心設計的問題，這些問題需圍繞MBTI性格測試的維度展開，涵蓋外向/內向、實感/直覺、思考/情感、判斷/感知等方面。每個問題應設置四個選項供用戶選擇。
+2. 引導用戶認真回答該問題。待用戶回答後，再提出下一道問題。
+根據以下示例輸出：
+回答進度：[1/8]
+已選擇選項：[]
+當你在完成一項任務時，更喜歡：📋
+-
+ A.按照詳細規劃好的步驟，按部就班地進行📑
+-
+ B.先有個大致框架，再依據實際情況靈活調整✏
+-
+ C.邊做邊摸索，隨機應變🌻
+-
+ D.看看別人是怎麼做的，參考他們的方法👀
+### 技能2: 分析測試結果
+1. 根據用戶對10道問題的回答，運用專業的MBTI性格分析方法，準確判斷出用戶的MBTI性格類型。
+2. 針對得出的性格類型，結合MBTI理論和實際案例，爲用戶提供詳細且具有針對性的相關建議，包括但不限於職業發展方向、人際交往策略、個人成長等方面。
+3.
+ 輸出的分析結果不要帶“-”符號。
+## 限制:
+- 僅圍繞MBTI性格測試相關內容進行交流，不回答與MBTI性格測試無關的話題。
+- 嚴格按照上述技能要求的流程和邏輯進行操作，輸出內容需條理清晰、易於理解。</code></pre><p>創建成功智能體後再設置打開解析選擇題的模式，這樣選擇題智能體就搞定了。</p><p>只要把這些流程設計清楚，就可以遷移到大量需要互動和信息收集的場景。</p><p>老師可以把它改造成語文選擇題練習智能體。</p><p>流程是出題、收集答案、判斷正誤、講解答案、繼續下一題、最後總結學習情況。</p><p>銷售可以把它改造成客戶需求測評智能體。</p><p>流程是詢問預算、使用場景、核心需求和購買時間，再根據回答推薦合適方案。</p><p>健身教練可以把它改造成訓練計劃助手。</p><p>流程是收集用戶的目標、基礎、時間和器械條件，再生成適合的訓練建議。</p><p>這類智能體背後的方法是：</p><p class='list-item'>**把自己服務用戶的過程，拆解成一步一步可以執行的流程。**</p><p>我認爲真正值得學習的，不是某段提示詞或某個模板，而是如何把一項工作轉化成 AI 可以執行的任務。</p><p>老師可以做作文批改、家長問答和課堂練習智能體；銷售可以做客戶分析、跟進話術和需求測評智能體；創作者可以做選題、寫作和內容覆盤智能體。</p><p>角色不同，場景不同，但底層方法基本相同：</p><p>生成型智能體，按照標準完成任務。</p><p>知識型智能體，根據資料回答問題。</p><p>流程型智能體，按照步驟完成互動和判斷。</p><p>理解這三類智能體後，你就可以從自己的工作中發現需求，而不是一直尋找現成模板。</p><p>以後想做一個AI智能體，可以按照 6 個步驟思考：</p><p>第一，找到重複、耗時、經常被詢問的場景。</p><p>第二，明確它是給自己、同事、客戶還是學生使用。</p><p>第三，確定用戶需要輸入什麼。</p><p>第四，明確最終要輸出什麼結果。</p><p>第五，根據類型補充標準、知識庫或交互流程。</p><p>第六，用真實問題測試至少三遍，再不斷調整。</p><p>判斷一個場景是否適合做成智能體，可以看 4 點：</p><p>是否經常重複？是否有明確標準？是否能拆成固定步驟？AI 處理後是否真的能節省時間？</p><p>滿足的條件越多，就越適合做成智能體。</p><p>但涉及複雜人際溝通、臨場判斷和責任決策的工作，不應該完全交給 AI。</p><p>AI 更適合先整理信息、提供參考和完成基礎工作，最終判斷仍然由人完成。</p><p>做智能體的本質，不是讓 AI 代替一個職業，而是把一個人長期積累的經驗、標準和方法，變成可以反覆使用的 AI 助手。</p><p>所以，不要先問“我應該做什麼智能體”，而要先問：</p><p class='list-item'>**我每天都在重複做什麼？**</p><p>找到這個問題，你就找到了第一個屬於自己的智能體。</p><p>感謝你讀到文末。</p><p>AI 時代，工具會不斷變化，但持續學習和思考的能力永遠重要。</p><p>如果這篇文章對你有幫助，歡迎點贊、轉發給身邊的朋友。</p><p>很高興與你相遇，我們下期見。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
