@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>蚂蚁百灵发布 Ling-3.0-Flash 原生混合推理模型，124B 参数对标 1T 旗舰 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>蚂蚁百灵发布 Ling-3.0-Flash 原生混合推理模型，124B 参数对标 1T 旗舰</h1>
+<div class="meta"><span class="src">sohu.com</span>
+<span>· <a href="https://www.sohu.com/a/1055360154_120893469" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.sohu.com/a/1055360154_120893469" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>2026 年 7 月 23 日，螞蟻集團旗下百靈大模型在開發者平臺上線新一代原生混合推理模型 Ling-3.0-Flash，並於 7 月 24 日正式對外發布。該模型總參數量 124B，單 token 激活參數僅 5.1B，官方稱其在基礎推理、指令遵循、長文本處理等核心指標上對標甚至超越參數規模達其 2-3 倍的行業領先模型。截至 2026 年 7 月 27 日，模型已在 OpenRouter 上線，限時免費一週，免費期截至 2026 年 8 月 3 日 23:00（北京時間），期滿後正式開源權重。</p><p>此次發佈在國產大模型競爭中的意義，不在於"又多了一個模型"，而在於螞蟻把"以小博大"的智效比路線推到了新拐點。 Ling-3.0-Flash 的總參數約爲其上一代旗艦 Ring-2.6-1T 的 12.4%，激活參數僅爲其 8.1%，卻宣稱實現全方位能力對標甚至超越。這意味着在高併發、對延遲敏感的 Agent 生產場景中，企業可以用約 1/12 的激活算力獲得接近旗艦模型的體驗——這對推理成本敏感的行業客戶是直接的經濟信號。</p><h3>模型定位：Agent 工作流中的&quot;高速執行節點&quot;</h3><p>百靈團隊在官方文章中明確，Ling-3.0-Flash 不是要取代超大參數規模的通用推理模型，而是完成 AI 工作流中"規劃-執行分離"範式裏的執行環節。</p><p>"我們不求單純的'大而全'，而是專注於在'足夠強'的前提下，把'快、省、可落地'做到極致。"</p><p>按照官方定義，該模型支持"思考模式"與"非思考模式"兩種推理形態，可根據任務複雜度自主判斷是否需要深度思考——簡單問答直接快速響應，複雜推理任務則切換到多步推導。這種"快慢結合"的策略在理論上接近人類認知的 System 1 / System 2 雙過程模型，在實踐中則降低了爲所有請求儲備頂配算力的部署成本。</p><p>模型原生支持 256K 上下文窗口，最高可擴展至 1M。</p><h3>架構升級：原生混合線性注意力 + 1/64 稀疏 MoE</h3><p>Ling-3.0-Flash 的能力躍遷主要源於底層架構的三處協同改造：</p><p>百靈團隊在發佈文章中表示："模型獲取智能的方式，不追求單純的規模堆砌，而更關注於對每一寸算力與狀態的高效壓榨，追求'智能密度'的極致提升。"</p><p>在工程側，模型接入 SGLang HiCache + Mooncake 分級緩存架構，長輸入場景下首字響應時間（TTFT）較從頭計算降低 60% 至 80% 以上。</p><h3>多方視角：官方口徑與獨立驗證的差距</h3><p>公司立場清晰且激進：通過 OpenRouter、Vercel AI Gateway、Nous Portal 等多渠道同步開放免費 API，並在免費期結束後開源權重，意圖快速切入全球開發者生態。</p><p>市場與第三方反應則更爲謹慎。AI 基礎設施分析機構 Orcarouter 在 2026 年 7 月 24 日的評測中指出："截至目前，Artificial Analysis 等第三方評測機構尚未建立 Ling-3.0-Flash 的評測頁面，所有性能與速度數據均追溯至螞蟻集團自身"。該機構特別提示，官方宣稱的 1000 tokens/秒峯值吞吐、sub-100ms TTFT 尚缺獨立驗證；模型權重也未在 Hugging Face 上線，許可證聲明（Apache 2.0）有待權重發布時確認。</p><p>Orcarouter 分析团队直言："Treat everything here as a preview, not a verdict."（将其视为预览，而非定论）</p><p>競爭對手角度，第三方技術分析指出，KDA 機制本身源自 Moonshot AI 的 Kimi Linear 研究，螞蟻採用的是該機制而非原創——這在大模型架構快速收斂的 2026 年屬於常態，但也意味着"原生混合推理"的架構創新更多體現在集成與工程優化，而非從零發明新機制。</p><h3>背景脈絡：從 Ling-2.6 到 Ling-3.0 的&quot;智效比&quot;演進</h3><p>螞蟻百靈大模型系列基於 MoE 架構構建，經歷國產異構算力適配、萬億參數突破，逐步迭代至長上下文與 Agent 協同推理階段。</p><p>這條演進路徑反映出明確的戰略分野：旗艦模型（Ring-2.6-1T）負責深度規劃與複雜推理，Ling-3.0-Flash 負責低成本、高併發的執行落地。兩者並非替代關係，而是"規劃-執行分離"範式下的分工。</p><h3>影響分析：成本曲線與落地門檻的重塑</h3><p>對行業的影響（已發生的事實）：Ling-3.0-Flash 將"激活參數 5.1B 對標 1T 旗艦"的性價比樣本擺上桌面。若其官方宣稱的性能在獨立評測中得到驗證，將倒逼同級別模型重新考量"參數規模=能力"的舊假設。</p><p>對市場與客戶的影響（預期）：金融、司法、科研等對推理準確性與響應速度有雙重要求的企業場景，是 Ling-3.0-Flash 的主要目標客戶。限時免費 API 至 2026 年 8 月 3 日的策略，意圖在開源權重發布前快速積累開發者的真實工作負載反饋。</p><p>對普通讀者的影響（預期）：更低的推理成本最終會傳導至下游應用——更快、更便宜的 AI 助手、代碼補全、智能客服體驗。但這一傳導需要時間，且取決於開源權重發布後的生態採納度。</p><p>需要區分的事實與推測：以下爲官方口徑、暫未獨立驗證的數據——"對標 2-3 倍參數模型"、"TTFT 降低 60%-80%+"、"MiniAppBench 通過率 25.3%（16 個主流模型平均 17%）"。第三方機構明確指出，截至 2026 年 7 月 24 日，Artificial Analysis 等獨立評測尚未覆蓋該模型。</p><h3>接下來看什麼</h3><p>📌 第一個關鍵節點：2026 年 8 月 3 日 23:00（北京時間）免費 API 期結束，屆時模型權重將正式開源——這是驗證"開源承諾"與許可證條款（官方宣稱 Apache 2.0，待確認）的關鍵時刻。📌 第二個觀察變量：Artificial Analysis 等第三方評測機構對 Ling-3.0-Flash 的獨立基準測試何時上線，以及測試結果是否與官方宣稱一致。📌 第三個待解問題：KDA + 1/64 稀疏 MoE 的架構路線，能否在開源後被其他團隊復現並衍生出更高效的變體——這將決定螞蟻百靈在國產大模型架構路線上的話語權。</p><h3>總結</h3><p>2026 年 7 月 23 日，螞蟻集團百靈大模型上線新一代原生混合推理模型 Ling-3.0-Flash，7 月 24 日正式發佈，模型總參數 124B、單 token 激活僅 5.1B，採用 5:1 交替堆疊 KDA 與 MLA 的原生混合線性注意力架構，官方宣稱多項核心指標對標甚至超越參數規模 2-3 倍的行業領先模型。該模型定位爲 Agent 工作流中的"高速執行節點"，已在 OpenRouter 上線並限時免費至 2026 年 8 月 3 日 23:00（北京時間），之後將開源權重。</p><p>需要明確的是，截至 2026 年 7 月 27 日，Artificial Analysis 等第三方評測機構尚未建立該模型的獨立評測頁面，所有性能數據均來自螞蟻集團官方口徑，獨立驗證仍待完成。此次發佈的真正新聞價值在於：它將"以小博大"的智效比路線推到新拐點，若性能聲明經獨立評測確認，將重塑高併發 Agent 場景的成本曲線。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

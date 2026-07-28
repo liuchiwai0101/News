@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>Vue 3.6 首个候选版发布：Vapor Mode 与 alien-signals 响应式重构 · 流動日報譯文</title>
+<title>Vue 3.6 候选版发布、WHATWG 同步释出 7 月 HTML 审阅草案 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,10 +42,10 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>Vue 3.6 首个候选版发布：Vapor Mode 与 alien-signals 响应式重构</h1>
+<h1>Vue 3.6 候选版发布、WHATWG 同步释出 7 月 HTML 审阅草案</h1>
 <div class="meta"><span class="src">Charlie27&#x27;s Blog</span><span>· 2026-07-19</span>
-<span>· <a href="https://www.charlie27.com/2026/07/2026-07-19-vue-3-6-candidate-%e5%b8%b6%e4%be%86-vapor-mode-%e8%88%87-alien-signals-%e5%8f%8d%e6%87%89%e5%bc%8f%e9%87%8d%e6%a7%8b%ef%bc%8cwhatwg-%e5%90%8c%e6%ad%a5%e7%99%bc%e5%b8%83-7" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.charlie27.com/2026/07/2026-07-19-vue-3-6-candidate-%e5%b8%b6%e4%be%86-vapor-mode-%e8%88%87-alien-signals-%e5%8f%8d%e6%87%89%e5%bc%8f%e9%87%8d%e6%a7%8b%ef%bc%8cwhatwg-%e5%90%8c%e6%ad%a5%e7%99%bc%e5%b8%83-7" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<span>· <a href="https://www.charlie27.com/2026/07/2026-07-19-vue-3-6-candidate-%E5%B8%B6%E4%BE%86-vapor-mode-%E8%88%87-alien-signals-%E5%8F%8D%E6%87%89%E5%BC%8F%E9%87%8D%E6%A7%8B%EF%BC%8Cwhatwg-%E5%90%8C%E6%AD%A5%E7%99%BC%E5%B8%83-7" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.charlie27.com/2026/07/2026-07-19-vue-3-6-candidate-%E5%B8%B6%E4%BE%86-vapor-mode-%E8%88%87-alien-signals-%E5%8F%8D%E6%87%89%E5%BC%8F%E9%87%8D%E6%A7%8B%EF%BC%8Cwhatwg-%E5%90%8C%E6%AD%A5%E7%99%BC%E5%B8%83-7" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><h3>GitHub Releases (vuejs/core) · 2026-07-18</h3><p>Vue 核心團隊於 <code>2026-07-18</code> 發布 <code>v3.6.0-rc.1</code>，這是 3.6 版本正式進入候選階段的第一個版本。**本次釋出的兩大主軸**是全新編譯模式 Vapor Mode，以及 <code>@vue/reactivity</code> 套件的底層重構。兩者都以「選擇性啟用」的方式導入，不影響既有專案的執行方式。</p><h3>核心改動：Vapor Mode</h3><p>Vapor Mode 是一種新的單檔案元件（SFC）編譯模式，目標是**縮小基礎打包體積並提升執行效能**。開發者可以用 <code><script setup vapor></code> 撰寫元件，或使用純模板的 SFC；官方在第三方基準測試中宣稱其效能已可與 Solid、Svelte 5 等框架打平。</p><pre><code>&lt;script setup vapor&gt;
 import { ref } from &#x27;vue&#x27;
 const count = ref(0)

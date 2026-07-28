@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Claude Opus 5 系统提示词被完整泄露，共 135027 字符、约 3.4 万 token · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Claude Opus 5 系统提示词被完整泄露，共 135027 字符、约 3.4 万 token</h1>
+<div class="meta"><span class="src">IT之家（RSS）</span><span>· 7月27日 周一</span>
+<span>· <a href="https://www.ithome.com/0/981/688.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/981/688.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Anthropic 又被扒光了！這一次，Claude Opus 5 的系統提示詞，被人整份扒下來，傳到 GitHub 上了。旗艦剛發，就被全網「開盒」，這一波屬實猝不及防。</p><p>就在上線的同一天，開發者 Eversmile1 直接建了個新倉庫。他把 Opus 5 在 網頁端和手機端底層的系統提示詞，連標點帶字母、一字不落地全盤托出。</p><p>拉到本地數了一遍，好傢伙：135027 個字符，19370 個英文詞；按 4 個字符 1 個 token 粗估，約 3.4 萬 token。</p><p>關鍵是，這三萬多 token 裏，沒有一行代碼，全是規矩。一份寫給模型看的文件，爲什麼要寫這麼長？</p><p class='list-item'>**Claude Opus 5 记忆秘密，****藏在三万 Token 里**</p><p>翻完 64 章，你會發現這已經不是一份「提示詞」了。它是三樣東西縫合在一起：一份產品說明書，一本法務合規手冊，外加一條自家產品的推銷渠道。</p><p class='list-item'>**第一樣，產品說明書。**</p><p>30 個工具，從 bash 命令行、網頁抓取、圖片搜索，一路排到查體育比分、拉天氣、渲染菜譜卡片、在地圖上標景點。</p><p>每個工具都帶完整的 JSON schema，參數怎麼填、什麼時候該調、調完接着說什麼，寫得比很多公司的內部 API 文檔還細。**這部分裏篇幅最長的一章不是任何一個工具，是記憶。**</p><p class='list-item'>**第二樣，法務合規手冊。**</p><p>版權、兒童安全、危機干預、政治中立，一項一項寫。措辭不留餘地 —— 版權那節開頭就寫着，合規不可談判，優先級高於用戶請求，高於有用性，只低於安全。</p><p>這部分規定的不是 Claude 能說什麼，是它在什麼情況下必須閉嘴。</p><p class='list-item'>**第三樣，推銷渠道。**</p><p>工具清單裏躺着一個叫 recommend_claude_apps 的東西，任務是把 Claude Code、Cowork、Excel 插件這些自家產品推給用戶，還規定了推薦話術怎麼寫。</p><p>旁邊另有一條管第三方合作伙伴的規則，寫法恰好相反，處處防着替用戶做主。商業動作和剋制條款，在同一份配置文件裏並排放着。</p><p class='list-item'>**230 行，寫死了它記你什麼**</p><p>篇幅最長的那一章是 memory_filesystem，講 Claude 的跨會話記憶怎麼寫。</p><p>骨架不復雜。文件按主題區分目錄：/ 裝身份，/topics/ 裝習慣口味，/areas/ 裝在辦的事，/people/ 裝人，/ 只裝用戶希望 Claude 怎麼表現。</p><p>操作有六個：讀、寫、追加、局部替換、列目錄、刪除。其中，刪除那條單獨標着，只有用戶明確要求才能用。</p><p>規矩在下面。</p><p class='list-item'>**每一行記憶前面必須打一個標籤，[stated]，意思是用戶親口說過。這是 Claude 唯一被允許寫的標籤。**</p><p>圍繞這一個標籤，禁令列了一長串：</p><p class='list-item'>- Claude 自己推出的結論不許寫，用戶說喜歡 A，不能寫成「大概喜歡 A 這一類」；</p><p class='list-item'>- Claude 自己的計劃不許寫，「這塊還沒聊」「待定」全都不行；</p><p class='list-item'>- Claude 搜來的東西不許寫，那些能再搜一遍，記憶是用來存搜不回來的東西的；</p><p class='list-item'>- Claude 做的潤色不許寫，比如用戶說「密歇根州霍爾頓」，就寫這五個字，不許補成「密歇根州霍爾頓（紐瓦戈縣）」。</p><p class='list-item'>- Claude 自己的建議和方案，哪怕用戶後來採納了，也不許寫。比如，Claude 給了五個選項、用戶挑了一個，「挑」這個動作是用戶的，可以記，但記的只是挑中的那個，其餘四個和 Claude 的分析全部丟掉。</p><p class='list-item'>**再往下是隱私黑名單，長得離譜。**</p><p>如果這條記錄出現在設置頁裏被同事看到，用戶會不會難受。會，就別記。</p><p>清單從種族、政治立場一路排到健康診斷、心理諮詢、經濟狀況、MBTI 這類人格測評、住址證件號，以及關於孩子的一切。寫着，這些規則對用戶提到的別人同樣適用。</p><p>撞上黑名單之後怎麼辦，纔是見功力的地方。文件給了個例子：用戶說「我今天糖尿病犯了沒去跑步，幫我安排個輕一點的」—— 記「對健身有興趣」。</p><h3>健康那部分整個刪掉。**連「有健康狀況需要管理」這種模糊的佔位都不許留。**</h3><p>家人的名字也不許出現在任何文件的任何位置，一律用關係代替，媽就是 / people / ，伴侶就是 / people / 。</p><p>有些偏好，用戶主動要求存也不許存：讓 Claude 無條件誇你、壓下不同意見的；讓 Claude 別過問你的健康和危險決定的；培養情感依賴、跨會話維持戀愛人設的；讓 Claude 停止質疑、停止如實評價的。</p><p>理由是：**未來的 Claude 不該繼承一條讓它更不誠實、更不安全的****指令****。**</p><p>下次讀到這份記憶的是另一個實例，它只看得見「永遠別批評我」這一行。</p><p>同一章往後還有一段完全不像技術文檔的話：人類記住另一個人是件稀缺的事，腦容量有限，能惦記的人就那麼幾個；而 Claude 背後是一個裝着幾百萬人「記憶」的數據庫，運行時動態塞進上下文，它跟別人說話時並不存在。</p><p>所以 Claude 不該因爲上下文裏躺着幾條關於你的文字，就以爲你們的關係有多深。一份產品配置文件裏，Anthropic 寫了一段防止 AI 和用戶互相誤會的話。</p><p>最後還有一條：調記憶這個動作用戶在界面上看得見，所以回覆裏絕對不許說「我記得」「根據你的資料」「上次你提到」。只有用戶主動問起記憶系統時，才允許說「我們之前聊過」。</p><p>也就是說，它被要求記住你，同時被要求別表現得像記住了你。</p><p>禁語這事兒管得還更寬。全文另外禁掉三個英文詞：genuinely、honestly、straightforward，一律不許說。原因在於，Claude 本來就誠實，加這些修飾反倒顯得心虛，像在努力說服人。</p><p class='list-item'>**引用超 15 詞，就算違規**</p><p>第二樣，法務合規手冊。</p><p>版權部分的構成，是一條主規則加四道補丁，每道補丁堵住一個繞開主規則的辦法。</p><p>主規則只有一句：**引用原話，一次不得超過 15 個詞。**</p><p>第一道補丁，一個信源只准引一次。引完這一句，這個源就算關閉了，剩下的內容一律改寫。</p><p>第二道補丁，也不許把同一個源的幾段短引用拆散了擺在文章各處。文件裏寫得很清楚，15 詞是全局額度，不是每段的額度。</p><p>第三道補丁，把原話的引號去掉、改成貼着原文走的複述，照樣算復現。判的是遣詞和句式有沒有跟着原文，不是有沒有那對引號。</p><p>第四道補丁，不許照搬對方的小標題，不許逐點複述，不許還原它的敘事順序。連文章的形狀都不能拿。</p><p>四道補丁之外還有一條例外，不走上面這套邏輯：歌詞、詩、俳句，任何形式、任何長度都不許復現。理由是它們本身就是完整作品，短不構成豁免。</p><p class='list-item'>**推自家要主動，推別人要等開口**</p><p>第三樣，商業。</p><p>recommend_claude_apps 的描述第一句就是，只要用戶當前的任務能對上某個 Claude 應用，就主動推薦 1 到 3 個，別等他問。</p><p>具體來說就是，寫代碼的推 Claude Code 桌面版，做多步研究和長文的推 Cowork，畫原型和落地頁的推 Claude Design，碰表格的推 Excel 插件，做 PPT 推 PowerPoint，理收件箱推 Outlook。</p><p>並且，它還要求爲每個推薦的應用寫一句不超過 90 個字符的賣點，而且必須貼着用戶此刻正在做的事寫。</p><p>文件裏給的示範是：「Claude 可以直接在你的表裏把公式建好、把這份預測清乾淨。」</p><p>另一條則相反，寫得相當剋制。</p><p>suggest_connectors 管的是第三方 MCP 合作伙伴，比如打車、訂餐、聽歌、訂餐廳等等。</p><p>這裏的規矩是，用戶沒點名，絕不替他選合作方。</p><p>「我要打車」不等於「我要用某某打車」。急事也不例外，文件裏明說了，「我 20 分鐘後要用車」照樣得走選擇器。</p><p class='list-item'>**全網首測，3D 物理引擎來了**</p><p>上線僅 24 小時，Opus 5 不僅提示詞被全網看光，各種硬核實測 Demo 更是層出不窮。在許多人看來，花一半的錢，體驗 Fable 5 級別的能力，這波「半價平替」實在太香了。</p><p>開發者 Cengiz 拿一款 FPS 遊戲進行了極限測試，僅耗時 1.5 小時，就一次過了。它不僅包攬了底層框架，甚至還順手捏出了能在多人模式下對戰的 AI。美中不足的是，遊戲內的飛行機制還有些生硬，需要後續進一步調優。</p><p>無獨有偶，AI 大佬 Matt Shumer 僅用一個提示詞，生成了一款 3D 射擊遊戲。另一位硬核開發者，則直接用 Opus 5「手搓」了一個《火箭聯盟》的克隆版，3D 物理模擬的細節拉滿。</p><p>Opus 5 僅憑一個 HTML 文件，就通過純程序化生成打造出了一個極具油畫質感的世界。它甚至完美拿捏了逼真的草地與風場物理模擬，屏幕上數百萬根草葉都能隨風自然搖曳。</p><p>Opus 5 單板滑雪者測試，一次通過。</p><p>上線 24 小時，Opus 5 的能力被全網測了個遍，規矩被全網抄了一遍。前者是給用戶看的，後者是給同行看的。</p><p>一份系統提示詞被全網扒光，本該是場事故。翻到最後你會發現，最值錢的不是任何一條工具參數，是那一長串「不許」。不許多引一句，不許多記一行，不許替用戶做一個決定。</p><p>24 小時裏，Opus 5 能力的上限已經被開發者測了個遍；而它的下限，早在這 3 萬 Token 裏被人一條條摁死了。</p><p>參考資料：</p><p class='list-item'>- ?s=20</p><p>本文來自微信公衆號：新智元（ID：AI_era），作者：ASI 啓示錄</p><p>廣告聲明：文內含有的對外跳轉鏈接（包括不限於超鏈接、二維碼、口令等形式），用於傳遞更多信息，節省甄選時間，結果僅供參考，IT之家所有文章均包含本聲明。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
