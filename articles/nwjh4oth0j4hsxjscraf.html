@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>Next.js 16.2 发布：开发提速、渲染优化，深度适配 AI 智能体工具 · 流動日報譯文</title>
+<title>Next.js 16.2 发布：开发提速 4 倍、渲染性能优化，新增 AI 智能体开发工具 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,8 +42,8 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>Next.js 16.2 发布：开发提速、渲染优化，深度适配 AI 智能体工具</h1>
-<div class="meta"><span class="src">InfoQ 中文</span><span>· 7月24日 周五</span>
+<h1>Next.js 16.2 发布：开发提速 4 倍、渲染性能优化，新增 AI 智能体开发工具</h1>
+<div class="meta"><span class="src">InfoQ 中文</span><span>· 2026-07-29</span>
 <span>· <a href="https://www.infoq.cn/article/NWjH4oTh0j4HsxJsCRaf" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.infoq.cn/article/NWjH4oTh0j4HsxJsCRaf" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>Vercel 近日發佈 Next.js 16.2，開源 React 框架的最新版本，帶來了性能提升、更好的調試體驗、面向 AI 智能體的新工具，以及超過 200 項 Turbopack 相關修復與改進。</p><p>本次發佈的核心亮點是速度。Vercel 官方數據顯示，<code>next dev</code> 啓動速度提升了約 400%，在默認應用中比 Next.js 16.1 快約 87%，本地服務器幾乎在啓動瞬間即準備就緒。渲染速度也提升了約 50%。這一提升源於一項已貢獻給 React 的改動：通過將 V8 中反覆跨 C++ 與 JavaScript 邊界的 <code>JSON.parse</code> 恢複函數回調替換爲先執行普通 <code>JSON.parse</code> 再在純 JavaScript 中進行遞歸遍歷的方式，使 Server Components 的載荷反序列化速度最高提升 350%。</p><p>在實際應用中，這意味着根據載荷大小不同，HTML 渲染速度可提升 25% 至 60%。</p><p>在 Next.js 16 中被設爲默認打包工具的 Turbopack 現已默認開啓 Server Fast Refresh。它不再清空整條導入鏈的 require 緩存，只重新加載發生改動的模塊。據 Vercel 測試，應用刷新速度因此提升 67% 至 100%，編譯速度提升 400% 至 900%。新版本還新增了三項能力：JavaScript 文件的子資源完整性（Subresource Integrity）支持、適配解構寫法動態導入的 Tree Shaking，以及 <code>postcss.config.ts</code> 配置文件支持。</p><p class='list-item'>16.2 版本的很大一部分更新聚焦於 AI 輔助開發。`create-next-app` 腳手架會自動生成一個 `AGENTS.md` 文件，`next` 包也內置了對應版本的 Markdown 格式文檔，方便編碼智能體在本地調用正確的 API。瀏覽器錯誤現在默認會轉發到終端，可通過 `logging.browserToTerminal` 進行配置。此外，實驗性的 `@vercel/next-browser` CLI 支持智能體在終端查看正在運行的項目。</p><p>業界評論總體偏向正面。在 Vercel 社區的一篇總結帖中，Roboto Studio 的 Jono 實測開發啓動速度提升約 80%，<code>ImageResponse</code> 生成速度提升了 2 至 20 倍，並報告稱在約五分鐘內完成了兩個應用的升級，沒有出現重大變更或配置更新。</p><p>在 Reddit 上，一位用戶對流式改進發表了評論：</p><p>流式改進很實用。對我來說，Next.js AI 相關功能最大的痛點在於連接中斷時無法妥善處理分段響應。我很想知道 16.2 是否解決了這個問題，還是仍然需要我們自己處理重連邏輯。</p><p>仍在使用 Next.js 15 的團隊可以通過運行官方 codemod <code>npx @next/codemod@canary upgrade latest</code> 完成遷移，這個工具會更新配置、把重命名的 <code>middleware</code> 適配爲 <code>proxy</code> 規範寫法，並移除已進入穩定狀態的 API 的 <code>unstable_</code> 前綴。</p><p>Next.js 16 要求 Node.js 20.9 或更高版本、TypeScript 5.1 或更高版本，升級指南中記錄了向全異步請求 API（如 <code>cookies</code>、<code>headers</code> 和 <code>params</code>）遷移的相關細節。</p><p>在與 Remix、Astro 等同類 React 框架的競爭中，Next.js 繼續憑藉其緊密的 Vercel 集成、日益完善的 AI 編碼智能體原生支持保持着差異化優勢。</p><p>Next.js 是由 Vercel 開發和維護的開源 React 框架，支持服務端渲染、靜態站點生成和客戶端渲染，被廣泛應用於大型生產網站，並對 React Server Components 和 Turbopack 提供了一流的支持。</p></div>

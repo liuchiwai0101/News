@@ -45,8 +45,254 @@ font-size:12.5px;color:var(--muted);}
 <h1>Hermes Agent 全生命周期实战教程：20 个 Task 的 TDD 驱动开发</h1>
 <div class="meta"><span class="src">掘金</span><span>· 2026-07-14</span>
 <span>· <a href="https://juejin.cn/post/7662298778017005618" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7662298778017005618" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>以一個真實項目「DevShare 開發者社區」爲例，完整演示如何用 Hermes 105 個技能，從 0 到 1 交付一個全棧項目。</p><h3>適用環境：Hermes CLI（Windows 終端）/ 微信</h3><h3>目錄</h3><p class='list-item'>- 項目背景</p><p class='list-item'>- 階段 0：環境準備（5 分鐘）</p><p class='list-item'>- 階段 1：需求分析與產品設計（30 分鐘）</p><p class='list-item'>- 階段 2：UI 設計與視覺規範（45 分鐘）</p><p class='list-item'>- 階段 3：技術方案與實現計劃（30 分鐘）</p><p class='list-item'>- 階段 4：分階段編碼實現（3 小時）</p><p class='list-item'>- 階段 5：代碼審查與質量保障（30 分鐘）</p><p class='list-item'>- 階段 6：測試與 Bug 修復（45 分鐘）</p><p class='list-item'>- 階段 7：性能優化（30 分鐘）</p><p class='list-item'>- 階段 8：發佈與 CI/CD（20 分鐘）</p><p class='list-item'>- 階段 9：文檔沉澱與知識管理（20 分鐘）</p><p class='list-item'>- 總結：一句話完成項目</p><h3>項目背景</h3><p class='list-item'>**DevShare**：一個面向開發者的技術文章分享社區，用戶可以發佈 Markdown 文章、點贊評論、關注作者。</p><p class='list-item'>- 前端：React 18 + TypeScript + Ant Design 5</p><p class='list-item'>- 后端：Node.js + Express + PostgreSQL</p><p class='list-item'>- 部署：GitHub + Vercel（前端）+ Railway（后端）</p><h3>階段 0：環境準備（5 分鐘）</h3><h3>第一步：確認環境就緒</h3><pre><code>你：檢查項目環境是否就緒</code></pre><p>Hermes 會自動：</p><p class='list-item'>- 检查 Node.js / npm 版本</p><p class='list-item'>- 檢查 Git 配置</p><p class='list-item'>- 檢查 GitHub 認證狀態（加載 `github-auth`技能）</p><p class='list-item'>- 确认 PostgreSQL 可用</p><h3>第二步：創建項目倉庫</h3><pre><code>你：在 GitHub 创建 devshare 仓库，初始化 React + TypeScript 项目</code></pre><p>Hermes 加载 <code>github-repo-management</code> 技能：</p><pre><code># Hermes 自动执行：
+gh repo create devshare --public --clone
+cd devshare
+npm create vite@latest frontend -- --template react-ts</code></pre><h3>階段 1：需求分析與產品設計（30 分鐘）</h3><h3>1.1 頭腦風暴 &amp; 創意驗證</h3><pre><code>你：幫我 brainstorm 一下 DevShare 的核心功能點，參考 V2EX 和 Dev.to</code></pre><p>Hermes 加載 <code>ideation</code> 技能，輸出結構化創意列表：</p><pre><code>核心功能候選：
+1. Markdown 文章發佈（實時預覽）
+2. 標籤系統 + 熱門標籤雲
+3. 點贊 + 收藏 + 評論（支持 Markdown）
+4. 用戶關注 + 個性化 Feed
+5. 文章搜索（全文檢索）
+6. 閱讀統計 + 排行榜</code></pre><h3>1.2 競品調研</h3><pre><code>你：調研一下目前開發者社區的市場情況</code></pre><p>Hermes 调用 <code>web_search</code> 内置工具 + <code>polymarket</code> 技能（如需预测数据），输出竞品分析。</p><h3>1.3 快速原型驗證</h3><pre><code>你：spike 一下 React Markdown 編輯器的可行性，看看 react-markdown 和 codemirror 能不能配合</code></pre><p>Hermes 加載 <code>spike</code> 技能，創建一次性原型：</p><pre><code>// 验证 Markdown 编辑+预览方案可行
+// 结论：react-markdown + @codemirror/view 组合可用
+// 注意：CodeMirror 6 需要额外安装 @codemirror/lang-markdown</code></pre><h3>1.4 系統架構設計</h3><pre><code>你：画 DevShare 的系统架构图，前端 React + 后端 Express + PostgreSQL</code></pre><p>Hermes 加载 <code>architecture-diagram</code> 技能，生成暗色主题 SVG 架构图：</p><pre><code>┌─────────────┐     ┌──────────────┐     ┌────────────┐
+│   React 18   │────▶│  Express API │────▶│ PostgreSQL │
+│  (Vercel)    │     │  (Railway)   │     │            │
+└─────────────┘     └──────────────┘     └────────────┘
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌──────────────┐
+│  Cloudinary  │     │    Redis     │
+│  (图片存储)   │     │   (缓存)     │
+└─────────────┘     └──────────────┘</code></pre><h3>1.5 數據模型設計</h3><pre><code>你：按 M1-M9 模板，寫 DevShare 的數據模型設計文檔</code></pre><p>Hermes 加载 <code>design-doc-writing</code> + <code>uatu-documentation</code> 技能：</p><pre><code>## M1: User 模型
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | UUID | 主键 |
+| username | VARCHAR(50) | 唯一用户名 |
+| email | VARCHAR(255) | 唯一邮箱 |
+| password_hash | VARCHAR(255) | bcrypt 哈希 |
+| avatar_url | VARCHAR(500) | 头像 URL |
+| bio | TEXT | 个人简介 |
+| created_at | TIMESTAMP | 注册时间 |
+## M2: Article 模型
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | UUID | 主键 |
+| author_id | UUID → User.id | 作者 |
+| title | VARCHAR(200) | 标题 |
+| content | TEXT | Markdown 内容 |
+| tags | VARCHAR(50)[] | 标签数组 |
+| view_count | INTEGER | 阅读数 |
+| created_at | TIMESTAMP | 发布时间 |</code></pre><h3>階段 2：UI 設計與視覺規範（45 分鐘）</h3><h3>2.1 風格探索</h3><pre><code>你：sketch 三種 DevShare 首頁風格：GitHub 暗色風、Linear 極簡風、Dev.to 暖色風</code></pre><p>Hermes 加载 <code>sketch</code> 技能，生成 3 个 HTML 设计稿：</p><h3>2.2 選定風格，深化設計</h3><pre><code>你：選方案 B，參考 Linear 風格做全站設計</code></pre><p>Hermes 加载 <code>popular-web-designs</code> 技能（内置 Linear 设计系统）：</p><pre><code># Hermes 輸出：基於 Linear 設計系統的頁面設計
+首頁 → 文章列表 + 側邊欄（標籤雲 + 熱門作者）
+文章頁 → Markdown 渲染 + 評論區 + 作者卡片
+發佈頁 → 分欄編輯器（左編輯 / 右預覽）</code></pre><h3>2.3 生成視覺素材</h3><pre><code>你：生成 DevShare 的 LOGO，像素風，藍紫漸變
+你：把用戶登錄流程畫成手繪風格流程圖</code></pre><p>Hermes 分别加载 <code>pixel-art</code> 和 <code>excalidraw</code>：</p><p class='list-item'>- 像素 LOGO：NES 調色板，32×32，藍紫漸變</p><p class='list-item'>- 流程圖：手繪風格 Excalidraw JSON，註冊→驗證→登錄→JWT</p><h3>2.4 輸出設計規範文件</h3><pre><code>你：生成 DESIGN.md，定義設計 Token</code></pre><p>Hermes 加载 <code>design-md</code> 技能：</p><pre><code># DevShare DESIGN.md
+## Colors
+--primary: #5E6AD2 (蓝紫)
+--bg: #FAFAFA
+--text: #1A1A1A
+--border: #E5E5E5
+## Typography
+--font-sans: &#x27;Inter&#x27;, sans-serif
+--font-mono: &#x27;JetBrains Mono&#x27;, monospace
+--text-base: 16px
+--leading: 1.6
+## Spacing
+--space-1: 4px / --space-2: 8px / --space-4: 16px
+--space-8: 32px / --space-16: 64px</code></pre><h3>階段 3：技術方案與實現計劃（30 分鐘）</h3><h3>3.1 生成實現計劃</h3><pre><code>你：/plan DevShare 全棧項目，按功能模塊分階段實現，先做後端 API 再做前端頁面</code></pre><p>Hermes 加载 <code>plan</code> + <code>writing-plans</code> 技能，输出详细计划文件：</p><pre><code># DevShare Implementation Plan
+&gt; 保存位置：.hermes/plans/2026-07-14_devshare.md
+## Phase 1: 后端基础（Task 1-8）
+### Task 1: 初始化 Express + TypeScript 项目
+### Task 2: 配置 PostgreSQL 连接（Prisma ORM）
+### Task 3: 实现 User 模型 + 注册 API
+### Task 4: 实现登录 API + JWT 签发
+### Task 5: 实现认证中间件
+### Task 6: 实现 Article 模型 + CRUD API
+### Task 7: 实现 Comment 模型 + API
+### Task 8: 实现 Like/Follow API
+## Phase 2: 前端页面（Task 9-16）
+### Task 9: 搭建路由 + 布局框架
+### Task 10: 实现注册/登录页面
+### Task 11: 实现首页文章列表
+### Task 12: 实现文章详情页（Markdown 渲染）
+### Task 13: 实现文章发布页（CodeMirror 编辑器）
+### Task 14: 实现评论组件
+### Task 15: 实现个人主页
+### Task 16: 实现标签搜索
+## Phase 3: 基础设施（Task 17-20）
+### Task 17: 错误处理 + 日志
+### Task 18: API 限流 + 输入验证
+### Task 19: 图片上传（Cloudinary）
+### Task 20: 部署配置（Vercel + Railway）</code></pre><h3>3.2 代碼庫分析</h3><pre><code>你：先看看項目結構，統計一下代碼情況</code></pre><p>Hermes 加载 <code>codebase-inspection</code> 技能，输出代码统计。</p><h3>階段 4：分階段編碼實現（3 小時）</h3><h3>4.1 Phase 1：后端 API（TDD 驱动）</h3><pre><code>你：按計劃執行 Phase 1 的 Task 1-8，嚴格 TDD，每個 Task 經過兩階段審查再提交</code></pre><p>Hermes 加载 <code>subagent-driven-development</code> + <code>test-driven-development</code>。</p><p class='list-item'>**執行過程（以 Task 3 爲例）：**</p><pre><code>━━━ Task 3: 实现 User 模型 + 注册 API ━━━
+[派子代理实现]
+  子代理：
+    1. RED: 写测试 tests/api/auth.test.ts
+       - test(&#x27;POST /api/auth/register 应创建新用户&#x27;)
+       - test(&#x27;POST /api/auth/register 应拒绝重复邮箱&#x27;)
+       - test(&#x27;POST /api/auth/register 应验证邮箱格式&#x27;)
+    2. 运行 pnpm test → FAIL（路由不存在）✅
+    3. GREEN: 写最小实现
+       - src/routes/auth.ts
+       - src/models/User.ts（Prisma schema）
+    4. 运行 pnpm test → PASS（3/3）✅
+    5. git commit -m &quot;feat: add user registration API&quot;
+[派规格审查子代理]
+  审查员：
+    ✅ 所有 3 个测试覆盖了计划要求的场景
+    ✅ 使用了 bcrypt 哈希密码
+    ✅ Prisma User 模型字段与设计文档一致
+    结论：PASS
+[派质量审查子代理]
+  审查员：
+    ✅ 命名清晰
+    ⚠️ Important: 缺少输入长度限制（username 应限制 50 字符）
+    ⚠️ Minor: 提取 saltRounds 为常量
+  子代理修复后重新审查：
+    ✅ APPROVED
+[标记 Task 3 完成]</code></pre><p>所有 8 個 Task 按此流程逐個執行，每個 Task 耗時 5-15 分鐘。</p><h3>4.2 面對複雜任務：並行派發</h3><pre><code>你：Task 5（JWT 中间件）、Task 7（Comment API）、Task 8（Like API）互不依赖，三个一起做</code></pre><p>Hermes 使用 <code>delegate_task</code> 批量模式，3 个子代理并行：</p><pre><code>[并行执行]
+  子代理A: Task 5 → JWT 认证中间件 ✅
+  子代理B: Task 7 → Comment API ✅
+  子代理C: Task 8 → Like/Follow API ✅
+[串行审查]
+  审查 A → 审查 B → 审查 C</code></pre><h3>4.3 Phase 2：前端頁面實現</h3><pre><code>你：继续执行 Phase 2 的 Task 9-16</code></pre><p>同樣的流程，每個頁面組件都走 TDD + 兩階段審查。</p><h3>4.4 遇到 Bug？系統性調試</h3><pre><code>你：登錄後 token 沒存到 localStorage，系統性排查</code></pre><p>Hermes 加载 <code>systematic-debugging</code> 技能：</p><pre><code>Phase 1: 根因调查
+  1. 读错误：Chrome 控制台无报错，token 默默丢失
+  2. 构建复现循环：curl POST /api/auth/login → 200 OK 有 token
+                     前端 fetch → Network 有 token → localStorage 空
+  3. 检查最近改动：git diff，发现 auth.ts 中 setToken 用了异步写法
+  4. 溯源数据流：
+     login() → setToken(token) → localStorage.setItem() → 此处 token 为 undefined
+     原因：API 响应中字段名是 access_token，但代码读的是 token
+  根因：字段名不匹配
+Phase 2: 模式分析
+  后端返回：{ access_token: &quot;xxx&quot; }
+  前端读取：data.token  → undefined
+Phase 3: 修正
+  将 data.token 改为 data.access_token → 问题解决
+Phase 4: 回归测试
+  写测试 test(&#x27;登录后 token 应存入 localStorage&#x27;) → PASS</code></pre><h3>4.5 需要外部 AI 幫忙時</h3><pre><code>你：這個 Markdown 渲染性能問題比較複雜，讓 Claude Code 來看看</code></pre><p>Hermes 加载 <code>claude-code</code> 技能，把任务委派给 Claude Code CLI。</p><pre><code>你：讓 Codex 做 Article 列表的虛擬滾動優化</code></pre><p>Hermes 加载 <code>codex</code> 技能。</p><h3>階段 5：代碼審查與質量保障（30 分鐘）</h3><h3>5.1 提交前全量審查</h3><pre><code>你：review 一下，準備提交 Phase 2</code></pre><p>Hermes 加载 <code>requesting-code-review</code> 技能，执行完整的 8 步审查流程：</p><pre><code>Step 1: 获取 diff → git diff --cached（1,247 行改动）
+Step 2: 静态安全扫描
+  ✅ 无硬编码密钥
+  ✅ 无 SQL 注入
+  ✅ 无 eval() 使用
+  ⚠️ 发现：src/utils/api.ts 中硬编码了 http://localhost:3000 的 API 地址
+Step 3: 基线测试
+  pnpm test → 38 passed, 0 failed（新增 12 个测试）
+Step 4: 自查清单
+  ✅ 输入验证完整
+  ✅ 错误处理覆盖
+  ❌ src/pages/Editor.tsx 残留 console.log
+Step 5: 独立审查子代理
+  {
+    &quot;passed&quot;: true,
+    &quot;security_concerns&quot;: [],
+    &quot;logic_errors&quot;: [],
+    &quot;suggestions&quot;: [
+      &quot;提取 API_BASE_URL 为环境变量&quot;,
+      &quot;移除 console.log&quot;,
+      &quot;ArticleList 组件可考虑 useMemo 优化&quot;
+    ]
+  }
+Step 6: 评估 → 无阻塞性问题，2 个建议修复
+Step 7: 自动修复
+  修复 1: API_BASE_URL → process.env.VITE_API_URL ✅
+  修复 2: 移除 console.log ✅
+Step 8: 提交
+  git commit -m &quot;[verified] feat: complete Phase 2 frontend pages&quot;</code></pre><h3>5.2 代碼簡化</h3><pre><code>你：簡化最近的代碼改動</code></pre><p>Hermes 加载 <code>simplify-code</code> 技能，三路并行审查：</p><pre><code>[審查員1：代碼複用]
+  發現：src/utils/formatDate.ts 中的日期格式化邏輯與 src/utils/timeAgo.ts 重複
+  建議：統一使用 formatDate，移除 timeAgo.ts 中的重複代碼
+  風險：SAFE → 自動修復 ✅
+[審查員2：代碼質量]
+  發現：
+  - ArticleCard.tsx 中 // 渲染文章卡片 註釋是廢話 → SAFE 自動刪除 ✅
+  - 3 個組件中重複的 useAuth() 調用模式 → CAREFUL 提取 &lt;AuthGuard&gt; ✅
+  - types.ts 中存在 as any 類型斷言 → CAREFUL 替換爲具體類型 ✅
+[審查員3：效率]
+  發現：首頁加載時連續請求 /api/articles + /api/tags + /api/users/top
+        這 3 個請求互不依賴 → 改爲 Promise.all 並行請求
+  風險：CAREFUL → 修改後測試通過 ✅
+彙總：7 個修復，0 個迴歸</code></pre><h3>階段 6：測試與 Bug 修復（45 分鐘）</h3><h3>6.1 補充集成測試</h3><pre><code>你：用 TDD 寫端到端測試：用戶註冊 → 登錄 → 發佈文章 → 查看文章</code></pre><h3>6.2 遇到線上 Bug</h3><pre><code>你：用戶反饋發佈文章後看不到，對這個問題做系統性排查</code></pre><pre><code>Phase 1: 根因調查
+  curl POST /api/articles → 201 Created（數據庫有記錄）
+  前端 GET /api/articles → 200 OK（返回空數組）
+  問題孤立到後端：文章查詢 API 返回空
+  讀代碼：articleController.getAll() → Prisma article.findMany()
+  檢查 Prisma 查詢：where published = true（但新建文章 published 默認 false）
+  根因：默認未發佈
+Phase 2: 模式分析
+  設計文檔中寫的是&quot;創建後自動發佈&quot;
+  代碼與設計文檔不一致
+Phase 3: 修復
+  Prisma schema: published Boolean @default(true)
+  運行測試 → 已有測試通過 + 新增迴歸測試通過
+Phase 4: 審計
+  加載 docs-audit 技能：檢查是否還有其他設計與代碼不一致的地方</code></pre><h3>階段 7：性能優化（30 分鐘）</h3><pre><code>你：分析 DevShare 前端性能，找出瓶頸並優化</code></pre><p>Hermes 進行多維度分析：</p><pre><code>## 性能审查报告
+### 发现的问题
+| 问题 | 位置 | 影响 |
+|------|------|------|
+| 首页未分页 | ArticleList.tsx | 一次加载 200+ 文章 |
+| 大 Markdown 文件同步渲染 | ArticleDetail.tsx | 阻塞主线程 |
+| 标签云未使用虚拟列表 | TagCloud.tsx | 100+ 标签时卡顿 |
+| 图片未懒加载 | 全局 | LCP 过高 |
+### 修复方案
+1. 首页加分页：cursor-based pagination，每页 20 条
+2. Markdown 渲染：用 react-markdown + 代码分割
+3. 标签云：换 react-window 虚拟列表
+4. 图片：全部加 loading=&quot;lazy&quot;
+### 修复后指标
+| 指标 | 修复前 | 修复后 |
+|------|--------|--------|
+| FCP | 2.1s | 0.8s |
+| LCP | 4.5s | 1.2s |
+| TBT | 380ms | 45ms |</code></pre><h3>階段 8：發佈與 CI/CD（20 分鐘）</h3><h3>8.1 配置 CI</h3><pre><code>你：给项目加 GitHub Actions CI，跑 lint + test + build</code></pre><p>Hermes 创建 <code>.github/workflows/ci.yml</code>。</p><h3>8.2 創建 PR 並監控</h3><pre><code>你：創建 PR，監控 CI 直到通過，然後合併</code></pre><p>Hermes 加载 <code>github-pr-workflow</code>：</p><h3>8.3 自動部署</h3><pre><code>你：設置 Vercel 和 Railway 的自動部署，PR 合併後自動觸發</code></pre><p>Hermes 加载 <code>webhook-subscriptions</code> 技能，配置 webhook 自动化。</p><h3>階段 9：文檔沉澱與知識管理（20 分鐘）</h3><h3>9.1 寫技術文章</h3><pre><code>你：把 DevShare 的開發過程寫成一篇 CSDN 技術文章，標題「從 0 到 1 用 React + Express 構建開發者社區」</code></pre><p>Hermes 加载 <code>csdn-writing</code> 技能，按规范输出：</p><pre><code># 从 0 到 1 用 React + Express 构建开发者社区
+## 一、项目概述
+...
+## 二、技术选型
+| 层级 | 技术 | 理由 |
+|------|------|------|
+| 前端 | React 18 + TypeScript | 类型安全 |
+| UI 库 | Ant Design 5 | 组件丰富 |
+| 后端 | Express + Prisma | 简单可靠 |
+...
+## 三、核心实现
+### 3.1 Markdown 编辑器</code></pre><p>// 完整代碼示例...</p><pre><code>### 3.2 JWT 认证流程
+</code></pre><p>// 完整代碼示例...</p><pre><code>## 四、部署指南
 
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7662298778017005618" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+…
+
+## 五、踩坑記錄
+
+- React 19 StrictMode 下 useEffect 執行兩次導致 token 重複設置
+ 解決：使用 ref 標記是否已初始化
+- Prisma 的 where 條件中 undefined 不等於 “不篩選”
+ 解決：用 spread 條件構建動態查詢
+</code></pre><h3>9.2 生成設計文檔</h3><pre><code>你：寫 DevShare 完整設計文檔，包含 M1-M9 全部模塊
+</code></pre><p>Hermes 加载 <code>design-doc-writing</code> 技能。</p><h3>9.3 文檔審計</h3><pre><code>你：檢查文檔和代碼是否一致
+</code></pre><p>Hermes 加载 <code>docs-audit</code> 技能：</p><pre><code>## 審計結果
+✅ M1 User 模型：文檔與 Prisma schema 一致
+✅ M2 Article 模型：一致
+⚠️ M3 Comment：文檔寫有 edited_at 字段，但 Prisma 中缺失
+❌ 文檔中提到 Favorite 功能，代碼中未實現</code></pre><h3>9.4 提取可複用組件</h3><pre><code>你：把 DevShare 中的通用組件提取出來，脫敏後輸出爲獨立項目</code></pre><p>Hermes 加载 <code>extract-reusable-code</code> 技能，输出：</p><p class='list-item'>- `MarkdownEditor`组件（CodeMirror + 预览）</p><p class='list-item'>- `InfiniteScroll`组件（游标分页）</p><p class='list-item'>- `useAuth`Hook（JWT 管理）</p><p class='list-item'>- `apiClient`工具（請求攔截 + 自動刷新 token）</p><h3>9.5 保存到共享知識庫</h3><pre><code>你：記住 DevShare 項目的關鍵設計決策：JWT 有效期 7 天，refresh token 存在 httpOnly cookie
+你：記住：Prisma 的 where undefined 不會自動忽略，需要用 spread 條件構建</code></pre><p>Hermes 加载 <code>shared-knowledge</code> 技能，存入知识库，后续 Claude Code/Codex/VSCode 都能读取。</p><h3>9.6 生成工作日報</h3><pre><code>你：生成本日工作日報</code></pre><p>Hermes 加载 <code>daily-report</code> 技能：</p><pre><code>## 2026-07-14 工作日报
+### 今日完成
+1. DevShare Phase 2 全部前端页面实现（ArticleList/Detail/Editor/Profile）
+2. 代码审查 + 简化，7 个修复
+3. 性能优化（FCP 2.1s → 0.8s）
+4. 创建 PR #42，CI 通过，已合并
+### 明日计划
+1. 配置 Vercel + Railway 自动部署
+2. 编写 E2E 测试
+3. 写 CSDN 技术文章</code></pre><h3>總結：一句話完成項目</h3><p>回顧整個流程，Hermes 的 105 個技能貫穿始終：</p><pre><code>产品设计   → ideation / spike / architecture-diagram / design-doc-writing
+UI 设计    → sketch / popular-web-designs / excalidraw / pixel-art / design-md
+实现计划   → plan / writing-plans
+编码实现   → subagent-driven-development / test-driven-development / claude-code / codex
+代码审查   → requesting-code-review / simplify-code
+测试调试   → systematic-debugging / node-inspect-debugger
+性能优化   → simplify-code（efficiency reviewer）
+发布部署   → github-pr-workflow / webhook-subscriptions
+文档沉淀   → csdn-writing / design-doc-writing / docs-audit / daily-report
+知识管理   → shared-knowledge / extract-reusable-code</code></pre><p class='list-item'>**關鍵心態：** 你不需要記住 105 個技能的名字，只需要像和同事說話一樣描述你的需求，Hermes 自動匹配最優技能組合。</p><h3>常用高頻指令速記</h3><p>這個教程展示的項目 DevShare，就是 Hermes 能幫你做到的事情的縮影。</p><p>從創意到上線，一個對話窗口，105 個技能，全流程 AI 驅動。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

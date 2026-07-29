@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>月之暗面Kimi K3正式开放权重，部署能力突破英伟达生态_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>月之暗面Kimi K3正式开放权重，部署能力突破英伟达生态_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260728A07POR00?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260728A07POR00?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>北京時間7月27日晚，月之暗面Kimi在全球開源社區Hugging Face正式發佈Kimi K3完整模型權重。同步公開的還有詳細技術報告，以及支撐該模型訓練的三項關鍵基礎設施技術——MoonEP、FlashKDA和AgentEnv。此次開源採用修改版MIT許可證，開發者可按需下載、修改並本地部署。</p><p>Kimi K3總參數規模達2.8萬億，激活參數1040億，是全球首個邁入3萬億參數級別的開源模型。模型基於混合專家（MoE）架構，在896個路由專家中每個Token僅激活16個。架構上採用自研Kimi Delta Attention（KDA）混合線性注意力機制與Attention  Residuals（注意力殘差）技術，原生支持視覺理解，上下文窗口達100萬Token。相比上一代Kimi K2，整體擴展效率提升約2.5倍。</p><p>技術報告披露，Kimi K3在編程、智能體、推理與視覺等數十項基準測試中超越所有開源模型及多數閉源模型。在Arena Intelligence的WebDev Arena中，Kimi K3以1679 Elo登頂，成爲首個在該榜單奪冠的開源模型；Artificial Analysis Intelligence Index v4.1得分57.1，排名全球第四。報告同時指出，其整體性能仍略遜於Claude Fable  5和GPT-5.6 Sol。</p><p>此次開源尤爲值得關注的是Kimi K3在GPU與芯片算力層面展現的自主工程能力。</p><p>技術報告顯示，在GPU內核優化測試中，Kimi K3在24小時內獨立完成了AttnRes、 Sparse Attention、KDA和MLA四種代表性內核的優化。其中AttnRes延遲從283.6毫秒降至114.4毫秒，DSA和KDA運行時間分別減少55.1%和73.6%，MLA接近峯值TFLOPS。該表現與Claude  Fable 5持平，顯著優於Claude Opus 4.8、GPT-5.6 Sol和GPT-5.5。</p><p>需注意的是，測試環境同時覆蓋了NVIDIA H200與來自其他供應商的GPGPU，意味着Kimi K3的部署能力已不侷限於生態。</p><p>報告還顯示，Kimi K3自主開發了名爲MiniTriton的緊湊型GPU編譯器，從Python前端到PTX代碼生成全鏈路均由模型完成，在NVIDIA L20上性能超越PyTorch eager、torch.compile和標準Triton實現。</p><p>作爲早期的概念驗證，技術報告披露Kimi K3在48小時自主運行中，基於開源EDA工具和Nangate 45nm工藝庫，完成一款推理芯片原型的設計、優化與驗證。該芯片面積僅4平方毫米，集成146萬個標準單元、0.277MB SRAM及帶融合去量化的INT4 MAC陣列，是一款由模型設計、爲模型服務的芯片，標誌着AI已具備從算法到硬件的全棧自主工程能力。</p><p>與模型權重同步開源的還有三項基礎設施技術：MoonEP是爲超大規模MoE設計的高性能專家並行通信庫，可實現完美負載均衡；FlashKDA是KDA注意力機制的高性能算子，在英偉達H20上預填充速度相比基線提升1.72至2.22倍；AgentEnv是與KVCache.ai合作開發的智能體沙箱系統，支持快速快照、恢復與Fork，用於大規模Agent訓練環境。</p><p>月之暗面表示，此次開源旨在加速前沿智能的部署與普及，促進研究。隨着Kimi K3完整權重、技術報告及核心Infra技術的同步開放，開源大模型正式邁入2.8萬億參數階段。</p><h3>（來源：第一財經）</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Vercel 团队 10 年 React 性能优化经验：10 大核心策略提升 300% · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Vercel 团队 10 年 React 性能优化经验：10 大核心策略提升 300%</h1>
+<div class="meta"><span class="src">SegmentFault 思否</span><span>· 2026-07-18</span>
+<span>· <a href="https://segmentfault.com/a/1190000047581029" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047581029" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Vercel 最近發佈了 React 最佳實踐庫，將**十餘年來積累的 React 和 Next.js** 優化經驗整合到了一個指南中。</p><p>其中一共包含**8 個類別、40 多條規則**。</p><p>這些原則並不是紙上談兵，而是 Vercel 團隊在 10 餘年從無數生產代碼庫中總結出的經驗之談。它們已經被無數成功案例驗證，能切實改善用戶體驗和業務指標。</p><p>以下將是對你的 React 和 Next.js 項目影響最大的 10 大實踐。</p><h3>1. 將獨立的異步操作並行</h3><p>請求瀑布流是 React 應用性能的頭號殺手。</p><p>每次順序執行 await 都會增加網絡延遲，消除它們可以帶來最大的性能提升。</p><p>❌ 錯誤：</p><pre><code>async function Page() {
+  const user = await fetchUser();
+  const posts = await fetchPosts();
+  return &lt;Dashboard user={user} posts={posts} /&gt;;
+}</code></pre><p>✅ 正確：</p><pre><code>async function Page() {
+  const [user, posts] = await Promise.all([fetchUser(), fetchPosts()]);
+  return &lt;Dashboard user={user} posts={posts} /&gt;;
+}</code></pre><p>當處理多個數據源時，這個簡單的改變可以將頁面加載時間減少數百毫秒。</p><h3>2. 避免桶文件導入</h3><p>從桶文件導入會強制打包程序解析整個庫，即使你只需要其中一個組件。</p><p>這就像把整個衣櫃都搬走，只爲了穿一件衣服。</p><p>❌ 錯誤：</p><p><code>import { Check, X, Menu } from "lucide-react";</code>✅ 正确：</p><pre><code>import Check from &quot;lucide-react/dist/esm/icons/check&quot;;
+import X from &quot;lucide-react/dist/esm/icons/x&quot;;
+import Menu from &quot;lucide-react/dist/esm/icons/menu&quot;;</code></pre><p class='list-item'>**更好的方式（使用 Next.js 配置）：**</p><pre><code>// next.config.js
+module.exports = {
+  experimental: {
+    optimizePackageImports: [&quot;lucide-react&quot;, &quot;@mui/material&quot;],
+  },
+};
+// 然后保持简洁的导入方式
+import { Check, X, Menu } from &quot;lucide-react&quot;;</code></pre><p>直接導入可將啓動速度提高 15-70%，構建難度降低 28%，冷啓動速度提高 40%，HMR 速度顯著提高。</p><h3>3. 使用延遲狀態初始化</h3><p>當初始化狀態需要進行耗時的計算時，將初始化程序包裝在一個函數中，確保它只運行一次。</p><p>❌ 錯誤：</p><pre><code>function Component() {
+  const [config, setConfig] = useState(JSON.parse(localStorage.getItem(&quot;config&quot;)));
+  return &lt;div&gt;{config.theme}&lt;/div&gt;;
+}</code></pre><p>✅ 正確：</p><pre><code>function Component() {
+  const [config, setConfig] = useState(() =&gt; JSON.parse(localStorage.getItem(&quot;config&quot;)));
+  return &lt;div&gt;{config.theme}&lt;/div&gt;;
+}</code></pre><p>組件每次渲染都會從 localStorage 解析 JSON 配置，但其實它只需要在初始化的時候讀取一次，將其封裝在回調函數中可以消除這種浪費。</p><h3>4. 最小化 RSC 邊界的數據傳遞</h3><p>React **服務端/客戶端**邊界會將所有對象屬性序列化爲字符串並嵌入到 HTML 響應中，這會直接影響頁面大小和加載時間。</p><p>❌ 錯誤：</p><pre><code>async function Page() {
+  const user = await fetchUser(); // 50 fields
+  return &lt;Profile user={user} /&gt;;
+}
+(&quot;use client&quot;);
+function Profile({ user }) {
+  return &lt;div&gt;{user.name}&lt;/div&gt;; // uses 1 field
+}</code></pre><p>✅ 正確：</p><pre><code>async function Page() {
+  const user = await fetchUser();
+  return &lt;Profile name={user.name} /&gt;;
+}
+(&quot;use client&quot;);
+function Profile({ name }) {
+  return &lt;div&gt;{name}&lt;/div&gt;;
+}</code></pre><p>只傳遞客戶端組件實際需要的數據。</p><h3>5. 動態導入大型組件</h3><p>僅在功能激活時加載大型庫，減少初始包體積。</p><p>❌ 錯誤：</p><pre><code>import { AnimationPlayer } from &quot;./heavy-animation-lib&quot;;
+function Component() {
+  const [enabled, setEnabled] = useState(false);
+  return enabled ? &lt;AnimationPlayer /&gt; : null;
+}</code></pre><p>✅ 正確：</p><pre><code>function AnimationPlayer({ enabled, setEnabled }) {
+  const [frames, setFrames] = useState(null);
+  useEffect(() =&gt; {
+    if (enabled &amp;&amp; !frames &amp;&amp; typeof window !== &quot;undefined&quot;) {
+      import(&quot;./animation-frames.js&quot;).then((mod) =&gt; setFrames(mod.frames)).catch(() =&gt; setEnabled(false));
+    }
+  }, [enabled, frames, setEnabled]);
+  if (!frames) return &lt;Skeleton /&gt;;
+  return &lt;Canvas frames={frames} /&gt;;
+}</code></pre><p><code>typeof window</code> 可以防止將此模塊打包用於 **SSR，優化**服務端包體積和構建速度。</p><h3>6. 延遲加載第三方腳本</h3><p>分析和跟蹤腳本不要阻塞用戶交互。</p><p>❌ 錯誤：</p><pre><code>export default function RootLayout({ children }) {
+  useEffect(() =&gt; {
+    initAnalytics();
+  }, []);
+  return (
+    &lt;html&gt;
+      &lt;body&gt;{children}&lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre><p>✅ 正確：</p><pre><code>import { Analytics } from &quot;@vercel/analytics/react&quot;;
+export default function RootLayout({ children }) {
+  return (
+    &lt;html&gt;
+      &lt;body&gt;
+        {children}
+        &lt;Analytics /&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre><p>在水合後加載分析腳本，優先處理交互內容。</p><h3>7. 使用 React.cache() 進行請求去重</h3><p>防止服務端在同一渲染週期內重複請求。</p><p>❌ 錯誤：</p><pre><code>async function Sidebar() {
+  const user = await fetchUser();
+  return &lt;div&gt;{user.name}&lt;/div&gt;;
+}
+async function Header() {
+  const user = await fetchUser(); // 重复请求
+  return &lt;nav&gt;{user.email}&lt;/nav&gt;;
+}</code></pre><p>✅ 正確：</p><pre><code>import { cache } from &quot;react&quot;;
+const getUser = cache(async () =&gt; {
+  return await fetchUser();
+});
+async function Sidebar() {
+  const user = await getUser();
+  return &lt;div&gt;{user.name}&lt;/div&gt;;
+}
+async function Header() {
+  const user = await getUser(); // 已缓存，无重复请求
+  return &lt;nav&gt;{user.email}&lt;/nav&gt;;
+}</code></pre><h3>8. 實現跨請求數據的 LRU 緩存</h3><p>React.cache() 僅在單個請求內有效，因此對於跨連續請求共享的數據，使用 LRU 緩存。</p><p>❌ 錯誤：</p><pre><code>import { LRUCache } from &quot;lru-cache&quot;;
+const cache = new LRUCache({
+  max: 1000,
+  ttl: 5 * 60 * 1000, // 5 分钟
+});
+export async function getUser(id) {
+  const cached = cache.get(id);
+  if (cached) return cached;
+  const user = await db.user.findUnique({ where: { id } });
+  cache.set(id, user);
+  return user;
+}</code></pre><p>這在 Vercel 的 Fluid Compute 中特別有效，多個併發請求共享同一個函數實例。</p><h3>9. 通過組件組合實現並行化</h3><p>React 服務端組件在樹狀結構中按順序執行，因此需要使用組合對組件樹進行重構以實現並行化數據獲取：</p><p>❌ 錯誤：</p><pre><code>async function Page() {
+  const data = await fetchPageData();
+  return (
+    &lt;&gt;
+      &lt;Header /&gt;
+      &lt;Sidebar data={data} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p>✅ 正確：</p><pre><code>async function Page() {
+  return (
+    &lt;&gt;
+      &lt;Header /&gt;
+      &lt;Sidebar /&gt;
+    &lt;/&gt;
+  );
+}
+async function Sidebar() {
+  const data = await fetchPageData();
+  return &lt;div&gt;{data.content}&lt;/div&gt;;
+}</code></pre><p>這樣一來，頁眉和側邊欄就可以並行獲取數據了。</p><h3>10. 使用 SWR 進行客戶端請求去重</h3><p>當客戶端上的多個組件請求相同的數據時，SWR 會自動對請求進行去重。</p><p>❌ 錯誤：</p><pre><code>function UserProfile() {
+  const [user, setUser] = useState(null);
+  useEffect(() =&gt; {
+    fetch(&quot;/api/user&quot;)
+      .then((r) =&gt; r.json())
+      .then(setUser);
+  }, []);
+  return &lt;div&gt;{user?.name}&lt;/div&gt;;
+}
+function UserAvatar() {
+  const [user, setUser] = useState(null);
+  useEffect(() =&gt; {
+    fetch(&quot;/api/user&quot;)
+      .then((r) =&gt; r.json())
+      .then(setUser);
+  }, []);
+  return &lt;img src={user?.avatar} /&gt;;
+}</code></pre><p>✅ 正確：</p><pre><code>import useSWR from &quot;swr&quot;;
+const fetcher = (url) =&gt; fetch(url).then((r) =&gt; r.json());
+function UserProfile() {
+  const { data: user } = useSWR(&quot;/api/user&quot;, fetcher);
+  return &lt;div&gt;{user?.name}&lt;/div&gt;;
+}
+function UserAvatar() {
+  const { data: user } = useSWR(&quot;/api/user&quot;, fetcher);
+  return &lt;img src={user?.avatar} /&gt;;
+}</code></pre><p>SWR 只發出一個請求，並將結果在兩個組件之間共享。</p><h3>11. 總結</h3><p>這些最佳實踐的美妙之處在於：**它們不是複雜的架構變更**。大多數都是簡單的代碼修改，卻能產生顯著的性能改進。</p><p>一個 600ms 的瀑布等待時間，會影響**每一位用戶**，直到被修復。</p><p>一個桶文件導入造成的包膨脹，會減慢**每一次構建和每一次頁面加載**。</p><p class='list-item'>**所以越早採用這些實踐，就能避免積累越來越多的性能債務。**</p><p>現在開始應用這些技巧，讓你的 React 應用快如閃電吧！</p><p>我是冴羽，10 年筆耕不輟，專注前端領域，更新了 10+ 系列、300+ 篇原創技術文章，翻譯過 Svelte、Solid.js、TypeScript 文檔，著有小冊《Next.js 開發指南》、《Svelte 開發指南》、《Astro 實戰指南》。</p><p>歡迎圍觀我的“網頁版朋友圈”，關注我的公衆號：**冴羽（或搜索 yayujs）**，每天分享前端知識、AI 乾貨。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

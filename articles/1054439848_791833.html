@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>技术速递｜如何使用 Canvas 构建交互式体验 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>技术速递｜如何使用 Canvas 构建交互式体验</h1>
+<div class="meta"><span class="src">sohu.com</span>
+<span>· <a href="https://www.sohu.com/a/1054439848_791833" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.sohu.com/a/1054439848_791833" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>作者：Jacklyn Carroll</h3><h3>排版：Alan Wang</h3><p>Canvas 能夠將 AI 從單純的對話助手，變成一個可交互的工作空間，讓你能夠可視化信息、探索工作流程，並在複雜任務中直接採取行動。</p><p>如今，大多數開發者都已經開始與 AI 智能體協作，或至少已經熟悉這種工作方式。智能體能夠幫助你探索想法，並將其轉化爲實際行動，從項目規劃到工作流自動化，很多時候，一段對話就足以推動工作向前。</p><p>但如果遇到那些並不適合通過對話完成的任務呢？</p><p>與其不斷在一長串提示詞和回覆之間來回切換，不如使用 Canvas，直接與眼前的信息進行交互。</p><p class='list-item'>**使用 Canvas**</p><p>這些共享、可交互的界面，是 GitHub Copilot App 中的一項擴展能力，稱爲 Canvas。Canvas 是 GitHub Copilot App 中供開發者與智能體實時協作的交互界面，而這些共享式交互界面則被稱爲 Canvas 擴展。</p><p>智能體在工作過程中可以持續更新 Canvas，而你也可以通過點擊、編輯等交互方式直接操作同一個工作空間。這些操作既可以發送回智能體繼續處理，也可以由 Canvas 在本地完成響應。</p><p>你還可以持續讓 Copilot 對 Canvas 進行迭代，例如添加新的功能、優化已有能力等，讓 Canvas 隨着你的工作不斷演進。</p><p>要創建一個 Canvas，只需在 GitHub Copilot App 的 Agent 會話中輸入 **/create-canvas**，然後描述你希望創建的內容，以及它需要具備哪些能力即可。</p><p>由於 Canvas 是根據 Prompt 動態生成，並會隨着工作流程不斷演化，因此它可以呈現出各種不同的形態。有些用於可視化信息，有些幫助你執行操作，還有一些則能以更加有趣的方式幫助你處理繁瑣的待辦事項。</p><p>下面是幾個 Canvas 擴展的示例。</p><p class='list-item'>**Issue 分類助手**</p><p class='list-item'>**目標**：以快速、直觀的方式整理 GitHub Issues。</p><p class='list-item'>**Prompt**：</p><p>/create-canvas Create an interface that allows me to easily swipe through issues in a repo in card format. Can swipe right to ship, left to reject.</p><p class='list-item'>**結果**：</p><p>Canvas 會生成一個卡片式界面，每次展示一個 Issue。你可以直接在界面中完成操作：右滑表示接受，左滑表示拒絕。隨着你的操作，Canvas 會實時更新狀態，將 Issue 自動歸類到對應的列表中。</p><p class='list-item'>**交互式代碼庫架構圖**</p><p class='list-item'>**目標**：可視化項目結構以及各組件之間的關係。</p><p class='list-item'>**Prompt**：</p><p>/create-canvas Render a colorful, interactive diagram showing how the code in this project is working together, show how things are related, etc.</p><p class='list-item'>**結果**：</p><p>Canvas 會生成一個動態的代碼架構圖，其中每個節點代表系統中的一個組成部分。你可以通過懸停、拖拽和篩選等方式探索不同層級，從而將原本靜態的代碼結構，變成一個可以自由探索的交互式架構圖。</p><p class='list-item'>**Sessions Worktree 视图**</p><p class='list-item'>**目標**：可視化所有 GitHub Copilot App 會話及其對應的 Git Worktree，清晰區分哪些仍在使用、哪些已經失效，並支持快速清理。</p><p class='list-item'>**Prompt**：</p><p>/create-canvas Create a worktree view that will help me see all of my current sessions and whether or not they are active or orphaned. Allow me to clean them up with a few clicks where needed</p><p class='list-item'>**結果**：</p><p>Canvas 會生成一個可視化視圖，展示所有 Worktree，並清楚標識哪些仍處於活動狀態，哪些已經失效或成爲孤立 Worktree。對於失效的 Worktree，你只需點擊按鈕即可完成清理。</p><p class='list-item'>**Agent Prompt 教练**</p><p class='list-item'>**目標**：分析歷史 Prompt，幫助提升 Prompt 編寫質量，並給出更清晰、更高效的智能體交互建議。</p><p class='list-item'>**Prompt**：</p><p>/create-canvas Create an interactive prompt coach that suggests to you how you could have improved your previous prompts in your sessions with skills, mcp servers, etc. Make note of any spelling errors, syntax errors, etc.</p><p class='list-item'>**結果**：</p><p>Canvas 會展示歷史 Prompt，並逐條分析，指出例如上下文缺失、拼寫錯誤、語法問題等可以改進的地方。藉助這些建議，你可以不斷優化 Prompt，提高表達清晰度，並獲得更加穩定、一致的智能體輸出。</p><p class='list-item'>**Knowledge Finder**</p><p class='list-item'>**目標**：通過搜索 Slack、Teams、郵件以及文檔，找到對某個文件或主題最瞭解的人。</p><p class='list-item'>**Prompt**：</p><p>/create-canvas Create a way that I can search across Slack, Teams, Email and docs to find people with knowledge of a specific file or someone that would have more context.</p><p class='list-item'>**結果**：</p><p>Canvas 會跨多個協作工具進行搜索，找出與指定文件或主題關聯最緊密的人員，並展示他們是誰，以及關聯信息來自哪裏。這樣，你可以快速定位最瞭解相關內容的人，並進一步獲取更多背景信息。</p><p class='list-item'>**帶走這些思考**</p><p>以上這些示例只是 Canvas 能力的一小部分。Canvas 能夠將 AI 從一個對話工具，升級爲一個可視化工作空間，讓你能夠更直觀地理解信息、探索不同的工作流程，並把原本枯燥的任務變成更有趣、更願意完成的體驗。</p><p>Canvas 是一個開發者與智能體共同協作的共享工作空間，你們可以在這裏一起思考、探索，並完成實際工作。</p><p class='list-item'>**想親自體驗 Canvas Extensions？**現在就可以前往 GitHub Copilot App開始使用。更多內容可查閱官方文檔。</p><p class='list-item'>**GitHub Copilot App**</p><p>https://github.com/features/ai/github-app/?wt.mc_id=3reg_webpage_reactor</p><p class='list-item'>**官方文檔**</p><p>https://docs.github.com/en/copilot/how-tos/github-copilot-app/working-with-canvas-extensions/?wt.mc_id=3reg_webpage_reactor</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

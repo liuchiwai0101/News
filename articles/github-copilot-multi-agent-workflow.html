@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>GitHub Copilot 多 Agent 工作流：面向真实代码库的审查优先方案 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>GitHub Copilot 多 Agent 工作流：面向真实代码库的审查优先方案</h1>
+<div class="meta"><span class="src">aigcdev.com</span>
+<span>· <a href="https://aigcdev.com/zh/articles/github-copilot-multi-agent-workflow" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://aigcdev.com/zh/articles/github-copilot-multi-agent-workflow" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>2026 年搭建多 Agent 編碼工作流，不要一上來就把代碼庫的控制權全交給一個 Agent。從三個獨立職責開始：一個 Agent 擬方案，一個工具在代碼庫上下文中執行編輯，一個審閱者獨立檢查 PR。這比純自動駕駛慢，但它是出問題時仍能看懂發生了什麼的前提。</p><p>GitHub 2026-03-19 關於 Squad 的文章說清楚了一件事：難點不是讓 Agent 寫一次代碼，而是協調規劃、實現、測試和審查，同時不把推理過程藏在一個長對話裏。對大多數團隊來說，實用的工作流是圍繞 GitHub Copilot、Cursor 和 CodeRabbit 搭建的審查優先棧。</p><p>新聞不是"AI Agent 能寫代碼了"，那已經是舊聞。新的信號是：大廠開始公開描述代碼庫原生的多 Agent 模式，而不只是當 demo 展示。</p><p>2026-03-19，GitHub 發佈了關於 Squad 的詳細文章，Squad 是一個在代碼庫內協調專業 Agent 的開源項目。有用的不是這個項目本身，而是它展示的模式：</p><p class='list-item'>- 共享的項目決策寫在文件裏，而非僅在聊天記錄中</p><p class='list-item'>- 實現和審查分離</p><p class='list-item'>- 專業 Agent 各自擁有上下文，而非在一個長線程裏爭搶</p><p class='list-item'>- 人類仍然審查最終的 PR</p><p>這比"讓一個 Agent 做所有事然後希望 diff 看起來沒問題"更適合真實代碼庫。</p><p>分工之所以重要，是因爲最常見的多 Agent 失敗模式是角色坍塌：一個助手既規劃變更、又寫代碼、又解釋爲什麼代碼正確、又"審查"同一份工作。那不是協作，那是一個上下文窗口在自說自話。</p><p>以下條件全部滿足時才用多 Agent 工作流：</p><p class='list-item'>- 任務跨多個文件，或至少包含一次實現加一次審查</p><p class='list-item'>- 驗收標準清晰到可以在編碼前寫下來</p><p class='list-item'>- 代碼庫已有值得保留的規範</p><p class='list-item'>- 壞補丁是煩人的，不是災難性的</p><p>適合的場景：</p><p class='list-item'>- 在現有模式後面新增一個有邊界的功能</p><p class='list-item'>- 帶測試地重構重複邏輯</p><p class='list-item'>- 更新代碼庫中已有的集成</p><p class='list-item'>- 爲常規後端或 UI 工單寫第一個 PR</p><p>不適合的場景：</p><p class='list-item'>- 回滾風險高的數據庫遷移</p><p class='list-item'>- 隱含業務規則的認證、計費或安全變更</p><p class='list-item'>- 真正 bug 還不清楚的事故</p><p class='list-item'>- 全新架構決策</p><p>從 GitHub Copilot 開始，但先要計劃，不要直接要代碼。</p><p>可複製的 prompt：</p><pre><code>You are planning a repository change.
+Return only:
+1. files to inspect first
+2. the smallest safe implementation path
+3. risks or unknowns
+4. tests to run
+5. one reason to stop and escalate
+Rules:
+- do not write code yet
+- do not propose new dependencies unless strictly required
+- if the task is underspecified, say NEEDS-CLARIFICATION first
+Task:
+[粘贴 issue 或工单]</code></pre><p>爲什麼有效：</p><p class='list-item'>- 在執行前強制確定範圍</p><p class='list-item'>- 給出具體的文件清單</p><p class='list-item'>- 創建一個執行者不應越過的書面邊界</p><p>截至 2026-03-21，GitHub 將 Copilot 定位於編輯器、終端、GitHub 和自定義 Agent，其產品頁明確描述了編輯器中的 Agent 模式和綁定到 issue 的後臺編碼 Agent。GitHub 官方方案頁列出 Free、Pro $10/月、Pro+ $39/月的個人開發者方案，以及面向團隊的 Business 和 Enterprise 方案。這使 Copilot 即使不讓它掌控整個循環，也適合作爲規劃層。</p><p>GitHub 的 Squad 文章有一個很多團隊仍在忽略的觀點：如果 Agent 需要記憶，就把它放在代碼庫裏。</p><p>最簡單的方式是一個純 Markdown 文件，比如 <code>docs/agent-decisions.md</code>，內容像這樣：</p><pre><code>## 2026-03-21: API 分頁變更
+- 保持現有響應格式以兼容向後。
+- 僅在 `/v2/reports` 上添加遊標分頁。
+- 本次 PR 不重命名前端 query hooks。
+- 測試必須覆蓋空、單頁和多頁場景。</code></pre><p>這比指望每次新的 Agent 運行都記住舊聊天要靠譜。它也給人類審閱者一個明確的核對基準。</p><p>用這個文件記錄：</p><p class='list-item'>- 命名決策</p><p class='list-item'>- API 边界</p><p class='list-item'>- 已選定的庫</p><p class='list-item'>- 下一個 Agent 必須繼承的約束</p><p>不要用它記錄：</p><p class='list-item'>- 原始日誌</p><p class='list-item'>- 大段聊天記錄</p><p class='list-item'>- 沒人會執行的猜測性筆記</p><p>範圍寫下來後，切換到 Cursor，保持指令窄。</p><p>可複製的 prompt：</p><pre><code>Implement only the plan below.
+Constraints:
+- touch only the files listed unless you hit a blocker
+- preserve public API names
+- no new dependencies
+- stop and explain before expanding scope
+Plan:
+[粘贴已批准的计划]
+Repository decisions:
+[粘贴相关的决策块]</code></pre><p>爲什麼 Cursor 適合這一步：</p><p class='list-item'>- 擅長在上下文中執行有邊界的多文件編輯</p><p class='list-item'>- 在編輯器內展示 diff，而非把所有東西藏在聊天裏</p><p class='list-item'>- 補丁開始漂移時更容易中途停下</p><p>截至 2026-03-21，Cursor 列出 Hobby 免費、Pro $20/月、Pro+ $60/月、Teams $40/人/月。重點不是定價本身，而是 Cursor 現在以執行層的方式打包——含 Agent 請求、前沿模型和 cloud agents——與本工作流中的執行者角色契合。</p><p>不要讓起草者給自己的作業打分。提 PR 後運行獨立審查。</p><p>審閱者 brief 示例：</p><pre><code>Review this PR as an independent reviewer.
+Focus on:
+- missing tests
+- hidden breaking changes
+- places where the implementation violates the stated scope
+- security or performance regressions
+- unclear naming or documentation gaps
+Do not suggest broad rewrites unless the current approach is unsound.</code></pre><p>這是 CodeRabbit 或其他獨立審閱者發揮價值的地方。截至 2026-03-21，CodeRabbit 提供免費的 PR 摘要功能和 Pro 方案（年付 $24/月或月付 $30/月/開發者）。這個定價只有在你用於持續的審查循環時才合理，不是用來當新鮮的評論機器人。</p><p>一條實用規則：</p><p class='list-item'>- 規劃者可以提議</p><p class='list-item'>- 執行者可以起草</p><p class='list-item'>- 審閱者可以拒絕</p><p class='list-item'>- 只有人類可以批准和合並</p><p>沒有真實驗證步驟的多 Agent 循環只是快速猜測。</p><p>選至少一項不依賴 Agent 自我評估的檢查：</p><p class='list-item'>- 單元測試通過</p><p class='list-item'>- lint 和類型檢查通過</p><p class='list-item'>- 改動的頁面正確渲染</p><p class='list-item'>- API 響應符合預期格式</p><p class='list-item'>- 審閱者能指出證明結論的確切文件</p><p>如果任務沒有低成本的驗證路徑，通常不適合多 Agent 執行。</p><p>最短的、在真實團隊中仍可用的版本：</p><p class='list-item'>- 創建任務，先寫驗收標準</p><p class='list-item'>- 讓 GitHub Copilot 出一份有邊界的計劃</p><p class='list-item'>- 把批准的約束複製到代碼庫決策文件</p><p class='list-item'>- 讓 Cursor 只實現該計劃</p><p class='list-item'>- 在 PR 描述中寫明範圍後提 PR</p><p class='list-item'>- 讓 CodeRabbit 審查漂移、缺口和缺失的測試</p><p class='list-item'>- 只在人類審查最終 diff 且真實檢查通過後才合併</p><p>這不是花哨的編排。這是讓多個 Agent 有用而非嘈雜的最低限度結構。</p><p>模式很直接：用 Copilot 定義工作，用 Cursor 執行工作，用 CodeRabbit 審查工作。</p><p>執行者從一個小 bug 修復開始，悄悄擴展到命名變更、API 變更或不相關的清理。</p><p>應對：保留書面的文件清單，拒絕任何未說明原因就擴展的補丁。</p><p>同一個 Agent 寫了補丁，然後解釋爲什麼補丁是正確的。</p><p>應對：使用獨立的 PR 審閱者，或擁有不同職責的獨立模型上下文。</p><p>一個好的決策在聊天中做了一次，下次運行就消失了。</p><p>應對：把持久約束寫入代碼庫文件。</p><p>所有人都讀 Agent 評論，沒人跑真正的檢查。</p><p>應對：合併前要求一個不可協商的驗證關卡。</p><p>不需要。GitHub 的 Squad 文章之所以有趣，是因爲它表明有用的是工作流形態，不是儀式。一個規劃者、一個執行者、一個審閱者加一個代碼庫決策文件，就能獲得大部分收益。</p><p>通常不應該。它可以覆蓋規劃、編輯和部分審查，但當規劃、編輯和審查分離到不同步驟或工具時，工作流更容易信任。</p><p>對單文件小編輯，不是。額外的協調是開銷。當未經審查的多文件錯誤的代價高於額外一次審查的代價時，這個方案才值得。</p><p>贏的多 Agent 工作流不是 Agent 最多的那個，而是邊界最清晰的那個。</p><p>用 GitHub Copilot 定義補丁，用 Cursor 在代碼庫上下文中執行，用 CodeRabbit 獨立審查。把持久決策存在代碼庫中，把驗證留在模型自評之外，把最終合併留給人類。</p><p>這是在活躍代碼庫上真正可用的多 Agent 編碼版本。</p><p>核验日期：2026-03-21。检查了 GitHub 2026-03-19 关于 Squad 的官方博客文章，包括显式的仓库记忆、专业角色和独立审查模式：<code>https://github.blog/ai-and-ml/github-copilot/how-squad-runs-coordinated-ai-agents-inside-your-repository/</code>。</p><p>检查了 GitHub Copilot 官方产品页和方案页中的编辑器 Agent 模式、后台编码 Agent 定位，以及当前 Free、Pro（$10/月）和 Pro+（$39/月）方案：<code>https://github.com/features/copilot</code> 和 <code>https://github.com/features/copilot/plans</code>。检查了 Cursor 官方定价页中的 Hobby、Pro（$20/月）、Pro+（$60/月）和 Teams（$40/人/月）：<code>https://cursor.com/pricing</code>。</p><p>检查了 CodeRabbit 官方定价页中的免费层和 Pro 定价（年付 $24/月或月付 $30/月/开发者）：<code>https://www.coderabbit.ai/pricing</code>。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

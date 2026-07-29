@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>2026 年前端大洗牌：从 React 服务端到 Vite 的底層重構 · 流動日報譯文</title>
+<title>2026 前端大洗牌：从 React 服务端到 Vite 的底层重构 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,8 +42,8 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>2026 年前端大洗牌：从 React 服务端到 Vite 的底層重構</h1>
-<div class="meta"><span class="src">SegmentFault</span><span>· 7月24日 周五</span>
+<h1>2026 前端大洗牌：从 React 服务端到 Vite 的底层重构</h1>
+<div class="meta"><span class="src">SegmentFault 思否</span><span>· 2026-07-20</span>
 <span>· <a href="https://segmentfault.com/a/1190000048061524" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000048061524" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>前端圈的鄙視鏈，似乎每隔幾年就要重寫一次。</p><p>過去幾年，大家還在爲了 <code>Vue</code> 的組合式 API 好用，還是 <code>React</code> 的 <code>Hooks</code> 純粹而吵得不可開交。但如果你現在站在 2026 年的時間節點上回頭看，你會發現那些語法層面的口水戰，簡直可笑得像小孩子過家家🤔。</p><p>在真實的商業項目裏，2026 年的現代前端，再加上AI編程的加持下，早已不再關心**你的組件怎麼寫**，所有人都在死磕一個極其冷酷的終極命題：**到底該怎麼把龐大的 JavaScript 從客戶端的加載鏈路裏剔除出去？**</p><p>如果你現在的首選依然是無腦用 <code>Webpack</code> 加上傳統的 <code>SPA</code>（單頁應用）打出一個好幾兆的 <code>JS 包</code>，然後扔給瀏覽器去漫長地解析、注水（<code>Hydration</code>）、再發起請求……那麼很遺憾，你的架構認知已經被這個時代淘汰了🫡。</p><p>一場殘酷的性能內卷，已經在底層裏打響。請繼續看👇</p><h3>React 19 目前的底牌是什麼？</h3><p>在傳統 <code>SPA</code> 的架構下，我們爲了在頁面上渲染一行用戶數據，付出的代價是極其慘痛的。</p><p>你需要讓用戶先下載龐大的 <code>React</code> 運行時引擎，等待主線程將其解析完畢，接着執行復雜的 <code>Hydration</code>（注水）來綁定事件，最後再通過 <code>useEffect</code> 發起網絡請求。這種冗長的**瀑布流加載**，在弱網環境下簡直就是災難。</p><p><code>React 19</code> 爲什麼強推 <code>RSC</code>（服務器組件）？因爲他們看透了：**客戶端根本承受不住日益膨脹的業務邏輯**。</p><pre><code>// 为了渲染几行字，客户端背负了极度沉重的运行时和请求瀑布流

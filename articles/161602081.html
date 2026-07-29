@@ -45,8 +45,934 @@ font-size:12.5px;color:var(--muted);}
 <h1>AI Agent 从 0 到 1 实战：前端工程师打造智能客服保姆级教程</h1>
 <div class="meta"><span class="src">CSDN</span><span>· 2026-07-22</span>
 <span>· <a href="https://blog.csdn.net/2301_80239908/article/details/161602081" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文頁面無法擷取全文，請<a href="https://blog.csdn.net/2301_80239908/article/details/161602081" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/2301_80239908/article/details/161602081" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>最近我一直在研究 AI Agent 這個方向。之前幾篇文章提到過，Agent 是前端轉型 AI 全棧最該切入的點之一。這次我直接從零搭建了一個 Agent 項目，把過程和代碼都記下來了。</p><p>2026 年行業裏出現了一個新角色——Agent 工程師。核心不是訓練大模型，而是編排 AI Agent 的工作流：給它工具、定義規則、讓它自主完成任務。前端工程師有用戶視角和交互思維，做這件事有天然優勢。</p><p>這篇教程用 LangChain + LangGraph 搭建一個智能客服 Agent，能理解用戶問題、查詢知識庫、生成回答。技術棧選的都是前端友好的方案。</p><p>要做的 Agent 能完成這幾件事：</p><p class='list-item'>- 理解用戶的自然語言問題</p><p class='list-item'>- 從預設知識庫中檢索相關信息</p><p class='list-item'>- 根據檢索結果生成回答</p><p class='list-item'>- 知識庫裏沒有答案時，如實告知</p><p>最終效果大致這樣：</p><pre><code>1
+2
+3
+用戶：你們的產品支持 API 嗎？
+Agent：支持。我們提供 REST API，包含用戶管理、數據查詢和消息推送。
+      文檔地址在開發者中心的 API 欄目下。</code></pre><p>不需要機器學習背景。LangChain 最早是 Python 庫，但 JavaScript 版本現在夠用了。</p><p>創建新項目：</p><pre><code>1
+2
+3
+mkdir
+ ai-agent-tutorial &amp;&amp;
+ cd
+ ai-agent-tutorial
+npm init -y
+npm install langchain @langchain/openai @langchain/core</code></pre><p>入口文件 <code>src/agent.js</code>，配置 LLM：</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+import
+ {
+ ChatOpenAI
+ }
+ from
+ &quot;@langchain/openai&quot;
+;
+const
+ llm =
+ new
+ ChatOpenAI
+({
+  modelName
+:
+ &quot;gpt-4o&quot;
+,
+  temperature
+:
+ 0.3
+,
+  apiKey
+: process.
+env
+.
+OPENAI_API_KEY
+,
+});
+console
+.
+log
+(
+&quot;LLM 配置完成&quot;
+);</code></pre><p>API Key 放環境變量：</p><pre><code>1
+export
+ OPENAI_API_KEY=
+&quot;你的API密钥&quot;</code></pre><p>Agent 的行爲由提示詞控制。我試了幾版，下面是效果最好的：</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+const
+ SYSTEM_PROMPT
+ =
+ `你是一个专业的客服助手，名叫小智。
+你的职责：
+- 根据知识库内容回答用户问题
+- 回答要简洁、准确、友好
+- 如果知识库中没有相关信息，请如实告知用户
+回答格式：
+- 直接回答问题，不要复述用户的问题
+- 如果信息充分，控制在
+ 3
+ 句话以内
+`;
+import
+ {
+ ChatPromptTemplate
+ }
+ from
+ &quot;@langchain/core/prompts&quot;
+;
+const
+ prompt =
+ ChatPromptTemplate
+.
+fromMessages
+([
+  [
+&quot;system&quot;
+,
+ SYSTEM_PROMPT
+],
+  [
+&quot;human&quot;
+,
+ &quot;{input}&quot;
+],
+]);</code></pre><p>Agent 需要知識來源。最簡單的方式：把常見問題存爲文檔，用向量檢索查找最相關答案。</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+import
+ {
+ MemoryVectorStore
+ }
+ from
+ &quot;langchain/vectorstores/memory&quot;
+;
+import
+ {
+ OpenAIEmbeddings
+ }
+ from
+ &quot;@langchain/openai&quot;
+;
+import
+ {
+ Document
+ }
+ from
+ &quot;@langchain/core/documents&quot;
+;
+// 预设知识库
+const
+ knowledgeBase = [
+  {
+ content
+:
+ &quot;我们的产品支持 REST API，包含用户管理、数据查询和消息推送三个核心模块。文档位于开发者中心的 API 栏目下。&quot;
+,
+ metadata
+: {
+ category
+:
+ &quot;API&quot;
+ } },
+  {
+ content
+:
+ &quot;免费套餐包含 1000 次 API 调用/月。专业版 99 元/月，提供 10 万次调用。企业版需联系销售，提供无限调用量和专属支持。&quot;
+,
+ metadata
+: {
+ category
+:
+ &quot;pricing&quot;
+ } },
+  {
+ content
+:
+ &quot;我们支持微信、邮件和企业微信三种通知渠道。在控制台的通知设置页面可以配置。&quot;
+,
+ metadata
+: {
+ category
+:
+ &quot;notification&quot;
+ } },
+  {
+ content
+:
+ &quot;数据存储在阿里云和华为云上，采用 AES-256 加密。我们通过了等保三级认证。&quot;
+,
+ metadata
+: {
+ category
+:
+ &quot;security&quot;
+ } },
+  {
+ content
+:
+ &quot;技术支持通过工单系统、在线客服和开发者社区三种方式提供。工单响应时间：免费用户 48 小时，专业用户 4 小时，企业用户 1 小时。&quot;
+,
+ metadata
+: {
+ category
+:
+ &quot;support&quot;
+ } },
+];
+const
+ embeddings =
+ new
+ OpenAIEmbeddings
+();
+const
+ docs = knowledgeBase.
+map
+(
+item =&gt;
+ 
+  new
+ Document
+({
+ pageContent
+: item.
+content
+,
+ metadata
+: item.
+metadata
+ })
+);
+const
+ vectorStore =
+ await
+ MemoryVectorStore
+.
+fromDocuments
+(docs, embeddings);
+// 检索函数
+async
+ function
+ searchKnowledge
+(
+query
+) {
+  const
+ results =
+ await
+ vectorStore.
+similaritySearch
+(query,
+ 2
+);
+  return
+ results.
+map
+(
+doc =&gt;
+ doc.
+pageContent
+).
+join
+(
+&quot;\n&quot;
+);
+}
+// 测试
+const
+ testResult =
+ await
+ searchKnowledge
+(
+&quot;API 怎么用&quot;
+);
+console
+.
+log
+(
+&quot;检索结果:&quot;
+, testResult);</code></pre><p>Agent 需要有自己的決策流程：先判斷問題類型，再決定調用什麼工具，最後生成回答。LangGraph 就是用來定義這個流程的。</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+import
+ {
+ StateGraph
+,
+ END
+ }
+ from
+ &quot;@langchain/langgraph&quot;
+;
+import
+ {
+ Annotation
+ }
+ from
+ &quot;@langchain/langgraph&quot;
+;
+const
+ AgentState
+ =
+ Annotation
+.
+Root
+({
+  input
+:
+ Annotation
+&lt;string&gt;,
+  context
+:
+ Annotation
+&lt;string&gt;,
+  output
+:
+ Annotation
+&lt;string&gt;,
+});
+// 节点 1：检索知识库
+async
+ function
+ retrieve
+(
+state
+) {
+  const
+ context =
+ await
+ searchKnowledge
+(state.
+input
+);
+  return
+ { context };
+}
+// 节点 2：生成回答
+async
+ function
+ generate
+(
+state
+) {
+  const
+ chain = prompt.
+pipe
+(llm);
+  const
+ fullPrompt =
+ `请根据以下知识库内容回答用户问题：\n\n知识库：{state.input}`
+;
+  const
+ response =
+ await
+ chain.
+invoke
+({
+ input
+: fullPrompt });
+  return
+ {
+ output
+: response.
+content
+ };
+}
+// 构建工作流
+const
+ workflow =
+ new
+ StateGraph
+(
+AgentState
+)
+  .
+addNode
+(
+&quot;retrieve&quot;
+, retrieve)
+  .
+addNode
+(
+&quot;generate&quot;
+, generate)
+  .
+addEdge
+(
+&quot;retrieve&quot;
+,
+ &quot;generate&quot;
+)
+  .
+addEdge
+(
+&quot;generate&quot;
+,
+ END
+);
+const
+ agent = workflow.
+compile
+();</code></pre><p>只查知識庫還不夠。讓 Agent 學會主動調用工具——比如查詢訂單、創建工單。</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+import
+ { tool }
+ from
+ &quot;@langchain/core/tools&quot;
+;
+import
+ { createReactAgent }
+ from
+ &quot;@langchain/langgraph/prebuilt&quot;
+;
+// 工具：查询订单
+const
+ checkOrderTool =
+ tool
+(
+  async
+ ({ orderId }) =&gt; {
+    const
+ orders = {
+      &quot;ORD001&quot;
+: {
+ status
+:
+ &quot;已发货&quot;
+,
+ tracking
+:
+ &quot;SF1234567890&quot;
+ },
+      &quot;ORD002&quot;
+: {
+ status
+:
+ &quot;处理中&quot;
+,
+ eta
+:
+ &quot;预计 2 天后发货&quot;
+ },
+    };
+    return
+ orders[orderId] ||
+ &quot;未找到该订单&quot;
+;
+  },
+  {
+    name
+:
+ &quot;check_order&quot;
+,
+    description
+:
+ &quot;根据订单号查询订单状态和物流信息&quot;
+,
+    schema
+: {
+      type
+:
+ &quot;object&quot;
+,
+      properties
+: {
+        orderId
+: {
+ type
+:
+ &quot;string&quot;
+,
+ description
+:
+ &quot;订单号，如 ORD001&quot;
+ },
+      },
+      required
+: [
+&quot;orderId&quot;
+],
+    },
+  }
+);
+// 工具：创建工单
+const
+ createTicketTool =
+ tool
+(
+  async
+ ({ title, description }) =&gt; {
+    return
+ `工单已创建，编号 TK-${Date.now()}，预计 24 小时内处理。`
+;
+  },
+  {
+    name
+:
+ &quot;create_ticket&quot;
+,
+    description
+:
+ &quot;为用户创建技术支持工单&quot;
+,
+    schema
+: {
+      type
+:
+ &quot;object&quot;
+,
+      properties
+: {
+        title
+: {
+ type
+:
+ &quot;string&quot;
+,
+ description
+:
+ &quot;工单标题&quot;
+ },
+        description
+: {
+ type
+:
+ &quot;string&quot;
+,
+ description
+:
+ &quot;问题描述&quot;
+ },
+      },
+      required
+: [
+&quot;title&quot;
+,
+ &quot;description&quot;
+],
+    },
+  }
+);
+// 创建支持工具调用的 Agent
+const
+ agentWithTools =
+ createReactAgent
+({
+  llm,
+  tools
+: [checkOrderTool, createTicketTool],
+  prompt
+:
+ ChatPromptTemplate
+.
+fromMessages
+([
+    [
+&quot;system&quot;
+,
+ SYSTEM_PROMPT
+ +
+ &quot;\n你可以使用工具来获取信息或执行操作。&quot;
+],
+    [
+&quot;human&quot;
+,
+ &quot;{input}&quot;
+],
+  ]),
+});</code></pre><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+async
+ function
+ runAgent
+(
+question
+) {
+  console
+.
+log
+(
+`\n用户: ${question}`
+);
+  const
+ result =
+ await
+ agent.
+invoke
+({
+    input
+: question,
+    context
+:
+ &quot;&quot;
+,
+    output
+:
+ &quot;&quot;
+,
+  });
+  console
+.
+log
+(
+`Agent: ${result.output}`
+);
+}
+// 测试
+await
+ runAgent
+(
+&quot;你们的产品支持 API 吗？&quot;
+);
+await
+ runAgent
+(
+&quot;免费套餐有什么限制？&quot;
+);
+await
+ runAgent
+(
+&quot;帮我查一下订单 ORD001 的状态&quot;
+);
+await
+ runAgent
+(
+&quot;我要投诉，帮我创建一个工单&quot;
+);</code></pre><p>運行輸出：</p><pre><code>1
+2
+3
+4
+5
+6
+用戶: 你們的產品支持 API 嗎？
+Agent: 支持。我們提供 REST API，包含用戶管理、數據查詢和消息推送。
+      文檔在開發者中心的 API 欄目下可以找到。
+用戶: 幫我查一下訂單 ORD001 的狀態
+Agent: 訂單 ORD001 已發貨，物流單號 SF1234567890。你可以通過順豐查詢具體物流進度。</code></pre><p>用 HTML + JavaScript 做一個簡單的聊天界面：</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;
+AI 智能客服
+&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: system-ui; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    #chat { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 16px; margin-bottom: 16px; border-radius: 8px; }
+    .message { margin-bottom: 12px; padding: 8px 12px; border-radius: 8px; }
+    .user { background: #e3f2fd; margin-left: 40px; }
+    .agent { background: #f5f5f5; margin-right: 40px; }
+    #input-area { display: flex; gap: 8px; }
+    #input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    button { padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;
+AI 智能客服
+&lt;/h2&gt;
+  &lt;div id=&quot;chat&quot;&gt;
+&lt;/div&gt;
+  &lt;div id=&quot;input-area&quot;&gt;
+    &lt;input id=&quot;input&quot; placeholder=&quot;输入你的问题...&quot; /&gt;
+    &lt;button onclick=&quot;sendMessage()&quot;&gt;
+发送
+&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    async function sendMessage() {
+      const input = document.getElementById(&#x27;input&#x27;);
+      const chat = document.getElementById(&#x27;chat&#x27;);
+      const question = input.value.trim();
+      if (!question) return;
+      chat.innerHTML += `
+&lt;div class=&quot;message user&quot;&gt;
+${question}
+&lt;/div&gt;
+`;
+      input.value = &#x27;&#x27;;
+      const response = await fetch(&#x27;/api/agent&#x27;, {
+        method: &#x27;POST&#x27;,
+        headers: { &#x27;Content-Type&#x27;: &#x27;application/json&#x27; },
+        body: JSON.stringify({ question }),
+      });
+      const data = await response.json();
+      chat.innerHTML += `
+&lt;div class=&quot;message agent&quot;&gt;
+${data.answer}
+&lt;/div&gt;
+`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+    document.getElementById(&#x27;input&#x27;).addEventListener(&#x27;keypress&#x27;, (e) =&gt; {
+      if (e.key === &#x27;Enter&#x27;) sendMessage();
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>後端配一個 Express 路由：</p><pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+import
+ express
+ from
+ &quot;express&quot;
+;
+const
+ app =
+ express
+();
+app.
+use
+(express.
+json
+());
+app.
+post
+(
+&quot;/api/agent&quot;
+,
+ async
+ (req, res) =&gt; {
+  const
+ { question } = req.
+body
+;
+  const
+ result =
+ await
+ agent.
+invoke
+({
+    input
+: question,
+    context
+:
+ &quot;&quot;
+,
+    output
+:
+ &quot;&quot;
+,
+  });
+  res.
+json
+({
+ answer
+: result.
+output
+ });
+});
+app.
+listen
+(
+3000
+,
+ () =&gt;
+ console
+.
+log
+(
+&quot;Agent 服务运行在 http://localhost:3000&quot;
+));</code></pre><p class='list-item'>**1. 向量檢索結果不穩定**</p><p>一開始知識庫只有 3 條數據，檢索效果很差。後來發現 Embedding 質量比數量更重要——知識庫裏每條內容應該是一個完整的知識點，而不是大段文字切開的碎片。</p><p class='list-item'>**2. Agent 會編造答案**</p><p>提示詞裏寫了“不知道就說不知道”，Agent 偶爾還是會自己編。把 temperature 調到 0.3 以下，同時在提示詞中給明確約束，好一些了。</p><p class='list-item'>**3. 工具調用死循環**</p><p>Agent 拿到問題後反覆調用同一個工具。原因是沒有設置終止條件。在提示詞里加上“每個工具最多調用一次”就解決了。</p><p class='list-item'>**4. 響應速度慢**</p><p>Embedding + LLM 兩重調用，首屏響應 2-3 秒。我的優化方案：先返回“正在思考”的佔位消息，再用流式輸出逐步展示回答。</p><p>改改提示詞、換換工具，看看 Agent 的行爲會怎麼變化，這是學 Agent 最快的方式。</p><p>我在一線科技企業深耕十二載，見證過太多因技術更迭而躍遷的案例。那些率先擁抱 AI 的同事，早已在效率與薪資上形成代際優勢，我意識到有很多經驗和知識值得分享給大家，也可以通過我們的能力和經驗解答大家在大模型的學習中的很多困惑。</p><p>我整理出這套 AI 大模型突圍資料包：</p><p class='list-item'>- ✅AI大模型學習路線圖</p><p class='list-item'>- ✅Agent行業報告</p><p class='list-item'>- ✅100集大模型視頻教程</p><p class='list-item'>- ✅大模型書籍PDF</p><p class='list-item'>- ✅DeepSeek教程</p><p class='list-item'>- ✅AI產品經理入門資料</p><p class='list-item'>**完整的大模型學習和麪試資料已經上傳帶到CSDN的官方了，有需要的朋友可以掃描下方二維碼免費領取【保證100%免費】👇👇**</p><p>人工智能技術的爆發式增長，正以不可逆轉之勢重塑就業市場版圖。從DeepSeek等國產大模型引發的科技圈熱議，到全國兩會關於AI產業發展的政策聚焦，再到招聘會上排起的長隊，AI的熱度已從技術領域滲透到就業市場的每一個角落。</p><p>智聯招聘的最新數據給出了最直觀的印證：2025年2月，**AI領域求職人數同比增幅突破200%** ，遠超其他行業平均水平；整個人工智能行業的求職增速達到33.4%，位居各行業榜首，其中人工智能工程師崗位的求職熱度更是飆升69.6%。</p><p>AI產業的快速擴張，也讓人才供需矛盾愈發突出。麥肯錫報告明確預測，到2030年中國AI專業人才需求將達600萬人，**人才缺口可能高達400萬人**，這一缺口不僅存在於核心技術領域，更蔓延至產業應用的各個環節。</p><p>包含提示詞工程、RAG、Agent等技術點</p><h3>全過程AI大模型學習路線</h3><p>市面上的大模型書籍確實太多了，這些是我精選出來的</p><p>這份資料由我和魯爲民博士共同整理，魯爲民博士先後獲得了北京清華大學學士和美國加州理工學院博士學位，在包括IEEE Transactions等學術期刊和諸多國際會議上發表了超過50篇學術論文、取得了多項美國和中國發明專利，同時還斬獲了吳文俊人工智能科學技術獎。目前我正在和魯博士共同進行人工智能的研究。</p><p>所有的視頻教程由智泊AI老師錄製，且資料與智泊AI共享，相互補充。**這份學習大禮包應該算是現在最全面的大模型學習資料了。**</p><p>資料內容涵蓋了從入門到進階的各類視頻教程和實戰項目，無論你是小白還是有些技術基礎的，這份資料都絕對能幫助你提升薪資待遇，轉行大模型崗位。</p><p>智泊AI始終秉持着“**讓每個人平等享受到優質教育資源**”的育人理念，通過動態追蹤大模型開發、數據標註倫理等前沿技術趨勢，構建起"**前沿課程+智能實訓+精準就業**"的高效培養體系。</p><p>課堂上不光教理論，還帶着學員做了十多個真實項目。學員要親自上手搞數據清洗、模型調優這些硬核操作，把課本知識變成真本事！</p><p>如果說你是以下人羣中的其中一類，都可以來智泊AI學習人工智能，找到高薪工作，一次小小的“投資”換來的是終身受益！</p><p>應屆畢業生：無工作經驗但想要系統學習AI大模型技術，期待通過實戰項目掌握核心技術。</p><p>零基礎轉型：非技術背景但關注AI應用場景，計劃通過低代碼工具實現“AI+行業”跨界。</p><p>業務賦能 突破瓶頸：傳統開發者（Java/前端等）學習Transformer架構與LangChain框架，向AI全棧工程師轉型。</p><p>😝有需要的小夥伴，可以保存圖片到wx掃描二v碼免費領取【保證100%免費】🆓**</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Kimi K3开放日：模型权重、技术报告和关键Infra技术同步开放_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Kimi K3开放日：模型权重、技术报告和关键Infra技术同步开放_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260727A0CPVU00" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260727A0CPVU00" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p class='list-item'>**文：月之暗面 Kimi**</p><p>感謝大家的耐心等待。</p><p>今天是 開放日，我們發佈 Kimi K3 的模型權重、，並開源支撐 Kimi K3 模型訓練的關鍵 Infra 技術：、和。希望以此加速前沿智能的部署與普及，促進 研究。</p><p class='list-item'>**Kimi K3 权重公布**</p><p>是我們能力最強的模型：這是一個擁有 2.8 萬億參數的混合專家（MoE）模型，具備原生視覺理解能力，並支持 100 萬 token 的上下文窗口。</p><p>Kimi K3 參數規模是 Kimi K2.5 的 3 倍左右，但是規模化並不僅僅是參數的堆疊，在並不寬裕的算力條件下，我們憑藉 、 以及 等一系列技術創新，規模化效率提升了 2.5 倍（即在算力最優意義下，單位算力產出智能約等於原來 2.5 倍）。</p><p class='list-item'>**現在，每個人都可以下載並部署 Kimi K3 模型——無論是用於內部研發，還是嵌入到面向終端用戶的產品中，均可自由使用**（其他使用情形，詳見Kimi K3 許可證）。</p><p class='list-item'>**Kimi K3 技術報告發布**</p><p>今天，與 Kimi K3 模型權重一起公開的，還有我們的模型訓練方法——。</p><p>從技術報告中，你可以瞭解這些技術細節：</p><p class='list-item'>- KDA + AttnRes：以 3:1 比例混合 KDA 與 Gated MLA，實現高效長上下文建模，並通過塊級注意力殘差增強跨層信息流動。</p><p class='list-item'>- Stable LatentMoE：每個 token 從 896 個路由專家中激活 16 個，並通過 SiTU-GLU 與 Quantile Balancing 保持極高稀疏度下的訓練穩定。</p><p class='list-item'>- MoonViT-V2：視覺編碼器從零開始使用 next-token prediction 訓練，無需對比預訓練，在達到 SigLIP 初始化基線效果的同時獲得更穩定的優化過程。</p><p class='list-item'>- 後訓練與評估：在通用推理、通用 Agent 和編程 Agent 三大領域進行大規模任務合成，百萬 token 上下文的強化學習基建，近 20 個內部評測集的完整評估結果。</p><p>以上幾點只是概覽，詳細論述與消融實驗，都已在技術報告中展開。</p><p class='list-item'>**Kimi K3 关键 Infra 技术开源**</p><p>模型能力背後，離不開訓練系統，即 Infra 基礎設施層的穩定支撐。今天，我們向大家介紹支撐 Kimi K3 訓練的三項 Infra 技術：**MoonEP**、**FlashKDA** 和 **AgentEnv**，覆蓋從高性能通信、高性能算子到分佈式 RL 環境的關鍵鏈路。其中 FlashKDA 此前已開源，MoonEP 和 AgentEnv 則隨本次發佈正式開源。</p><p class='list-item'>- MoonEP：MoonEP 是我們爲超大的細粒度 MoE 打造的高性能通信庫，讓專家並行（expert-parallel）的通信在不均衡的情況下仍然實現極致效率。</p><p class='list-item'>- FlashKDA：FlashKDA 是我们实现的 Kimi Delta Attention 高性能算子（kernel）。在 H20 上，相比 flash-linear-attention 基线，它的 prefill 速度提升 1.72-2.22 倍，可以直接作为 flash-linear-attention 的替换后端。</p><p class='list-item'>- AgentEnv：AgentENV 是我們與 KVCache.ai 合作開發的沙箱系統，用於大規模運行 Agent 環境。它爲 Kimi K3 的後訓練提供高保真、強隔離沙箱，靈活支持快速快照、恢復和分叉（fork）等，可以應對大規模並行的 Agent 工作流與訓練任務。</p><p>這三項技術是支撐 Kimi K3 訓練效率與穩定性的關鍵。現在將它們開放出來，希望也能爲你訓練下一代模型的提供幫助。</p><p class='list-item'>**爲什麼我們選擇開放**</p><p>我們堅信開放權重模型的價值。它們能降低獲取智能的門檻，推動創新，並賦予用戶對數據更大的控制權、隱私保護和所有權。在過去幾周裏，我們很高興聽到了許多來自 AI 社區，以及與我們有着共同願景的技術領袖的支持聲音。</p><p>我們相信，對於 AGI 這樣具有深遠影響的技術，一個廣泛、開放的生態系統是最適合承載它的土壤。爲此，我們將繼續貢獻自己的力量。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
