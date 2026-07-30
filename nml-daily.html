@@ -99,15 +99,13 @@
   ｜ 本站僅作內容聚合與更新監測，版權與原文歸原媒體所有。</div>
 <script>
 (function(){
-  var SERVER='https://herenow-anhz7w.fly.dev';
-  var page=location.hostname+location.pathname;
+  var WORKER='https://news-online-ip.<your-subdomain>.workers.dev';
   var el=document.getElementById('online-count');
   var badge=document.getElementById('online-badge');
-  function sid(){ var k='hereNowSessionId'; var v=sessionStorage.getItem(k); if(!v){ v=(crypto.randomUUID?crypto.randomUUID():String(Math.random())); sessionStorage.setItem(k,v);} return v; }
-  function ping(){ try{ fetch(SERVER+'/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:sid(),page:page,referrer:document.referrer||'direct'})}); }catch(e){} }
-  function upd(){ fetch(SERVER+'/count?page='+encodeURIComponent(page)).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(n<1)n=1; if(el)el.textContent=n; }).catch(function(){ if(badge)badge.style.display='none'; }); }
-  ping(); upd(); setInterval(ping,60000); setInterval(upd,60000);
-  window.addEventListener('pagehide',function(){ try{ var p=JSON.stringify({sessionId:sid(),page:page,referrer:document.referrer||'direct'}); navigator.sendBeacon(SERVER+'/ping',new Blob([p],{type:'application/json'})); }catch(e){} });
+  function beat(){ try{ fetch(WORKER+'/heartbeat',{method:'POST',cache:'no-store'}); }catch(e){} }
+  function upd(){ fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); }).catch(function(){ if(badge)badge.style.display='none'; }); }
+  beat(); upd(); setInterval(beat,60000); setInterval(upd,30000);
+  window.addEventListener('pagehide',function(){ try{ navigator.sendBeacon(WORKER+'/heartbeat'); }catch(e){} });
 })();
 </script>
 </body>
