@@ -45,8 +45,113 @@ font-size:12.5px;color:var(--muted);}
 <h1>Vue 3.6 Vapor Mode 实战：储能大屏渲染性能提升 4 倍</h1>
 <div class="meta"><span class="src">掘金</span><span>· 2026-07-28</span>
 <span>· <a href="https://juejin.cn/post/7663854184966062126" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7663854184966062126" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7663854184966062126" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>Vue 3.6 Vapor Mode 實戰：我把一個 Vue3 項目的渲染性能提升了 4 倍</h3><p>上個月 Vue & ViteConf 2026 上，尤雨溪宣佈了三件事：Vue 3.6 正式發佈、Vue 4.0 啓動、Vite 8 落地。其中 **Vapor Mode** 是最讓我興奮的——它讓 Vue 的虛擬 DOM 變成了「可選項」，而不是「必選項」。</p><p>我們團隊維護的儲能監控大屏項目，單頁同時渲染 50+ 圖表組件，Vue 3.4 時代每次數據刷新都會觸發全量 diff，即使大部分圖表數據根本沒變。<code>shallowRef</code> + <code>markRaw</code> 的補丁打了一層又一層，性能瓶頸始終卡在虛擬 DOM 的比對開銷上。</p><p>Vue 3.6 的 Vapor Mode 承諾直接編譯爲細粒度 DOM 操作，跳過虛擬 DOM 中間層。我花了一個週末把核心看板模塊遷移過去，結果**首幀渲染時間從 580ms 降到 120ms，內存佔用減少 40%**。這篇文章記錄我的完整遷移過程和踩過的坑。</p><h3>一、Vapor Mode 到底是什麼？跟虛擬 DOM 的區別在哪</h3><p>傳統 Vue 3 的渲染流程是：組件狀態變化 → 重新執行渲染函數 → 生成新的虛擬 DOM 樹 → Diff 算法比對 → 定位變更節點 → 批量 Patch 真實 DOM。</p><p>Vapor Mode 把這套流程砍掉了中間三層。編譯器在構建階段直接分析模板中的依賴關係，生成這樣的代碼：</p><pre><code>// 传统 Vue 3 编译输出（简化）
+function render(_ctx) {
+  return _openBlock(), _createElementBlock(&#x27;div&#x27;, null, [
+    _createElementVNode(&#x27;span&#x27;, null, _toDisplayString(_ctx.count), 1)
+  ])
+}
+// Vapor Mode 编译输出（简化）
+function render(_ctx) {
+  const n0 = _createElement(&#x27;span&#x27;)
+  _renderEffect(() =&gt; _setText(n0, _ctx.count))
+  return n0
+}</code></pre><p>關鍵差異：</p><p class='list-item'>- **沒有**：直接創建 DOM 節點，不經過虛擬節點中間層- `createVNode`</p><p class='list-item'>- **沒有**：狀態變化時直接更新綁定的 DOM 屬性，而不是重新生成整棵樹再 diff- `patch`函數</p><p class='list-item'>- **依賴粒度到節點級別**：編譯器靜態分析模板，每個動態表達式獨立綁定一個更新 effect</p><p>這聽起來很像 Solid.js，但 Vue 的 Vapor Mode 是**漸進式啓用**的——你可以在一個項目裏混用 Vapor 組件和傳統組件，不需要全量遷移。</p><h3>二、漸進式遷移：從單個組件開始</h3><p>我採用的策略是「先驗證、再推廣」。選了一個最痛的組件——實時功率曲線卡片——作爲第一個遷移目標。</p><h3>#### 2.1 启用 Vapor Mode</h3><p>Vue 3.6 的 Vapor Mode 是編譯時特性，不需要改運行時。只需要在 <code>vite.config.ts</code> 里加一行：</p><pre><code>import { defineConfig } from &#x27;vite&#x27;
+import vue from &#x27;@vitejs/plugin-vue&#x27;
+export default defineConfig({
+  plugins: [
+    vue({
+      // 关键配置：启用 Vapor Mode
+      vapor: true
+    })
+  ]
+})</code></pre><p>全局啓用後，所有 <code>.vue</code> 單文件組件默認走 Vapor 編譯管線。如果你只想讓部分組件用 Vapor，可以在組件級別聲明：</p><pre><code>&lt;script setup vapor&gt;
+// 这个组件使用 Vapor Mode 编译
+&lt;/script&gt;</code></pre><h3>#### 2.2 遷移功率曲線組件</h3><p>原來的功率曲線組件是這樣寫的：</p><pre><code>&lt;script setup lang=&quot;ts&quot;&gt;
+import { ref, watch, onMounted } from &#x27;vue&#x27;
+import * as echarts from &#x27;echarts&#x27;
+const props = defineProps&lt;{
+  data: { time: string; power: number }[]
+}&gt;()
+const chartRef = ref&lt;HTMLElement&gt;()
+let chartInstance: echarts.ECharts | null = null
+onMounted(() =&gt; {
+  if (chartRef.value) {
+    chartInstance = echarts.init(chartRef.value)
+    chartInstance.setOption({
+      xAxis: { type: &#x27;category&#x27; },
+      yAxis: { type: &#x27;value&#x27; },
+      series: [{ type: &#x27;line&#x27;, data: props.data }]
+    })
+  }
+})
+// 数据变化时更新图表 —— 这里每次都会触发组件重新渲染
+watch(() =&gt; props.data, (newData) =&gt; {
+  chartInstance?.setOption({ series: [{ data: newData }] })
+}, { deep: true })
+&lt;/script&gt;
+&lt;template&gt;
+  &lt;div ref=&quot;chartRef&quot; class=&quot;power-chart&quot;&gt;&lt;/div&gt;
+&lt;/template&gt;</code></pre><p>遷移到 Vapor Mode 後，組件結構不變，但編譯產物完全不同。我抓了一下編譯輸出，核心差異在這：</p><pre><code>// Vapor Mode 编译后的核心逻辑（反编译简化）
+function setup(_ctx) {
+  const n0 = _createElement(&#x27;div&#x27;)
+  _setAttribute(n0, &#x27;class&#x27;, &#x27;power-chart&#x27;)
+  
+  // 图表初始化逻辑保持不变，因为 ECharts 是外部库
+  let chartInstance = null
+  
+  _onMounted(() =&gt; {
+    chartInstance = echarts.init(n0)
+    chartInstance.setOption({ /* ... */ })
+  })
+  
+  // 关键：props.data 变化只触发这个 effect，不触发整组件重渲染
+  _renderEffect(() =&gt; {
+    if (chartInstance) {
+      chartInstance.setOption({
+        series: [{ data: _ctx.data }]
+      })
+    }
+  })
+  
+  return n0
+}</code></pre><p>注意 <code>_renderEffect</code> 只包裹了真正依賴 <code>props.data</code> 的那行代碼。如果組件模板裏還有靜態的標題、圖例文字，它們不會在數據刷新時重新執行。</p><h3>#### 2.3 實測數據對比</h3><p>我用 Chrome DevTools 的 Performance 面板跑了 10 次數據刷新（每次 200 個數據點）：</p><p>最直觀的感受是：以前數據刷新時整個卡片區域會閃一下（因爲組件重新渲染導致 ECharts 容器短暫消失再重建），現在完全沒有了，曲線是平滑過渡的。</p><h3>三、alien-signals：新響應式系統帶來的額外紅利</h3><p>Vue 3.6 不只有 Vapor Mode，還引入了 **alien-signals** 作爲新的響應式底層實現。這原本是 Vapor Mode 的配套信號庫，但 Vue 團隊把它抽成了獨立包，傳統組件也能受益。</p><h3>#### 3.1 从 Proxy 到 Signal 的迁移</h3><p>傳統 Vue 3 的 <code>ref()</code> 基於 Proxy 攔截對象訪問，這在深層嵌套對象上有性能開銷。alien-signals 採用 Solid.js 風格的顯式信號：</p><pre><code>import { signal, computed, effect } from &#x27;vue/alien-signals&#x27;
+// 定义信号
+const power = signal(0)
+const voltage = signal(220)
+// 计算派生值 —— 只在依赖变化时重新计算
+const current = computed(() =&gt; power.value / voltage.value)
+// 副作用 —— 精确追踪依赖
+ effect(() =&gt; {
+  console.log(`当前电流: ${current.value}A`)
+})
+// 更新数据 —— 只触发 current 的重新计算，无关的 effect 不执行
+power.value = 5000</code></pre><p>在儲能大屏裏，我把設備狀態管理從 <code>reactive()</code> 遷移到了 alien-signals：</p><pre><code>// store/deviceStore.ts
+import { signal, computed } from &#x27;vue/alien-signals&#x27;
+import type { DeviceStatus } from &#x27;@/types&#x27;
+const devices = signal&lt;DeviceStatus[]&gt;([])
+// 派生：在线设备数量 —— 只依赖 devices.length，不依赖具体设备属性
+const onlineCount = computed(() =&gt; 
+  devices.value.filter(d =&gt; d.status === &#x27;online&#x27;).length
+)
+// 派生：总功率 —— 精确依赖 power 字段
+const totalPower = computed(() =&gt; 
+  devices.value.reduce((sum, d) =&gt; sum + (d.power || 0), 0)
+)
+export { devices, onlineCount, totalPower }</code></pre><p>對比傳統 <code>computed()</code> 基於 Proxy 的依賴收集，alien-signals 的依賴在**讀取時顯式建立**，不會因爲「意外訪問某個屬性」而建立虛假依賴。在我們的項目裏，這消除了 3 個導致不必要的重渲染的幽靈依賴。</p><p>#### 3.2 混用策略：不重構，只增量替換</p><p>alien-signals 和 Vue 的 <code>ref/reactive</code> 可以混用。我的策略是：</p><p class='list-item'>- **新模塊直接用 alien-signals**：狀態管理、工具函數</p><p class='list-item'>- **舊組件保持**：除非遇到性能瓶頸，否則不動- `ref/reactive`</p><p class='list-item'>- **边界处用**：Vue 提供了- `toSignal()`桥接- `toSignal()`和- `fromSignal()`做转换</p><pre><code>import { toSignal } from &#x27;vue/alien-signals&#x27;
+import { useRoute } from &#x27;vue-router&#x27;
+// Vue Router 的响应式对象桥接为 signal
+const route = useRoute()
+const stationId = toSignal(() =&gt; route.params.id)
+// 现在 stationId 是 signal，可以在 alien-signals 的 computed 里使用
+const stationData = computed(() =&gt; fetchStation(stationId.value))</code></pre><h3>四、踩坑記錄：真實項目遷移中的 5 個問題</h3><h3>#### 4.1 第三方庫依賴虛擬 DOM 的副作用</h3><p>Vuetify 和 Element Plus 的底層依賴 Vue 的虛擬 DOM 實現（如 <code>renderSlot</code>、<code>createVNode</code> 的私有 API）。Vapor Mode 下這些組件能正常渲染，但**某些動態插槽的更新會失效**。</p><p>解決：把 UI 組件庫頁面保留爲傳統組件（不加 <code>vapor</code> 屬性），業務組件用 Vapor Mode。</p><h3>#### 4.2 &lt;code&gt;v-for&lt;/code&gt; 的 key 策略差异</h3><p>Vapor Mode 的列表 diff 算法和虛擬 DOM 不同。在 <code>v-for</code> 裏用 <code>index</code> 做 <code>key</code> 時，Vapor 模式的列表更新行爲更激進，會導致輸入框失焦。</p><p>解決：始終使用業務唯一標識做 <code>key</code>，這個習慣在 Vapor Mode 下變得強制而非建議。</p><h3>#### 4.3 開發環境 HMR 偶現失效</h3><p>Vite 8 + Vapor Mode 的 HMR 在某些邊界場景（如同時修改 <code><script></code> 和 <code><template></code>）會觸發全量刷新而非熱更新。這是已知問題，Vue 團隊在 3.6.2 補丁裏已修復，升級到 <code>vue@3.6.2</code> 即可。</p><h3>#### 4.4 自定義指令的生命週期</h3><p>Vapor Mode 不支持 <code>Vue.directive()</code> 的 <code>inserted</code> 钩子（因为不存在「插入到虚拟 DOM 再 patch 到真实 DOM」的过程）。只支持 <code>mounted</code> 和 <code>updated</code>。</p><p>解決：檢查項目裏的自定義指令，把 <code>inserted</code> 改爲 <code>mounted</code>。</p><h3>#### 4.5 性能監控數據的誤讀</h3><p>Vue DevTools 的「組件渲染時間」在 Vapor Mode 下統計的是**組件初始化時間**，而不是「響應式更新耗時」。因爲 Vapor 組件沒有傳統意義上的「重新渲染」，狀態更新只觸發細粒度 DOM 操作。</p><p>如果要監控性能，需要用 Performance API 直接打點：</p><pre><code>import { effect } from &#x27;vue/alien-signals&#x27;
+const data = signal([])
+effect(() =&gt; {
+  const start = performance.now()
+  updateChart(data.value)
+  console.log(`Chart update: ${performance.now() - start}ms`)
+})</code></pre><h3>五、總結：什麼時候該上 Vapor Mode</h3><p>遷移完核心模塊後，我對 Vapor Mode 的適用場景有了更清晰的判斷：</p><p class='list-item'>-</p><p class='list-item'>**高頻數據更新的組件**最適合遷移：實時大屏、股票行情、聊天消息列表。Vapor 的細粒度更新在這些場景收益最大。</p><p class='list-item'>-</p><p class='list-item'>**靜態內容爲主的首頁**收益有限：如果你的頁面以文本和靜態圖片爲主，虛擬 DOM 的 diff 開銷本就不高，遷移的性價比不高。</p><p class='list-item'>-</p><p class='list-item'>**重度使用第三方組件庫的項目需要分階段來**：UI 組件庫往往依賴虛擬 DOM 的私有 API，先把業務組件遷移過去，組件庫等官方升級。</p><p class='list-item'>-</p><p class='list-item'>**alien-signals 可以先用起來**：即使不啓用 Vapor Mode，alien-signals 作爲響應式狀態管理方案也優於`reactive()`，它的依賴追蹤更精確、內存佔用更低。</p><p class='list-item'>-</p><p class='list-item'>**Vue 3.6 不是 Vue 4.0 的預覽版**：Vapor Mode 在 3.6 是「實驗性穩定」，API 已經凍結，可以上生產。但 Vue 4.0 纔會把 Vapor 作爲默認編譯模式。</p><p>我的儲能大屏項目目前 60% 的業務組件已遷移到 Vapor Mode，計劃 Q3 完成全量遷移。如果你也在維護一個數據密集型 Vue 項目，Vue 3.6 值得你花一個週末試一試。</p><h3>掘金文章地址：[待補充]</h3><h3>文中完整示例代碼已整理到 GitHub 倉庫：vue-vapor-migration-demo</h3></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
