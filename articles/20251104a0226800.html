@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>长上下文快2.9倍，解码快6倍：Kimi 用线性注意力实现性能与效率双突破_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>长上下文快2.9倍，解码快6倍：Kimi 用线性注意力实现性能与效率双突破_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20251104A0226800" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20251104A0226800" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p class='list-item'>*專注AIGC領域的專業社區，關注微軟&OpenAI、百度文心一言、訊飛星火等大語言模型（LLM）的發展和*</p><p class='list-item'>*應用*落地，聚焦LLM的市場研究和AIGC開發者生態，歡迎關注！月之暗麪糰隊的模型，首次在公平的全面比較中，讓一種混合線性注意力架構在上下文和強化學習等所有場景下，超越了傳統強大的全注意力（Softmax Attention）機制。</p><p>實現了推理速度和性能雙突破。</p><p>大型語言模型正在從單純的文本生成器，進化爲能夠思考和行動的智能體。</p><p>這個轉變對模型提出了全新的要求。</p><p>它們不再只是處理一段靜態的文本，而是要在長時間的交互中，處理不斷增長的對話軌跡、調用工具的記錄，並在複雜的決策空間裏進行推理。</p><p>這種需求暴露了標準注意力機制的根本缺陷。</p><p>傳統Transformer架構的核心是Softmax注意力，它的表達能力很強，但代價是巨大的計算和內存開銷。</p><p>其時間和空間複雜度都是O(n²)，n是序列長度。這意味着上下文長度翻倍，計算量和內存就要翻四倍。</p><p>這讓處理長文本變得異常昂貴，嚴重製約了模型的吞吐量、上下文窗口的擴展以及實時交互能力。</p><p>一個直接的解決方案是線性注意力。它在2020年被提出，通過數學上的變換，巧妙地將複雜度從O(n²)降低到了O(n)。計算效率問題迎刃而解。</p><p>可惜的是，早期的線性注意力雖然快，但在性能上一直不如Softmax注意力，即便是在處理短序列時也是如此。它的表達能力有限，像一個記憶力不太好的學生，雖然讀書快，但記不住關鍵細節。</p><p>近些年，通過引入門控或衰減機制，以及一種被稱爲delta規則的在線學習方法，線性注意力的性能追了上來，在中等長度的序列上，已經非常接近Softmax注意力。</p><p>但它依然受限於一個根本問題：有限的狀態容量。</p><p>它的記憶機制本質上是一個固定大小的狀態，要把無限長的歷史信息壓縮進去，這在理論上讓精確的長序列建模和上下文檢索變得非常困難。</p><p>而Kimi Linear是一種混合線性注意力架構，其核心是一種名爲（KDA）的全新模塊。它在不犧牲模型質量的前提下，滿足智能體時代對效率和長時程推理的苛刻要求。</p><h3>一種更聰明的記憶機制</h3><p>要理解Kimi Linear的精妙之處，我們需要從注意力的本質說起。</p><p>傳統的Softmax注意力機制，可以把它想象成一個信息檢索過程：查詢（Q）與數據庫中所有的鍵（K）進行匹配，計算出相似度得分，然後用這個得分作爲權重，去加權求和所有的值（V）。因爲每個查詢都要和所有鍵比較，所以計算量是平方級別的。</p><p>線性注意力則走了另一條路：</p><p>它通過一個核函數，避免了Q和K直接相乘。從計算過程看，它更像一個循環神經網絡（RNN），維護一個不斷更新的矩陣狀態S。</p><p>這個狀態S就像一個關聯記憶，存儲着從鍵到值的映射。但這個原始的記憶機制有個大問題：它只會累加，從不遺忘。新的鍵值對會不斷強化，而舊的信息即使不再重要，也依然存在，最終導致記憶混亂，在長上下文中產生嚴重的干擾。</p><p>爲了解決記憶管理問題，被提了出來。它將這個更新過程重新解釋爲一種在線學習，用經典的delta規則來更新記憶狀態S。</p><p>S像一個可學習的記憶，它會根據新的信息不斷地自我修正。這個更新規則在數學上是一個秩1更新，結構優美，並且支持硬件高效的並行計算。</p><p>DeltaNet穩定了學習，但它依然沒有解決遺忘問題，過時的關聯信息會被無限期保留。於是，（GDN）在其基礎上引入了一個簡單的標量遺忘門。</p><p>Kimi Linear的核心創新，Kimi Delta Attention（KDA），則將這種遺忘機制提升到了一個全新的維度：細粒度門控。</p><p>KDA的數學表達如下：</p><p>KDA爲記憶的每個維度都配備了一個獨立的遺忘旋鈕，模型可以根據輸入內容，動態地、精細地決定哪些維度的信息需要被重點保留，哪些可以快速遺忘。</p><p>這種通道級的獨立遺忘率，讓模型能夠更精確地調控其有限的RNN式記憶，極大地釋放了其潛力。</p><p>KDA的另一個關鍵創新在於其硬件高效的並行算法。</p><p>它採用了一種被稱爲Diagonal-Plus-Low-Rank（DPLR）轉換矩陣的特化變體，併爲此設計了定製的分塊並行算法。相比通用的DPLR實現，KDA的計算量大幅減少，同時保持了與經典delta規則的數學一致性。</p><p>KDA的算子效率比通用的DPLR公式高出約100%。</p><p>它通過巧妙的數學約束，減少了分塊計算中的矩陣運算數量，並消除了多個額外的矩陣乘法。</p><p>這解決了先前方法在追求細粒度控制時遇到的數值精度和計算效率瓶頸，使得在半精度下進行大規模矩陣乘法成爲可能，從而實現了極高的硬件利用率。</p><h3>一個精心設計的混合體</h3><p>Kimi Linear的強大並非僅僅來自KDA這一個組件，而是源於一套精心設計的混合架構。</p><p>它的整體骨幹遵循了Moonlight架構，模型由一系列功能塊堆疊而成。</p><p>在token混合層，它並沒有完全拋棄傳統注意力，而是採用了3:1的混合比例，即每3個KDA層之後，會插入1個全注意力層，這裏稱之爲MLA（Multi-head Linear Attention）。</p><p>這種設計兼顧了效率與能力。</p><p>KDA層作爲主力，以其線性複雜度和高效的並行計算能力，處理絕大部分的序列信息，極大地降低了內存佔用和計算成本。</p><p>而少數的全注意力層則像上帝視角，能夠捕捉到KDA這種線性結構可能忽略的、跨越非常長距離的全局依賴關係。實驗證明，3:1是在模型質量和推理吞吐量之間取得最佳平衡的黃金比例。</p><p>更有趣的是，Kimi Linear中的全注意力層被剝奪了一項傳統配置：位置編碼（Position Encoding）。</p><p>Transformer模型本身無法感知序列的順序，需要額外的位置編碼來告訴模型每個token的位置。RoPE（旋轉位置編碼）是目前最主流、最有效的方法。</p><p>在Kimi Linear中，團隊大膽地在全注意力層上應用了（No Position Encoding）設計。這意味着編碼位置信息、建立近期偏見的全部責任，都落在了KDA層身上。</p><p>KDA通過其類似RNN的循環結構和數據依賴的門控機制，天然地就能動態捕捉和編碼位置信息。</p><p>這讓KDA成爲了模型中主要的位置感知算子。這種設計不僅簡化了長上下文訓練（無需再爲RoPE的各種參數調整而煩惱），更重要的是，它促使模型在不同層之間形成了更平衡的位置偏見分佈，從而提高了模型在長距離上的魯棒性和外推能力。</p><p>將不帶位置編碼的全局注意力與專門的位置感知機制（如此處的KDA）相結合，是一種非常有效的策略，能夠產生極具競爭力的長上下文性能。</p><h3>用實驗結果證明一切</h3><p>Kimi Linear在一系列任務上展示了其卓越的能力。</p><p>在考驗長上下文能力的合成任務中，KDA的表現堪稱優異。</p><p>迴文任務要求模型精確地反轉一個隨機序列，這對線性注意力的記憶檢索能力是極大的考驗。</p><p>多查詢關聯回憶（MQAR）任務則評估模型在上下文中檢索多個鍵值對的能力，這與語言建模的性能高度相關。堆棧任務則測試模型跟蹤多個獨立狀態的能力。</p><p>隨着序列長度從256增加到2048，KDA在所有任務中都穩定地達到了最高的準確度。尤其是在迴文和MQAR任務上，KDA的收斂速度遠超其前身GDN。</p><p>這充分證明了細粒度衰減機制的優勢：模型能夠選擇性地遺忘無關信息，從而更精確地保留關鍵記憶。</p><p>在真實的語言模型訓練中，Kimi Linear的擴展定律（）也展現出優越性。擴展定律描述了模型性能如何隨着計算資源、模型大小和數據量的增加而提升。</p><p>在計算最優的訓練設置下，Kimi Linear相比於全注意力的MLA基線，實現了約1.16倍的計算效率提升。這意味着要達到相同的模型性能，Kimi Linear所需的計算資源更少。</p><p>在1.4萬億token的預訓練之後，Kimi Linear與兩個基線模型——全注意力的MLA和採用GDN的混合模型（GDN-H）——進行了正面交鋒。</p><p>在通用知識、推理（數學與代碼）以及中文任務等多個維度的評測中，Kimi Linear幾乎在所有類別中都勝出。</p><p>無論是在MMLU、GSM8K等知名基準測試，還是在CEval、CMMLU等中文評測上，Kimi Linear都取得了最高分，展示了其作爲全注意力架構有力替代品的強大實力。</p><p>經過監督微調（SFT）後，Kimi Linear的優勢進一步鞏固，在更困難的任務上，如AIME 2025（數學競賽）、LiveCodeBench（代碼生成）等，它都顯著超越了兩個基線模型。</p><p>長上下文性能是Kimi Linear的主場。在128k上下文長度的多個基準測試上，Kimi Linear的表現一騎絕塵。它在和等評測上以顯著優勢獲得最高分，並取得了所有任務的最高平均分（54.5），有力地證明了其在長上下文場景中的領先地位。</p><p>在要求更強推理和規劃能力的強化學習（RL）場景中，Kimi Linear同樣表現出色。</p><p>在數學問題的RL訓練中，Kimi Linear的訓練準確度增長率明顯高於MLA，並且在測試集上實現了更快、更好的性能提升。這經驗性地表明，在需要進行推理密集型長格式生成的RL任務中，Kimi Linear比全注意力模型更具優勢。</p><p>最後，回到最初的目標——效率。</p><p>在處理長序列時，Kimi Linear的預填充（Prefill，對輸入上下文的初次處理）速度遠超MLA。當序列長度達到100萬時，Kimi Linear比MLA快2.9倍。</p><p>在解碼（Decode，逐個生成新token）階段，其優勢更加驚人。對於100萬的上下文長度，Kimi Linear的解碼速度是全注意力的6倍。</p><p>同時，由於3:1的混合架構，其KV緩存（注意力機制中存儲鍵值對的內存）使用量減少了高達75%。這意味着在同樣的硬件上，Kimi Linear能夠處理更長的上下文，或者服務更多的用戶。</p><h3>新範式的意義</h3><p>Kimi Linear的成功，不僅僅是發佈了一個更快更強的模型，它更深遠的意義在於，爲大語言模型架構的設計提供了一種新的範式。</p><p>長期以來，線性注意力一直被視爲一種爲了效率而犧牲性能的妥協方案。</p><p>Kimi Linear通過引入細粒度門控的KDA機制，並結合精心設計的混合架構，打破了性能與效率不可兼得的傳統觀念。</p><p>通過巧妙的設計，線性注意力完全有能力在所有場景中超越全注意力。</p><p>這項工作也爲我們揭示了注意力機制更深層的原理。</p><p>KDA本質上可以被看作一種可學習的、數據依賴的位置編碼。與RoPE那種固定的、基於頻率的編碼方式不同，KDA能夠根據內容動態地調整其位置感，這可能是其在長上下文外推能力上表現出色的原因之一。</p><p>Moonshot AI團隊開源了KDA的內核實現、vLLM集成代碼以及一系列模型檢查點。</p><p>這極大地推動整個AI社區在高效長上下文模型方向上的研究和應用。</p><p>開發者可以基於這些資源，構建自己的長文本應用；研究者則可以站在巨人的肩膀上，探索下一代更強大的模型架構。</p><p>Kimi Linear用精巧的數學和架構設計，讓大模型“喫得少，又跑得快”。</p><p>參考資料：</p><h3>https://huggingface.co/papers/2510.26692</h3><h3>https://arxiv.org/pdf/2510.26692</h3><h3>https://github.com/MoonshotAI/Kimi-Linear</h3><p>https://huggingface.co/moonshotai/Kimi-Linear-48B-A3B-Instruct</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

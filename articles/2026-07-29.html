@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>OpenAI 宣布开源 Codex Security CLI，支持代码扫描、漏洞追踪和自动化安全检查 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>OpenAI 宣布开源 Codex Security CLI，支持代码扫描、漏洞追踪和自动化安全检查</h1>
+<div class="meta"><span class="src">tech.sina.cn</span>
+<span>· <a href="https://tech.sina.cn/2026-07-29/detail-inikmqct5918480.d.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://tech.sina.cn/2026-07-29/detail-inikmqct5918480.d.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>OpenAI 宣佈開源 Codex Security CLI，支持代碼掃描、漏洞追蹤和自動化安全檢查</h3><p>IT之家 7 月 29 日消息，OpenAI 今日宣佈推出開源命令行安全工具 Codex Security CLI，用於幫助開發者掃描代碼倉庫、發現和驗證安全漏洞，並將安全檢查流程集成到持續集成與持續交付（CI / CD）環境中。</p><p>OpenAI 表示，該工具實際上在正式公開前就已被人發現。目前，Codex Security CLI 仍處於早期版本階段，官方表示將根據開發者反饋持續改進工具功能。</p><p>Codex Security CLI 是一款基於命令行界面的安全工具，同時提供 TypeScript SDK 接口。開發者可以使用它掃描代碼倉庫，查看代碼變更，跟蹤不同運行週期中的安全問題，並驗證漏洞修復效果。</p><p>OpenAI 介紹，該工具支持將安全檢查加入 CI / CD 流程，幫助開發團隊在軟件開發過程中自動執行安全檢測。對於持續開發的軟件項目，這類工具可以用於提前發現代碼中的潛在安全風險。</p><p>安裝方面，開發者可以通過 npm 安裝該工具：</p><p>安裝完成後，可使用以下命令查看幫助信息：</p><p>根據官方文檔，Codex Security CLI 運行需要 Node.js 22 或更高版本、Python 3.10 或更高版本，以及具備 Codex Security 訪問權限。</p><p>完成安裝和身份驗證後，開發者可以通過以下命令掃描代碼倉庫：</p><p>在 CI 環境中，開發者無需交互式登錄，可通過設置 OPENAI_API_KEY 環境變量完成身份驗證。工具同時支持 ChatGPT 賬號登錄和 API 密鑰兩種認證方式，用戶可以通過參數指定使用哪一種認證方式。</p><p>此外，OpenAI 還提供了 TypeScript SDK，開發者可以直接在 TypeScript 項目中調用 Codex Security 功能。例如，通過 SDK 運行代碼安全掃描，並獲取掃描報告路徑。</p><p>OpenAI 表示，Codex Security CLI 的掃描歷史會保存在 Codex Security 工作目錄中。如果默認目錄無法寫入，用戶可以通過設置 CODEX_SECURITY_STATE_DIR 變量指定其他可寫目錄。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
