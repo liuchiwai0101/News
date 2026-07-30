@@ -100,12 +100,18 @@
 <script>
 (function(){
   var WORKER='https://news-online-ip.<your-subdomain>.workers.dev';
+  var HERENOW='https://herenow-anhz7w.fly.dev';
+  var page=location.hostname+location.pathname;
   var el=document.getElementById('online-count');
   var badge=document.getElementById('online-badge');
-  function beat(){ try{ fetch(WORKER+'/heartbeat',{method:'POST',cache:'no-store'}); }catch(e){} }
-  function upd(){ fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); }).catch(function(){ if(badge)badge.style.display='none'; }); }
-  beat(); upd(); setInterval(beat,60000); setInterval(upd,30000);
-  window.addEventListener('pagehide',function(){ try{ navigator.sendBeacon(WORKER+'/heartbeat'); }catch(e){} });
+  var usingWorker=false;
+  function hbWorker(){ try{ fetch(WORKER+'/heartbeat',{method:'POST',cache:'no-store'}); }catch(e){} }
+  function hbHerenow(){ try{ fetch(HERENOW+'/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:page})}); }catch(e){} }
+  function updWorker(){ fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); usingWorker=true; }).catch(function(){ updHerenow(); }); }
+  function updHerenow(){ fetch(HERENOW+'/count?page='+encodeURIComponent(page)).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(n<1)n=1; if(el)el.textContent=n; if(badge)badge.style.display='inline-flex'; }).catch(function(){ if(badge)badge.style.display='none'; }); }
+  function beat(){ if(usingWorker){ hbWorker(); } else { hbHerenow(); } }
+  beat(); updWorker(); setInterval(beat,60000); setInterval(updWorker,30000);
+  window.addEventListener('pagehide',function(){ try{ if(usingWorker){ navigator.sendBeacon(WORKER+'/heartbeat'); } else { navigator.sendBeacon(HERENOW+'/ping',new Blob([JSON.stringify({page:page})],{type:'application/json'})); } }catch(e){} });
 })();
 </script>
 </body>
