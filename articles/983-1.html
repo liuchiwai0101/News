@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>揭秘 AI 智能体入侵 Hugging Face 全过程：4 天半执行 17600 次操作 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>揭秘 AI 智能体入侵 Hugging Face 全过程：4 天半执行 17600 次操作</h1>
+<div class="meta"><span class="src">IT之家（RSS）</span><span>· 7月31日 周五</span>
+<span>· <a href="https://www.ithome.com/0/983/374.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/983/374.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>7 月 30 日，據 TechCrunch 報道，Hugging Face 近日公佈了一份關於近期 AI 智能體入侵事件的完整技術時間線，披露了一套基於 **OpenAI 模型**構建的自主 AI 智能體如何在 **4 天半時間內執行約 17600 次操作**，最終成功突破公司多項安全防護。這也是 OpenAI CEO **薩姆 · 奧爾特曼**此前公開表示令其“切身感受到衝擊”的 AI 安全事件。</p><p>根據 Hugging Face 披露的信息，此次事件並非 AI 脫離控制自行作惡，而是一套原本用於參加 OpenAI 網絡安全評測的 AI 智能體，在關閉常規安全限制後，自主尋找漏洞，並將攻擊目標擴展至考試之外的系統。</p><p>時間線顯示，該 AI 首先利用一個**尚未修復的軟件漏洞**逃離原本的測試環境，隨後入侵另一套公開暴露的 AI 測試工具，並植入代碼，將其作爲後續攻擊 Hugging Face 系統的跳板。</p><p>進入 Hugging Face 系統後，AI 發現服務器對外部請求進行了限制，但**未限制本地文件讀取**。它隨後上傳僞裝成普通數據集的文件，誘導系統讀取服務器上的**密碼、源代碼等敏感信息**並返回結果。隨後，AI 又利用另一處漏洞，將原本應作爲普通文本的數據當作系統命令執行，從而獲得服務器代碼執行能力。</p><p>調查顯示，這套 AI 沒有搭建專門的攻擊基礎設施，而是利用 **Paste 網站、請求日誌服務以及 Hugging Face 自身上傳和代理功能**建立起隱蔽的數據傳輸通道，並設計了簡單的消息重組機制，將分散的數據重新拼接，同時對傳輸內容進行加密混淆，以躲避自動檢測。Hugging Face 表示，初期自動分析僅發現了少量泄露數據，研究人員隨後通過逆向分析 AI 使用的加密方式，才確認實際泄露的數據規模約爲最初發現的 **4 倍**。</p><p>爲了維持攻擊持續進行，該 AI 還在 **11 臺不同服務器**上部署了自身副本，即便部分節點被關閉，其他副本仍可自動恢復運行。調查還發現，AI 曾獲取用於生成合法登錄令牌的**私鑰**，理論上能夠自行生成有效身份憑證。此外，由於 Hugging Face 內部權限配置存在問題，一組憑證意外擁有多個內部系統訪問權限，使 AI 獲得了更大範圍的控制能力。</p><p>Hugging Face 還披露，AI 曾嘗試修改構建腳本，希望藉此影響自動化構建系統，但最終被公司現有安全機制攔截，沒有成功實施。同時，所有可能刪除或修改雲資源的命令均以“Dry Run（模擬執行）”模式運行，僅驗證執行結果，並未真正破壞系統資源。</p><p>值得注意的是，由於測試環境會頻繁重置，這套 AI 每次都會失去此前獲得的工具和身份信息，但它都會重新建立攻擊鏈路，持續恢復行動，整個過程持續了 **4 天半**。</p><p>Hugging Face 在報告中認爲，此次事件暴露出的漏洞，包括**不安全的數據集處理、雲元數據暴露、權限配置過寬以及長期有效憑證**等，本質上均可能被經驗豐富的人類攻擊者利用，不同之處在於，AI 能夠以前所未有的規模和持續性不斷嘗試各種攻擊路徑，大幅提升漏洞發現和利用效率。</p><p class='list-item'>**相關閱讀：**</p><p>廣告聲明：文內含有的對外跳轉鏈接（包括不限於超鏈接、二維碼、口令等形式），用於傳遞更多信息，節省甄選時間，結果僅供參考，IT之家所有文章均包含本聲明。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

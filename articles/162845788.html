@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Prompt 工程实验笔记：10 轮迭代让模型输出合格率从 61% 到 94% · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Prompt 工程实验笔记：10 轮迭代让模型输出合格率从 61% 到 94%</h1>
+<div class="meta"><span class="src">blog.csdn.net</span>
+<span>· <a href="https://blog.csdn.net/qimo_ai/article/details/162845788" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/qimo_ai/article/details/162845788" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>我們產品裏有一個"結構化信息提取"模塊：用戶上傳一段非結構化文本（合同片段、招聘需求、商品描述等），模型需要提取出指定字段並以 JSON 返回。聽起來簡單，但實際跑起來合格率只有 61%——格式錯誤、字段遺漏、類型混亂，各種問題。</p><p>排查後發現不是模型能力問題，是 Prompt 設計問題。接下來兩週我做了 10 輪迭代實驗，把合格率拉到 94%。這篇文章是實驗過程的完整記錄，包括每一輪的假設、改法、數據和反思。</p><h3>實驗設置</h3><p class='list-item'>**任務**：從非結構化文本中提取結構化字段，返回嚴格 JSON。</p><p class='list-item'>**評測集**：500 條標註數據，覆蓋合同、招聘、商品三個場景。合格標準 = JSON 可解析 + 所有必填字段存在 + 字段類型正確 + 值與標註一致。</p><p class='list-item'>**模型**：主力用 GPT-5.6 Terra（均衡型，速度和效果折中），關鍵場景對比 Claude Fable 5 和 GPT-5.6 Sol。通過魔芋AI（moyu.info）調用，它同時支持 GPT 和 Claude 全系，換模型只改一個參數，省得維護多套 SDK。</p><p class='list-item'>**控制變量**：每輪只改 Prompt 的一處，其他不變，跑完 500 條再統計。</p><h3>實驗 1：基線確認</h3><p class='list-item'>**Prompt v0**（最初版本）：</p><pre><code>請從以下文本中提取信息，返回JSON格式。
+文本：{input}</code></pre><p class='list-item'>**結果**：合格率 61.2%</p><p class='list-item'>**錯誤分佈**：</p><p>最大問題不是模型能力，而是 Prompt 根本沒告訴模型"要什麼字段、什麼類型、什麼格式"。</p><h3>實驗 2：明確字段 schema</h3><p class='list-item'>**假設**：模型不知道要提取哪些字段，所以亂編。</p><p class='list-item'>**改動**：在 Prompt 中明確列出字段名和類型。</p><pre><code>請從以下文本中提取信息，返回JSON格式。
+需要提取的字段：
+- title: 字符串，標題
+- amount: 數字，金額
+- party_a: 字符串，甲方名稱
+- party_b: 字符串，乙方名稱
+- date: 字符串，日期，格式YYYY-MM-DD
+文本：{input}</code></pre><p class='list-item'>**结果**：合格率 71.4%（+10.2%）</p><p class='list-item'>**反思**：明確 schema 後字段遺漏大幅減少，但 JSON 不可解析仍然是最大問題——模型經常在 JSON 前後加解釋性文字，如"好的，結果如下："。</p><h3>實驗 3：強制純 JSON 輸出</h3><p class='list-item'>**假設**：模型在 JSON 外加廢話導致解析失敗。</p><p class='list-item'>**改動**：加兩條硬約束。</p><pre><code>請從以下文本中提取信息，返回JSON格式。
+需要提取的字段：
+- title: 字符串，標題
+- amount: 數字，金額
+- party_a: 字符串，甲方名稱
+- party_b: 字符串，乙方名稱
+- date: 字符串，日期，格式YYYY-MM-DD
+要求：
+1. 只輸出JSON，不要任何解釋、前綴或後綴
+2. 不要用markdown代碼塊包裹
+文本：{input}</code></pre><p class='list-item'>**结果**：合格率 78.6%（+7.2%）</p><p class='list-item'>**反思**：JSON 不可解析從 28% 降到 9%。"只輸出JSON"這句話效果顯著。但剩下的 9% 仍是因爲模型偶爾不聽話——尤其是 Claude 系列傾向於在輸出前後加 `json` 標記。</p><h3>实验 4：引入 response_format 参数</h3><p class='list-item'>**假設**：光靠 Prompt 約束不夠，用 API 層面的格式強制。</p><p class='list-item'>**改動**：調用時加 `response_format={"type": "json_object"}`，讓模型在解碼層面就保證輸出合法 JSON。</p><pre><code>import httpx
+async def extract_fields(text: str) -&gt; dict:
+    &quot;&quot;&quot;结构化信息提取&quot;&quot;&quot;
+    prompt = PROMPT_TEMPLATE.format(input=text)
+    
+    resp = await client.post(
+        &quot;https://moyu.info/v1/chat/completions&quot;,
+        headers={&quot;Authorization&quot;: f&quot;Bearer {api_key}&quot;},
+        json={
+            &quot;model&quot;: &quot;gpt-5.6-terra&quot;,
+            &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+            &quot;response_format&quot;: {&quot;type&quot;: &quot;json_object&quot;},  # 强制JSON
+            &quot;temperature&quot;: 0,
+        },
+    )
+    return resp.json()[&quot;choices&quot;][0][&quot;message&quot;][&quot;content&quot;]</code></pre><p class='list-item'>**结果**：合格率 83.1%（+4.5%）</p><p class='list-item'>**反思**：JSON 不可解析降到 0%。API 層的格式強制比 Prompt 約束可靠得多。但要注意：`response_format` 不是所有模型都支持，Claude 系列就不支持這個參數，需要走 Prompt 約束 + 後處理清洗的路線。</p><h3>實驗 5：加 few-shot 示例</h3><p class='list-item'>**假設**：模型對"值提取"的理解有偏差，給例子比給規則有效。</p><p class='list-item'>**改動**：在 Prompt 中加 2 個輸入-輸出示例。</p><pre><code>請從以下文本中提取信息，返回JSON格式。
+需要提取的字段：
+- title: 字符串，標題
+- amount: 數字，金額
+- party_a: 字符串，甲方名稱
+- party_b: 字符串，乙方名稱
+- date: 字符串，日期，格式YYYY-MM-DD
+要求：
+1. 只輸出JSON，不要任何解釋
+2. 不要用markdown代碼塊包裹
+示例1：
+輸入：2024年3月15日，北京科技公司（甲方）與上海貿易公司（乙方）簽訂採購合同，金額爲58000元。
+輸出：{&quot;title&quot;:&quot;採購合同&quot;,&quot;amount&quot;:58000,&quot;party_a&quot;:&quot;北京科技公司&quot;,&quot;party_b&quot;:&quot;上海貿易公司&quot;,&quot;date&quot;:&quot;2024-03-15&quot;}
+示例2：
+輸入：甲方：張三，乙方：李四，於2024年1月8日簽訂房屋租賃合同，月租金3500元。
+輸出：{&quot;title&quot;:&quot;房屋租賃合同&quot;,&quot;amount&quot;:3500,&quot;party_a&quot;:&quot;張三&quot;,&quot;party_b&quot;:&quot;李四&quot;,&quot;date&quot;:&quot;2024-01-08&quot;}
+文本：{input}</code></pre><p class='list-item'>**结果**：合格率 87.3%（+4.2%）</p><p class='list-item'>**反思**：值提取錯誤明顯減少。few-shot 的作用不是"教模型什麼是 JSON"，而是"對齊提取粒度"——比如"金額"應該提取數字部分還是帶單位，看了示例就明白了。</p><h3>實驗 6：字段說明細化 + 約束邊界</h3><p class='list-item'>**假設**：部分字段類型錯誤是因爲描述太模糊。</p><p class='list-item'>**改動**：每個字段加更詳細的約束說明。</p><pre><code>需要提取的字段：
+- title: 字符串，合同/文件的標題或類型名稱，如&quot;採購合同&quot;&quot;租賃合同&quot;
+- amount: 數字，金額數值，只保留數字不要單位（58000元→58000）
+- party_a: 字符串，甲方全稱，如文本中無甲方則填null
+- party_b: 字符串，乙方全稱，如文本中無乙方則填null
+- date: 字符串，日期，格式YYYY-MM-DD，如&quot;2024年3月15日&quot;→&quot;2024-03-15&quot;
+        如文本中無日期則填null</code></pre><p class='list-item'>**结果**：合格率 89.0%（+1.7%）</p><p class='list-item'>**反思**：提升幅度變小了，說明 Prompt 文本層面的優化接近天花板。但"只保留數字不要單位"這條消除了 amount 字段大量的類型錯誤。</p><h3>实验 7：temperature 降到 0 + 固定 seed</h3><p class='list-item'>**假設**：隨機性導致同一輸入不同輸出，影響穩定性。</p><p class='list-item'>**改動**：</p><pre><code>json={
+    &quot;model&quot;: &quot;gpt-5.6-terra&quot;,
+    &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}],
+    &quot;response_format&quot;: {&quot;type&quot;: &quot;json_object&quot;},
+    &quot;temperature&quot;: 0,       # 确定性输出
+    &quot;seed&quot;: 42,             # 固定随机种子
+}</code></pre><p class='list-item'>**结果**：合格率 89.4%（+0.4%）</p><p class='list-item'>**反思**：合格率幾乎沒變，但穩定性大幅提升——同一輸入連續跑 10 次，結果完全一致。對線上服務來說這比合格率更重要，因爲可復現才能排查問題。</p><p>注意 <code>seed</code> 參數不是所有中轉站都透傳，我們用的魔芋AI官網是支持的，之前試的另一家不支持，調了半天發現 seed 沒生效。</p><h3>實驗 8：模型對比測試</h3><p class='list-item'>**假設**：GPT-5.6 Terra 可能不是這個任務的最優模型。</p><p class='list-item'>**改動**：同一 Prompt 在三個模型上跑完整 500 條評測集。</p><p class='list-item'>**結果**：Claude Fable 5 合格率最高，但延遲和成本也最高。GPT-5.6 Sol 居中。</p><p class='list-item'>**決策**：高價值場景（合同提取）用 Claude Fable 5，普通場景（商品描述）用 GPT-5.6 Terra，按任務類型分流。這個結論直接推動了我們後面做多模型路由——不同任務用不同模型，成本和效果兼得。</p><h3>實驗 9：添加錯誤處理指令</h3><p class='list-item'>**假設**：模型遇到信息缺失時行爲不確定，導致類型錯誤。</p><p class='list-item'>**改動**：明確告訴模型遇到缺失字段怎麼處理。</p><pre><code>特殊情況處理：
+1. 如某字段在文本中找不到，該字段值填null，不要編造
+2. 如日期格式不完整（如只有&quot;2024年3月&quot;），date填&quot;2024-03-01&quot;，取該月第一天
+3. 如金額有多種表述（如&quot;約5萬&quot;），amount取最接近的整數（50000）
+4. 如甲方或乙方有多個，只取第一個</code></pre><p class='list-item'>**结果**：合格率 92.7%（+3.3%）</p><p class='list-item'>**反思**：這輪提升超出預期。之前很多"類型錯誤"本質是模型遇到邊界情況時的行爲不確定——它不知道該怎麼辦就隨便編一個。明確邊界行爲後，錯誤率大幅下降。</p><h3>實驗 10：自驗證機制</h3><p class='list-item'>**假設**：模型輸出後不檢查，錯誤直接流出。</p><p class='list-item'>**改動**：在 Prompt 末尾加一句自驗證指令。</p><pre><code>輸出前請自行檢查：
+1. 所有必填字段是否都存在
+2. amount是否爲純數字
+3. date是否爲YYYY-MM-DD格式
+4. party_a和party_b是否爲字符串或null
+如不符合，請修正後再輸出。</code></pre><p>同時代碼層面加一道後校驗：</p><pre><code>import json
+from datetime import datetime
+REQUIRED_FIELDS = [&quot;title&quot;, &quot;amount&quot;, &quot;party_a&quot;, &quot;party_b&quot;, &quot;date&quot;]
+def validate_extraction(result: str) -&gt; tuple[bool, str]:
+    &quot;&quot;&quot;提取结果后校验&quot;&quot;&quot;
+    try:
+        data = json.loads(result)
+    except json.JSONDecodeError:
+        return False, &quot;JSON解析失败&quot;
+    
+    # 必填字段检查
+    for field in REQUIRED_FIELDS:
+        if field not in data:
+            return False, f&quot;缺失字段: {field}&quot;
+    
+    # 类型检查
+    if not isinstance(data[&quot;amount&quot;], (int, float)):
+        return False, &quot;amount不是数字&quot;
+    
+    # 日期格式检查
+    if data[&quot;date&quot;] is not None:
+        try:
+            datetime.strptime(data[&quot;date&quot;], &quot;%Y-%m-%d&quot;)
+        except ValueError:
+            return False, &quot;date格式错误&quot;
+    
+    return True, &quot;ok&quot;
+async def extract_with_retry(text: str, max_retries: int = 2) -&gt; dict:
+    &quot;&quot;&quot;提取+校验+重试&quot;&quot;&quot;
+    for attempt in range(max_retries + 1):
+        raw = await extract_fields(text)
+        valid, msg = validate_extraction(raw)
+        if valid:
+            return json.loads(raw)
+        if attempt &lt; max_retries:
+            # 校验失败，把错误信息拼进Prompt重试
+            retry_prompt = f&quot;{PROMPT_TEMPLATE}\n\n上次输出有误：{msg}，请修正。&quot;
+            # ... 重新调用
+    raise ValueError(f&quot;提取失败，最后错误: {msg}&quot;)</code></pre><p class='list-item'>**结果**：合格率 94.1%（+1.4%）</p><p class='list-item'>**反思**：Prompt 內的自驗證 + 代碼層後校驗 + 自動重試，三道防線把最後一點不合格率壓下去了。其中自動重試只觸發在約 5% 的請求上，對整體延遲影響可忽略。</p><h3>彙總：10 輪迭代數據</h3><h3>經驗總結</h3><p class='list-item'>**1. 先看錯誤分佈，再定優化方向。** 不要盲目改 Prompt，先把 500 條跑一遍，統計錯誤類型佔比。我們的前 3 輪改的都是"JSON 不可解析"，因爲它佔比最大。等它降到 0 再攻下一個。</p><p class='list-item'>**2. API 參數比 Prompt 文字有效。** `response_format` 比寫 10 遍"只輸出JSON"都管用。能用 API 層面解決的別靠 Prompt。</p><p class='list-item'>**3. few-shot 對齊的是粒度不是格式。** 給示例不是教模型寫 JSON，而是告訴它"金額取數字還是帶單位""日期怎麼格式化"這種提取粒度問題。</p><p class='list-item'>**4. 邊界行爲要顯式聲明。** 模型遇到信息缺失時的默認行爲不可預測，必須在 Prompt 裏寫清楚"找不到填null"。這單獨一步漲了 3.3%。</p><p class='list-item'>**5. 不要只靠模型，加代碼校驗。** Prompt 內自驗證 + 代碼層後校驗 + 自動重試，三道防線缺一不可。模型永遠有翻車的時候，代碼兜底是最後一道保險。</p><p class='list-item'>**6. 模型選型要分場景。** 我們的最終方案是高價值任務用 Claude Fable 5，普通任務用 GPT-5.6 Terra，通過魔芋AI統一調用。選 Terra 而不是 Sol 是因爲信息提取不需要旗艦級推理能力，Terra 的均衡性正好匹配，成本只有 Sol 的三分之一。如果預算敏感，還可以把低優先級任務切到 DeepSeek V4-Flash，合格率會降幾個點但成本降一個數量級。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
