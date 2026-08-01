@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Cursor 如何为云智能体构建开发环境 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Cursor 如何为云智能体构建开发环境</h1>
+<div class="meta"><span class="src">Cursor Blog</span><span>· 7月31日 周五</span>
+<span>· <a href="https://cursor.com/blog/cloud-agent-environment" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://cursor.com/blog/cloud-agent-environment" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>當我們決定為雲端代理提供電腦，讓它們能測試自己做出的變更時，第一步是確保它們能在我們的程式碼庫中妥善測試這些變更。</p><p>讓 monorepo 能在雲端代理上運作，使我們瞭解到開發環境本身就是一項產品，只是它的使用者是代理。你必須讓雲端環境與本機開發環境一致，讓儲存庫清楚到代理即使不瞭解團隊慣例，也能執行及測試程式碼，並隨著程式碼庫變更持續維持環境的健康狀態。</p><p>打造這個環境改變了我們的工作方式。去年 12 月，雲端代理撰寫了合併至 Cursor monorepo 的 PR (拉取請求) 中約十分之一。如今，它們撰寫的 PR 已超過一半。</p><p>要讓雲端代理在我們的儲存庫中順利運作，第一步是讓儲存庫能在雲端 VM 中順利運作。任何第一次設定遠端開發環境的工程師，對這個階段都不陌生。</p><p>大多數 Cursor 開發人員都在 Mac 上進行本機開發，但我們的雲端 VM 運行 Linux。因此，我們必須讓各種開發工具和設定指令碼能在 Ubuntu VM 上運作。我們將關鍵的開發相依套件加入 Cursor 定義的 Dockerfile，作為雲端代理的基礎映像。</p><p>我們也與安全團隊合作，為雲端代理產品加入安全功能，讓使用者能放心地將必要的密鑰注入代理的環境。這些功能包括網路出站限制、具範圍限制並透過 Proxy 的 Git 遠端存取、提交和提交訊息中的密鑰掃描，以及工具結果中的密鑰遮蔽，即使代理嘗試讀取，也無法取得密鑰值。</p><p>即使我們已讓 Ubuntu VM 上的開發環境正常運作，代理仍不擅長執行我們的程式碼。這並不令人意外，因為我們的開發者體驗相當混亂，需要學習並記住許多建置指令、建置旗標和公用指令碼。</p><p>我們為系統許多部分的建置與執行方式撰寫了技能，但幫助有限。技能可以記錄正確的指令，但這些指令本身仍很複雜，而且處處容易踩雷。</p><p>為了降低這種複雜性，我們打造了一個名為 anydev 的 CLI，代理可用它啟動所有服務。我們也透過 anydev 執行常用的公用指令碼，並提供多個 <code>--help</code> 選單，說明如何使用各個子指令。anydev 還具備監督行程，可監控並重新啟動長時間執行的建置指令，讓模型完全不必承擔這項責任。</p><p>anydev 讓開發體驗變得足夠簡單，使代理能可靠地執行程式碼。技能有助於記錄使用方式，但更大的改變是，代理不再需要周旋於冷門的多步驟建置指令、避開隱藏陷阱，或照看長時間執行的行程。</p><p>正是在這個時候，每個都擁有自己電腦的雲端代理，開始展現出遠勝本機代理的真正價值。透過電腦使用、recordScreen 工具和可正常運作的開發環境，代理現在能端對端測試變更，並向使用者證明其成果的正確性。</p><p>當有人修正錯誤回報時，他們也能在 Slack 分享代理錄製的示範；或是在建立變更時，附在 PR (拉取請求) 中分享。對於許多工作，工程師現在可以放心合併並部署雲端代理產生的程式碼，完全不必在本機簽出分支。</p><p>代理周遭的環境持續變動，因此要維持其正常運作，就必須持續更新其執行方式與可存取的資源。</p><p>為了在不健康的環境發生故障時進行診斷與復原，我們打造了 Cursor Cloud MCP。我們選擇 MCP，是因為它提供可動態探索的工具，且可在無須重建代理迴圈的情況下變更其介面。雲端代理會用它檢查自身環境中的設定失敗、出站政策、已變更的密鑰等狀況。這讓它們能在問題發生時診斷並修正問題，更快復原不健康的環境。</p><p>導入 Cursor Cloud MCP 後，我們設定了一項名為 Cloud Doctor 的 自動化功能，會定期檢查故障、判斷哪些錯誤可能是暫時性的、哪些值得關注、進行根本原因分析，並能在高度確信時建立 PR (拉取請求) 來修正問題。</p><p>即使環境運作正常，代理有時仍會繞遠路或採取不必要的複雜步驟來驗證變更。它們可能使用錯誤的技能、在 VM 中遇到可避免的問題，或遵循比必要時間更長的工作流程。</p><p>我們在這裡也會使用 Cursor Cloud MCP。Cloud Doctor 代理會檢視追蹤資料，找出其他代理在哪個環節出錯、哪些技能或指令容易造成誤導，以及哪些工作流程一貫偏慢。根據這些發現，Cloud Doctor 會修正技能、簡化路徑，或調整環境，讓下一個代理更容易完成工作。</p><p>這個循環持續改善代理本身的開發人員體驗。當環境運作正常且具備自我修復能力時，代理便能可靠地執行，開發人員也更信賴雲端代理處理重要工作。</p><p>這讓我們得以在內部擴大雲端代理的採用，如今它們已撰寫我們交付程式碼中的大多數。</p><p>雲端代理能否發揮生產力，很大程度取決於環境。若要判斷您的程式碼庫是否已準備就緒，請先回答以下三個問題：</p><p class='list-item'>- 代理是否能存取與開發人員相同的工具和資料？</p><p class='list-item'>- 代理是否能找到記錄開發人員實際工作方式的技能？</p><p class='list-item'>- 代理是否能測試並驗證核心工作流程？</p><p>如果您需要協助讓環境準備就緒，請聯絡我們。</p><p>或者，如要進一步瞭解，請閱讀 Faire 如何透過雲端代理將每週 PR (拉取請求) 吞吐量提升一倍。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

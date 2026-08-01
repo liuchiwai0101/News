@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>谷歌的机器人赌局：不卖本体，只卖大脑 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>谷歌的机器人赌局：不卖本体，只卖大脑</h1>
+<div class="meta"><span class="src">finance.sina.com.cn</span>
+<span>· <a href="https://finance.sina.com.cn/cj/2026-07-31/doc-iniksait1449974.shtml?finpagefr=p_104_js" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://finance.sina.com.cn/cj/2026-07-31/doc-iniksait1449974.shtml?finpagefr=p_104_js" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>來源：鈦媒體</h3><h3>當所有人都以爲人形機器人</h3><p>當地時間7 月 30 日，Google DeepMind 發佈了 Gemini Robotics 2系列模型，這套東西試圖定義整個機器人行業的操作系統。谷歌 DeepMind 機器人高級總監Carolina Parada，在官方博客裏寫下了第一句話：</p><p>“從腳到指尖——我們正在教機器人智能地控制全身、精細靈巧操作，以及團隊協作。”</p><p>同一時間，谷歌在社交平臺 X 上的官方賬號拋出了更直白的九個字：“一個大腦。適用於任何機器人。”</p><p>造機器人的宣言和造“機器人之腦”的宣言，是兩回事。想象一個場景，特斯拉在弗裏蒙特工廠裏讓 Optimus 練習跑步，Figure AI 的 BotQ 工廠正以每小時一臺的速度下線 Figure 03……谷歌站在旁邊掏出了三個模型問了一句：你們的機器人，要不要試試我的系統？</p><h3>谷歌的“機器人之腦”</h3><p>Gemini Robotics 2 其實不止一個模型，是三個。</p><p>第一個，Gemini Robotics 2，視覺-語言-動作模型，把視覺和語言輸入直接轉成電機指令。從腳到指尖，完整控制一臺人形機器人的每一個關節。以前谷歌的模型只能控上半身在桌面上幹活，現在能讓人形機器人走路、下蹲、伸展、抓取，完成“把水壺放進底層櫃子的綠色收納箱”這種需要先走過去、再彎腰、再精確放置的完整任務。</p><p>第二個，Gemini Robotics ER 2，具身推理模型。它不直接控電機，而是充當機器人的“高級大腦”，負責看視頻、理解環境、規劃多步任務，然後把執行指令交給底層的 VLA 模型。它能調用工具，包括 Google 搜索和用戶自定義的函數，能同時“思考下一步”和“執行當前動作”。此外，它首次引入了多機器人協作——不同類型的機器人可以實時溝通、分工配合，完成單個機器人做不了的活。</p><p>第三個，Gemini Robotics On-Device 2，在機器人本地運行的輕量 VLA。給它幾小時的數據，就能適配一個全新的機器人本體。</p><p>三個模型，三種分工。</p><p>動作、規劃、部署各司其職，這個架構本身就是谷歌的競爭宣言。</p><p>回看整個人形機器人賽道，幾乎所有玩家都在走同一條路：垂直整合。</p><p>Figure AI 是最極端的代表。2024 年發佈 Figure 02 時還掛着 OpenAI 的模型，2025 年 2 月直接宣佈分手，轉向自研 Helix VLA 模型。Figure 03 在 2025 年 10 月亮相，用的是 Helix 的升級版。他們要什麼有什麼，自己的模型、自己的手、自己的執行器、自己的 BotQ 工廠，2025 年 9 月融了超過 10 億美元，估值衝到 390 億美元。</p><p>到 2026 年 4 月，BotQ 生產了超過 350 臺 Figure 03，從每天 1 臺加速到每小時 1 臺，良率超過 80%。到 2026 年 7 月，Figure 已宣佈第 1,000 臺 Figure 03 下線。</p><p>創始人 Brett Adcock 的目標是四年內交付 10 萬臺。</p><p>Tesla Optimus 走的是另一條垂直整合的路。用 Tesla 自研的視覺 AI 系統，自研執行器，在自己的超級工廠裏先用起來。2025 年底 Optimus 2.5 在弗裏蒙特工廠跑了起來，有 22 個自由度的五指靈巧手。</p><p>馬斯克曾計劃三代 Optimus 在 2026 年 Q1 亮相，但實際在 4 月 23 日財報電話會上才正式宣佈通過量產節點。公共銷售預計在 2027 年啓動。到 2026 年中，特斯拉制定的全年生產目標爲 5 萬臺 Optimus，但實際量產在 2026 年下半年纔開始啓動，截至年中尚未大規模交付。Q2 交付報告裏沒有出現過 Optimus 的獨立數據。</p><p>NVIDIA 則在 2025 年 3 月發佈了 Isaac GR00T N1，號稱“首個開放式人形機器人基礎模型”，採用快慢雙系統架構，用合成數據加模擬訓練。它開源，但它的商業模式跟機器人本身沒什麼關係。它賣的是訓練這些模型所需的 GPU 集羣。</p><p>現在，谷歌加入了，帶着完全不同的邏輯。</p><p>全棧還是平臺？</p><p>谷歌不擁有自己的機器人產線，也不銷售機器人硬件。</p><p>它和 Apptronik 合作讓 Apollo 2 做人形機器人本體，和波士頓動力合作讓 Atlas 做人形機器人的“運動員”，然後自己專心做“大腦”。三種模型覆蓋三種能力，VLA 管動作執行，ER 管推理規劃，On-Device 管本地部署。而且，一個 VLA 模型就可以直接控三種不同的機器人形態——Apollo 2 配 SharpaWave 手、Apollo 2 配 Inspire 手、Franka Duo 配 Robotiq 夾爪——用同一個模型參數就能完成全身操控、多指靈巧操作和夾爪操作三大類任務。</p><p>這纔是關鍵。谷歌的路線是，模型做一次，適配所有機器人。Figure AI 和 Tesla 則傾向於每個機器人從頭做一套。</p><p>更鋒利的刀藏在 ER 2 的開放策略裏。VLA 和 On-Device 只對早期合作伙伴開放，但 ER 2 直接上了 Gemini API 和 Google AI Studio。任何開發者現在就可以接入，用這個模型爲自己的機器人寫推理和規劃層。甚至不需要自己的 VLA，可以人手遙控，讓 ER 2 做決策，然後把指令發給人類操作者。</p><p>谷歌正在把機器人行業最關鍵的一層，理解和推理物理世界的能力，變成 API 調用的商品。如果這個策略跑通，Figure AI 費盡心血自研的 Helix 推理層，突然就要面對一個很直接的問題：憑什麼比谷歌的 API 更好？憑什麼更便宜？</p><p>Gemini Robotics 2 目前展示的能力距離“替代人工”還有明顯差距。谷歌自己在博客裏坦誠，在多指靈巧操作上，成功率仍然明顯低於全身控制和夾爪操作任務，機器人的移動速度也“有待提升”。On-Device 2 雖然宣稱幾小時就能適配新身體，但實際適配質量、不同硬件平臺的兼容性邊界，谷歌沒有給出詳細數據。</p><p>更重要的是，谷歌這條路歷史上走過，而且結果參差不齊。</p><p>Android 在手機市場的成功是平臺策略的教科書案例。但當谷歌把類似的思路搬到物聯網、智能家居和可穿戴設備上，Nest 和 Wear OS 用了十幾年也沒有複製出 Android 的統治力。機器人比手機複雜至少一個數量級——物理交互、安全約束、實時性要求、異構硬件的驅動兼容——每一個維度都可能成爲平臺策略的滑鐵盧。</p><p>另一重風險在商業層面。把核心大腦做成開放 API，確實能快速鋪量，但也意味着主動放棄了最厚的利潤層。Figure AI 估值 390 億美元的邏輯，不是因爲它賣了多少臺機器人，而是因爲它同時掌握大腦和身體，有望在未來喫下整條價值鏈。如果機器人行業最終走向垂直整合，就像蘋果在手機行業證明的那樣，谷歌今天的平臺策略，可能是在爲別人做嫁衣。蘋果一度拿走全球手機市場超過 80% 的利潤，靠的就是“不開放”。</p><p>這取決於一個根本問題，人形機器人行業最終會變成“Windows-Intel 時代”還是“蘋果時代”？</p><h3>刀也有鈍的一面</h3><p>如果是硬件標準化、軟件平臺化、各家拼組裝，谷歌這套三模型架構就是天選之子。</p><p>三星、LG、豐田、奔馳，任何一個想做機器人但沒能力自研 AI 的公司，都可以直接接入 Gemini Robotics，把精力放在硬件設計、供應鏈和渠道上。屆時，Figure AI 和 Tesla Optimus 就會像當年的黑莓和諾基亞，以爲自己全棧是壁壘，結果被一個開放系統加一羣硬件廠商圍毆。</p><p>如果是後者，硬件和軟件深度耦合才能產生最優體驗，那 Figure AI 和 Tesla 的垂直整合就是對的。模型再好，如果控制不了執行器的延遲、傳感器的精度、散熱和功耗管理，就不可能給出超越原廠的表現。</p><p>截至 2026 年年中，這個答案還不明朗。但谷歌這場發佈至少暴露了一件事，人形機器人的競爭已經不再是“誰的機器人更厲害”。它變成了“誰有權定義機器人行業的技術棧”。</p><p>Figure 和 Tesla 押的是“硬件+軟件”全棧，做一個偉大的產品，喫掉整個市場。谷歌押的是“模型即平臺”，做一個偉大的大腦，讓所有人替你造本體。NVIDIA 則站在更上游，給所有人賣訓練這些模型所需的計算卡。</p><p>三家巨頭，三層博弈，一張牌桌上只有一件事是一致的，他們都認定人形機器人會是 AI 之後下一個萬億級市場。Fortune Business Insights 的預測是，全球人形機器人市場到 2034 年將達到 1,651 億美元，從 2026 年到 2034 年的年複合增長率約爲 50.6%。2025 年這個數字是 48.9 億美元。也就是說，十年要走完從“玩具”到“基礎設施”的距離。</p><p>在這場牌局裏，谷歌今天打出的三張牌有一個共同的名字，不賣機器人，賣系統。不建工廠，建標準。</p><p>人形機器人行業需要的不是一個“機器人界的蘋果”。它需要的是一個能跑通的“機器人界的安卓”。至於這個安卓最後會不會由谷歌來做，這是另一個問題了。</p><p>但至少今天，谷歌是唯一一個掏出了完整三模型架構，並且敢把推理層直接開放給所有開發者的人。它賭的，就是自己的大腦，能讓所有的機器人都跑起來。</p><p>（本文首發鈦媒體APP，作者 | 硅谷Tech-news，編輯 | 秦聰慧）</p><p>特別聲明：以上內容僅代表作者本人的觀點或立場，不代表新浪財經頭條的觀點或立場。如因作品內容、版權或其他問題需要與新浪財經頭條聯繫的，請於上述內容發佈後的30天內進行。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
