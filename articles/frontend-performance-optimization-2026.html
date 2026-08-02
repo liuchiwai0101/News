@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>2026 前端性能优化全景指南 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>2026 前端性能优化全景指南</h1>
+<div class="meta"><span class="src">momoc.cn</span>
+<span>· <a href="https://www.momoc.cn/posts/frontend-performance-optimization-2026" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.momoc.cn/posts/frontend-performance-optimization-2026" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>2026 前端性能優化全景指南</h3><p>前端性能優化已經不再只是“壓縮一下 JS、合併一下請求”這麼簡單。到了 2026 年，一個真實項目的性能瓶頸往往同時來自 **包體積、首屏關鍵資源、主線程長任務、組件重複渲染、列表數據量、圖片與字體、三方腳本、緩存策略、服務端渲染架構和線上監控體系**。</p><p>如果只做構建壓縮，頁面也許能小一點；但如果沒有控制 LCP、INP、CLS，沒有管理首屏 JS 執行成本，沒有處理複雜頁面的渲染壓力，用戶依然會感覺“白屏久、點不動、滾動卡、頁面跳”。</p><p>本文按照實際項目中的高頻場景整理一套 2026 仍然主流且實用的前端性能優化方法，重點覆蓋：</p><p class='list-item'>- 包體積管理：減少初始 JS、控制依賴、拆包與按需加載</p><p class='list-item'>- 首屏加載：圍繞 LCP、關鍵資源優先級、SSR/SSG、流式渲染和骨架屏優化</p><p class='list-item'>- 交互響應：圍繞 INP、長任務拆分、Web Worker 和組件渲染優化</p><p class='list-item'>- 大數據渲染：虛擬滾動、分頁、增量渲染和 CSS 渲染隔離</p><p class='list-item'>- 資源優化：圖片、字體、CSS、緩存、預加載、預渲染和 bfcache</p><p class='list-item'>- 工程治理：性能預算、CI 檢查、線上 RUM 監控和持續優化機制</p><h3>先明確性能優化目標</h3><p>性能優化最怕一上來就改代碼。成熟的做法應該是先定義指標，再定位瓶頸，最後選擇方案。</p><h3>核心指標</h3><p>2026 年做前端性能優化，建議把 **LCP、INP、CLS** 當作第一優先級。它們更接近用戶真實感知，也更適合和業務頁面質量掛鉤。</p><h3>優化順序</h3><p>一個比較穩妥的順序是：</p><p class='list-item'>- 先看線上數據：哪些頁面慢、哪些設備慢、哪些網絡慢。</p><p class='list-item'>- 再看加載鏈路：HTML、CSS、JS、圖片、字體、接口是不是阻塞首屏。</p><p class='list-item'>- 再看執行成本：JS 解析、執行、組件渲染、長任務是不是卡住主線程。</p><p class='list-item'>- 最後看局部體驗：滾動、輸入、彈窗、表格、列表、圖表是不是有明顯卡頓。</p><p>性能優化不是把所有技巧都堆上去，而是把瓶頸最明顯的那一段鏈路縮短。</p><h3>包體積管理</h3><p>前端項目越做越大，包體積往往是第一個失控點。尤其是後臺系統、低代碼平臺、可視化大屏、編輯器、國際化站點，常常會把 UI 庫、圖表庫、富文本、日期庫、工具庫、SDK 一股腦打進首屏。</p><p>包體積管理的核心目標不是“最終產物越碎越好”，而是 **首屏必須下載和執行的 JS 越少越好**。</p><h3>建立包體積預算</h3><p>建議在項目中明確幾類預算：</p><p>预算不一定一开始就非常严格，但必须可见。比如在 CI 中输出 bundle report，或者用 <code>size-limit</code>、<code>bundlesize</code>、Lighthouse CI、webpack-bundle-analyzer、rollup-plugin-visualizer 之类的工具持续观察变化。</p><h3>做好依賴治理</h3><p class='list-item'>- 這個依賴是不是必須進首屏？</p><p class='list-item'>- 這個依賴是否支持 Tree Shaking？</p><p class='list-item'>- 有沒有更輕量或原生 API 替代？</p><p>常見例子：</p><p class='list-item'>- 日期處理不要因爲一個格式化函數引入完整大庫。</p><p class='list-item'>- 圖標不要整包引入，優先使用按需導入。</p><p class='list-item'>- 工具函數優先使用 ESM 版本，避免引入 CommonJS 導致 Tree Shaking 失效。</p><p class='list-item'>- 後臺管理系統的圖表、富文本、Excel 導出、PDF 預覽等功能應儘量放到異步路由或異步組件中。</p><h3>路由級拆包與功能級拆包</h3><p>現代構建工具通常都支持動態導入：</p><pre><code>const UserSettings = () =&gt; import(&#x27;./pages/UserSettings.vue&#x27;)
+const ChartPanel = () =&gt; import(&#x27;./components/ChartPanel.vue&#x27;)</code></pre><p>拆包時要注意：</p><p class='list-item'>- 首屏路由保留必要代碼，非首屏路由異步加載。</p><p class='list-item'>- 重型組件按交互觸發加載，比如富文本編輯器、圖表、地圖、視頻播放器。</p><p class='list-item'>- 不要爲了拆包而製造過多小 chunk，否則會增加調度和請求成本。</p><p class='list-item'>- 公共 chunk 需要觀察真實複用情況，避免把大量低頻代碼抽到公共包裏。</p><p>Vite 在構建階段會自動處理 CSS Code Splitting、<code>modulepreload</code> 和異步 chunk 的加載優化，但項目仍然需要自己決定哪些功能應該被拆開。</p><h3>避免“假按需”</h3><p>有些項目看起來使用了按需導入，實際仍然把全量樣式或全量運行時代碼打進了包裏。排查時要重點看：</p><p class='list-item'>- UI 組件庫是否配置了按需組件和按需樣式。</p><p class='list-item'>- 圖標庫是否按圖標粒度引入。</p><p class='list-item'>- 國際化語言包是否只加載當前語言。</p><p class='list-item'>- Monaco Editor、ECharts、AntV、Map SDK 是否延迟加载。</p><p class='list-item'>- polyfill 是否只面向目標瀏覽器生成，而不是全量兼容所有舊環境。</p><h3>刪除無效代碼</h3><p>包體積優化裏最容易被忽略的是刪除代碼：</p><p class='list-item'>- 刪除廢棄頁面和廢棄路由。</p><p class='list-item'>- 刪除未使用組件、hooks、utils、mock 數據。</p><p class='list-item'>- 刪除重複封裝的工具函數。</p><p class='list-item'>- 刪除歷史兼容邏輯和已經下線的 AB 實驗分支。</p><p>真實項目裏，刪除無效代碼往往比換壓縮工具更有效。</p><h3>首屏加載優化</h3><p>首屏優化的目標是讓用戶儘快看到“有意義的主內容”，也就是優化 LCP 和白屏時間。</p><h3>識別 LCP 元素</h3><p>先用 Chrome DevTools、Lighthouse 或線上 RUM 數據確認 LCP 元素是什麼。常見 LCP 元素包括：</p><p class='list-item'>- 首页 Banner 图</p><p class='list-item'>- 商品主圖</p><p class='list-item'>- 文章標題或正文首段</p><p class='list-item'>- 看板中的核心卡片</p><p class='list-item'>- 搜索結果或列表第一屏</p><p>不同 LCP 元素對應不同優化策略。如果 LCP 是圖片，就優化圖片發現時機、格式、尺寸和優先級；如果 LCP 是文本，就優化 HTML 輸出、CSS 阻塞和字體加載；如果 LCP 是接口數據渲染結果，就優化接口、SSR、緩存和首屏數據獲取。</p><h3>減少首屏關鍵路徑</h3><p>首屏關鍵路徑可以簡單理解爲：</p><p><code>HTML -> CSS -> JS -> 数据 -> 渲染 -> LCP</code>优化方向包括：</p><p class='list-item'>- HTML 儘早返回，降低 TTFB。</p><p class='list-item'>- 關鍵 CSS 儘早加載，非關鍵 CSS 延後。</p><p class='list-item'>- 首屏 JS 儘量少，避免大包阻塞解析和執行。</p><p class='list-item'>- 首屏接口並行請求，避免串行瀑布流。</p><p class='list-item'>- LCP 圖片在 HTML 中儘早出現，不要等 JS 執行後才插入。</p><p class='list-item'>- 骨架屏只解決等待感，不能代替真實內容加載。</p><h3>提高關鍵資源優先級</h3><p>对于首屏关键图片，可以使用 <code>fetchpriority="high"</code>：</p><pre><code>&lt;img
+  src=&quot;/images/product-cover.avif&quot;
+  width=&quot;1200&quot;
+  height=&quot;675&quot;
+  alt=&quot;商品主图&quot;
+  fetchpriority=&quot;high&quot;
+&gt;</code></pre><p>如果 LCP 圖片不是直接出現在初始 HTML 中，例如 CSS 背景圖或客戶端渲染後纔出現的圖片，可以考慮預加載：</p><pre><code>&lt;link
+  rel=&quot;preload&quot;
+  as=&quot;image&quot;
+  href=&quot;/images/hero.avif&quot;
+  fetchpriority=&quot;high&quot;
+&gt;</code></pre><p>響應式圖片也可以結合 <code>imagesrcset</code>：</p><pre><code>&lt;link
+  rel=&quot;preload&quot;
+  as=&quot;image&quot;
+  imagesrcset=&quot;/hero-640.avif 640w, /hero-1280.avif 1280w&quot;
+  imagesizes=&quot;100vw&quot;
+  href=&quot;/hero-1280.avif&quot;
+  fetchpriority=&quot;high&quot;
+&gt;</code></pre><p>注意：不要給大量資源都設置高優先級。優先級是相對概念，濫用會讓真正關鍵的資源失去優勢。</p><h3>SSR、SSG、ISR 和流式渲染</h3><p>對於首屏依賴內容的頁面，純 CSR 往往會經歷：</p><p><code>下載 JS -> 執行 JS -> 請求接口 -> 渲染內容</code>這會拉長 LCP。可選方案包括：</p><p class='list-item'>- **SSR**：服務端直接輸出首屏 HTML，適合動態內容、SEO 要求高的頁面。</p><p class='list-item'>- **SSG**：構建時生成靜態 HTML，適合博客、文檔、營銷頁。</p><p class='list-item'>- **ISR/增量靜態生成**：靜態頁面按需再生成，適合內容更新頻率中等的站點。</p><p class='list-item'>- **流式渲染**：先返回頁面殼和關鍵內容，再逐步補齊低優先級內容。</p><p class='list-item'>- **React Server Components / Server Actions**：減少客戶端 JS 和數據獲取膠水代碼，適合 React 技術棧中複雜頁面。</p><p>並不是所有頁面都要 SSR。後臺系統、強登錄系統、重交互編輯器可能更適合 CSR + 局部優化；內容型頁面、商品詳情、落地頁則更適合 SSR/SSG。</p><h3>首屏數據請求優化</h3><p>首屏慢經常不是靜態資源慢，而是接口慢。優化方式包括：</p><p class='list-item'>- 合併首屏必要接口，減少串行等待。</p><p class='list-item'>- 接口並行化，避免 A 請求完成後才發 B。</p><p class='list-item'>- 服務端聚合數據，減少瀏覽器端編排成本。</p><p class='list-item'>- 首屏只返回必要字段，詳情字段延後加載。</p><p class='list-item'>- CDN、邊緣緩存或服務端緩存高頻數據。</p><p class='list-item'>- 對低頻變化數據使用 stale-while-revalidate 思路，先展示緩存再後臺更新。</p><h3>骨架屏和漸進展示</h3><p>骨架屏適合緩解等待感，但要避免兩個問題：</p><p class='list-item'>- 骨架屏結構和真實內容差異太大，導致 CLS。</p><p class='list-item'>- 骨架屏展示很快，但真實內容很久纔出現，掩蓋不了性能問題。</p><p>更好的方式是漸進展示：</p><p class='list-item'>- 首屏核心信息優先展示。</p><p class='list-item'>- 次要模塊延後加載。</p><p class='list-item'>- 非首屏內容進入視口附近再加載。</p><p class='list-item'>- 圖表、推薦、評論、廣告等低優先級模塊不阻塞主體內容。</p><h3>INP 與交互響應優化</h3><p>INP 關注的是用戶交互之後，頁面多久能完成下一次繪製。它比過去的 FID 更嚴格，因爲它觀察整個頁面生命週期中的交互延遲，而不是隻看第一次輸入。</p><p>INP 差通常有幾個原因：</p><p class='list-item'>- 主線程被長任務佔滿。</p><p class='list-item'>- 點擊事件裏做了大量同步計算。</p><p class='list-item'>- 狀態更新觸發了大範圍組件重渲染。</p><p class='list-item'>- DOM 太大，佈局和繪製成本高。</p><p class='list-item'>- 三方腳本搶佔主線程。</p><h3>拆分長任務</h3><p>瀏覽器主線程上超過 50ms 的任務通常會影響響應。常見長任務包括：</p><p class='list-item'>- 大量 JS 初始化</p><p class='list-item'>- 大量 JSON 解析</p><p class='list-item'>- 複雜表格計算</p><p class='list-item'>- 富文本/圖表初始化</p><p class='list-item'>- 一次性渲染大量 DOM</p><p class='list-item'>- 循環中同步讀寫佈局</p><p>可以通過 <code>scheduler.yield()</code> 或降級方案把大任務拆開：</p><pre><code>async function processLargeList(list: Item[]) {
+  const result: Result[] = []
+  for (let i = 0; i &lt; list.length; i++) {
+    result.push(expensiveTransform(list[i]))
+    if (i % 100 === 0 &amp;&amp; &#x27;scheduler&#x27; in window &amp;&amp; &#x27;yield&#x27; in scheduler) {
+      await scheduler.yield()
+    }
+  }
+  return result
+}</code></pre><p>對於兼容性要求更高的項目，可以使用 <code>setTimeout</code>、<code>requestIdleCallback</code> 或調度庫做降級。但思路是一致的：不要讓一個大任務長時間霸佔主線程。</p><h3>避免輸入事件裏做重活</h3><p>用戶輸入、點擊、拖拽、滾動時，事件處理函數應該儘量短：</p><pre><code>function handleInput(value: string) {
+  keyword.value = value
+  scheduleSearch(value)
+}</code></pre><p>複雜邏輯可以放到：</p><p class='list-item'>- 防抖後的異步請求</p><p class='list-item'>- Web Worker</p><p class='list-item'>- 空閒時間任務</p><p class='list-item'>- 服務端計算</p><p class='list-item'>- 緩存命中後的增量更新</p><h3>用 Web Worker 轉移計算</h3><p>適合放到 Worker 的任務包括：</p><p class='list-item'>- 大 JSON 解析和轉換</p><p class='list-item'>- Excel/CSV 处理</p><p class='list-item'>- 圖片壓縮</p><p class='list-item'>- 數據聚合</p><p class='list-item'>- 圖表數據預計算</p><p class='list-item'>- 搜索索引構建</p><p>Worker 不能直接操作 DOM，所以它適合處理純計算和數據轉換。對於大數據後臺系統，這是非常值得投入的優化方向。</p><h3>控制組件重渲染</h3><p>React、Vue、Svelte 等框架的優化方式不同，但底層目標類似：讓狀態變化影響儘可能小的視圖範圍。</p><p>通用建議：</p><p class='list-item'>- 不要把局部狀態提升到全局。</p><p class='list-item'>- 不要讓一個大組件承擔太多狀態。</p><p class='list-item'>- 列表項組件保持穩定 key。</p><p class='list-item'>- 避免在模板或 render 中創建大量新對象、新函數。</p><p class='list-item'>- 對重型組件做懶加載和局部 memo。</p><p class='list-item'>- 表格、圖表、編輯器組件隔離渲染邊界。</p><p>React 技術棧還需要關注 React Compiler。它會在構建階段自動優化組件和值的 memoization，減少手寫 <code>memo</code>、<code>useMemo</code>、<code>useCallback</code> 的必要性。但這不代表可以不做架構治理：狀態邊界、組件拆分、數據結構穩定性仍然很重要。</p><h3>虛擬滾動與大數據渲染</h3><p>虛擬滾動是性能優化中的高頻場景，適合處理大列表、大表格、日誌流、聊天記錄、訂單列表、權限樹、文件列表等。</p><h3>爲什麼需要虛擬滾動</h3><p>瀏覽器渲染一萬個 DOM 節點時，成本不僅是創建 DOM，還包括：</p><p class='list-item'>- 樣式計算</p><p class='list-item'>- 佈局計算</p><p class='list-item'>- 繪製</p><p class='list-item'>- 合成</p><p class='list-item'>- 事件綁定</p><p class='list-item'>- 內存佔用</p><p class='list-item'>- 後續更新時的 diff 成本</p><p>虛擬滾動的核心思想是：**數據可以很多，但 DOM 只渲染視口附近的一小段**。</p><pre><code>總數據：100000 條
+真實 DOM：可視區域 30 條 + 上下緩衝 20 條
+滾動時：根據 scrollTop 換算應該顯示的數據區間</code></pre><h3>固定高度虛擬列表</h3><p>固定高度列表最簡單，公式如下：</p><pre><code>const itemHeight = 40
+const visibleCount = Math.ceil(containerHeight / itemHeight)
+const start = Math.floor(scrollTop / itemHeight)
+const end = start + visibleCount + overscan
+const offsetTop = start * itemHeight</code></pre><p>渲染結構通常是：</p><pre><code>&lt;div class=&quot;viewport&quot;&gt;
+  &lt;div class=&quot;phantom&quot; style=&quot;height: 4000000px;&quot;&gt;
+    &lt;div class=&quot;list&quot; style=&quot;transform: translateY(12000px);&quot;&gt;
+      &lt;!-- 只渲染可视区附近的数据 --&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre><p>固定高度適合：</p><p class='list-item'>- 日誌列表</p><p class='list-item'>- 簡單表格</p><p class='list-item'>- 通知列表</p><p class='list-item'>- 商品卡片高度一致的場景</p><h3>動態高度虛擬列表</h3><p>動態高度更復雜，因爲無法通過簡單公式計算位置。常見方案：</p><p class='list-item'>- 初始用預估高度。</p><p class='list-item'>- 渲染後測量真實高度。</p><p class='list-item'>- 建立 item index 到 height、offset 的缓存。</p><p class='list-item'>- 滾動時通過二分查找定位 start index。</p><p class='list-item'>- 高度變化時更新後續 offset。</p><p>動態高度適合聊天消息、評論流、富文本卡片，但實現成本更高。項目中優先使用成熟庫，例如：</p><p class='list-item'>- React：`react-window`、`react-virtualized`、`@tanstack/react-virtual`</p><p class='list-item'>- Vue：`vue-virtual-scroller`、`@tanstack/vue-virtual`</p><h3>表格虛擬滾動</h3><p>表格虛擬滾動比普通列表更容易踩坑，因爲還涉及：</p><p class='list-item'>- 固定表頭</p><p class='list-item'>- 固定列</p><p class='list-item'>- 橫向滾動</p><p class='list-item'>- 單元格合併</p><p class='list-item'>- 展開行</p><p class='list-item'>- 行選擇</p><p class='list-item'>- 樹形數據</p><p class='list-item'>- 動態行高</p><p>建議優先使用成熟表格組件自帶的虛擬滾動能力。自己實現時，要把“數據層”和“渲染層”拆開，不要把排序、篩選、分頁、列寬計算和 DOM 渲染全部綁在一個組件裏。</p><h3>虛擬滾動的注意事項</h3><p>虛擬滾動不是萬能解。它會帶來一些額外複雜度：</p><p class='list-item'>- 瀏覽器原生查找只查當前 DOM，無法搜索未渲染內容。</p><p class='list-item'>- 錨點定位、滾動恢復、無障礙語義需要額外處理。</p><p class='list-item'>- 動態高度會造成滾動條抖動。</p><p class='list-item'>- overscan 太小會白屏，太大會失去優化意義。</p><p class='list-item'>- SEO 頁面不適合只用虛擬滾動展示核心內容。</p><p>如果數據量只有幾十條或一兩百條，普通分頁可能比虛擬滾動更簡單、更穩定。</p><h3>圖片、字體與靜態資源優化</h3><p>圖片通常是頁面帶寬大戶，也經常是 LCP 元素。</p><h3>圖片格式選擇</h3><p>圖片優化要點：</p><p class='list-item'>- 不要上傳遠大於展示尺寸的圖片。</p><p class='list-item'>- 使用 `srcset`和`sizes`輸出響應式圖片。</p><p class='list-item'>- 首屏圖不要懶加載。</p><p class='list-item'>- 非首屏圖片使用 `loading="lazy"`。</p><p class='list-item'>- 始终设置 `width`和`height`，减少 CLS。</p><pre><code>&lt;img
+  src=&quot;/cover-800.avif&quot;
+  srcset=&quot;/cover-400.avif 400w, /cover-800.avif 800w, /cover-1200.avif 1200w&quot;
+  sizes=&quot;(max-width: 768px) 100vw, 800px&quot;
+  width=&quot;800&quot;
+  height=&quot;450&quot;
+  loading=&quot;lazy&quot;
+  alt=&quot;文章封面&quot;
+&gt;</code></pre><h3>iframe 懶加載</h3><p>視頻、地圖、評論插件、廣告 iframe 會帶來大量三方資源。非首屏 iframe 應該使用：</p><pre><code>&lt;iframe
+  src=&quot;https://example.com/embed&quot;
+  loading=&quot;lazy&quot;
+  width=&quot;600&quot;
+  height=&quot;400&quot;
+  title=&quot;嵌入内容&quot;
+&gt;&lt;/iframe&gt;</code></pre><h3>字體優化</h3><p>字體容易導致 FOIT、FOUT 和 CLS。建議：</p><p class='list-item'>- 使用 `font-display: swap`或`optional`。</p><p class='list-item'>- 中文字體儘量避免全量 Web Font。</p><p class='list-item'>- 字體文件按字符子集拆分。</p><p class='list-item'>- 關鍵字體可以 preload，但不要濫用。</p><p class='list-item'>- 使用系統字體棧能滿足設計時優先使用系統字體。</p><pre><code>@font-face {
+  font-family: &quot;Inter&quot;;
+  src: url(&quot;/fonts/inter-latin.woff2&quot;) format(&quot;woff2&quot;);
+  font-display: swap;
+}</code></pre><h3>CSS 與渲染性能優化</h3><p>CSS 不只是樣式問題，也會影響渲染性能。</p><h3>使用 content-visibility</h3><p>對於長頁面中大量首屏外內容，可以使用 <code>content-visibility: auto</code> 讓瀏覽器跳過離屏內容的渲染工作：</p><pre><code>.below-fold-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}</code></pre><p>適合場景：</p><p class='list-item'>- 長文章</p><p class='list-item'>- 商品詳情長頁面</p><p class='list-item'>- 多模塊落地頁</p><p class='list-item'>- 帶大量卡片的內容流</p><p>注意設置合理的 <code>contain-intrinsic-size</code>，否則可能引發佈局跳動。</p><h3>避免佈局抖動</h3><p>常見 CLS 來源：</p><p class='list-item'>- 圖片沒有寬高。</p><p class='list-item'>- 廣告位沒有預留空間。</p><p class='list-item'>- 字體加載後尺寸變化。</p><p class='list-item'>- 異步插入頂部內容。</p><p class='list-item'>- 骨架屏和真實內容尺寸不一致。</p><p class='list-item'>- 动画改变 `width`、`height`、`top`、`left`。</p><p>动画优先使用 <code>transform</code> 和 <code>opacity</code>，避免频繁触发布局。</p><h3>減少樣式計算範圍</h3><p>建議：</p><p class='list-item'>- 避免過深、過複雜的選擇器。</p><p class='list-item'>- 不要頻繁切換影響大範圍佈局的 class。</p><p class='list-item'>- 大模塊之間使用 CSS Containment 隔離影響範圍。</p><p class='list-item'>- 對複雜列表和卡片流考慮 `contain`或`content-visibility`。</p><h3>緩存、預加載與下一頁加速</h3><p>緩存和預加載優化的是“重複訪問”和“下一次訪問”。</p><h3>HTTP 緩存</h3><p>常見策略：</p><p>構建產物文件名帶 hash 是長緩存的前提。否則用戶可能一直拿到舊資源。</p><h3>Service Worker</h3><p>Service Worker 适合：</p><p class='list-item'>- PWA 離線訪問</p><p class='list-item'>- 靜態資源緩存</p><p class='list-item'>- 弱網兜底</p><p class='list-item'>- 後臺同步</p><p class='list-item'>- 資源預緩存</p><p>但它也會增加緩存失效複雜度。後臺管理系統或頻繁發版系統要謹慎使用，避免用戶長期卡在舊版本。</p><h3>bfcache</h3><p>bfcache 是瀏覽器的前進/後退緩存，可以讓用戶點擊返回或前進時幾乎瞬間恢復頁面。它不同於 HTTP 緩存，保存的是整個頁面快照，包括 JS 堆。</p><p>優化建議：</p><p class='list-item'>- 避免使用 `unload`事件，改用`pagehide`。</p><p class='list-item'>- 谨慎设置 `Cache-Control: no-store`。</p><p class='list-item'>- 頁面恢復時用 `pageshow`判斷是否來自 bfcache。</p><p class='list-item'>- 在恢復後刷新敏感或易變數據。</p><pre><code>window.addEventListener(&#x27;pageshow&#x27;, (event) =&gt; {
+  if (event.persisted) {
+    refreshPageState()
+  }
+})</code></pre><h3>Speculation Rules</h3><p>Speculation Rules API 是近幾年非常值得關注的頁面導航優化能力。它可以告訴瀏覽器哪些頁面可能會被訪問，從而提前 prefetch 或 prerender。</p><p>簡單示例：</p><pre><code>&lt;script type=&quot;speculationrules&quot;&gt;
+{
+  &quot;prefetch&quot;: [
+    {
+      &quot;where&quot;: {
+        &quot;href_matches&quot;: &quot;/docs/*&quot;
+      },
+      &quot;eagerness&quot;: &quot;moderate&quot;
+    }
+  ]
+}
+&lt;/script&gt;</code></pre><p>更激進的方式是 prerender：</p><pre><code>&lt;script type=&quot;speculationrules&quot;&gt;
+{
+  &quot;prerender&quot;: [
+    {
+      &quot;where&quot;: {
+        &quot;href_matches&quot;: &quot;/product/*&quot;
+      },
+      &quot;eagerness&quot;: &quot;conservative&quot;
+    }
+  ]
+}
+&lt;/script&gt;</code></pre><p>使用時要注意：</p><p class='list-item'>- 不要預取會改變狀態的 GET 頁面，例如 `/logout`。</p><p class='list-item'>- 先从 prefetch 开始，再评估 prerender。</p><p class='list-item'>- 對登錄態、隱私頁面、成本高頁面要謹慎。</p><p class='list-item'>- SPA 內部軟路由不能直接靠 Speculation Rules 完成路由預渲染，但可以在進入 SPA 前預渲染應用殼。</p><h3>三方腳本優化</h3><p>三方腳本是很多頁面性能問題的黑盒來源。廣告、統計、客服、熱力圖、A/B 實驗、監控 SDK 都可能搶佔主線程。</p><p>治理建議：</p><p class='list-item'>- 建立三方腳本清單，明確負責人和業務價值。</p><p class='list-item'>- 首屏不必要的三方腳本延後加載。</p><p class='list-item'>- 使用 `async`或`defer`，避免阻塞 HTML 解析。</p><p class='list-item'>- 對低優先級腳本使用交互後加載或空閒時間加載。</p><p class='list-item'>- 定期審查重複 SDK，比如多個監控、多個埋點、多個客服組件。</p><p class='list-item'>- 對廣告和 iframe 預留尺寸，避免 CLS。</p><p><code><script src="https://example.com/analytics.js" defer></script></code>如果三方脚本严重影响 INP，可以考虑：</p><p class='list-item'>- 延後初始化。</p><p class='list-item'>- 只在需要的頁面加載。</p><p class='list-item'>- 使用 Worker 化方案。</p><p class='list-item'>- 替換供應商。</p><p class='list-item'>- 通過服務端轉發減少客戶端 SDK。</p><h3>框架層面的優化思路</h3><h3>React</h3><p class='list-item'>- 使用 React DevTools Profiler 找到重複渲染組件。</p><p class='list-item'>- 合理使用 `memo`、`useMemo`、`useCallback`，但不要滥用。</p><p class='list-item'>- 關注 React Compiler，減少手寫 memoization 的維護成本。</p><p class='list-item'>- 使用 Suspense、lazy、Server Components 拆分客户端负担。</p><p class='list-item'>- 避免全局狀態變化導致整棵樹重渲染。</p><p class='list-item'>- 大列表使用虛擬滾動。</p><h3>Vue</h3><p class='list-item'>- 使用 `defineAsyncComponent`做异步组件。</p><p class='list-item'>- 使用路由懶加載。</p><p class='list-item'>- 大對象避免不必要的深層響應式，必要時用 `shallowRef`、`markRaw`。</p><p class='list-item'>- 列表保持穩定 key。</p><p class='list-item'>- 對大列表使用虛擬滾動。</p><p class='list-item'>- 避免在模板中執行復雜計算，使用 computed 或預處理。</p><p><code>const HeavyChart = defineAsyncComponent(() => import('./HeavyChart.vue'))</code>### Astro / Islands Architecture</p><p>Astro 這類 Islands Architecture 的思路非常適合內容站點：</p><p class='list-item'>- 默認輸出靜態 HTML。</p><p class='list-item'>- 只有需要交互的組件才加載 JS。</p><p class='list-item'>- 可以按组件选择 `client:load`、`client:idle`、`client:visible`等激活策略。</p><p>這類架構的優勢是減少客戶端 JS，非常適合博客、文檔、營銷頁和內容型網站。</p><h3>工程化與持續監控</h3><p>性能優化不能只靠一次專項。真正有效的是持續治理。</p><h3>實驗室監控</h3><p>適合開發和 CI 階段：</p><p class='list-item'>- Lighthouse</p><p class='list-item'>- WebPageTest</p><p class='list-item'>- Chrome DevTools Performance</p><p class='list-item'>- Lighthouse CI</p><p class='list-item'>- Bundle Analyzer</p><p>實驗室數據可復現，適合定位問題，但它不等於真實用戶體驗。</p><h3>真實用戶監控</h3><p>線上應該採集 RUM 數據：</p><p class='list-item'>- LCP</p><p class='list-item'>- INP</p><p class='list-item'>- CLS</p><p class='list-item'>- TTFB</p><p class='list-item'>- FCP</p><p class='list-item'>- 路由切換耗時</p><p class='list-item'>- 接口耗時</p><p class='list-item'>- 靜態資源加載失敗率</p><p class='list-item'>- JS 错误和 Promise rejection</p><p class='list-item'>- 設備、網絡、地區、瀏覽器維度</p><p>採集時建議按頁面、設備、網絡、版本分組。不要只看平均值，更應該看 P75、P90、P95。</p><h3>性能預算進入 CI</h3><p>建議在 CI 中至少做幾件事：</p><p class='list-item'>- 檢查首屏 bundle 是否超預算。</p><p class='list-item'>- 輸出構建產物體積變化。</p><p class='list-item'>- 對關鍵頁面跑 Lighthouse CI。</p><p class='list-item'>- 對 PR 標記性能風險。</p><p class='list-item'>- 對新增三方依賴進行審查。</p><p>性能優化一旦進入工程流程，就不會完全依賴個人經驗。</p><h3>場景化優化清單</h3><h3>包體積過大</h3><p class='list-item'>- 用分析工具找出最大依賴。</p><p class='list-item'>- 檢查是否誤引入全量庫。</p><p class='list-item'>- 路由級拆包。</p><p class='list-item'>- 重型組件交互後加載。</p><p class='list-item'>- 移除無效代碼。</p><p class='list-item'>- 限制 polyfill 范围。</p><p class='list-item'>- 對三方 SDK 單獨統計。</p><h3>首屏加載慢</h3><p class='list-item'>- 定位 LCP 元素。</p><p class='list-item'>- 优化 TTFB。</p><p class='list-item'>- 減少首屏 JS。</p><p class='list-item'>- 關鍵 CSS 前置，非關鍵資源延後。</p><p class='list-item'>- LCP 图片 preload 或设置 fetch priority。</p><p class='list-item'>- 首屏接口並行化。</p><p class='list-item'>- 內容型頁面考慮 SSR/SSG。</p><h3>頁面點不動</h3><p class='list-item'>- 用 Performance 面板找長任務。</p><p class='list-item'>- 拆分同步計算。</p><p class='list-item'>- 事件處理函數保持輕量。</p><p class='list-item'>- 大計算放 Worker。</p><p class='list-item'>- 減少組件重複渲染。</p><p class='list-item'>- 延後低優先級三方腳本。</p><h3>列表滾動卡</h3><p class='list-item'>- 使用虛擬滾動。</p><p class='list-item'>- 降低單行組件複雜度。</p><p class='list-item'>- 避免滾動時同步讀寫佈局。</p><p class='list-item'>- 圖片懶加載並固定尺寸。</p><p class='list-item'>- 合理设置 overscan。</p><p class='list-item'>- 表格優先使用成熟組件方案。</p><h3>頁面佈局跳動</h3><p class='list-item'>- 圖片、視頻、iframe 固定寬高。</p><p class='list-item'>- 廣告位預留空間。</p><p class='list-item'>- 字体使用 `font-display`。</p><p class='list-item'>- 骨架屏尺寸貼近真實內容。</p><p class='list-item'>- 不在頂部異步插入未預留內容。</p><h3>返回頁面仍然很慢</h3><p class='list-item'>- 檢查 bfcache 是否命中。</p><p class='list-item'>- 移除 `unload`监听。</p><p class='list-item'>- 谨慎使用 `no-store`。</p><p class='list-item'>- 用 `pageshow`恢復數據。</p><p class='list-item'>- 對下一頁使用 Speculation Rules 預取。</p><h3>常見誤區</h3><h3>誤區一：請求越少越好</h3><p>HTTP/2 和 HTTP/3 下，請求數量不是唯一問題。更重要的是關鍵資源優先級、資源大小、是否阻塞渲染和主線程執行成本。盲目合併所有資源，可能反而讓首屏必須下載一個更大的包。</p><h3>誤區二：所有圖片都懶加載</h3><p>首屏圖片，尤其是 LCP 圖片，不應該懶加載。首屏圖需要儘早被瀏覽器發現並下載。</p><h3>誤區三：骨架屏等於性能優化</h3><p>骨架屏只是體驗緩衝。真正的優化仍然是減少真實內容出現的時間。</p><h3>誤區四：memo 越多越快</h3><p>memoization 有成本。如果 props 每次都變化，<code>memo</code> 可能沒有收益，還會增加代碼複雜度。先用 Profiler 定位，再優化。</p><h3>誤區五：虛擬滾動適合所有列表</h3><p>小列表用虛擬滾動會增加複雜度。虛擬滾動適合大量 DOM 或複雜單元格場景，不適合所有列表。</p><h3>一套可落地的優化流程</h3><p>可以把性能優化沉澱爲團隊流程：</p><p class='list-item'>- 建立指標：LCP、INP、CLS、資源體積、接口耗時。</p><p class='list-item'>- 建立監控：實驗室數據 + 線上 RUM 數據。</p><p class='list-item'>- 找出重點頁面：流量高、轉化關鍵、投訴多的頁面優先。</p><p class='list-item'>- 定位瓶頸：網絡、資源、主線程、接口、渲染分別排查。</p><p class='list-item'>- 制定方案：只處理真正影響指標和體驗的問題。</p><p class='list-item'>- 灰度驗證：對比優化前後的 P75/P90 數據。</p><p class='list-item'>- 固化規則：性能預算、CI 檢查、依賴審查、代碼規範。</p><h3>小結</h3><p>2026 年的前端性能優化更像一項系統工程。包體積管理決定頁面需要下載和執行多少東西，首屏加載決定用戶多久看到主體內容，INP 決定頁面是否真正可交互，虛擬滾動和渲染隔離決定複雜業務頁面能不能穩定運行。</p><p>真正有效的優化，不是把所有技巧都用上，而是基於指標找到瓶頸，然後在架構、工程、資源、渲染和監控層面持續治理。前端性能做得好，用戶感知是“頁面很輕、反饋很快、操作不斷”；工程團隊感知是“問題可定位、變化可監控、優化可持續”。</p><h3>參考資料</h3><p class='list-item'>- web.dev: Optimize Interaction to Next Paint</p><p class='list-item'>- web.dev: Optimize long tasks</p><p class='list-item'>- web.dev: Optimize Largest Contentful Paint</p><p class='list-item'>- web.dev: Optimize resource loading with the Fetch Priority API</p><p class='list-item'>- web.dev: Preload responsive images</p><p class='list-item'>- web.dev: Browser-level image lazy loading for the web</p><p class='list-item'>- web.dev: Back/forward cache</p><p class='list-item'>- web.dev: content-visibility</p><p class='list-item'>- Chrome Developers: Prerender pages in Chrome for instant page navigations</p><p class='list-item'>- Chrome Developers: Guide to implementing speculation rules for more complex sites</p><p class='list-item'>- Vite: Build Optimizations</p><p class='list-item'>- React: React Compiler Introduction</p><p class='list-item'>- React: memo API Reference</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

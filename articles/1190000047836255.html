@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>前端性能优化：LCP 从 4s 到 0.9s 的 5 个核心手段 · 流動日報譯文</title>
+<title>前端性能优化：LCP 从 4s 到 0.9s 的 5 个核心手段（附配置代码） · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,8 +42,8 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>前端性能优化：LCP 从 4s 到 0.9s 的 5 个核心手段</h1>
-<div class="meta"><span class="src">SegmentFault</span><span>· 2026-07-10</span>
+<h1>前端性能优化：LCP 从 4s 到 0.9s 的 5 个核心手段（附配置代码）</h1>
+<div class="meta"><span class="src">segmentfault.com</span>
 <span>· <a href="https://segmentfault.com/a/1190000047836255" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047836255" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><h3>一、LCP 的定義與優化目標</h3><p class='list-item'>**LCP（Largest Contentful Paint）** 衡量頁面最大內容元素（通常是圖片、視頻、大文本塊）的渲染時間。優化目標：**≤ 2.5 秒**。</p><p>影響 LCP 的主要因素：</p><p class='list-item'>- 資源加載慢（圖片、字體）</p><p class='list-item'>- 渲染阻塞（CSS、JS）</p><p class='list-item'>- 客戶端渲染延遲</p><p>下面按優先級列出 5 個最有效的優化手段。</p><h3>二、優化手段 1：圖片優化（WebP + 響應式 + 懶加載）</h3><h3>原理</h3><p class='list-item'>- 使用現代圖片格式（WebP/AVIF）體積更小</p><p class='list-item'>- 不同設備加載不同尺寸，減少無效傳輸</p><p class='list-item'>- 非首屏圖片懶加載</p><h3>具體配置</h3><p class='list-item'>**WebP 替换（Nginx 自动协商）**：</p><pre><code>location ~* \.(jpg|jpeg|png)$ {
