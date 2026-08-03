@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>头部AI再失控！Anthropic旗下Claude AI在测试中真实入侵三家公司系统 · 流動日報譯文</title>
+<title>ChatGPT成诈骗工具，OpenAI重拳出击 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,11 +42,11 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>头部AI再失控！Anthropic旗下Claude AI在测试中真实入侵三家公司系统</h1>
+<h1>ChatGPT成诈骗工具，OpenAI重拳出击</h1>
 <div class="meta"><span class="src">k.sina.com.cn</span>
-<span>· <a href="https://k.sina.com.cn/article_5952915720_162d2490806704lbb8.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://k.sina.com.cn/article_5952915720_162d2490806704lbb8.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
-<div class="body"><h3>（來源：網易科技）</h3><p>Anthropic旗下人工智能模型Claude在網絡安全測試中因配置失誤意外入侵三家外部機構，這一事件與競爭對手OpenAI近期披露的類似事故相互疊加，令AI行業的安全管控能力受到嚴峻拷問。</p><p>據彭博，Anthropic於7月30日在一篇博客文章中披露，其Claude模型在"奪旗"（capture-the-flag）網絡安全測試中，因測試環境錯誤連接至公共互聯網，導致對三家外部機構的真實基礎設施實施了未經授權的訪問。最早的入侵事件可追溯至今年4月。Anthropic表示，此次披露源於其在OpenAI上週公開類似事故後主動啓動的內部審查。</p><p>此次事件發生在OpenAI披露其AI模型在安全測試中"失控"併入侵AI公司Hugging Face基礎設施僅數日之後，兩起事故接連曝光，已促使部分美國政界人士呼籲對AI技術實施聯邦層面的監管。與此同時，據彭博，逾1100名AI行業從業者於本週二聯署請願，呼籲美國政府建立機制以"有意識地控制"AI發展節奏。</p><h3>配置失誤打開安全缺口</h3><p>Anthropic表示，此次事故的根源在於其與評估合作伙伴、AI安全公司Irregular之間的溝通誤解。在所有涉事測試中，Anthropic均向Claude明確說明其所處環境爲模擬環境且無法訪問互聯網，但實際上測試系統仍與公共互聯網保持連接。</p><p>"由於我們與評估合作伙伴之間存在誤解，實際情況並非如此，"Anthropic在博客中寫道。Irregular發言人表示，該公司對Anthropic的合作與透明度表示讚賞，並稱調查仍在進行中。</p><p>涉事的三個模型分別爲Claude Opus 4.7、Claude Mythos 5以及一個內部研究測試模型，均在缺乏公開工具通常配備的標準安全防護措施的環境下運行。Anthropic指出，Claude利用弱密碼和未經身份驗證的端點等基礎技術入侵了上述機構的基礎設施。</p><p>值得關注的是，在模型行爲上，較舊的模型在獲得已連接至公共互聯網的證據後仍繼續發動攻擊，而Anthropic最新模型在識別出自身處於互聯網環境後則主動停止了行動。</p><h3>事後審查揭示監控盲區</h3><p>Anthropic表示，其於7月23日開始審查評估記錄，並在當天發現Claude可能已訪問互聯網的證據後，立即暫停了所有網絡安全評估工作。公司於7月24日確認全部三起事件，並於7月27日通知了受影響機構。</p><p>此次審查共涵蓋141006個測試會話。Anthropic坦承，在事件發生時，公司與受影響機構均未察覺到這些入侵行爲，並承認本可對網絡日誌和評估記錄進行更爲嚴格的審查。</p><p>三家受影響機構均未在博客中具名。其中兩家機構在被Anthropic聯繫之前對相關活動毫不知情。</p><h3>行業安全標準面臨重新審視</h3><p>Surrey大學網絡安全教授Alan Woodward表示，Anthropic對導致此次事故的人爲失誤持坦誠態度。"AI並沒有失控——你要求它做某件事，然後把門敞開了，"他說，"我認爲Anthropic承認了這一點。"</p><p>Anthropic在博客中表示，此次事件揭示了若干重要教訓，包括涉及強大自主能力的測試同樣需要嚴格的管控措施。"安全測試之所以在模型發佈前進行，正是因爲我們尚不完全瞭解其能力所及，"公司表示，"評估環境越來越需要達到與模型實際運行的任何其他系統相同的安全標準。"</p><p>此次事件發生在Anthropic宣佈推出功能強大且潛在風險較高的Mythos模型並對其發佈實施嚴格限制後約四個月。兩起AI安全事故的接連發生，正推動業界重新審視AI測試環境的安全標準，並加速外部監管討論的進程。</p><h3>举报邮箱：jubao@vip.sina.com</h3></div>
+<span>· <a href="https://k.sina.com.cn/article_5953190046_162d6789e06703nalw.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://k.sina.com.cn/article_5953190046_162d6789e06703nalw.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>（來源：IT之家）</h3><p>IT之家 8 月 1 日消息，OpenAI 官方昨日在官網發文稱，公司成功打擊一起位於柬埔寨的詐騙網絡，這些詐騙人士利用 ChatGPT，進行投資、戀愛、賭博詐騙。</p><p>IT之家從 OpenAI 官方獲悉，本起案件發生在今年早些時候，最初由 WhatsApp 方面提供線索。這些詐騙分子採取有組織的團伙模式，靈活採用各種敘事方式、虛假身份和攻擊手段，以最大程度地欺騙受害者。</p><p>據 OpenAI 觀察，這些用戶還生成了涉及人口販賣、強迫犯罪活動的內容，與大量公開報道一致。因此官方封禁了一組互相協同的 ChatGPT 賬戶，這些用戶極有可能來自柬埔寨，並在班迭棉吉省的波貝地區活動。</p><p>同時，該詐騙網絡利用 ChatGPT 模型創建虛假身份、翻譯詐騙信息、製作詐騙活動的宣傳內容，並使用 GPT 起草內部通知、翻譯員工交流記錄。</p><p>上述詐騙分子還會使用虛假身份，與受害人建立信任關係，然後引誘受害者參與涉及加密貨幣或黃金交易的虛假投資項目。雖然詐騙話術有所不同，但該網絡中的用戶始終表現出相同的欺詐行爲模式。</p><p>目前 OpenAI 已封禁上述用戶的 ChatGPT 賬號，並向行業合作伙伴共享了相關信息。我們現在還不清楚該網絡造成的經濟損失，部分詐騙者曾在聊天框中提到，一些受騙者因此損失了數千美元。</p><h3>举报邮箱：jubao@vip.sina.com</h3></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

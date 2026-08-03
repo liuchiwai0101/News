@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>DeepSeek V4 Flash 0731 发布：Agent 能力反超 Pro Preview，开源模型前三易主 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>DeepSeek V4 Flash 0731 发布：Agent 能力反超 Pro Preview，开源模型前三易主</h1>
+<div class="meta"><span class="src">cnblogs.com</span>
+<span>· <a href="https://www.cnblogs.com/aimagician/p/22128115" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.cnblogs.com/aimagician/p/22128115" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>摘要：2026年7月31日，DeepSeek 將 V4-Flash 從預覽版升級爲正式版 API，架構維持 284B 總參數/13B 激活的 MoE 設計，核心升級在於後訓練驅動的 Agent 能力躍遷。新版原生適配 OpenAI Codex 與 Responses API，TerminalBench 2.1 得分 82.7、Cybergym 得分 76.7，多項基準反超 V4-Pro Preview。配合 FP4/FP8 混合精度與 MIT 開源許可，Flash 版以緩存命中輸入每百萬 Token 僅 0.2 元的成本，成爲高併發 API 場景的性價比首選。</p><p>你在 Codex 裏寫了一個需要調用終端、讀取文件、再調 API 的多步腳本，結果模型在第 3 步突然斷鏈，這是 V4-Flash Preview 時代的日常。7 月 31 日之後，同樣的任務 TerminalBench 分數從 Preview 的 70 出頭跳到了 82.7，Agent 斷鏈率顯著下降。</p><p>說實話，看到這個數字我愣了一下。不是因爲 82.7 本身有多驚人，而是因爲——這是 Flash 版本，不是 Pro 版本。而且是通過後訓練，不是靠堆參數。</p><p>這玩意有點意思。</p><h3>DeepSeek V4 Flash 0731 正式版：升级了什么</h3><p>先說架構。V4-Flash 的底座沒變，還是那個 284B 總參數、13B 激活的 MoE 設計。也就是說，每次推理只激活一小部分參數，速度上去，成本下來。這個設計思路 DeepSeek 一直玩得很溜，從 V2 到 V3 到 V4，路線很清晰。</p><p>但這次升級的核心，不在架構，在後訓練。</p><p>Preview 版本的時候，很多人拿 Flash 去跑 Agent 任務，體驗怎麼說呢，有點尷尬。能跑，但經常跑到一半就飄了。你讓它寫個腳本，它寫到第三步突然開始胡言亂語，或者乾脆給你一個看起來正確但實際跑不通的代碼。那種感覺就像你僱了個實習生，態度挺好，但活兒幹不利索。</p><p>正式版出來後，這個問題被顯著緩解了。</p><h3>從 Preview 到正式：後訓練纔是 Agent 能力的分水嶺</h3><p>這裏需要解釋一下「後訓練」是什麼。很多人聽到這個詞，第一反應是「哦，就是微調」。但其實後訓練的範圍比微調大得多，它包括 SFT（監督微調）、RLHF（人類反饋強化學習）、DPO（直接偏好優化）等等一系列技術。DeepSeek 這次做的，大概率是在 Agent 場景下做了大量的 SFT + 偏好優化。</p><p>什麼意思呢？就是拿一堆真實的 Agent 任務數據，讓模型去學「遇到這種情況該怎麼一步步處理」。</p><p>我尋思了一下，這其實挺聰明的。因爲 Agent 能力和通用對話能力，真的是兩碼事。一個模型可以在數學推理上拿滿分，但在 Agent 任務上表現拉胯。爲什麼？因爲 Agent 任務需要的是規劃、工具調用、錯誤恢復、多步追蹤——這些能力，光靠預訓練是學不來的，必須通過後訓練來強化。</p><p>這就好比一個學霸，考試能考第一，但讓他去組織一場活動，可能連流程都理不清楚。</p><p>DeepSeek 這次的做法，就是把「組織活動」這種能力，通過後訓練的方式，硬生生餵給了 Flash 版本。</p><h3>基准测试数据：TerminalBench 82.7、Cybergym 76.7 说明了什么</h3><p>TerminalBench 2.1 得分 82.7，Cybergym 得分 76.7。這兩個數字背後是什麼？</p><p>TerminalBench 測的是模型在終端環境下的 Agent 能力，包括文件操作、命令執行、腳本編寫這些。82.7 分意味着什麼？意味着在 100 個典型終端任務裏，模型能獨立完成 82 個以上。而且不是「看起來能做」，是真正跑通了。</p><p>Cybergym 測的是網絡安全相關的 Agent 能力，76.7 分說明模型在安全場景下的工具調用和錯誤處理能力也上了一個臺階。</p><p>關鍵是，這兩個分數，Flash 版本都超過了 V4-Pro Preview。</p><p>Pro Preview 是什麼概念？是還沒正式發佈的 Pro 版本。也就是說，Flash 這個「輕量版」，在 Agent 能力上，已經追上了還沒發佈的「旗艦預覽版」。</p><p>這有點像是說，一個經濟型轎車，在某個特定賽道上，跑贏了還沒發佈的豪華版原型車。</p><p>不是車不行，是賽道選對了。</p><pre><code>``mermaid
+%% title: V4-Flash 后训练升级路径
+flowchart TD
+    A[预训练底座
+284B总参数/13B激活] --&gt; B[Agent场景数据收集]
+    B --&gt; C[SFT监督微调]
+    C --&gt; D[偏好优化
+DPO/RLHF]
+    D --&gt; E[TerminalBench 82.7
+Cybergym 76.7]
+    E --&gt; F[反超Pro Preview]
+    
+    style A fill:#e1f5fe
+    style E fill:#c8e6c9
+    style F fill:#fff9c4</code></pre><p>說真的，這個升級路徑讓我想到一件事。過去兩年，整個 AI 行業都在卷參數規模，捲到後來，大家發現光堆參數解決不了所有問題。尤其是 Agent 這種需要「執行力」的場景，參數再多，如果不會「幹活」，也是白搭。</p><p>DeepSeek 這次的選擇，有點反潮流。它沒在 Flash 版本上繼續堆參數，而是把資源投到了後訓練上。結果呢？效果出來了。</p><p>這給整個行業提了個醒：參數規模很重要，但後訓練的質量，可能更重要。尤其是對於 Agent 這種新興場景，誰先跑通後訓練的路徑，誰就能拿到先發優勢。</p><p>當然，我也不是說要完全放棄參數規模。Pro 版本肯定還是有它的價值，特別是在複雜推理、長文本理解這些場景下。但如果你主要的需求是 Agent 任務，是工具調用，是代碼生成和執行，那 Flash 版本可能已經夠用了。</p><p>而且，成本差得不是一點半點。</p><p>Flash 版本用 FP4/FP8 混合精度，緩存命中輸入每百萬 Token 只要 0.2 元。這是什麼概念？同樣是跑 Agent 任務，Flash 的成本可能是 Pro 的一小部分。對於高併發的 API 場景來說，這個成本差異，足以改變整個項目的經濟模型。</p><p>我有個朋友，之前一直在用 Pro 版本跑他的 Agent 產品，每個月 API 費用好幾萬。聽說 Flash 版本出來後，他立馬切了過去，成本直接降了一個數量級。他說「早知道這樣，我何必之前那麼心疼錢」。</p><p>這大概就是技術進步的意義吧。讓好技術，變得更便宜，更普及。</p><p>不過話說回來，Flash 版本雖然強，但也不是萬能的。它的 13B 激活參數，決定了它在某些需要深度推理的場景下，可能還是不如 Pro 版本。所以選擇哪個版本，還是要看你的具體需求。</p><p>但有一點可以肯定：DeepSeek 用這次升級證明了，後訓練對 Agent 場景的提升空間，可能比很多人想象的大。</p><h3>架構不變，精度與成本重新算賬</h3><p>DeepSeek V4 Flash 這次升級最騷的操作是，架構沒動。284B 總參數、13B 激活的 MoE 設計，跟 Preview 版本一模一樣。但就是這不動的架構，配合精度調整，硬是把成本打下來了。</p><p>架構不變，成本重算，這纔是真正的工程智慧</p><p>MoE 架構的精髓在於，每次推理只激活一小部分參數。284B 是總參數量，13B 是實際參與計算的激活參數。這意味着模型有足夠大的知識庫，但每次推理只需要處理 13B 的參數。就像你有一個裝滿工具的倉庫，但每次幹活只帶一把扳手。</p><p>FP4 和 FP8 混合精度是這個版本的核心工程取捨。FP4 精度極低，4 位浮點數，能存的數據範圍很窄，但推理速度極快。FP8 精度稍高，8 位浮點數，在精度和速度之間找到了一個平衡點。DeepSeek 的做法是把計算密集的部分用 FP8，把對精度不敏感的部分用 FP4。</p><h3>V4 Flash 精度分層架構</h3><p>這個設計很聰明。FP8 負責需要精度的部分，比如數學計算、代碼邏輯。FP4 負責對精度不敏感的部分，比如文本理解、語義匹配。兩種精度混着用，既保證了 Agent 任務需要的推理精度，又把推理速度拉滿了。</p><p>成本模型纔是真正讓人眼前一亮的設計。緩存命中時，每百萬 Token 只要 0.2 元。未命中時，每百萬 Token 1 元。這個差距不是小數點後面的差別，是五倍的差距。</p><p>緩存命中 0.2 元 vs 未命中 1 元，五倍差距決定了高併發的生死</p><p>爲什麼會有這個差距？因爲緩存命中意味着這個請求的中間狀態已經被計算過了，模型不需要重新走完整的推理鏈路。對於 Agent 場景來說，這意味着多步任務中的重複調用可以被緩存複用。你讓模型讀一個文件、執行一個命令、再根據結果調 API，這個過程中間狀態如果命中緩存，成本直接降爲原來的五分之一。</p><p>高併發場景下，這個成本模型的意義被放大了。想象一下，你的服務同時處理 1000 個 Agent 請求，每個請求平均 10 萬 Token。如果緩存命中率是 80%，每百萬 Token 成本是 0.2 元，總成本是 1000 × 10 × 0.2 = 2000 元。如果緩存命中率只有 20%，每百萬 Token 成本是 1 元，總成本是 1000 × 10 × 0.8 × 1 + 1000 × 10 × 0.2 × 0.2 = 8400 元。四倍的成本差距，直接決定了你的服務能不能盈利。</p><h3>Agent 能力躍遷：從工具調用到 Codex 原生適配</h3><p>V4 Flash 這次升級最核心的變化，是原生適配了 OpenAI Codex 和 Responses API。這不是簡單的格式兼容，而是從底層重新設計了 Agent 的工作流。</p><p>Codex 原生適配，Agent 不再是調 API 的腳本小子</p><p>Responses API 是 OpenAI 推出的專門面向 Agent 場景的接口格式。它和傳統的 Chat Completions API 最大的區別在於，它支持工具調用的結構化輸出。模型不再只是返回一段文本，而是可以返回一個包含工具調用指令的結構化響應。</p><p>DeepSeek V4 Flash 對 Responses API 的原生適配，意味着模型在生成工具調用時，輸出的格式完全符合 OpenAI 的規範。你的代碼不需要做任何格式轉換，直接調用 Responses API，模型返回的結果可以直接被 SDK 解析執行。</p><p>Agentic Coding 評測是這次升級最直接的受益者。TerminalBench 2.1 得分 82.7，Cybergym 得分 76.7。這兩個基準測試的核心區別在於，TerminalBench 測試的是模型在終端環境中的多步操作能力，Cybergym 測試的是模型在網絡安全攻防場景中的 Agent 能力。</p><p>Flash 版反超 Pro Preview，說明後訓練對 Agent 場景的提升空間，可能比很多人想象的大。閉源模型還在拼參數規模的時候，DeepSeek 用 13B 激活參數 + MIT 許可 + 0.2 元成本，重新定義了開源 Agent 模型的性價比邊界。</p><p>多步終端操作的實戰表現，是這次升級最直觀的體驗。Preview 版本在處理需要多次終端交互的任務時，經常在第 2 或第 3 步出現斷鏈。模型要麼忘記之前的上下文，要麼工具調用格式出錯，要麼執行結果解析失敗。</p><p>Flash 版本之後，同樣的任務流暢度明顯提升。模型能夠保持多步操作的上下文一致性，工具調用的格式更加穩定，執行結果的解析也更加準確。這不是參數規模的提升帶來的，是後訓練數據質量和訓練策略優化的結果。</p><p>網絡安全攻防場景的測試，進一步驗證了 Flash 版本的 Agent 能力。Cybergym 測試的是模型在 CTF 類網絡安全挑戰中的表現，需要模型理解漏洞原理、構造攻擊 payload、驗證攻擊效果。Flash 版本 76.7 的得分，說明模型在複雜安全場景下的推理和工具使用能力已經達到了一個新的高度。</p><p>安全攻防場景 76.7 分，Agent 能力已經不只是寫代碼了</p><p>當閉源模型還在拼參數規模的時候，DeepSeek 用一次 Flash 的升級證明了，後訓練對 Agent 場景的提升空間，可能比很多人想象的大。架構不變，精度調整，成本重算，Agent 能力躍遷。這就是 V4 Flash 0731 版本的完整邏輯。</p><h3>開源策略與生態影響</h3><h3>MIT 許可對商業部署的意義</h3><p>坦率的講，DeepSeek 這次選 MIT 許可，不是隨便選的。</p><p>MIT 和 Apache 2.0 看起來都是開源，但商業部署時差別挺大。Apache 2.0 有專利授權條款，大公司法務看了會多問幾句。MIT 就一句話，你愛咋用咋用，別扯皮。</p><p>這對商業部署意味着什麼，我尋思了一下，其實挺直接的。你拿 V4 Flash 去跑自己的 Agent 產品，不需要公開代碼，不需要付授權費，不需要跟 DeepSeek 籤什麼協議。想商用就商用，想改就改，想集成到自家系統裏就集成。</p><h3>法務看了直點頭</h3><p>我之前跟一個做 SaaS 的朋友聊，他說他們公司之前一直用閉源模型，因爲開源模型部署起來太麻煩，還要自己搞適配。現在 V4 Flash 出來了，MIT 許可，原生支持 OpenAI 兼容接口，他們直接就把自己的 Agent 產品遷過去了。</p><p>成本從每百萬 Token 2 塊降到了 0.2 塊，這差距不是一點半點。</p><h3>与 GPT-5.5、Gemini 3.6 Flash 的同场对比</h3><p>說真的，這個對比挺有意思的。</p><p>GPT-5.5 在推理和複雜任務上確實強，但閉源架構限制了深度定製。你想改它的工具調用邏輯，沒門。Gemini 3.6 Flash 在代碼生成上有優勢，但工具調用鏈路上有缺陷，多步任務經常斷鏈。</p><p>V4 Flash 的定位很清晰，Agent 場景。</p><p>TerminalBench 82.7，Cybergym 76.7，這兩個分數說明什麼，說明它在真實 Agent 任務上的表現已經接近甚至超過了 GPT-5.5 的 Preview 版本。而且成本只有後者的十分之一。</p><h3>這分數我一開始也不信</h3><p>我拿 V4 Flash 跑了一組對比測試，同樣的 Agent 任務，GPT-5.5 要 3 步才能完成，V4 Flash 2 步就搞定了。不是因爲 V4 Flash 更聰明，而是它的工具調用鏈路更穩定，不容易斷。</p><p>Gemini 3.6 Flash 在代碼生成上確實強，但工具調用這塊，V4 Flash 已經追上來了。而且開源許可讓企業可以自由部署，這點 Gemini 做不到。</p><h3>國產芯片適配：華爲昇騰與英偉達的雙軌支持</h3><p>這塊需要注意一下。</p><p>DeepSeek 這次同時支持華爲昇騰和英偉達，不是隨便選的。國際環境下，供應鏈穩定性很重要。昇騰芯片在國內供應穩定，英偉達芯片在海外供應穩定，雙軌支持讓企業可以根據實際情況選擇。</p><p>我認識一個做金融 AI 的朋友，他們公司主要用昇騰芯片，因爲數據合規要求高。現在 V4 Flash 支持昇騰，他們直接就把模型部署到自家服務器上了，不用走海外鏈路。</p><h3>供應鏈焦慮終於緩解了</h3><p>雙軌支持還有一個好處，成本優化。昇騰芯片性價比高，英偉達芯片性能強，企業可以根據任務類型靈活選擇。簡單任務用昇騰，複雜任務用英偉達，成本能再降一截。</p><h3>實戰建議：何時該切 V4 Flash</h3><h3>高併發 API 產品的遷移路徑與注意事項</h3><p>說實話，遷移這事兒沒那麼複雜，但也不是零成本。</p><p>首先是 API 兼容性問題。V4 Flash 原生支持 OpenAI 的 Codex 和 Responses API，大部分現有代碼不需要大改。但工具調用的邊界情況需要驗證，特別是多步任務。</p><p>我建議先跑一組迴歸測試，把現有的 Agent 任務都跑一遍，看看有沒有斷鏈的情況。如果有，再針對性地優化 prompt 模板。</p><h3>遷移前記得做這步</h3><p>緩存策略是關鍵。V4 Flash 的緩存命中輸入每百萬 Token 只要 0.2 元，但前提是你要把緩存策略做好。prompt 模板要複用，上下文要精簡，重複請求要合併。</p><h3>緩存命中的成本紅利如何真正喫到</h3><p>這塊是重點。</p><p>緩存命中是 V4 Flash 成本優勢的核心。但很多人不知道，緩存命中不是自動的，需要你主動設計。</p><p>我總結了一個緩存優化公式，分享給你。</p><h3>緩存命中率 = 重複請求數 / 總請求數 × 上下文複用率 × prompt 模板複用率</h3><p>你想讓緩存命中率高，就得讓重複請求多、上下文複用率高、prompt 模板複用率高。</p><p>這公式我試過了，真有用</p><p>具體怎麼做，我舉幾個例子。</p><p>一個是 prompt 模板複用。你的 Agent 任務可能有 10 種類型，每種類型的 prompt 模板其實差不多，只是參數不同。把公共部分抽出來，做成模板，緩存命中率能提升 30% 以上。</p><p>另一個是上下文精簡。多步任務會產生大量中間結果，如果把這些結果都傳給模型，緩存命中率會很低。把中間結果壓縮成摘要，只傳關鍵信息，緩存命中率能再提升 20%。</p><p>還有一個是請求合併。如果你的產品有多個用戶同時發起相似任務，可以把這些請求合併成一次批量請求，緩存命中率能再提升 15%。</p><p>我算了一筆賬，假設你的產品每天 100 萬請求，原來用 GPT-5.5 成本是 2000 元，現在用 V4 Flash 緩存命中率做到 60%，成本能降到 480 元，一個月省 4 萬多。</p><h3>這賬算完我心動了</h3><p>當然，緩存策略不是一蹴而就的，需要持續優化。但一旦做起來了，成本優勢會越來越大。</p><h3>總結</h3><p>V4 Flash 這次升級，後訓練纔是 Agent 能力的分水嶺。13B 激活參數 + MIT 許可 + 0.2 元成本，重新定義了開源 Agent 模型的性價比邊界。</p><p>高併發 API 場景，V4 Flash 是性價比首選。Agent 任務多、工具調用頻繁、成本敏感的產品，直接切。</p><p>閉源模型還在拼參數規模，DeepSeek 已經用開源策略把生態做起來了。這尼瑪就是降維打擊。</p><p>大時代啊，朋友們。</p><h3>參考文獻</h3><p class='list-item'>- DeepSeek V4 Flash 0731 发布说明：https://api-docs.deepseek.com/zh-cn/news/deepseek_v4_flash</p><p class='list-item'>- TerminalBench 基准测试数据：https://terminal-bench.github.io/</p><p class='list-item'>- Cybergym 基准测试数据：https://github.com/abi/sandbox-evaluator</p><p class='list-item'>- DeepSeek 开源许可说明：https://github.com/deepseek-ai/DeepSeek-V4</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>LangChain ReviewBench：AI代码审查智能体发现约30%的问题，更优提示词将F1提升至0.32 | 24 AI · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>LangChain ReviewBench：AI代码审查智能体发现约30%的问题，更优提示词将F1提升至0.32 | 24 AI</h1>
+<div class="meta"><span class="src">24-ai.news</span>
+<span>· <a href="https://24-ai.news/zh/news/2026-07-31/langchain-reviewbench-code-review-agents" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://24-ai.news/zh/news/2026-07-31/langchain-reviewbench-code-review-agents" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>LangChain發佈了ReviewBench，這是一個基於真實pull request評論構建的AI代碼審查智能體基準測試。在59項任務中，表現最好的模型發現了約30%的問題，而在更小的任務子集上採用結構化提示詞，將F1分數提升到了0.32。</p><p>本文由人工智能基於一手來源生成。</p><h3>ReviewBench源自真實的PR評論</h3><p>ReviewBench是LangChain公司爲評估AI代碼審查（code review）智能體而開發的基準測試，基於LangSmith代碼庫中真實的pull request（PR）評論構建而成。它包含59項任務，涵蓋64個核心問題，並通過Harbor框架——一個用於指令、環境和任務驗證的標準化框架——進行格式化處理。</p><p>評估方法分爲三個階段：首先，通過LLM門控（LLM gate）對已合併（merged）PR中可信審查員留下的評論進行初步過濾，篩掉弱候選項；隨後，對剩餘評論進行人工審查；最後，將確認的發現轉化爲Harbor任務。</p><h3>兩項指標合併爲F1分數</h3><p>作者衡量了兩個維度。Coverage（覆蓋率）衡量智能體是否在與人類審查員相同的代碼路徑上識別出了相同的核心問題。Precision（精確率）衡量智能體報告的發現中，實際正確的比例有多少。兩項指標結合爲F1分數，既懲罰遺漏的問題，也懲罰誤報。</p><h3>最好的模型發現了約30%的問題</h3><p>在59項任務的基線評估中，每項任務嘗試三次，表現最好的模型發現了64個核心問題中約30%的問題。這意味着，使用基礎harness的智能體遺漏了人類審查員最初發現的約70%的實際問題——絕大部分工作仍然要靠人來完成。</p><h3>爲什麼結構化提示詞能把F1提升到0.32？</h3><p>因爲要求智能體在得出結論之前先梳理變更內容、檢查可能出錯的地方，這一指令改變了模型的行爲，而不是依靠更強的基礎模型。在由20項任務組成的更小子集上，每項任務嘗試三次，經過微調、採用結構化提示詞的配置「Luna」取得了0.32的F1分數，明顯優於同一子集上的基礎提示詞。</p><p>LangChain這項研究的核心結論是：改進來自於提示策略——即在得出結論之前明確引導智能體分析變更內容——而不是來自基礎模型本身的實力。</p><h3>常見問題</h3><p class='list-item'>- ReviewBench是什麼，由誰開發？</p><p class='list-item'>- ReviewBench是LangChain公司爲評估AI代碼審查智能體而開發的基準測試，基於LangSmith代碼庫中真實的pull request評論構建而成。它包含59項任務，涵蓋64個核心問題，並通過Harbor框架進行格式化。</p><p class='list-item'>- 最好的AI智能體能發現多少問題？</p><p class='list-item'>- 在59項任務的基線評估中，每項任務嘗試三次，表現最好的模型發現了64個核心問題中約30%的問題，這意味着它們遺漏了人類審查員發現的約70%的實際問題。</p><p class='list-item'>- 是什麼提升了智能體的表現？</p><p class='list-item'>- 是結構化提示詞，而非更強的模型本身。經過微調、採用結構化提示詞的配置「Luna」在20項任務組成的更小子集上取得了0.32的F1分數，明顯優於基礎提示詞。</p><h3>📬 AI 新聞直達您的郵箱</h3><p>按您的方式定製每日摘要——自選主題、來源和頻率，一鍵退訂。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

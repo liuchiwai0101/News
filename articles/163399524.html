@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>DeepSeek V4 Flash 0731 开源，登顶开源模型前三 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>DeepSeek V4 Flash 0731 开源，登顶开源模型前三</h1>
+<div class="meta"><span class="src">blog.csdn.net</span>
+<span>· <a href="https://blog.csdn.net/2501_92547326/article/details/163399524" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/2501_92547326/article/details/163399524" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>前兩天大清早，我剛揉着惺忪的睡眼打開手機，刷推特的時候突然看到 Artificial Analysis 彈了一條推送。</p><p>當時我整個人直接就愣住了。</p><p>DeepSeek 又搞事情了。</p><p>它們悄無聲息地開源了全新的 DeepSeek V4 Flash 0731。</p><p>這玩意兒在 Artificial Analysis 智能指數上直接考出了 50 分的高分，瞬間殺進全球開源模型的前三名。</p><p>更離譜的是什麼呢，它採用的是完全自由的 MIT 許可，總參數 284B，但實際激活參數居然只有 13B，FP4/FP8 混合精度跑下來大概也就 167GB 左右。</p><p>而且架構和定價完全跟之前的 V4 Flash 保持一致，官方 API 也已經在第一時間內上線了。</p><p>說實話，看到這個消息的時候，我腦子裏第一反應不是什麼技術突破，而是腦補了一幅特別騷的畫面。</p><p>你在硅谷那些高大上的寫字樓裏，幾百個頂尖科學家開着百萬年薪，燒着幾億美金的算力，天天加班加點搞模型蒸餾、調參、架構優化。</p><p>結果遠在杭州的幾個年輕人，喝着茶，順手把代碼和權重往 GitHub 上一扔。</p><p>然後跟全世界說，來，開源的，拿去玩吧，性能還跟我們之前收費的昂貴 API 一模一樣。</p><p>這尼瑪簡直就是對當前整個硅谷 AI 圈子的一場無聲嘲諷。</p><p>我當時就忍不住尋思，DeepSeek 這幫人到底是用什麼材料做的，怎麼能做到每次發新東西都像是在玩降維打擊。</p><p>爲了徹底搞明白這玩意兒到底是真牛逼還是純粹在吹牛，我當天就直接調用了官方剛剛上線的 API，順便在 Hacker News 和推特上扒了一整天國外大佬們的評測和源代碼討論。</p><p>今天我就想跟大家好好聊聊這個剛出爐的 DeepSeek V4 Flash 0731，以及這背後隱藏着的一些極其有意思、甚至有點背離直覺的技術祕密。</p><p>故事得從 Artificial Analysis 那個榜單開始說起。</p><p>很多人可能對 Artificial Analysis 這個機構不太瞭解，你可以把它理解成 AI 界非常權威的第三方裁判所。</p><p>它們不看你廠商宣傳頁上寫的那些花裏胡哨的指標，只用自己的一套基準測試去硬測模型的真實能力、推理速度和性價比。</p><p>這次 V4 Flash 0731 跑出來的 50 分是什麼概念呢，就是在所有開源大模型裏，它已經能夠穩穩地跟頂級的開源巨無霸們平起平坐了。</p><p>但你要知道，通常那些能考到這個分數的開源模型，動不動就是幾百 GB 甚至是上 TB 的體量，想要在本地或者私有云上跑起來，你沒個幾張 A100/H100 顯卡連看都不敢看。</p><p>而 DeepSeek 這個 Flash 版本，總參數雖然達到了 284B，但在實際計算推理的時候，依靠極度騷氣的 Mixture of Experts 架構，真正激活的參數只有 13B。</p><p>13B 啊朋友們。</p><p>13B 意味着什麼，意味着它的計算開銷和響應速度其實跟一個輕量級的端側模型差不多。</p><p>你用着 13B 參數的算力成本，拿到了媲美巨型模型的推理能力。</p><p>這種感覺就像是你花了一輛飛度車的油錢，結果油門踩下去直接推出了保時捷 911 的加速度。</p><p>而且這次它們還把模型用 FP4 和 FP8 的混合精度給壓縮到了 167GB 左右。</p><p>雖然 167GB 顯存對於個人電腦來說依然有點喫力，但對於絕大多數企業級服務器或者多卡消費級顯卡組合來說，部署門檻簡直是被直接一腳踹翻到了地獄門檻。</p><p>更絕的是，DeepSeek 依然直接給了 MIT 許可。</p><p>熟悉開源協議的朋友都知道，MIT 協議基本上就是相當於告訴你，拿去用吧，拿去改吧，你想拿去商業化賣錢都無所謂，別找我麻煩就行。</p><p>在這個很多大廠都在搞僞開源、給開源協議加各種商業限制條款的年代，DeepSeek 這種直接丟 MIT 協議的做法，真就叫真誠是唯一的捷徑。</p><p>說到這裏，我就不得不提起前兩天在 Hacker News 上看到的一個超級熱門的帖子。</p><p>那個帖子名字叫 Show HN: 將 DeepSeek 整合到 GPT-OSS 中不會帶來審查機制。</p><p>這個帖子是由 CTGT 團隊發出來的一篇研究報告，他們在 Hacker News 上一掛出來就直接被頂上了首頁。</p><p>研究內容特別騷，可以說是精準地戳中了西方科技圈一直以來最敏感、也最糾結的一個痛點。</p><p>大家也都知道，國外很多開發者和機構對中國背景的 AI 模型一直有一種說不清道道不的戒心，總覺得中國的模型帶有某種天然的審查機制。</p><p>於是這個 CTGT 團隊就做了一個非常有意思的受控實驗。</p><p>他們用 DeepSeek V4 Flash 作爲教師模型，去蒸餾訓練美國本土的開源模型 GPT-OSS-120B。</p><p>說白了，就是讓美國的開源模型去天天背誦、學習 DeepSeek 的輸出內容，看看能不能把 DeepSeek 身上強大的推理能力給學過來。</p><p>同時，他們最核心想觀察的一點是，在把 DeepSeek 的能力蒸餾過去的過程中，那些所謂的審查行爲，到底會不會跟着一起遷移到美國模型身上。</p><p>實驗結果出來之後，所有的研究人員都傻眼了。</p><p>不僅沒有出現他們擔心的審查遷移，相反，GPT-OSS-120B 在吸收了 DeepSeek V4 Flash 的輸出之後，金融推理能力和複雜邏輯能力出現了暴漲。</p><p>這說明了什麼，說明 DeepSeek 模型的底層推理能力和邏輯框架，跟表面上的安全過濾機制完全是兩碼事。</p><p>模型的智慧是純粹的邏輯和知識，而所謂的過濾層只是外面套的一層殼。</p><p>當西方開發者拿到了 DeepSeek 的開源權重或者 API 輸出來訓練自己的模型時，他們得到的全是硬核的數學、代碼和金融推理乾貨。</p><p>看到這個實驗結果的時候，我真的差點笑出聲。</p><p>這不就是典型的打不過就加入嗎。</p><p>嘴上說着不要，身體卻非常誠實地拿 DeepSeek 的數據去喂自己的模型，結果喂完發現效果好得不行。</p><p>這也印證了我一直以來的一觀：技術本身是沒有國界的，真正能夠打動人類的，永遠是絕對硬核的實力和效率。</p><p>說實話，我自己也在項目裏試着調用了新版 V4 Flash 的 API。</p><p>我隨便扔給了它一段極其繁瑣的 Java 後端併發代碼，裏面包含了複雜的 Redis 緩存擊穿邏輯和 Lua 腳本原子更新。</p><p>這種代碼如果讓一般的模型來看，很可能會在上下文解析或者邏輯推演上出現紕漏。</p><p>但 V4 Flash 0731 的返回速度快得飛起，並且不僅精準指出了我代碼裏關於鎖釋放的一個隱蔽 Bug，還順手給我優化出了一版性能更高的實現。</p><p>那種毫秒級響應帶來的爽快感，真的會讓你覺得科技的進步太特麼赤雞了。</p><p>你可以回想一下，在兩三年以前，我們想要用上這種級別的模型能力，需要經歷怎樣的過程。</p><p>你需要按月支付高昂的訂閱費，你需要忍受時不時的網絡卡頓，你需要看着那個光標像烏龜爬一樣一個字一個字地往外吐。</p><p>而現在，DeepSeek 把這一切都給打下來了。</p><p>它們不僅把 API 價格壓到了極致，還把最核心的開源權重毫無保留地拱手相讓。</p><p>我有時候覺得，DeepSeek 正在用一己之力重塑整個全球 AI 的生態格局。</p><p>它們不是在跟 Open AI 或者 Anthropic 競爭某一款產品的市場份額，它們是在用一種接近於公用事業的方式，把頂尖 AI 算力和推理能力的獲取成本，推向無限接近於零。</p><p>當技術被摺疊到人人都可以輕易觸及的高度時，奇蹟纔會真正發生。</p><p>你不再需要是一個擁有千萬融資的創業公司，你甚至不需要有一間像樣的辦公室。</p><p>你只需要一臺帶顯卡的電腦，加上一點點對這個世界的好奇心，你就可以基於 DeepSeek 開源的模型，搭建出屬於你自己的超級應用。</p><p>從最早的 DeepSeek V1 到現在的 V4 Flash 0731，我一路看着它們走過來，最感動我的從來不是那些跑分榜單上的數字。</p><p>而是這羣人身上那種極具硬核工匠精神的浪漫主義。</p><p>它們不搞花裏律哨的發佈會，不講那些動不動就要改變人類命運的宏大敘事。</p><p>它們只是默默地在每一個節點上，把代碼寫好，把架構調優，把權重打包，然後發個推特說，吶，我們做出來了，表現還不錯，開源了，大家拿去玩吧。</p><p>這纔是真正的技術精神。</p><p>坦率的講，在這個充滿了喧囂、泡沫和焦慮的時代，能看到有這樣一家團隊，始終踐行着對技術的好奇與真誠，真的讓人非常慶幸。</p><p>大時代啊，朋友們。</p><p>當頂尖的模型能力像空氣和水一樣變得觸手可及，接下來最重要的，就是看我們這些普通人，能用它來玩出什麼有意思的花樣了。</p><p>謝謝你看我的文章，我們，下次再見。</p><h3>/ 作者：Ea4on</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

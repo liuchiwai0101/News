@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>Vue 3.6 Vapor Mode 实战：储能大屏渲染性能提升 4 倍 · 流動日報譯文</title>
+<title>Vue 3.6 Vapor Mode 实战：我把一个 Vue3 项目渲染性能提升 4 倍 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,8 +42,8 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>Vue 3.6 Vapor Mode 实战：储能大屏渲染性能提升 4 倍</h1>
-<div class="meta"><span class="src">掘金</span><span>· 2026-07-28</span>
+<h1>Vue 3.6 Vapor Mode 实战：我把一个 Vue3 项目渲染性能提升 4 倍</h1>
+<div class="meta"><span class="src">juejin.cn</span>
 <span>· <a href="https://juejin.cn/post/7663854184966062126" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7663854184966062126" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><h3>Vue 3.6 Vapor Mode 實戰：我把一個 Vue3 項目的渲染性能提升了 4 倍</h3><p>上個月 Vue & ViteConf 2026 上，尤雨溪宣佈了三件事：Vue 3.6 正式發佈、Vue 4.0 啓動、Vite 8 落地。其中 **Vapor Mode** 是最讓我興奮的——它讓 Vue 的虛擬 DOM 變成了「可選項」，而不是「必選項」。</p><p>我們團隊維護的儲能監控大屏項目，單頁同時渲染 50+ 圖表組件，Vue 3.4 時代每次數據刷新都會觸發全量 diff，即使大部分圖表數據根本沒變。<code>shallowRef</code> + <code>markRaw</code> 的補丁打了一層又一層，性能瓶頸始終卡在虛擬 DOM 的比對開銷上。</p><p>Vue 3.6 的 Vapor Mode 承諾直接編譯爲細粒度 DOM 操作，跳過虛擬 DOM 中間層。我花了一個週末把核心看板模塊遷移過去，結果**首幀渲染時間從 580ms 降到 120ms，內存佔用減少 40%**。這篇文章記錄我的完整遷移過程和踩過的坑。</p><h3>一、Vapor Mode 到底是什麼？跟虛擬 DOM 的區別在哪</h3><p>傳統 Vue 3 的渲染流程是：組件狀態變化 → 重新執行渲染函數 → 生成新的虛擬 DOM 樹 → Diff 算法比對 → 定位變更節點 → 批量 Patch 真實 DOM。</p><p>Vapor Mode 把這套流程砍掉了中間三層。編譯器在構建階段直接分析模板中的依賴關係，生成這樣的代碼：</p><pre><code>// 传统 Vue 3 编译输出（简化）
