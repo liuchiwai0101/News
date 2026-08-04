@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>[论文评述] Understanding Alignment in Multimodal LLMs: A Comprehensive Study · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>[论文评述] Understanding Alignment in Multimodal LLMs: A Comprehensive Study</h1>
+<div class="meta"><span class="src">themoonlight.io</span>
+<span>· <a href="https://www.themoonlight.io/zh/review/understanding-alignment-in-multimodal-llms-a-comprehensive-study" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.themoonlight.io/zh/review/understanding-alignment-in-multimodal-llms-a-comprehensive-study" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>[论文评述] Understanding Alignment in Multimodal LLMs: A Comprehensive Study</h3><p>这篇论文的标题为《理解多模态大语言模型中的对齐：综合研究》。论文的作者包括Elmira Amirloo、Jean-Philippe Fauconnier、Christoph Roesmann、Christian Kerl、Rinu Boney、Yusu Qian、Zirui Wang、Afshin Dehghan、Yinfei Yang、Zhe Gan和Peter Grasch，均来自Apple Inc。</p><h3>摘要</h3><p>偏好對齊已成爲提升大型語言模型（LLMs）性能的關鍵組成部分，而其在多模態大型語言模型（MLLMs）中的影響尚未得到充分探討。與語言模型類似，MLLMs在圖像理解任務中也面臨諸如“幻覺”的挑戰。在MLLMs中，幻覺不僅體現在陳述錯誤事實上，還表現爲生成與圖像內容不一致的響應。MLLMs對齊的一項主要目標是鼓勵模型的響應更接近於圖像信息。近期，多個研究已提出用於MLLMs的偏好數據集，並探討了包括直接偏好優化（DPO）和近端策略優化（PPO）在內的不同對齊方法。然而，由於數據集、基礎模型類型和對齊方法的差異，當前尚不清楚哪些具體因素對這些研究中報告的性能提升最爲顯著。本文獨立分析了MLLMs中偏好對齊的各個方面。</p><h3>方法論</h3><p>研究者首先將對齊算法分爲兩組：離線方法（例如DPO）和在線方法（例如在線DPO），並展示在某些情況下結合使用離線和在線方法能提高模型的性能。論文還回顧了多種已發佈的多模態偏好數據集，並討論了其構建細節如何影響模型性能。基於這些見解，研究者引入了一種新的創建多模態偏好數據的方法，稱爲偏差驅動的幻覺採樣（BDHS），該方法無需額外標註或外部模型，顯示出在多個基準測試中能達到與先前發佈的對齊工作競爭的性能。</p><h3>核心方法</h3><p>BDHS方法的設計旨在有效地產生偏好數據，具體過程如下：</p><p class='list-item'>- **引導生成**：響應從一個參考句子進行拆分，並通過模型生成功能對非重疊部分進行補充。這樣做的目的是確保生成的無偏好（被拒絕的）回答與首選回答保持一定一致性，以便優化對圖像的注意力。</p><p class='list-item'>- **注意力掩蔽**：實驗中通過隨機掩蔽部分圖像嵌入的注意力，從而誘導模型生成幻覺。具體來說，通過掩蔽的方式讓模型只能關注部分圖像信息，促使模型依賴其預訓練的語言知識生成響應，而非完全依賴圖像信息。</p><p class='list-item'>- **相似性評分**：爲了避免生成的無偏好響應與首選響應在語義上的相似性，BDHS設計了一個迭代過程，使用句子嵌入模型計算生成響應與首選響應的相似度，並在超過設定閾值時重新生成。</p><h3>結果</h3><p>結果顯示，BDHS方法在多個基準測試中優於使用外部網絡或人類標註生成的傳統數據集。通過結合在線與離線方法，BDHS確立了在多模態對齊領域的競爭力。</p><h3>結論</h3><p>本文提升了對MLLMs中偏好對齊的理解，確立了進一步研究的基礎，特別是在如何改進對齊方法、提升模型在實際應用中的可信度等方面。寫作團隊也提出了幾個未來研究方向，鼓勵社區的進一步探索。整體而言，這項研究爲多模態語言模型的對齊策略提供了新的思路，強調在減少模型幻覺方面的重要性，併爲今後類似的工作奠定了基礎。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

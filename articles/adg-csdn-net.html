@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>每日极客日报：Bijou64 变长整数编码与 Quick BI 数据智能体工程实践 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>每日极客日报：Bijou64 变长整数编码与 Quick BI 数据智能体工程实践</h1>
+<div class="meta"><span class="src">adg.csdn.net</span>
+<span>· <a href="https://adg.csdn.net/6a6d6216662f9a54cb96cbee.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://adg.csdn.net/6a6d6216662f9a54cb96cbee.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>每日極客日報 · 2026年08月01日</h3><h3>·</h3><h3>每日極客日報 · 2026年08月01日 &gt; 今日精選 25 條 IT 科技熱點，覆蓋 AI 大模型、開源生態、雲原生、工程實踐與業界動態。 --- ## 🔥 今日頭條 ### [Tailscale 覆盤 Hugging Face 入侵：邊界安全爲何攔不住](https://tailscale.com/blog/hugging-face-intrusion) Tailscale 發佈 Hugging Face 被自主 AI 代理入侵事件的深度覆盤（HN 475 分）。文章指出，傳統基於邊界/網絡的零信任方案未能阻止攻擊鏈，攻擊者利用被入侵環境的網絡可達性橫向移動。對&quot;用 VPN/零信任就能防住 AI 代理&quot;的假設敲響警鐘，值得所有部署 AI Agent 的團隊細讀。 ### [NVIDIA Vera Rubin 正式登場：從芯片捲到電網，只爲壓低每個 Token 成本](https://www.infoq.cn/article/3gb6NlxK6c0A9or5Zfbt) InfoQ 解讀 NVIDIA Vera Rubin 全棧協同設計：從 GPU 芯片、整機櫃到數據中心供電與電網調度一體優化，核心目標是最大化每瓦性能、壓低推理 Token 成本。這是算力競爭從&quot;單芯片性能&quot;轉向&quot;系統級能效&quot;的標誌性節點，將深刻影響未來雲與 AI 基礎設施格局。 ### [29GB 內存跑起 Kimi K3：本地大模型推理的新可能](https://github.com/sqliteai/waste) HN 熱帖（166 分）介紹用 29GB RAM、約 0.50 tok/s 在消費級設備上跑起 Kimi K3 權重的實踐。雖速度不快，但證明開源大模型在脫離昂貴 GPU 集羣的情況下仍有本地推理空間，對隱私敏感場景與邊緣部署具啓發意義。 ### [微軟、Meta 同日交財報：納德拉靠 Azure 賺瘋，小扎燒錢到只剩 7.84 億美元](https://www.infoq.cn/article/cWloUAofMHCLHpvscihh) InfoQ 對比微軟與 Meta 最新財報：微軟憑藉 Azure 與 AI 雲服務利潤大漲，Meta 則因激進的 AI 基建投入現金流驟降至 7.84 億美元。兩種 AI 投入策略的財務反差，折射出行業對&quot;AI 回報週期&quot;的分歧。 --- ## 📦 開源項目精選 ### 1. [different-ai/openwork](https://github.com/different-ai/openwork) ⭐ 19.5k (+806) **TypeScript** | Claude Cowork 的開源替代方案，基於 opencode 構建，主打多人協作式 AI 編程代理。適合想在自有環境中搭建團隊級 Agent 工作流的開發者，今日新增 806 星，增長勢頭強勁。 ### 2. [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) ⭐ 56.3k (+658) **Python** | AI Agent 技能包，可跨 Reddit、X、YouTube、HN、Polymarket 及全網研究任意主題，並綜合成有據可查的摘要。把&quot;信息聚合 + 溯源&quot;工程化，適合做競品追蹤、輿情與調研自動化。 ### 3. [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) ⭐ 55.4k (+1.6k) **Jupyter Notebook** | 微軟出品的 12 周、24 課 AI 入門課程，覆蓋經典 ML 到深度學習與生成式 AI。零基礎友好的系統化學習路徑，今日單日新增約 1,592 星，長期位居 AI 教育類倉庫前列。 ### 4. [1jehuang/jcode](https://github.com/1jehuang/jcode) ⭐ 14.7k (+527) **Rust** | 主打&quot;最省內存&quot;的編程/AI 代理運行框架，以極低 RAM 佔用爲賣點。在內存受限環境或大規模併發 Agent 場景下具備優勢，今日新增 527 星。 ### 5. [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) ⭐ 10.8k (+335) **PowerShell** | 逆向/授權滲透/安全研究的 AI 技能路由包：AI 自動路由 + 按需自舉工具鏈 + 自進化知識庫，支持 Claude Code、Kiro、Cursor、Cline 等客戶端。安全研究員的高效工作流加速器。 ### 6. [agavra/tuicr](https://github.com/agavra/tuicr) ⭐ 2.2k (+335) **Rust** | 帶 vim 鍵綁定的代碼審查 TUI 工具，可在終端內高效瀏覽 diff、評論與審查流程。適合偏好鍵盤流、想把 Code Review 留在終端的工程師，今日新增 335 星。 ### 7. [github/copilot-sdk](https://github.com/github/copilot-sdk) ⭐ 10.1k **Java** | GitHub 官方多平臺 SDK，用於將 Copilot Agent 能力集成進自有應用與服務。標誌着 Copilot 從編輯器插件走向可嵌入的 Agent 基礎設施，值得平臺型產品關注。 --- ## 🤖 AI &amp; 大模型動態 ### [Is AI reasoning right for the wrong reasons?](https://www.quantamagazine.org/is-ai-reasoning-right-for-the-wrong-reasons-20260731/) Quanta Magazine 深度報道（HN 124 分）探討大模型&quot;推理&quot;是否建立在正確的機制之上。研究提示部分模型看似推理正確，實則依賴表面的統計捷徑，揭示當前推理模型在可解釋性與可靠性上的深層隱憂。 ### [大模型價格戰再起：DeepSeek V4 Flash 正式版上線，GPT-5.6 大幅降價](https://juejin.cn/post/7668568406279405606) 掘金彙總本週 AI 圈最大變量：DeepSeek V4 Flash 正式版發佈、OpenAI GPT-5.6 大幅降價（V2EX 亦有集中討論），API 性價比被重新洗牌。對依賴外部模型的應用層是顯著利好，選型策略需重新評估。 ### [智譜 GLM 逆勢漲價近 3 倍，社區熱議定價策略](https://www.v2ex.com/t/1231126) V2EX&quot;程序員&quot;節點熱帖（56 回覆）吐槽智譜 GLM 近期價格上調近 3 倍。在同行紛紛降價的背景下，逆勢漲價引發對國產大模型商業路徑與成本結構的廣泛討論。 ### [翁荔被爆重返 OpenAI，AI 頂才流動加速](https://www.infoq.cn/article/im3GxWtxYPZpkodNRgVQ) InfoQ 報道稱翁荔在離開 Thinking Machines Lab 後重返 OpenAI。頂級 AI 人才的頻繁流動，折射出大模型公司在研究壁壘與組織穩定性上的激烈博弈。 --- ## 🛠️ 工程實踐 &amp; 技術文章 ### [硬停止規則：從 3 個 HCM 單體應用到 120 個領域微服務](https://www.infoq.cn/article/1GC0U88AkvaWbqO1DNlR) InfoQ 譯介 Paycor 團隊五年轉型實錄：主動&quot;凍結&quot;單體架構的新改動，將平臺拆爲 120 個領域微服務。坦誠分享停改單體的決策邏輯與陣痛，對正在或準備做微服務化的團隊極具借鑑價值。 ### [June in Servo：真實世界兼容、媒體查詢、SharedWorker 等進展](https://servo.org/blog/2026/07/31/june-in-servo/) Servo 瀏覽器引擎 6 月進展報告（HN 112 分）：在真實網站兼容性、媒體查詢、SharedWorker 等方面取得實質突破。作爲 Rust 編寫的現代引擎，其每一步推進都關乎 Web 平臺的性能與安全未來。 ### [Golang 提案：container/ 引入泛型集合類型](https://github.com/golang/go/issues/80590) Go 官方提案（HN 128 分）建議在標準庫 container/ 下引入泛型集合類型。若通過，將終結 Go 社區長期依賴第三方泛型容器的局面，影響無數項目的依賴結構與代碼風格。 ### [我們棄用了自建 LLM 路由器](https://manifest.build/blog/why-we-deprecated-our-llm-router/) Manifest 工程博客（HN 96 分）反思&quot;人人都在建 LLM 路由器&quot;的潮流：自研路由在模型快速迭代下維護成本陡增，最終選擇棄用。爲盲目跟風 LLM 基礎設施的團隊提供了反共識視角。 --- ## 🌐 業界動態 ### [GitHub AI Agent 翻車：一句話間接提示注入即可竊取私有倉庫數據](https://www.infoq.cn/article/u4rDqep8zVWUJsqVoQ23) InfoQ 披露針對 GitHub AI Agent 的間接提示注入攻擊：攻擊者無需黑客技術，僅寫一句話即可誘導 Agent 泄露私有倉庫數據。再次警示&quot;把 Agent 接入代碼庫&quot;前必須建立隔離與權限護欄。 ### [Kubernetes 之後，谷歌 Agent Substrate 意在拿下下一個十年](https://www.infoq.cn/article/h0WG6p7z3tyTk3hxQIhT) InfoQ 分析指出 K8s 並非理想的 AI 智能體控制平面，谷歌 Agent Substrate 瞄準下一代 Agent 編排。容器編排的統治經驗能否延續到 Agent 時代，是雲廠商的新戰場。 ### [二十五年前是密碼學，今天是大模型權重](https://weeraman.com/because-we-can/) HN 熱文（178 分）類比：當年密碼學算法的開放與管制之爭，如今在開源大模型權重上重演。關於&quot;模型權重是否應受出口管制、開放權重運動的合法性&quot;的討論，正成爲 AI 治理的核心命題。 --- ## 📚 推薦閱讀 ### [交互式圖解：JPEG 有損壓縮是如何工作的](https://cgjennings.ca/articles/jpeg-compression/) HN 118 分的交互式長文，用可視化一步步拆解 JPEG 的色彩空間轉換、DCT、量化與熵編碼。想真正理解&quot;爲什麼圖片壓縮會糊&quot;的開發者，這是難得的直觀教材。 ### [Quick BI 數據分析智能體的可靠工程實踐](https://www.infoq.cn/article/VJ3s26QZUG1C5ANF2O4Q) InfoQ（AICon 深圳）分享數據智能體從&quot;能對話&quot;到&quot;能信賴&quot;的工程實踐，聚焦數據可理解性與系統可控性，適合正在把 Agent 落地到企業數據分析的團隊參考。 ### [告別 LEB128：Bijou64 用結構設計解決安全問題](https://www.infoq.cn/article/bJwPR37hbb5stH238hyS) InfoQ 介紹 Ink &amp; Switch 推出的 Bijou64 可變長整數編碼規範，用結構性約束規避 LEB128 的解析陷阱與安全隱患。對從事二進制協議、序列化與解析器實現的工程師有啓發。 --- *每日極客日報 由 AI 助手自動整理 · 如有遺漏歡迎補充*</h3><h3>更多推薦</h3><h3>已爲社區貢獻3條內容</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

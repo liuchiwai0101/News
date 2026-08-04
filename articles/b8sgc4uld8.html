@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>tsgo 转正：Go 重写的 TypeScript 7.0 正式发布，构建提速 8–12 倍 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>tsgo 转正：Go 重写的 TypeScript 7.0 正式发布，构建提速 8–12 倍</h1>
+<div class="meta"><span class="src">front-talk.com</span>
+<span>· <a href="https://front-talk.com/news/b8SGc4ULd8" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://front-talk.com/news/b8SGc4ULd8" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>一個大型 TypeScript 項目，從打開 VS Code 到看見第一條類型錯誤，要等多久？</p><p>以前可能是 17.5 秒，現在不到 1.3 秒。</p><p>這不是換了臺更貴的電腦，也不是關掉類型檢查換來的速度。微軟把 TypeScript 編譯器和語言服務移植到了 Go，做成了今周正式發佈的 **TypeScript 7.0** 。</p><p>過去一年，很多開發者已經通過 <code>tsgo</code> 體驗過這個原生版本。正式版發佈後，<code>tsgo</code> 這個預覽階段的名字也完成了使命。現在直接安裝標準 <code>typescript</code> 包，拿到的就是新的 <code>tsc</code>。</p><pre><code>npm install -D typescript
+npx tsc</code></pre><p>對於每天被類型檢查、編輯器卡頓和 CI 排隊折磨的前端團隊，這次升級可能比新增十幾個語法特性更有感。</p><p>TypeScript 6 及更早版本的編譯器以 TypeScript 編寫，運行在 JavaScript 環境中。TypeScript 7 則是一個新的 Go 原生代碼庫。</p><p>微軟沒有重新設計一門語言，而是儘量保留舊代碼庫的結構與邏輯，讓兩個編譯器得到一致的檢查結果。變化集中在底層執行方式：原生代碼、共享內存多線程，以及圍繞新架構加入的一系列優化。</p><p>這也是爲什麼提升不是常見的 10% 或 20%，而是直接跨了一個數量級。</p><p>在官方測試的 5 個大型開源項目中，完整構建速度提升了 **7.7 倍到 11.9 倍** ：</p><p>速度更快，內存也沒有跟着失控。上述項目的總內存用量下降了 6% 到 26%。其中 Bluesky 從 1.8 GB 降到 1.3 GB，減少 26%。</p><p>我的第一反應不是“編譯終於快了”，而是 **TypeScript 開始更充分地使用現代多核硬件了** 。過去你給 CI 增加 CPU，類型檢查未必能線性受益。TypeScript 7 會並行執行解析、類型檢查、代碼輸出和項目引用構建，大型 monorepo 更容易喫到硬件升級的紅利。</p><p>只看構建耗時，會低估這次重構的影響。</p><p>TypeScript 同時掌管編輯器裏的自動補全、跳轉、查找引用和錯誤診斷。項目越大，語言服務的延遲越容易把開發節奏切碎。你剛進入狀態，點了一次“查找全部引用”，然後開始盯着進度條發呆。</p><p>TypeScript 7 的語言服務改用 LSP，並能通過多線程同時處理請求。在 VS Code 代碼庫上，從啓動編輯器到顯示首個錯誤，由約 17.5 秒縮短到 1.3 秒以內。Canva 的反饋也很直觀，同一個過程從約 58 秒降到了 4.8 秒。</p><p>更關鍵的是穩定性。微軟公佈的內部數據中，新語言服務失敗的命令減少超過 80%，崩潰減少超過 60%。快是一眼就能看見的變化，少崩纔是團隊長期使用時真正省心的地方。</p><p>把這次性能提升簡單歸因於“Go 比 TypeScript 快”，會漏掉一半故事。</p><p>TypeScript 7 的優勢來自三部分疊加：</p><p><code>--watch</code> 模式都獲得了新的實現基礎。默認情況下，TypeScript 7 會啓用 4 個類型檢查 worker。大型項目可以通過實驗性的 <code>--checkers</code> 參數繼續加並行度。官方把 worker 調到 8 個後，VS Code 的完整構建耗時進一步從 10.6 秒降到 7.51 秒，相比 TypeScript 6 快 16.7 倍。</p><p>但 worker 不是越多越好。更多檢查器會消耗更多內存，<code>--checkers</code> 與並行項目構建參數 <code>--builders</code> 疊加後，還可能瞬間拉高併發量。資源有限的 CI 機器，反而適合減少 worker，或者用 <code>--singleThreaded</code> 排查問題。</p><p>普通 Node.js 和前端項目可以先在分支裏試。安裝方式沒有額外門檻，原來的 <code>npx tsc</code> 命令也不用改。</p><p>不過，TypeScript 7.0 還沒有提供穩定的編程 API。這會影響直接嵌入 TypeScript 編譯器或語言服務的工具。官方預計 TypeScript 7.1 纔會帶來一套新的 API。</p><p>因此，下面幾類項目需要多看一步：</p><p><code>@typescript/typescript6</code> 兼容包正是为过渡准备的。TypeScript 7 还继承了 6.0 的新默认值和废弃项处理。<code>strict</code> 默认开启，<code>module</code> 默认改为 <code>esnext</code>，<code>target: es5</code>、<code>moduleResolution: node</code>、<code>baseUrl</code> 等旧配置也不再受支持。老项目如果跨版本升级，先处理 TypeScript 6 的迁移问题，会比直接硬切顺利得多。</p><p>我認爲 TypeScript 7 最有分量的變化，不是某個項目跑出了 11.9 倍，而是編譯器和語言服務共用了一套能繼續擴展的原生基礎。</p><p>對個人小項目來說，幾十毫秒和幾百毫秒未必有明顯區別。對擁有幾百萬行代碼、數百名開發者的大型團隊來說，每次類型檢查少等幾秒，乘上每天的提交、CI 和編輯器操作，就是一筆可觀的時間。</p><p>當然，7.0 還不是生態遷移的終點。穩定 API 要等 7.1，部分框架工具鏈也需要時間適配。但 <code>tsgo</code> 所代表的原生代碼庫已經走進標準 <code>typescript</code> 包，這說明最難的底層遷移已經完成。</p><p>從今天開始，TypeScript 的性能上限不再只由 JavaScript 運行時決定。對於前端工程化來說，這可能是未來幾年裏最實在的一次基礎設施升級。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

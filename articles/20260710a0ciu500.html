@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Rust 持续吞噬前端工具链：SWC、Oxc、Rspack 2.1 与 Rolldown 的现状 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Rust 持续吞噬前端工具链：SWC、Oxc、Rspack 2.1 与 Rolldown 的现状</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260710A0CIU500?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260710A0CIU500?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>微軟主導的 TypeScript 7.0 正式發佈首個穩定版本。得益於使用 Go 語言對編譯器進行徹底重寫，新版帶來了數量級的性能提升。</p><p>這是自啓動實驗性原生 Go 實現以來，首個包含基於 Go 的編譯器重寫的穩定版本。微軟首席產品經理 Daniel Rosenwasser 表示，TypeScript 7 引入了原生代碼速度、共享內存多線程及多項新優化，通常在完整構建中可實現 8 到 12 倍的速度提升。</p><p>此次重寫顯著縮短了文件打開、代碼搜索及自動補全的響應時間。值得注意的是，這種加速主要作用於開發階段，而非部署階段。過去常被歸咎於文本編輯器的延遲，實則多由 TypeScript Language Server（語言服務器）的性能瓶頸導致。</p><h3>JavaScript 已難勝任</h3><p>TypeScript 團隊去年便着手解決性能瓶頸。TypeScript 創始人 Anders Hejlsberg 宣佈，語言服務器的所有組件均需從頭重寫。Hejlsberg 指出，從最初由 V8 引擎執行的 JavaScript 編譯器移植到原生代碼，旨在獲取 10 倍的提速，其中一半源於原生代碼，另一半得益於共享內存併發能力。</p><p>此前，大型項目開發者深受緩慢的語言服務器困擾。以 Slack 爲例，其開發人員曾因本地類型檢查過慢，被迫將任務移交持續集成服務器。隨着 TypeScript 7 的發佈，Slack 開發人員已可再次在本地完成完整的類型檢查。</p><p>基準測試數據顯示了顯著的性能飛躍：在編譯擁有 230 萬行代碼的 VS Code 時，TypeScript 6 耗時 125 秒，而 TypeScript 7 僅耗時 10.6 秒，提升達 11.9 倍。此外，TypeScript 7 在處理其他大型代碼庫時也表現優異：Sentry（190 萬行代碼）耗時 15.7 秒，Bluesky（62.8 萬行代碼）耗時 2.8 秒，Playwright（52.8 萬行代碼）耗時 1.47 秒。</p><h3>爲何選擇 Go</h3><p>儘管微軟擁有 C# 且行業青睞 Rust，團隊最終仍選擇 Go 進行重寫。Go 由 Google 工程師創建，以簡化分佈式應用開發著稱，並在雲原生社區（如 Kubernetes）中佔據主導地位。</p><p>Hejlsberg 解釋稱，Go 是能提供跨平臺完整原生代碼支持的最低級別語言，且在併發處理上表現出色。TypeScript 開發團隊負責人 Ryan Cavanaugh 補充指出，Go 語法與 JavaScript 高度相似，便於人員理解和機器遷移，這對於仍需維護數年的舊 JS 服務器代碼至關重要。</p><p>此外，Go 在內存分配和圖遍歷方面優勢明顯。對於大多數編譯過程，TypeScript 可關閉 Go 的垃圾回收器，從而大幅降低代碼庫複雜性和運行時成本。Go 在處理複雜語法樹時的效率，也使其能更好地理解錯綜複雜的代碼結構。</p><h3>面向未來的智能體優勢</h3><p>前 Google Go 產品負責人 Steve Francia 指出，Go 還爲 TypeScript 帶來了構建時間、依賴管理、錯誤反饋和貢獻者流失率方面的優勢。這些因素不僅影響開發者體驗，更關乎未來自動化智能體的效率。</p><p>Francia 認爲，緩慢的構建、損壞的依賴解析及薄弱的錯誤反饋會阻礙迭代，而生態系統的變化可能導致智能體知識失效。他強調，在開發循環中，關鍵問題並非“哪種語言最容易編寫”，而是“哪種語言最容易編寫、審查和發佈”。正是 Go 的這些人性化特質，使其成爲推動 TypeScript 飛速發展的理想選擇。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

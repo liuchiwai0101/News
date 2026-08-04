@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>TypeScript 7.0 实测：Slack 的 CI 类型检查从 7.5 分钟降到 1.25 分钟 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>TypeScript 7.0 实测：Slack 的 CI 类型检查从 7.5 分钟降到 1.25 分钟</h1>
+<div class="meta"><span class="src">linlog.top</span>
+<span>· <a href="https://linlog.top/article/1080" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://linlog.top/article/1080" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>TypeScript 7.0 正式發佈：Go 重寫帶來最高 12 倍速度提升</h3><p>2026 年 7 月 8 日，微軟正式發佈 TypeScript 7.0。這個版本的里程碑意義在於：整個編譯器用 Go 語言從頭重寫，完整構建速度提升 8 到 12 倍，同時內存佔用也顯著降低。</p><h3>爲什麼用 Go 重寫</h3><p>TypeScript 最初由 TypeScript 自身編寫（自舉編譯器），經過十多年的發展積累了龐大的代碼量。隨着前端項目規模不斷增長，編譯速度成爲開發者最頻繁遇到的瓶頸，尤其在大型 monorepo 中，一次完整類型檢查可能需要數分鐘。</p><p>微軟團隊在 2025 年啓動了原生重寫計劃，目標是利用現代多核 CPU 的並行計算能力。Go 語言的共享內存多線程模型天然適合這個需求。重寫過程中，團隊儘可能保持原有代碼結構和邏輯不變，確保新舊編譯器產出的類型檢查結果完全一致。</p><p>TypeScript 7 帶來了三個關鍵變化：</p><p class='list-item'>- **原生代碼執行速度**：Go 編譯爲原生二進制，不再依賴 Node.js 運行時</p><p class='list-item'>- **共享內存多線程**：解析、類型檢查、代碼生成可以並行執行</p><p class='list-item'>- **全新 watch 模式**：基於 Parcel bundler 的文件監視器，跨平臺更穩定</p><h3>真實項目基準測試</h3><p>微軟在五個大型開源項目上對比了 TypeScript 6 和 7 的完整構建時間：</p><p>內存方面同樣有改善：</p><h3>編輯器體驗的質變</h3><p>對開發者日常體驗影響最大的是編輯器響應速度。在 VS Code 代碼庫中，打開一個包含類型錯誤的文件，從編輯器啓動到看到第一個錯誤提示：</p><p class='list-item'>- **TypeScript 6**：约 17.5 秒</p><p class='list-item'>- **TypeScript 7**：不到 1.3 秒</p><p>find-all-references、自動補全、實時診斷等高頻操作的延遲都大幅縮短。TypeScript 7 的語言服務器基於 LSP（Language Server Protocol），已適配 VS Code、Visual Studio、WebStorm 等主流編輯器。</p><p>根據微軟的數據，TypeScript 7.0 的新語言服務器將失敗的語言服務器命令減少了 80% 以上，服務器崩潰減少了 60% 以上。</p><h3>新增並行控制參數</h3><p>TypeScript 7 引入了兩個實驗性參數來精細控制並行度：</p><h3>--checkers N</h3><p>控制類型檢查器的工作線程數，默認爲 4。在 CPU 核心較多的機器上可以調高。例如使用 <code>--checkers 8</code> 時，各項目加速比進一步提升：</p><p>代價是內存佔用增加，因爲每個類型檢查器 worker 會維護自己的類型信息視圖。在 CI 環境（CPU 核心少、內存有限）中，可以將 <code>--checkers</code> 調低到 1 來避免不必要的開銷。</p><h3>--builders N</h3><p>控制項目引用（project references）的並行構建器數量，適合 monorepo 場景。<code>--builders</code> 與 <code>--checkers</code> 有乘積效應：<code>--checkers 4 --builders 4</code> 意味着最多 16 個類型檢查線程同時運行，可能過於激進。</p><h3>--singleThreaded</h3><p>完全關閉並行化，解析、類型檢查、代碼生成全部在單線程中執行。適用於調試、與 TypeScript 6 性能對比、外部編排並行構建、或資源極度受限的環境。</p><h3>與 TypeScript 6 共存方案</h3><p>TypeScript 7.0 目前尚未公開編譯器 API（預計 7.1 版本提供）。對於 typescript-eslint 等需要程序化訪問編譯器的工具，微軟提供了兼容方案。</p><p>新的 <code>@typescript/typescript6</code> 包導出 <code>tsc6</code> 可執行文件和 TypeScript 6.0 的完整 API。通過 npm alias 可以讓兩個版本在同一項目中共存：</p><pre><code>{
+  &quot;devDependencies&quot;: {
+    &quot;@typescript/native&quot;: &quot;npm:typescript@^7.0.2&quot;,
+    &quot;typescript&quot;: &quot;npm:@typescript/typescript6@^6.0.2&quot;
+  }
+}</code></pre><p>这样，依赖 <code>typescript</code> 包的工具（如 typescript-eslint）继续使用 6.0 API，而 <code>npx tsc</code> 直接使用 7.0。</p><p>Vue、Svelte 等嵌入式語言工具鏈因依賴編譯器 API 集成，目前仍需使用舊版 TypeScript。</p><h3>企業級實踐反饋</h3><p>多家公司在正式發佈前參與了測試：</p><p class='list-item'>- **Slack**：CI 類型檢查時間從 7.5 分鐘降到 1.25 分鐘，合併隊列等待時間減少 40%。此前編輯器加載慢到幾乎不可用，工程師只能依賴 CI 做完整類型檢查</p><p class='list-item'>- **微軟 News Services**：每月節省 400 小時 CI 構建等待時間</p><p class='list-item'>- **Canva**：編輯器首次報錯時間從 58 秒降到 4.8 秒</p><p class='list-item'>- **Vanta**：最大項目獲得 9 倍加速</p><p class='list-item'>- **PowerBI**：工程師在 rename 功能尚未支持時就將其設爲默認體驗</p><p>微软内部参与测试的团队包括 Loop、Office、Teams、Xbox。外部合作公司包括 Bloomberg、Figma、Google、Linear、Miro、Notion、Sentry、Slack、Vercel 等。</p><h3>安裝方式</h3><p><code>npm install -D typescript</code>此前通过 <code>@typescript/native-preview</code> 安装的用户（周下载量超过 850 万次），未来可通过 <code>typescript@next</code> 获取 nightly 构建。</p><h3>watch 模式重建</h3><p>TypeScript 7 的 <code>--watch</code> 模式完全重建，基於 Parcel bundler 的文件監視器實現跨平臺高效監視。Go 標準庫不提供內置文件監視 API，團隊評估了多個第三方庫後選擇自建方案，解決了穩定性和跨平臺兼容問題。</p><p>来源：Announcing TypeScript 7.0 - Microsoft DevBlogs（2026-07-08）</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
