@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Agent成本暴降几十倍，LlamaFactory作者开源新工具：0.2元自动造Agent-36氪 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Agent成本暴降几十倍，LlamaFactory作者开源新工具：0.2元自动造Agent-36氪</h1>
+<div class="meta"><span class="src">36kr.com</span>
+<span>· <a href="https://www.36kr.com/p/3925157852493960" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.36kr.com/p/3925157852493960" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>過去，LlamaFactory讓每個人都能微調大模型；</p><p>現在，PenguinHarness希望讓每個人都能構建自進化Agent。</p><p>LlamaFactory的作者鄭耀威最近開源了一個新項目PenguinHarness。這個「企鵝駕馭師」能幫你自動完成Agent的構建、評測和持續改進，真正從「手動調優Agent」邁入「Agent自我迭代」。</p><p>PenguinHarness是一個原生支持自我進化的AgentHarness，主打輕量、開源、易用。基於原創的Agent內核，無論是GPT-5.6還是DeepSeekV4，這套框架都能穩穩駕馭。</p><p>开源地址：https://github.com/Prism-Shadow/penguin-harness</p><h3>主页链接：https://penguin.ooo</h3><p class='list-item'>**讓Agent自動構建Agent**</p><p>項目的初衷與2026年討論得熱火朝天的AI4AI，遞歸自我進化（RSI）等方向不謀而合。</p><p>Meta前研究總監田淵棟創立的Recursive着力探索AI遞歸自我改進的潛力，其首篇博客已經證明出Agent可以訓練模型、優化GPU算子。</p><p>MSRA前副院長邊江創立的XYZ AI Lab，也成功探索出一條通過運作數百個Agent完成Deep Research模型後訓練的路徑。</p><p>而PenguinHarness則是立志做最好用的開源Harness，讓Agent自進化開箱即用，不再需要手動調優Agent。</p><p>它的第一項能力——讓Agent自動構建另一個Agent。我們用一個最經典的案例對比PenguinHarness和OpenAI Codex的實際表現：「讓AI生成一個RAG應用，實現分塊檢索，流式返回通俗易懂的答案，並帶上引用」。</p><p>通過視頻，我們可以清晰看出，PenguinHarness不僅花費比Codex更少的時間和低於數十倍的成本，還產出了幾乎能直接落地的RAG Agent應用。</p><p>左邊回答語言通順，有流式輸出，還有來源引用。而Codex的結果中英混雜，缺少流式輸出。</p><p>過去，開發這樣一套Agent應用需要框架選型、模型部署、接入工具、編寫提示詞、反覆測試修改，每個應用都幾乎從零開始，花費一個團隊幾個星期的精力。</p><p>即使有了Claude Code這類開發工具，它們對現有的Agent框架也比較陌生，很難做到像開發前端網頁那麼容易。而PenguinHarness從誕生之日起，就爲自己設計好了一切選項。</p><p>而對於PenguinHarness，你只需要說清楚需求，它立即就能開幹：生成腳手架、Prompt，安裝和優化Skill，並搭建前端，直到把一個完整能跑的Agent應用交付給你。而這套流程，只需要花費0.2元的Token和一杯咖啡的時間。</p><p>鄭耀威也爲我們揭開了PenguinHarness的背後原理：它將文件系統作爲唯一真相來源，Agent是文件，提示詞是文件，對話歷史也是文件。文件是人與Agent最自然的協作方式。</p><p>框架只負責把文件拼裝成可運行的Agent對象，而構造一個新的Agent無外乎文件的複製粘貼。</p><p>在運行時，PenguinMessage作爲唯一的消息協議，就像網絡數據報文一樣，在模型、環境和用戶之間交換，這種統一且輕量的接口讓PenguinHarness可以輕鬆接入到任意代碼中。</p><p>PenguinHarness既是一個Agent框架，又是一個Agent實體，沒有人比它更懂自己。</p><p class='list-item'>**本地可復現的Agent自進化閉環**</p><p>讓Agent構建Agent只是PenguinHarness的第一步，PenguinHarness更長遠的目標，是希望每個人都能在本地擁有自進化Agent。</p><p>構建Agent是從0到1，優化Agent是從1到100，其中需要跨越許多挑戰。</p><p>「Chaning agents is easy; improving them is hard.」</p><p>在一次關於自進化的討論中，鄭耀威曾提出這樣的觀點：Agent本質上就是一堆代碼和文件，修改它很容易，讓他變好卻很難。大模型本就已經是自帶隨機性的概率函數，Agent則更是一個充滿了不確定性的自主系統。要想做好Agent自進化，那麼必須要有一個可靠的「尺子」，也就是評估系統。</p><p>ReAct論文作者姚順雨曾言，評估是大模型的下半場。對於Agent自進化，這句話同樣成立，一套好的評估基準是自進化的根本。</p><p>爲了探索準確的評估方式，鄭耀威帶領團隊花費了半年多時間。最大的障礙是，現有的評估大多隻有測試集，而沒有訓練集。如果在測試集上跑自進化，很難區分Agent到底是背會了答案，還是真正產生了進化。</p><p>爲此，團隊甚至親手做了一套新的評估基準——GDPevo，專門用於測試Agent自進化能力，覆蓋醫療、金融、法律等六大真實場景。通過劃分訓練/測試集，確保Agent進化時不會「偷看答案」。</p><p>PenguinHarness吸納了GDPevo的核心思想，把Agent的評估和優化凝練爲了開箱即用的Skills。在調用Skill以後，PenguinHarness就會啓動多個智能體，配合完成Agent的調優流程，也就是「自進化」。</p><p>試想這樣一個場景：做一個Agent幫你更準確的預測球賽、提出投資策略、處理電商售後，但是這個Agent一開始準確率並不高。過去，你需要通過手動調整提示詞，搭建工作流來提高精度，而現在，PenguinHarness可以自動幫你完成Agent調優。</p><p>通過視頻可以看出，PenguinHarness完成了多次迭代，Agent的分數從優化前的53分，提升到了優化後的95分。使用DeepSeek V4 Flash正式版，整個過程只花了0.5元的Token。</p><p>這背後是一套多智能體的協作流程。PenguinHarness首先生成一個負責出題的Benchmark Builder，圍繞目標能力生成一系列題目和答案對，通過反覆測試來校準題目難度。</p><p>進入優化階段後，三個承擔不同角色職責的Agents會組成一個自進化閉環，反覆進行下面四步過程：</p><p>組織評測：Optimizer Agent按照題目數量和運行次數，組織多個Evaluator Agents並行評測；</p><p>獨立打分：每個Evaluator Agent啓動一個獨立的被測Agent解答題目，並且根據只有Evaluator才能看到的Rubrics打分，將分數返回給Optimizer Agent；</p><p>分析優化：Optimizer Agent彙總評測結果，通過查看和分析軌跡，定位失分原因，修改被測Agent的提示詞、Skill或者配置，生成候選的下一版被測Agent；</p><p>驗證迭代：Evaluator Agent對候選版本重新評測，Optimizer Agent根據結果決定是否接受候選版本，再進入下一輪迭代。</p><p>整個過程如下圖所示，在整個優化過程中，只有在候選版本取得嚴格更高的分數時纔會被接受，如果得分持平或下降，Optimizer Agent會回退到上一個版本。</p><p>從一次性交付走向持續進化，這就是PenguinHarness對下一代Agent Harness給出的回答。</p><p class='list-item'>**和自進化Agent之間的契約**</p><p>爲了讓Agent自進化跑得更「穩」，PenguinHarness設計了一套框架必須遵守的「契約」。</p><p>這份契約規定了Agent自進化的邊界在哪裏，我們在這裏挑幾個重點來講。</p><p>限定Agent的修改範圍爲提示詞和Skills，不能觸及Harness內核。這是爲了防止Agent在進化過程中產生安全風險，例如破壞了原有的權限審計規則。好的Agent建立在安全之上。</p><p>Agent自進化要有快照和回滾能力，如果產生了負面作用，框架要有能力將Agent版本回退到之前的狀態。</p><p>目標Agent在進化過程中只能看到題目，不能看到Rubrics。這是爲了防止Agent走捷徑，通過背會答案或者迎合打分器來取得更高分數，防止Reward Hacking現象。</p><p>所有的優化流程都要形成文件記錄，用戶有權限去審計優化過程，提供自進化的可解釋性。</p><p>這套契約也被PenguinHarness形式化爲了一份「CONTRACT.md」文件，方便複製和分發。</p><p class='list-item'>**PenguinHarness的其他有趣特性**</p><p>團隊在探索Agent自動構建範式的同時，也給PenguinHarness安裝了一系列很有意思的能力。</p><p>首先，PenguinHarness內置了LlamaFactory、vLLM、Ollama等與模型訓練、部署相關的Skills，你可以使用PenguinHarness，用類似Vibe Coding的方法來嘗試啓動模型訓練和部署。</p><p>其次，PenguinHarness集成了統一的模型網關，支持接入1000多種在線與本地模型，與Kimi K3、Gemini 3.6、Ling 3.0 Flash等最新的模型都完成了適配。</p><p>此外，PenguinHarness還爲DeepSeek裝上了眼睛。你可以配置一個帶有視覺模態的代理模型，實現DeepSeek爲主駕駛，視覺代理模型爲副駕駛的開發模式，讓DeepSeek也能「看到」自己生成的網頁和PPT，再基於視覺反饋進行調整。</p><p>不僅如此，PenguinHarness本身還支持細粒度的行爲軌跡分析，通過觀察時間線，分析Agent的性能卡點。</p><p>此外，你也可以將PenguinHarness作爲類似Pi Agent一樣的空白Agent樣板來使用，PenguinHarness內置的Agent保持了極簡的設計，將Shell作爲通用接口，使用極少的工具完成任務，將Subagent等功能作爲核心性能目標進行了優化，系統提示詞也只有Claude Code的十分之一（1,300vs15,000）。</p><p>在嚴謹的評估基準上，PenguinHarness配合DeepSeek模型做到了最好的表現，而成本只有其他產品的數十分之一。</p><p>PenguinHarness的表現不僅停留在紙面上，在開發過程中，團隊已經將PenguinHarness實際部署到了兩個生產場景中。某家體檢機構使用PenguinHarness生成了和醫學專家能力類似的報告覈查Agent，過去一份需要30分鐘才能覈查的報告現在只需要幾十秒。</p><p>某家制造企業將PenguinHarness構建出的多個Agents應用到了流水線作業巡檢上，全天候盯着設備狀態並自動恢復，產線停機時間減少65%，產出提升了近2倍。</p><p>PenguinHarness以Apache2.0協議開源，支持Linux、Mac、Windows系統一鍵安裝，既可以部署到本地機器，也可以放到服務器上遠程通過瀏覽器訪問，提供多用戶隔離且支持團隊協同使用，既可以作爲Agent自動構建平臺，也可以當做Codex的本地平替，以更低成本完成任務。</p><p>期待PenguinHarness開源項目可以得到更多關注，構建出各種有趣的Agent應用。PenguinHarness將努力作爲Agent生產引擎，讓所有人都能享受到自進化Agent帶來的生產力提升。</p><p class='list-item'>**PenguinHarness背后的团队**</p><p>PenguinHarness由PrismShadow團隊開源，團隊成立於2025年，專注於打造能在真實業務中持續學習的Agent基礎平臺，讓企業知識、工作流程和業務反饋轉化爲可部署、可評測、可持續優化的Agent。</p><p>PrismShadow創始團隊成員包括：</p><p>鄭耀威：LlamaFactory開源框架作者，GitHub7萬星標，專注於打造更易用的模型與Agent基礎設施。</p><p>錢步月：加州大學戴維斯分校博士，曾任IBM TJ Waston高級研究員，曾任復旦大學教授、博導。</p><p>吳雪軍：前百度NLP部門創始成員，曾任阿里巴巴高級總監和京東數科副總裁。</p><p>胡俊豪：北京大學博士生，提出位置無關緩存，曾參與MiMo V2模型，Hy3系列模型的研發。</p><p>陳溪：美國紐約大學商學院教授，卡耐基梅隆大學博士，曾任亞馬遜首席科學家。</p><p>從LlamaFactory到PenguinHarness，團隊始終堅持的使命是：將複雜的AI能力，變成真正易用、可靠且高效的大衆化工具。</p><h3>参考资料：https://penguin.ooo</h3><p>本文來自微信公衆號“新智元”，作者：新智元；編輯：LRST，36氪經授權發佈。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

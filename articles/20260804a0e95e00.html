@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>开源版Claude Science来了！零依赖、MIT协议，内置30+项科研Skills_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>开源版Claude Science来了！零依赖、MIT协议，内置30+项科研Skills_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260804A0E95E00" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260804A0E95E00" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>允中 發自 凹非寺</h3><h3>量子位 | 公衆號 QbitAI</h3><p>Claude Science，你可能有耳聞。</p><p>Anthropic家那個能自己搜文獻、自己寫代碼、自己跑分析、自己出圖出報告的科研Agent，一度讓人直呼「這纔是AI for Science該有的樣子」。</p><p>但它閉源。</p><p>現在，有人把它復刻出來了——**開源**，MIT協議，核心零依賴。</p><p>項目叫**（Open AI for Scientist）**，是**北京大學&元空AI Agent聯合實驗室**正式開源的科研智能體項目。</p><p>劃重點：它不是「長得像」Claude Science，而是沿着Code-as-Action的思路，把引擎、持久內核、host-RPC協議、安全層，用開源方式獨立復現了一遍。</p><h3>作者聲明：該圖片由AI生成</h3><p>項目已於2026年7月6日在GitHub開源，採用MIT許可證。</p><p>目前，OpenAI4S提供完整的科研Web應用、數十個內置Skills、自有算力接入能力和版本化科研產物。</p><h3>作者聲明：該圖片由AI生成</h3><p>元空AI Science：https://www.chatexcel.com/homesite/openAI4S</p><p>它並不滿足於給出一段看起來正確的回答，而是希望讓AI真正進入科研工作流，把一個問題從“提出”推進到“做完”。</p><h3>不是多聊幾輪，而是讓AI真正動手</h3><p>現在不少AI Agent，本質上都在做同一件事：模型面對一份提前準備好的「工具菜單」，判斷該調用哪個工具，然後一步一步往下走。簡單任務，這套方法夠用。</p><p>但科研不是三五步就能搞定的事。</p><p>查多個數據庫、下載數據、清洗數據、反覆改代碼、調用專業算法、請求GPU算力、生成圖表、整理報告……任何一步出問題，都可能要回頭重來。</p><p>OpenAI4S給出的答案是**Code-as-Action**，也就是**“代碼即行動”**。</p><p>它讓智能體直接生成Python或R代碼，並在一個持續運行的內核環境中執行。</p><p>循環、條件判斷、批量數據處理和繪圖可以組合在一次執行裏完成；數據和中間結果也不必在每一步重新交給模型，而是保留在工作環境中。</p><p>對用戶來說，最直接的變化不是多了一個技術名詞，而是AI可以把更長、更復雜的任務串起來：</p><p class='list-item'>- 前一步下載的數據，可以直接交給後一步分析；</p><p class='list-item'>- 生成的圖片、表格和報告會自動保存；</p><p class='list-item'>- 研究人員也能隨時打開Notebook，檢查代碼、接手分析或修改結果。</p><p class='list-item'>**“代碼即行動，內核即環境。”**</p><h3>一個界面裏，完成從數據到結論的科研流程</h3><p>OpenAI4S更像**一張人和AI共用的科研工作臺**。</p><p>你給出一個任務，它可以自己查公開科研數據源、編寫並運行分析代碼、調用專業計算能力，再把結果整理成圖片、表格、三維結構或Markdown報告。</p><p>整個過程，不是做完就散。每一份科研產物都會被記錄、保存和版本化，方便後續檢查、修改和複用。</p><p>比如，讓它分析一個蛋白質。</p><p>它可以先去檢索真實的蛋白質序列和結構數據，再完成特徵計算與可視化，最後把分析過程、數據來源和結果一起寫進論文。</p><p>重點是：數據是真的，計算也是真的。</p><p>外部服務連不上，或者計算條件不滿足，它會明確告訴你哪裏做不了。不會偷偷塞一份模擬數據，更不會編個結果把論文強行補齊。</p><p>作者聲明：該圖片由AI生成△OpenAI4S在同一任務中生成數據、圖表和結構等科研產物</p><p>科研工作往往還需要反覆修改。</p><p>傳統流程中，研究人員可能要重新找到繪圖腳本、修改參數、再次運行並導出文件；</p><p>在OpenAI4S中，可以直接用自然語言提出調整要求，智能體會基於已有數據和代碼重新生成產物，同時保留版本記錄。</p><h3>作者聲明：該圖片由AI生成△OpenAI4S對已有科研圖表進行調整並生成新版本</h3><h3>數十個科研Skills，把專業能力裝進智能體</h3><p>通用模型想變成科研助手，只靠「聰明」還不夠。</p><p>它得知道專業數據去哪裏找，專業工具怎麼用，複雜算法該怎麼跑。</p><p>OpenAI4S首批內置了**30+個科研Skills**。</p><p>蛋白質結構、序列分析、蛋白設計、分子對接、單細胞分析、文獻檢索、開放數據檢索……基本覆蓋了一批常見的計算科研場景。</p><p>其中，有14個Skills封裝了需要GPU或專業模型才能完成的科學計算能力。</p><p>這裏的Skills，也不是一張寫死的工具參數表。它們更像是一組可以被智能體閱讀、理解和執行的「代碼配方」。</p><p>需要什麼數據、調用什麼服務、代碼怎麼寫、結果怎麼檢查，都可以沉澱在Skill裏。</p><p>以後有新的數據庫、新的算法或者新的實驗流程，開發者繼續往裏接就行。</p><p>也就是說，這套能力不是一次性封死的，科研需求怎麼變，Skills就可以跟着怎麼長。</p><h3>作者聲明：該圖片由AI生成</h3><h3>科研數據要連上真正的計算環境？把任務送到自己的GPU</h3><p>科研計算，還有一個很現實的問題：**算力**。</p><p>蛋白質摺疊、突變評分、分子模擬這些任務，不是普通筆記本隨便跑兩下就能完成的。</p><p>而且，很多專業計算背後，都依賴特定模型、複雜軟件環境和GPU資源。</p><p>OpenAI4S支持接入自有計算環境。本地負責交互和組織任務，需要GPU的專業計算則可以派發到自己的服務器上執行，結果跑完以後，再回到同一套科研工作流裏。</p><p>比如蛋白質結構預測和突變效應評分，真正困難的往往不是生成調用代碼，而是把輸入送進正確的計算環境，再把結果完整地帶回工作流。</p><p>不用把所有東西都擠在一臺電腦上，也不用爲了接一臺算力服務器重寫整套流程，這點對實驗室和科研團隊尤其重要。</p><p>數據、模型和算力都可以留在自己的環境裏，智能體負責把它們串起來。</p><h3>真實數據、真實計算，它是真沒編</h3><p>拿便宜模型跑科研，最怕啥？怕它一本正經地胡編。</p><p>OpenAI4S立了條硬規矩，叫**no-fabrication policy（不僞造策略）**：用np.random假裝實驗結果、硬編造的「保守性」、拿BLOSUM冒充ESM、模擬數據集充當真數據……全禁。</p><p>要麼真服務，要麼老實報錯。</p><p>所以你回頭看那個INS案例——序列是真從UniProt拉的，結構是真從RCSB下的，連不上網它就誠實跳過，絕不給你糊一個假的。</p><p>真要算蛋白結構，它也是真調GPU：host.fold會ssh到一臺8×A100的機器上，跑單序列的Protenix（AlphaFold3級別）推理，回傳帶pLDDT的結構；host.score_mutations跑真實的ESM打分挑突變。</p><p>沒配GPU？那它就直接報錯，絕不給你捏一個假結構。</p><p>它寧可告訴你「算不了」，也不給你捏一個看起來像模像樣的假結構。</p><p>對於科研Agent來說，這可能比「什麼都會」更重要。</p><h3>開源，是北大&amp;元空AI聯合實驗室推動產學研協同的一次實踐</h3><p>OpenAI4S的發佈，不只是增加了一個開源項目，也是北京大學與元空AI推進產學研協同的一次實踐。</p><p>作爲雙方聯合實驗室的階段性成果，OpenAI4S從研發到開源，離不開聯合實驗室**張恭博**同學的持續投入與推動。</p><h3>作者聲明：該圖片由AI生成</h3><p>張恭博研究方向聚焦AI for Science，由他擔任共同第一作者的UniGenX，探索了面向分子、材料與蛋白質的通用科學基礎模型，這些圍繞科學智能展開的研究積累，也進一步延伸到了OpenAI4S的研發與落地中。</p><p>同時，OpenAI4S也凝聚了團隊中李昊、王豫、劉宇陽、呂劉正浩、毛奕澄、林慕捷、彭莘堯、姜政祥、王一米等同學的共同努力，從框架設計、功能研發到開源發佈，每個環節都離不開大家的協作與投入。</p><p class='list-item'>**元空AI**是一家端側AI公司，專注於通過模型後訓練、Agent Runtime、長期記憶與端側推理技術，讓AI在本地及離線環境中完成複雜任務。</p><p>目前，該公司已形成**元空AI Work**與**元空AI Science**兩條產品線，分別進入智能辦公與科學發現領域。</p><p>這次開源OpenAI4S，也體現了聯合實驗室與元空AI對科研Agent的共同判斷：</p><p>科研智能體不能只停留在Demo，而應成爲真正可執行、可檢查、可擴展的科研基礎設施。</p><p>因此，本次開放的不只是示例，還包括核心架構、科研Skills與完整應用。</p><p>高校、科研機構、開發者和產業夥伴可以在此基礎上接入數據源、算法、工具與科研流程，共同推動科研Agent進入更多真實任務。</p><h3>歡迎把它跑起來，也一起把它做下去</h3><p>參與OpenAI4S，可以從把它跑起來開始。</p><p>安裝不復雜，三行就能啓動：</p><p><code>Plain Textgit clone https://github.com/PKU-YuanGroup/OpenAI4Scd OpenAI4S./setup.sh # 首次运行：使用uv创建环境./start.sh # 打开http://127.0.0.1:8760/</code>启动项目本身，不需要先配置模型Key。</p><p>進入界面以後，在Customize → Models裏填寫就行。</p><p>項目還自帶了一整套真實案例，可以直接跟着跑：Live API工作流、人胰島素INS真實數據分析、一句話改圖，以及計劃模式下的青蒿素和紫杉醇溶解度預測、蛋白質工程……</p><p>但把項目跑起來，只是第一步。</p><p>真實科研橫跨生命科學、化學、材料、醫學、地球科學等衆多領域。</p><p>每個方向都有自己的數據庫、專業模型和計算流程。如此龐大的能力版圖，不可能只靠一個團隊一次性補齊。</p><p>因此，OpenAI4S正式向**高校、科研機構、開發者和產業團隊**發出Call for Contributors。</p><p>目前，兔展智能的Skills UI，已對該開源項目給予了部分支持。</p><p>如果你熟悉某個科研方向，可以爲它開發新的科研Skills，接入專業數據庫、算法模型和計算平臺；</p><p>如果你擅長Agent或軟件工程，也可以參與完善核心架構、遠程計算、安全機制、測試和文檔。</p><p>不寫代碼，也能參與。</p><p>提交一個Issue、補充一個可復現案例、反饋一次失敗任務，或者告訴社區某個學科真正需要什麼，都是有價值的貢獻。</p><p>如果你也相信，科研Agent不該只停留在Demo裏，歡迎把它跑起來，也歡迎一起把它做下去。</p><h3>傳送門</h3><h3>https://github.com/PKU-YuanGroup/OpenAI4S</h3><h3>https://www.chatexcel.com/homesite/openAI4S</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
