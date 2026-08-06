@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>超过1B参数都是浪费？多模态情感模型进入「小」时代 | ACM MM&#x27;26_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>超过1B参数都是浪费？多模态情感模型进入「小」时代 | ACM MM&#x27;26_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260801A07GNZ00" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260801A07GNZ00" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p class='list-item'>**  ****新智元報道  **</p><p class='list-item'>**  ****新智元報道  **</p><p>多模態大語言模型正在改變情感識別的研究範式。</p><p>與傳統方法只輸出「高興」「悲傷」或「憤怒」等預定義標籤不同，新一代生成式多模態情感識別模型能夠聯合理解視頻、音頻和文本，並用自然語言解釋人物的情感狀態及其判斷依據。</p><p>但這種能力通常建立在更大的模型規模之上。現有代表性方法大多依賴至少7B參數的語言模型，不僅需要較高的顯存和計算資源，也帶來了更長的推理延遲，難以部署到機器人、移動設備和其他邊緣平臺。</p><p>這引出了一個根本問題：</p><p class='list-item'>**爲了實現高質量的多模態情感理解與識別，我們真的需要參數規模超過1B的模型嗎？**</p><p>來自格拉斯哥大學、山東大學和中國科學院計算技術研究所的研究者在論文**Light-MER**中對這一假設提出了挑戰，他們將8B教師模型的多模態情感理解能力遷移至參數規模低於1B的學生模型，並通過隱藏狀態蒸餾與多獎勵強化學習，在顯著降低計算開銷的同時，實現了超過教師模型的平均性能。</p><p>论文已被**ACM Multimedia 2026（ACM MM 2026）主会接收**。</p><h3>论文链接：https://arxiv.org/pdf/2607.12787</h3><h3>代码链接：https://github.com/GAIR-Lab/Light-MER</h3><p>該論文主要包含以下三個亮點：</p><p class='list-item'>- **構建參數規模低於1B的生成式多模態情感模型。**Light-MER將大規模教師模型壓縮爲總參數量約854.93M的學生模型，在參數量與FLOPs均降低約11倍的情況下，平均性能超過8B教師模型。</p><p class='list-item'>- **提出基於切片Wasserstein距離的隱藏狀態蒸餾方法SWD-H。**與只對齊輸出概率或逐點擬合隱藏狀態不同，SWD-H從分佈幾何的角度遷移教師模型內部的多模態情感表示。</p><p class='list-item'>- **提出面向生成質量與推理效率的多獎勵優化方法M-GRPO。**該方法同時考慮情感識別準確性、回答長度、情感信息密度、句子完整性和重複程度，使學生模型生成更簡潔、更流暢的情感描述，並進一步降低推理延遲。</p><p class='list-item'>**爲什麼要把多模態情感模型做小？**</p><p>多模態情感識別的許多應用並不發生在雲端服務器，而是機器人、智能座艙、移動終端等需要即時交互的設備。這些系統需要持續處理人臉、聲音和文本，並在較短時間內作出判斷。</p><p>7B以上的模型雖然具備較強的情感理解和生成能力，但也需要更多顯存和計算資源。若每次識別都依賴高端GPU或將視音頻上傳至雲端，不僅會增加響應延遲，也容易受到設備算力和網絡條件的限制。</p><p>因此，小模型的意義不只是「節省計算量」，而是讓多模態情感識別能夠更接近實際使用場景：降低硬件門檻、縮短交互等待時間，併爲弱網或本地處理提供可能。</p><p>Light-MER並不要求訓練階段完全放棄大模型，而是將大模型保留爲知識來源，最終只部署低於1B參數的學生模型。它真正想回答的是：**能否在大幅降低部署成本的同時，保留生成式多模態情感理解能力？**</p><p class='list-item'>**Light-MER如何保留多模態情感理解能力？**</p><p>Light-MER採用教師—學生框架。</p><p>8B教師模型只在訓練階段使用，負責提供較強的多模態情感理解能力；真正用於推理和部署的是參數規模約854M的學生模型。</p><p>知識遷移分爲兩步。</p><p>第一步是**SWD-H**。</p><p>常見蒸餾方法主要讓學生模仿教師的最終輸出，但對於情感識別而言，真正重要的不只是「答案是什麼」，還有模型如何組織表情、聲音和文本中的情感線索。</p><p>SWD-H使用切片Wasserstein距離對齊教師與學生的隱藏狀態分佈，讓學生學習教師模型內部的情感表示結構，而不是隻複製最終答案。</p><p>第二步是**M-GRPO**。</p><p>蒸餾後的學生雖然會判斷情緒，但也可能繼承教師模型過於冗長的表達方式。M-GRPO同時考慮情感準確性、回答長度、情感信息密度、句子完整性和重複程度，讓輸出更簡潔，也減少不必要的生成時間。</p><p>Light-MER的核心思路：大模型只負責提供知識，低於1B參數的學生模型負責實際部署。</p><p class='list-item'>**爲什麼選擇SWD-H**</p><p>常見的知識蒸餾方法通常讓學生模型模仿教師模型的輸出概率。但論文發現，這種方法在生成式情感識別中存在一個問題：教師模型的輸出分佈非常集中，排名第一的token已經佔據約98%的概率。</p><p>在這種情況下，學生從輸出概率中獲得的信息與普通標籤監督相差不大。它能學到教師給出了什麼答案，卻很難學到教師如何綜合表情、聲音和文本中的情感線索。</p><p>相比之下，隱藏狀態保留了更豐富的多模態信息。但如果直接使用均方誤差逐點對齊，又容易忽略教師與學生在表示空間中的整體分佈差異。</p><p>因此，Light-MER提出了**SWD-H**。它將教師和學生的高維隱藏狀態投影到多個一維方向，再通過排序計算Wasserstein距離，使學生學習教師隱藏狀態的整體分佈形狀。</p><p>換句話說，普通蒸餾主要讓學生模仿教師的答案，而SWD-H進一步讓學生學習教師組織多模態情感信息的方式。</p><p>SWD-H蒸餾前後的隱藏狀態分佈。蒸餾前，教師與學生模型的分佈位置存在明顯差異；加入SWD-H後，兩者的主要分佈模式更加接近，表明學生模型有效學習了教師模型內部的情感表示結構。</p><p class='list-item'>**爲什麼還需要M-GRPO**</p><p>SWD-H能夠遷移教師模型的情感理解能力，但也可能把教師模型過於冗長的表達方式一併遷移給學生。</p><p>對於生成式情感識別而言，回答越長並不一定越好。模型可能反覆描述相同線索，或者生成大量與最終判斷關係不大的內容。這不僅影響信息密度，也會增加推理時間。</p><p>如果只以情感識別準確率作爲優化目標，模型還可能通過羅列大量情感詞來獲得更高分數，卻無法保證回答是否簡潔、完整和自然。</p><p>因此，Light-MER在完成SWD-H蒸餾後，進一步引入了**M-GRPO**。對於同一個樣本，模型生成多個候選回答，再根據綜合獎勵比較這些回答的質量。獎勵同時考慮五個方面：</p><p class='list-item'>- 情感判斷是否準確；</p><p class='list-item'>- 回答長度是否合理；</p><p class='list-item'>- 情感信息是否足夠集中；</p><p class='list-item'>- 句子表達是否完整；</p><p class='list-item'>- 內容是否存在重複。</p><p>M-GRPO的目標並不是簡單地讓模型「少說」，而是讓它在保留關鍵情感信息的同時，減少冗餘內容。</p><p>從訓練曲線可以看到，總獎勵在訓練前期快速提升並逐漸穩定；與此同時，情感分析部分的生成長度持續下降，並在訓練後期收斂至約53個英文單詞。這說明模型正在逐步學習更加集中、高效的表達方式。</p><p>M-GRPO的訓練過程。隨着訓練推進，總獎勵逐漸提升並趨於穩定，情感分析的生成長度則持續下降，說明模型在保持情感判斷質量的同時，學會了更加簡潔的表達。</p><p>因此，兩個階段解決了不同的問題：**SWD-H負責遷移大模型內部的多模態情感表示，M-GRPO則進一步優化學生模型的生成質量和推理效率。**</p><p class='list-item'>**<1B对决8B**</p><p class='list-item'>**小模型真的能超過老師嗎？**</p><p>論文在九個公開數據集上進行了實驗，覆蓋基礎情感識別、情感傾向分析和開放詞彙細粒度情感識別。</p><p>最主要的結論是：在完整的視頻、音頻和文本輸入下，Light-MER的九數據集平均分達到**74.61**，超過8B教師模型的**73.93**，並在其中七個數據集上取得更好的結果。</p><p>在「音頻＋文本」和「視頻＋文本」兩種輸入設置下，Light-MER 的平均性能同樣超過教師模型。這說明其效果並不依賴某一種固定的模態組合。</p><h3>Light-MER在三種模態設置下均超過8B教師模型的平均性能</h3><p class='list-item'>**學生不必止步於老師**</p><p class='list-item'>**知識蒸餾也能實現性能反超**</p><p>知識蒸餾常被理解爲一種性能妥協：學生模型更小、更快，但通常只能儘可能接近教師模型。</p><p>Light-MER的實驗結果展示了另一種可能性。</p><p>學生模型並不是機械地複製教師的輸出，而是通過SWD-H學習教師模型隱藏狀態中的分佈結構，再通過M-GRPO對生成行爲進行重新優化。</p><p>因此，學生模型一方面繼承了教師模型的多模態情感理解能力，另一方面也修正了教師模型輸出過長、信息密度不足的問題。</p><p>從這個角度看，教師模型更像是能力來源，而不是學生模型性能的上限。</p><p>只要知識遷移目標設計合理，小模型不僅可以接近大模型，還可能在特定任務和部署目標下超過大模型。</p><h3>從性能到部署：Light-MER有多輕量？</h3><p>相比教師模型，Light-MER的參數量和FLOPs均減少約11倍，峯值顯存從**20.04GB**降至**2.54GB**。</p><p>在論文的測試環境下，模型直接輸出情感標籤約需**0.52秒/樣本**；如果生成完整的情感解釋，約需**3.11秒/樣本。**</p><p>這兩個數字可以這樣理解：</p><p class='list-item'>- **直接識別模式已經達到亞秒級響應**，適合對短視頻片段進行交互式情感判斷；</p><p class='list-item'>- **描述生成模式屬於秒級響應**，可以用於機器人對話、人機交互等對延遲相對寬容的場景；</p><p>從2.54GB的峯值顯存來看，Light-MER已經不再依賴20GB級高端GPU。理論上，具備約4GB顯存的設備已有運行空間；考慮系統和推理框架的額外開銷，使用6GB及以上顯存的消費級GPU或嵌入式邊緣計算平臺會更穩妥。</p><p class='list-item'>**從20.04GB到2.54GB：Light-MER將生成式多模態情感識別從高端GPU推向了更輕量的邊緣計算平臺。**</p><p class='list-item'>**寫在最後**</p><p>過去幾年，多模態情感識別不斷受益於更大的語言模型。模型規模從7B、8B繼續增長，似乎已經成爲獲得更強生成和推理能力的自然路徑。</p><p>Light-MER則重新審視了這一默認前提。</p><p>通過SWD-H，模型將8B教師模型內部的多模態情感表示遷移到低於1B參數的學生模型；通過M-GRPO，模型進一步學會生成更加簡潔、流暢且忠於情感判斷的描述。</p><p>最終，Light-MER在九個基準數據集上的平均性能超過8B教師模型，同時將參數量和FLOPs減少約11倍，將峯值顯存從20.04GB降低至2.54GB。</p><p>因此，對於文章開頭提出的問題——</p><p class='list-item'>**我們真的需要超過1B參數的模型，才能實現高質量的多模態情感識別嗎？**</p><p>Light-MER給出的答案是：</p><p class='list-item'>**不一定。與單純擴大模型規模相比，如何有效遷移和優化模型內部的多模態知識，可能更加關鍵。**</p><p>參考資料：</p><h3>https://arxiv.org/pdf/2607.12787</h3><h3>編輯：LRST</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

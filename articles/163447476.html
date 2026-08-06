@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>尚硅谷AI Coding教程 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>尚硅谷AI Coding教程</h1>
+<div class="meta"><span class="src">blog.csdn.net</span>
+<span>· <a href="https://blog.csdn.net/weixin_63627378/article/details/163447476" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/weixin_63627378/article/details/163447476" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>從零開始，用自然語言指揮AI構建真實軟件項目</p><h3>基於 Claude Code 深度實踐 | 多模型配置全覆蓋 | 國內用戶友好</h3><p class='list-item'>- 前言：一個不會寫代碼的人，如何用AI構建軟件</p><p class='list-item'>- 第零部分：環境準備與工具安裝</p><p class='list-item'>- 第一部分：AI編程基礎理論</p><p class='list-item'>- 第二部分：AI編程工具生態與模型選擇</p><p class='list-item'>- 第三部分：Claude Code 深度使用與進階技巧</p><p class='list-item'>- 第四部分：AI技能系統（Skills）深度實踐</p><p class='list-item'>- 第五部分：完整項目案例實操</p><p class='list-item'>- 第六部分：項目實戰（獨立完成）</p><p class='list-item'>- 第七部分：Codex Desktop 安裝和使用教程</p><p class='list-item'>- 附錄</p><p>在正式開始之前，先了解本教程中使用的標記約定：</p><p>提示：這是一個幫助你更好理解概念的提示信息。</p><p>注意：這是一個需要特別留意的事項，忽略可能導致問題。</p><p>避坑：這是其他學習者踩過的坑，提前瞭解可以少走彎路。</p><p>驗證：這是一個檢查點，執行後應該看到預期結果，確認你走在正確的路上。</p><p class='list-item'>- 所有終端命令前會標註適用的操作系統（Windows / macOS / 通用）</p><p class='list-item'>- 代碼註釋全部使用中文，方便理解</p><p class='list-item'>- 模型、價格、安裝命令和第三方工具信息變化很快；本文中相關信息已在 **2026-05-18**按官方文檔做過一次覈對，正式使用前仍應以官網當前頁面爲準</p><p class='list-item'>- `$`符號表示終端命令提示符，輸入命令時不需要輸入- `$`</p><p class='list-item'>- 尖括號 `<xxx>`表示需要替換爲你自己的實際內容</p><p>想象這樣一個場景：產品經理小王完全不會寫代碼，但他用自然語言向AI描述了自己想要的功能 —— “幫我做一個團隊內部的書籤收藏工具，支持按標籤分類和搜索”。三天後，一個功能完整、界面美觀的Web應用上線了。</p><p>這不是科幻，這是2026年正在發生的事情。</p><p>傳統的編程學習路徑是這樣的：花幾個月學語法 → 花幾個月做練習 → 花幾個月做項目 → 終於能寫出可用的軟件。而AI編程的路徑完全不同：**你只需要學會"如何清晰地表達你想要什麼"，AI來負責把它變成代碼**。</p><p>這就像你不需要學會砌牆、接水管、布電路，你只需要能清楚地告訴裝修隊"我想要一個什麼樣的家"，專業的團隊會幫你實現。AI編程工具就是你的"裝修隊"，而你要學的，是如何當好這個"業主"。</p><p>本教程面向**完全沒有編程經驗的初學者**。你不需要具備以下任何知識：</p><p class='list-item'>- 不需要會任何編程語言（Python、JavaScript、Java……統統不需要）</p><p class='list-item'>- 不需要數學基礎</p><p class='list-item'>- 不需要計算機科學學位</p><p class='list-item'>- 不需要之前用過任何開發工具</p><p>你只需要具備：</p><p class='list-item'>- 基本的電腦操作能力（會上網、會裝軟件、會管理文件夾）</p><p class='list-item'>- 一定的英語閱讀能力（能借助翻譯工具看懂簡單的英文界面即可）</p><p class='list-item'>- 清晰的邏輯思維（能描述清楚"我想要什麼"）</p><p class='list-item'>- 一顆願意嘗試的心</p><p>完成本教程後，你將能夠：</p><pre><code>第零部分：環境準備 ──→ 打好地基，安裝必要工具
+   ↓
+第一部分：基礎理論 ──→ 建立認知，理解AI編程的核心概念
+   ↓
+第二部分：工具生態 ──→ 瞭解主流工具與模型，完成安裝與選型
+   ↓
+第三部分：Claude Code 深度使用 ──→ 掌握武器，深入學習Claude Code的全部能力 核心
+   ↓
+第四部分：技能系統 ──→ 效率倍增，構建可複用的AI技能
+   ↓
+第五部分：項目實操 ──→ 學以致用，從零到一完成完整項目 重點
+   ↓
+第六部分：獨立實戰 ──→ 獨當一面，自主完成項目開發
+   ↓
+第七部分：Codex Desktop ──→ 拓展視野，掌握另一個主流AI編程工具</code></pre><p class='list-item'>- **動手大於閱讀**—— 每學一個概念，立刻打開終端實踐</p><p class='list-item'>- **項目驅動學習**—— 帶着"我要做出一個產品"的目標去學</p><p class='list-item'>- **擁抱錯誤**—— AI會犯錯，你也會犯錯，這都是學習過程</p><p class='list-item'>- **持續迭代**—— 沒有一步到位的完美，先能跑再說</p><p class='list-item'>- **記錄與分享**—— 把踩的坑記下來，分享出去，加深理解</p><p>學習目標：搭建完整的開發環境，確保後續學習零障礙</p><p>完成標誌：能在終端執行基本命令，至少一個AI編程工具可正常運行</p><p>工欲善其事，必先利其器。在正式進入AI編程世界之前，我們需要先把"工作臺"搭好。這就像做菜之前先把廚房收拾好、食材買齊 —— 雖然不是最激動人心的環節，但跳過它後面會處處碰壁。</p><p>你平時用電腦，是通過鼠標點擊圖標、菜單來操作的，這叫**圖形界面（GUI）**。而**終端（Terminal）**是另一種操作電腦的方式 —— 通過輸入文字命令來告訴電腦做什麼。</p><p>打個比方：圖形界面就像在餐廳看着菜單點菜（點什麼有什麼），終端就像直接跟廚師說你想喫什麼（更靈活，但需要知道怎麼"說"）。</p><p>AI編程工具（如Claude Code）幾乎全部運行在終端中，所以掌握基本的終端操作是第一步。</p><p class='list-item'>**Windows 用户：**</p><p class='list-item'>- 按下鍵盤上的 `Win + R`鍵（Win 是鍵盤左下角帶 Windows 標誌的鍵）</p><p class='list-item'>- 在彈出的"運行"對話框中輸入 `powershell`</p><p class='list-item'>- 按回車鍵</p><p>或者更簡單的方式：</p><p class='list-item'>- 在桌面底部的搜索欄中搜索"PowerShell"</p><p class='list-item'>- 点击"Windows PowerShell"打开</p><p class='list-item'>**macOS 用户：**</p><p class='list-item'>- 按下 `Command + 空格`打开 Spotlight 搜索</p><p class='list-item'>- 输入 `Terminal`或"终端"</p><p class='list-item'>- 按回車鍵打開</p><p>提示：打開終端後你會看到一個黑色（或白色）的窗口，裏面有一個閃爍的光標等待你輸入命令。不要怕，它不會因爲你輸錯命令就爆炸 —— 最多給你一個報錯信息而已。</p><p>以下是你需要掌握的最基本的終端命令。打開終端，跟着一起敲：</p><p class='list-item'>**1.  pwd —— 查看當前位置（我在哪？）**</p><pre><code># 通用命令（macOS/Linux直接输入，Windows PowerShell也支持）
+$ pwd</code></pre><p>預期輸出：</p><pre><code># Windows 輸出類似：
+C:\Users\你的用戶名
+# macOS 輸出類似：
+/Users/你的用戶名</code></pre><p>這就像你在商場裏，看一下腳下的地圖上"您在此處"的標記。</p><p class='list-item'>**2.  ls（macOS/Linux）或 dir（Windows）—— 查看当前目录有什么**</p><pre><code># macOS / Linux
+$ ls
+# Windows PowerShell（ls也可以用，但dir是经典命令）
+$ dir</code></pre><p>預期輸出：</p><pre><code>Desktop    Documents   Downloads   Pictures   Videos
+桌面       文档       下载       图片      视频</code></pre><p>就像打開一個文件夾，看看裏面有什麼東西。</p><p class='list-item'>**3.  cd —— 進入某個目錄（走到某個位置）**</p><pre><code># 進入&quot;桌面&quot;文件夾
+$ cd Desktop
+# 返回上一級目錄
+$ cd ..
+# 直接回到用戶主目錄
+$ cd ~</code></pre><p><code>cd</code> 是 “change directory” 的缩写，就是"换个地方"的意思。</p><p class='list-item'>**4.  mkdir —— 創建新文件夾**</p><pre><code># 創建一個名爲 my-project 的文件夾
+$ mkdir my-project
+# 驗證：查看是否創建成功
+$ ls</code></pre><p>預期輸出中應該能看到 <code>my-project</code> 文件夾。</p><p class='list-item'>**5.  clear —— 清屏（屏幕太亂了，清理一下）**</p><pre><code>$ clear</code></pre><p>驗證：在終端中依次執行以下命令，確認你能正常操作：<code>$ pwd $ mkdir ai-coding-test $ cd ai-coding-test $ pwd $ cd ..</code>如果每條命令都能正常執行且沒有報錯，恭喜你，終端入門完成！</p><p>注意：在整個教程中，請儘量使用全英文的文件夾名和文件名。中文路徑在很多開發工具中會引發奇怪的錯誤，這是一個經典的坑。</p><p>Node.js 是一個讓 JavaScript 能在電腦上運行的環境。它是前端開發、npm 包管理、Next.js/Vite 項目的基礎工具，也是 Claude Code 官方安裝前置條件之一。</p><p>你可以把 Node.js 理解爲 AI 編程項目的“基礎運行環境”：很多腳手架、依賴安裝、構建命令都離不開它。</p><p class='list-item'>**下載安裝：**</p><p class='list-item'>- 打开浏览器，访问 Node.js 官网：https://nodejs.org/</p><p class='list-item'>- 你會看到兩個版本按鈕，選擇左邊的 **LTS（長期支持版）**，這是最穩定的版本</p><p class='list-item'>- 下載完成後，雙擊安裝包</p><p class='list-item'>- 安裝過程中一路點 **“Next”**（下一步），保持默認選項即可</p><p class='list-item'>- 最後點 **“Install”**完成安裝</p><p>注意：安裝時請確保勾選了"Add to PATH"選項（默認是勾選的），這樣才能在終端中直接使用<code>node</code>和<code>npm</code>命令。</p><p class='list-item'>**驗證安裝：**</p><p>安裝完成後，**關閉並重新打開終端**（這一步很重要，否則新安裝的命令可能找不到），然後輸入：</p><pre><code># 检查 Node.js 版本
+$ node -v</code></pre><p>預期輸出：</p><pre><code>v24.15.0</code></pre><p>（版本號可能不完全一致。建議安裝官網當前 LTS 版本；如果用 npm 安裝 Claude Code，需要 Node.js <code>v18</code> 或更高版本。）</p><pre><code># 檢查 npm 版本（npm 是 Node.js 自帶的包管理器）
+$ npm -v</code></pre><p>預期輸出：</p><pre><code>11.12.1</code></pre><p>驗證：如果兩條命令都能輸出版本號，恭喜，Node.js 安裝成功！</p><p class='list-item'>**常見問題：**</p><p>提示：如果你是 macOS 用户，推荐使用<code>nvm</code>（Node Version Manager）来管理 Node.js 版本，方便将来切换不同版本。安装命令：<code>$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash</code>安装完成后重启终端，然后使用</p><p><code>nvm install --lts</code>安装最新 LTS 版本。</p><p>Git 是一個"版本控制"工具。什麼是版本控制？想象你在寫一篇文章，每寫一個版本你都存一份副本：<code>論文_v1.doc</code>、<code>論文_v2.doc</code>、<code>論文_最終版.doc</code>、<code>論文_最終最終版.doc</code>…… Git 就是幫你優雅地管理這些版本的工具。</p><p>在AI編程中，Git 尤其重要 —— 因爲**AI有時候會改錯代碼**。有了 Git，你可以隨時"時光倒流"回到之前正確的版本。這是你的"後悔藥"。</p><p class='list-item'>**下載安裝：**</p><p class='list-item'>**Windows 用户：**</p><p class='list-item'>- 访问 https://git-scm.com/download/win</p><p class='list-item'>- 下載 64-bit 版本的安裝包</p><p class='list-item'>- 雙擊安裝，安裝過程中保持所有默認選項即可（會有很多頁配置，不用改，一直點 Next）</p><p class='list-item'>- 安裝完成</p><p class='list-item'>**macOS 用户：**</p><p>macOS 通常自帶 Git。打開終端輸入 <code>git --version</code>，如果有輸出就不需要安裝。如果沒有，執行：</p><pre><code># macOS 安装 Git（通过 Xcode 命令行工具）
+$ xcode-select --install</code></pre><p>彈出的對話框中點擊"安裝"即可。</p><p class='list-item'>**驗證安裝：**</p><pre><code>$ git --version</code></pre><p>預期輸出：</p><pre><code>git version 2.43.0</code></pre><p class='list-item'>**首次配置（必須）：**</p><p>安裝完成後，需要告訴 Git 你是誰（這些信息會記錄在每次代碼提交中）：</p><pre><code># 设置你的名字（用英文，可以是昵称）
+$ git config --global user.name &quot;Your Name&quot;
+# 设置你的邮箱
+$ git config --global user.email &quot;your.email@example.com&quot;</code></pre><p>提示：這裏的名字和郵箱不需要是真實的，但建議和你將來註冊 GitHub 的郵箱保持一致。</p><p class='list-item'>**Git 最小生存技能（6條命令走天下）：**</p><p>你現在不需要精通 Git，只要記住這6條命令就夠了（後面遇到會詳細解釋）：</p><pre><code># 1. 在項目文件夾中初始化 Git 倉庫（只需要做一次）
+$ git init
+# 2. 查看當前文件狀態（哪些文件被修改了）
+$ git status
+# 3. 把修改的文件添加到&quot;暫存區&quot;（準備提交）
+$ git add .
+# 4. 提交一個版本（附帶說明信息）
+$ git commit -m &quot;描述這次修改做了什麼&quot;
+# 5. 將代碼推送到遠程倉庫（如GitHub）
+$ git push
+# 6. 從遠程倉庫拉取最新代碼
+$ git pull</code></pre><p>避坑：使用AI編程工具時，養成一個好習慣 ——在讓AI做大的修改之前，先。這樣即使AI改壞了，你也能用<code>git add . && git commit -m "保存當前進度"</code><code>git checkout .</code>恢復到之前的狀態。這是無數開發者總結出的血淚經驗。</p><p>Python 在本教程的第六部分（AI知識庫項目）中會用到。如果你暫時只想學前端項目，可以先跳過。</p><p class='list-item'>**下載安裝：**</p><p class='list-item'>- 访问 https://www.python.org/downloads/</p><p class='list-item'>- 下載最新版本（建議 Python 3.11 或 3.12）</p><p class='list-item'>- **Windows 用戶特別注意**：安裝時務必勾選- **“Add Python to PATH”**選項！</p><p class='list-item'>**驗證安裝：**</p><pre><code># Windows
+$ python --version
+# macOS / Linux（可能需要用 python3）
+$ python3 --version</code></pre><p>預期輸出：</p><pre><code>Python 3.12.4</code></pre><pre><code># 验证 pip（Python 包管理器）
+$ pip --version</code></pre><p>預期輸出：</p><pre><code>pip 24.0 from ... (python 3.12)</code></pre><p>完成上面的安裝後，讓我們做一次全面的環境檢查，確保所有工具都正常工作。</p><p class='list-item'>**環境檢查清單：**</p><p>打開終端，依次執行以下命令：</p><pre><code># 1. 检查 Node.js
+$ node -v
+# 预期输出: v18.x.x 或更高版本
+# 2. 检查 npm
+$ npm -v
+# 预期输出: 9.x.x 或 10.x.x 或更高版本
+# 3. 检查 Git
+$ git --version
+# 预期输出: git version 2.x.x
+# 4. 检查 Python（可选）
+$ python --version
+# 预期输出: Python 3.11.x 或 3.12.x</code></pre><p class='list-item'>**創建你的第一個項目文件夾：**</p><pre><code># 在你喜欢的位置创建一个总的工作目录
+# Windows 建议：
+$ mkdir D:\ai-coding-projects
+# macOS 建议：
+$ mkdir ~/ai-coding-projects
+# 进入这个目录
+$ cd D:\ai-coding-projects  # Windows
+$ cd ~/ai-coding-projects   # macOS
+# 初始化 Git
+$ git init</code></pre><p>預期輸出：</p><pre><code>Initialized empty Git repository in .../ai-coding-projects/.git/</code></pre><p>驗證：如果以上所有命令都能正常執行，恭喜你！環境準備工作全部完成。你現在擁有了進入AI編程世界的全部工具。</p><p class='list-item'>**環境準備完成度檢查表：**</p><p class='list-item'>- Node.js 已安装，版本 >= 18</p><p class='list-item'>- npm 已安裝</p><p class='list-item'>- Git 已安裝並完成基本配置（user.name 和 user.email）</p><p class='list-item'>- 已創建工作目錄並初始化 Git</p><p>如果有某一項未完成，請回到對應章節重新操作。**不要跳過這些步驟** —— 後續每一步都依賴這些基礎環境。</p><p>學習目標：建立對AI輔助編程的系統認知，理解核心概念與方法論</p><p>完成標誌：能向他人清晰解釋什麼是 Vibe Coding、Agentic Engineering 和 SDD</p><p>在正式上手工具之前，我們需要先建立"認知地圖"。這就像學開車之前要先了解交通規則一樣 —— 你不需要成爲交通工程師，但至少要知道紅燈停綠燈行、靠右行駛這些基本概念。</p><p class='list-item'>**傳統編程**是你一行一行地"手寫"代碼，告訴計算機每一步該怎麼做。你需要掌握編程語言的語法、理解算法、記住各種API —— 學習曲線陡峭且耗時漫長。</p><p class='list-item'>**AI輔助編程**則完全不同。你用自然語言（中文或英文都行）描述"你想要什麼"，AI幫你把它變成可運行的代碼。你的角色從"打字員"變成了"指揮官"。</p><p>打個比方：傳統編程就像你自己從頭學做一道紅燒肉 —— 要學買菜、備料、掌握火候；AI編程就像你請了一個專業廚師 —— 你只需要說"我想喫紅燒肉，少放糖，多放一點八角"，廚師幫你做出來，你嘗一口覺得太鹹了，再說"減少一些鹽"就行。</p><p>提示：AI編程不是"不需要懂任何技術"，而是大幅降低了入門門檻。隨着你的使用越來越深入，你會自然而然地積累技術知識。這個過程是"邊用邊學"，而非傳統的"先學後用"。</p><p>AI編程並不是突然出現的，它經歷了一個清晰的演進過程：</p><p class='list-item'>**第一階段：智能補全時代（2020-2022）**</p><p>代表产品：GitHub Copilot、TabNine</p><p>就像手機輸入法的聯想功能 —— 你打了幾個字，它猜你接下來要打什麼。這個階段的AI只能幫你補全一行或幾行代碼，依然需要你自己動手寫大部分代碼。</p><p class='list-item'>**第二階段：對話式編程時代（2023-2024）**</p><p>代表产品：ChatGPT、Claude.ai</p><p>AI進化成了一個"編程顧問"。你可以用自然語言問它"怎麼寫一個排序算法"，它會給你一段完整的代碼。但問題是：你需要自己把代碼複製到項目中、自己處理各種細節，AI並不瞭解你的項目全貌。</p><p class='list-item'>**第三階段：智能體編程時代（2024 至今）** ← 我們現在就在這裏</p><p>代表产品：Claude Code、Cursor Agent、Qoder、Codex</p><p>這是一個質的飛躍！AI從"回答問題"進化到了"完成任務"。你告訴它"給我的項目添加一個用戶登錄功能"，它會**自己**去讀你的項目代碼，**自己**創建需要的文件，**自己**寫代碼，**自己**運行測試 —— 全程自主完成。</p><p>這就像從"問路人"（對話式）變成了"請了一個代駕"（智能體）—— 你只需要說目的地，它自己開車到。</p><p class='list-item'>**第四階段：協作工程時代（正在形成）**</p><p>多個AI智能體組成"團隊"，各司其職 —— 一個負責設計架構、一個負責寫代碼、一個負責測試、一個負責審查代碼質量。人類的角色進一步上升爲"項目總監"。</p><pre><code>第一階段       第二階段        第三階段         第四階段
+AI幫你打字  →  AI幫你想方案  →  AI幫你做任務  →  AI團隊幫你做項目
+（補全）      （對話）        （智能體）       （多智能體協作）</code></pre><p class='list-item'>*圖：AI編程四個發展階段演進示意圖*</p><p>你不需要成爲AI專家，但理解以下幾個核心概念會幫你更好地使用AI工具：</p><p class='list-item'>**Token化：AI怎麼"閱讀"代碼**</p><p>AI不是像人一樣一個字一個字地讀代碼，它把文本切成一個個小塊，叫做 **Token**。</p><p>例如，<code>Hello World</code> 会被切成 <code>Hello</code> 和 <code> World</code> 两个 Token。中文的 <code>你好世界</code> 可能被切成 <code>你好</code> 和 <code>世界</code> 两个 Token，也可能被切成更多个。</p><p>爲什麼這個概念重要？因爲**AI的計費和能力限制都以 Token 爲單位**。你發送的內容越長，消耗的 Token 越多，費用越高。</p><p>提示：簡單記住這個換算關係 —— 1 個 Token ≈ 4 個英文字符 ≈ 1-2 箇中文字符。一篇 1000 字的中文文章大約是 500-1000 個 Token。</p><p class='list-item'>**上下文窗口：AI的"工作記憶"**</p><p>上下文窗口是AI一次能"記住"的內容量。這就像你的辦公桌大小 —— 桌子越大，能同時攤開的文件越多。</p><p>對於AI編程來說，上下文窗口越大越好 —— 因爲AI需要同時"看到"更多項目代碼才能做出合理的修改。Claude、Gemini、GPT 等主流模型都在持續擴大上下文窗口。</p><p class='list-item'>**概率生成：爲什麼AI有時會"胡說八道"**</p><p>AI生成內容的本質是**預測概率最高的下一個詞**。大多數時候它預測得很準，但有時候它會"一本正經地胡說八道" —— 這被稱爲**“幻覺”（Hallucination）**。</p><p>例如，AI可能信心滿滿地告訴你某個函數的用法，但這個函數根本不存在。這就像一個知識淵博但偶爾會編故事的朋友 —— 大部分時候值得信賴，但關鍵信息你需要自己驗證。</p><p>避坑：永遠不要100%信任AI生成的代碼。尤其是涉及數據庫操作、用戶認證、支付邏輯等關鍵代碼時，一定要仔細檢查。"信任但驗證"是AI編程的黃金法則。</p><p class='list-item'>**Vibe Coding** 是 AI 大牛 Andrej Karpathy（前OpenAI/Tesla AI主管）在2025年初提出的概念。他的原话是：</p><p>“完全沉浸在氛圍中，擁抱指數級增長，忘記代碼的存在。”</p><p>翻譯成大白話就是：**不要糾結代碼的每一個細節，跟着感覺走，讓AI幫你實現想法**。</p><p>Vibe Coding 的核心原則：</p><p class='list-item'>- **意圖優先**：先描述你想要什麼效果，而不是告訴AI怎麼寫代碼</p><p class='list-item'>- **快速迭代**：不追求一次完美，擁抱"生成 → 測試 → 修正"的循環</p><p class='list-item'>- **信任但驗證**：相信AI的能力，但始終檢查關鍵邏輯</p><p class='list-item'>- **上下文經營**：持續維護和優化提供給AI的背景信息</p><p class='list-item'>**Vibe Coding 适用场景：**</p><p class='list-item'>- 原型開發、概念驗證（快速把想法變成可運行的東西）</p><p class='list-item'>- 個人項目、學習項目（試錯成本低）</p><p class='list-item'>- 探索性編程（不確定最終效果，邊做邊看）</p><p class='list-item'>- UI/前端開發（可視化反饋快，容易判斷好不好）</p><p class='list-item'>**Vibe Coding 需謹慎的場景：**</p><p class='list-item'>- 注意： 生產環境的核心繫統（銀行、醫療等）</p><p class='list-item'>- 注意： 安全敏感代碼（認證、加密等）</p><p class='list-item'>- 注意： 性能極致要求的場景</p><p>提示：Vibe Coding 不等於"亂來"。它的精髓在於改變你的關注點—— 從關注"代碼怎麼寫"轉向關注"產品好不好用"。</p><p>Vibe Coding 對於做小項目、快速原型非常好用，但當項目變大變複雜時，純粹的"跟着感覺走"會遇到麻煩：</p><p class='list-item'>- **代碼質量不可控**：AI可能寫出能跑但很亂的代碼，積累成"技術債務"</p><p class='list-item'>- **前後矛盾**：AI在不同對話中可能給出相互衝突的實現方式</p><p class='list-item'>- **缺乏全局視角**：AI可能只關注當前的小任務，忽略對整體架構的影響</p><p class='list-item'>- **難以協作**：沒有統一規範時，多個人（或多次會話）的代碼風格各異</p><p>這就像建房子 —— 自己搭一個小木屋可以隨意發揮（Vibe Coding），但要建一棟大樓就必須有圖紙、有規範、有質檢（Agentic Engineering）。</p><p>在AI編程的語境中，**智能體（Agent） 是一個能夠自主完成任務**的AI系統。它和普通的AI聊天有什麼區別？</p><p>一個智能體的工作循環是 **感知 → 推理 → 行動 → 反饋**：</p><pre><code>   ┌─────────────────────────────────┐
+   │                         │
+   ▼                         │
+  感知（读取项目代码、理解需求）      │
+   │                         │
+   ▼                         │
+  推理（分析问题、制定计划）         │
+   │                         │
+   ▼                         │
+  行动（修改文件、运行命令、安装依赖）   │
+   │                         │
+   ▼                         │
+  反馈（检查结果、发现新问题）──────────┘</code></pre><p>Claude Code 就是一個典型的編程智能體 —— 你告訴它"幫我添加一個用戶註冊功能"，它會自己讀懂項目代碼，自己創建文件，自己寫代碼並運行測試。</p><p>當一個智能體不夠用時（比如項目特別複雜），可以讓多個智能體協作，各司其職。就像一個公司不是一個人幹所有事 —— 有產品經理、有程序員、有測試員、有設計師。</p><p class='list-item'>**領導者-執行者模式（Leader-Worker）**</p><p>一個"老闆"Agent負責拆分任務和協調，多個"員工"Agent負責執行具體任務。</p><pre><code>               ┌──────────┐
+               │ 领导Agent │ ← 你的需求
+               │（规划分配）│
+               └──┬───┬───┘
+                  │   │
+           ┌────────┘   └────────┐
+           ▼                ▼
+      ┌──────────┐        ┌──────────┐
+      │编码Agent  │        │测试Agent  │
+      │（写代码）  │        │（写测试）  │
+      └──────────┘        └──────────┘</code></pre><p>Qoder 就是這種模式的典型代表 —— 有 Leader（指揮官）、Coding（開發者）、Research（研究員）、Verify（測試員）等多個 Agent 角色。</p><p class='list-item'>**管道式協作（Pipeline）**</p><p>Agent按順序接力，就像工廠流水線：</p><pre><code>需求分析Agent → 架構設計Agent → 代碼實現Agent → 測試Agent → 部署Agent</code></pre><p class='list-item'>**对等协作（Peer-to-Peer）**</p><p>多個Agent平等地互相審查，就像同事之間互相Code Review。</p><p>提示：對於初學者來說，你暫時只需要瞭解這些概念。在實際使用中，Claude Code 是一個單智能體工具（一個Agent幫你做所有事），已經能完成大多數項目。當項目足夠複雜時，再考慮 Qoder 等多智能體方案。</p><p>優秀的AI編程智能體不會一股腦地把所有代碼寫出來，它會像一個經驗豐富的程序員一樣，先思考再行動：</p><p class='list-item'>**Plan-Act-Observe-Reflect 循环：**</p><pre><code>1. Plan（規劃）：   &quot;要完成登錄功能，我需要做這些事......&quot;
+2. Act（行動）：   &quot;先創建數據庫用戶表......&quot;
+3. Observe（觀察）：&quot;創建成功了，但發現少了一個字段......&quot;
+4. Reflect（反思）：&quot;我需要修改表結構，加上郵箱字段......&quot;
+5. 回到 Plan：     &quot;好的，現在繼續下一步......&quot;</code></pre><p class='list-item'>**任務分解原則 —— MECE：**</p><p>MECE（Mutually Exclusive, Collectively Exhaustive）是一個管理諮詢中常用的概念，意思是"相互獨立，完全窮盡"。</p><p>舉個例子，把"構建一個博客系統"分解爲：</p><pre><code>構建博客系統
+├── 1. 用戶系統（註冊、登錄、個人資料）
+├── 2. 文章系統（創建、編輯、刪除、列表）
+├── 3. 評論系統（發表、刪除、回覆）
+├── 4. 分類標籤（創建分類、打標籤、按分類篩選）
+└── 5. 部署上線（打包、配置服務器、域名）</code></pre><p>這5個子任務之間互不重疊（相互獨立），合在一起覆蓋了博客系統的全部功能（完全窮盡）。</p><p>提示：在使用 Claude Code 時，最佳實踐是先讓AI制定計劃，你確認後再執行。而不是一上來就讓它開始寫代碼。這個習慣會大幅減少返工。</p><p>你有沒有過這種經歷：在淘寶買衣服時，你描述"我要一件好看的衣服"，結果收到的和你想的完全不一樣？這就是**溝通不精準**導致的。</p><p>AI編程也是一樣。如果你告訴AI"幫我做一個網站"，它可能做出一個和你期望完全不同的東西。“垃圾進，垃圾出” —— 模糊的需求必然導致不準確的結果。</p><p class='list-item'>**規範（Specification）就是你和AI之間的"合同"**，它明確地寫清楚：</p><p class='list-item'>- 要做什麼（功能需求）</p><p class='list-item'>- 怎麼做（技術方案）</p><p class='list-item'>- 做到什麼程度（質量標準）</p><p>有了這份"合同"，AI才能精準地理解你的意圖。</p><p class='list-item'>**PRD（Product Requirements Document，产品需求文档）**描述的是"要做什么"。</p><p class='list-item'>**用戶故事（User Story）格式：**</p><pre><code>作爲一個 [角色]，
+我希望 [功能]，
+以便 [價值/目的]。</code></pre><p>例如：</p><pre><code>作爲一個博客讀者，
+我希望能按標籤篩選文章，
+以便快速找到我感興趣的內容。</code></pre><p class='list-item'>**验收标准（Acceptance Criteria）格式：**</p><pre><code>Given（前提條件）：系統中有20篇文章，其中5篇標記了&quot;Python&quot;標籤
+When（操作）：用戶點擊&quot;Python&quot;標籤
+Then（預期結果）：頁面只顯示這5篇標記了&quot;Python&quot;標籤的文章</code></pre><p class='list-item'>**用AI輔助生成PRD的Prompt：**</p><p>這是一個非常實用的技巧 —— 你可以讓AI幫你把模糊的想法變成結構化的需求文檔：</p><pre><code>我想做一個個人書籤管理工具。
+請幫我生成一份完整的PRD文檔，包含：
+1. 項目概述（一句話描述）
+2. 目標用戶
+3. 核心功能列表（按優先級排列：Must Have / Should Have / Nice to Have）
+4. 每個功能的用戶故事和驗收標準
+5. 非功能需求（性能、安全、兼容性）
+請用Markdown格式輸出。</code></pre><p>提示：在第五部分的項目實操中，我們會完整演示如何用這個方法生成PRD文檔。</p><p class='list-item'>**SPEC（Technical Specification，技術規範文檔）**描述的是"怎麼做"。</p><p>一個完整的SPEC文檔包含：</p><p class='list-item'>**讓AI從PRD自動生成SPEC的Prompt：**</p><pre><code>基於以下PRD文檔，請生成對應的技術規範文檔（SPEC）：
+[粘貼你的PRD內容]
+要求：
+1. 推薦技術選型並說明理由
+2. 設計完整的數據模型（包含字段類型和關係）
+3. 列出所有API接口（RESTful風格）
+4. 給出建議的項目目錄結構</code></pre><p>質量規範定義了"做到什麼程度算合格"：</p><p class='list-item'>- **編碼規範**：代碼風格統一、命名規則、註釋要求</p><p class='list-item'>- **測試規範**：需要覆蓋哪些測試場景</p><p class='list-item'>- **安全規範**：輸入驗證、認證授權、數據保護</p><p>提示：對於初學者來說，不需要一開始就寫完美的規範文檔。從簡單的PRD開始，隨着項目變複雜再逐步完善。規範的核心價值在於 ——讓你和AI的溝通更精準。</p><p>建議在項目根目錄下創建一個 <code>specs/</code> 文件夾，統一管理規範文件：</p><pre><code>my-project/
+├── specs/
+│   ├── PRD.md         # 产品需求文档
+│   ├── SPEC.md         # 技术规范
+│   ├── ARCHITECTURE.md   # 架构设计
+│   └── API.md         # API 接口文档
+├── src/              # 源代码
+├── CLAUDE.md          # 给Claude Code的项目说明（详见第二部分）
+└── package.json</code></pre><p>規範文件最大的價值之一是 —— **可以直接作爲AI工具的上下文輸入**。當你把 SPEC.md 的內容提供給 Claude Code 時，它就能精準地按照你的技術方案來寫代碼。</p><p class='list-item'>**參數量：模型的"大腦"大小**</p><p>你可能聽說過"7B模型"、“70B模型"這樣的說法。這裏的 B 是 Billion（十億）的縮寫，指的是模型的參數數量。簡單理解：參數越多，模型越"聰明”，但也越慢、越貴。</p><p>提示：參數量不是唯一標準。訓練數據的質量、訓練方法的優化同樣重要。有些小參數模型經過精細調優後，在特定任務上可以媲美大模型。</p><p class='list-item'>**上下文窗口：再次強調的核心概念**</p><p>對AI編程來說，上下文窗口直接決定了AI能"看到"你項目中多少代碼。窗口越大，AI對項目的理解越全面，生成的代碼越準確。</p><pre><code>4K Token   ≈ 一個文件      → 只能看到當前文件
+32K Token  ≈ 幾個文件      → 能看到相關的幾個文件
+128K Token ≈ 一個小項目    → 能理解整個小項目
+200K Token ≈ 一箇中型項目   → 許多主力模型的長上下文起點
+1M Token   ≈ 一個大型項目   → Claude / Gemini / GPT 等旗艦模型的超長上下文級別</code></pre><p class='list-item'>**Token 計費：你的"油費"**</p><p>使用AI模型就像開車需要加油 —— Token 就是你的"油"，用多少付多少。</p><pre><code>費用 = 輸入Token數 × 輸入單價 + 輸出Token數 × 輸出單價</code></pre><p class='list-item'>**Temperature：AI的"创造性开关"**</p><p>Temperature 是一個 0-1 之間的參數，控制AI回覆的"隨機性"：</p><p class='list-item'>- **Temperature = 0**：每次給出幾乎相同的答案（最確定性）→ 適合代碼生成</p><p class='list-item'>- **Temperature = 1**：每次答案都不同（最隨機）→ 適合創意寫作</p><p>提示：編寫代碼時，通常不需要手動調整 Temperature。Claude Code 默認使用適合編程的低 Temperature 值。</p><p>Claude 是本教程推薦的主力模型，由 Anthropic 公司開發。</p><p class='list-item'>**核心優勢：**</p><p class='list-item'>- 超長上下文（200K 到 1M，隨模型不同而變化），項目級代碼理解能力強</p><p class='list-item'>- 代碼生成質量在業界領先</p><p class='list-item'>- 指令遵循能力精確（你說什麼，它就做什麼）</p><p class='list-item'>- 安全對齊好（不容易生成危險代碼）</p><p class='list-item'>**核心優勢**：多模態能力強、工具調用生態成熟，和 Codex / ChatGPT / OpenAI API 的集成最完整。</p><p class='list-item'>**適合場景**：將UI截圖轉換爲代碼、需要視覺理解的任務。</p><p>智譜AI的GLM系列（配套 CodeGeex 代碼助手），中文能力和代碼能力均衡，國內可用。</p><p>注意： 模型名與後續變化請以 DeepSeek 官方文檔 爲準。</p><p class='list-item'>**核心優勢**：</p><p class='list-item'>- **極致性價比**：價格遠低於官方 Claude</p><p class='list-item'>- 代碼能力強，接近 Claude Sonnet 水平</p><p class='list-item'>- 國內直連，註冊簡單</p><p class='list-item'>- 官方爲 Claude Code 提供了專用的 **Anthropic 兼容端點**，適配度高</p><p class='list-item'>**核心優勢**：中文理解能力出色、國內直連、阿里雲生態集成。</p><p>面對一個編程任務時，按以下流程選擇模型：</p><pre><code>你的任务是什么？
+│
+├── 简单任务（代码补全、格式化、小修改）
+│   ├── 追求最快速度 → Claude Haiku / GLM-4.5-Air / 本地 Qwen
+│   ├── 追求最低成本 → DeepSeek API / 本地 Ollama
+│   └── 完全免费 → 本地 Ollama 模型
+│
+├── 日常开发（功能实现、Bug修复、代码生成）
+│   ├── 英文项目 → Claude Sonnet （首选）
+│   ├── 中文项目 → Claude Sonnet 或 通义千问 / GLM-4.7
+│   └── 预算紧张 → DeepSeek V4 / GLM / Kimi
+│
+├── 复杂任务（架构设计、算法难题、疑难Bug）
+│   ├── 深度推理 → Claude Opus / GPT-5.5 / DeepSeek V4 Pro
+│   └── 超长代码库 → Gemini Pro (1M上下文)
+│
+└── 特殊场景
+   ├── 离线/隐私要求 → 本地 Ollama + Llama/Qwen
+   ├── 截图→代码 → GPT-5.5 / GPT-4o 系列（多模态）
+   └── 国内直连要求 → DeepSeek / 千问 / GLM</code></pre><p class='list-item'>**策略一：分層使用**</p><pre><code>简单任务 ──→ Haiku / GLM-4.5-Air / 本地 Qwen（成本：$）
+日常任务 ──→ Sonnet / DeepSeek V4 Pro      （成本：$$）
+复杂任务 ──→ Opus / GLM-5.1              （成本：$$$$）</code></pre><p>不要所有任務都用最貴的模型，就像不是每次出門都需要打專車。</p><p class='list-item'>**策略二：Prompt Cache（緩存利用）**</p><p>Claude 和 GPT 都支持 Prompt Cache —— 如果你發送的上下文中有大量重複內容（如每次都發送同一個 CLAUDE.md），後續請求可以複用緩存，顯著降低重複上下文的輸入成本。</p><p class='list-item'>**策略三：本地模型補充**</p><p>對於簡單的代碼格式化、註釋生成等任務，可以使用 Ollama 部署的本地模型，完全免費。</p><p class='list-item'>**一個月的費用預估：**</p><p>注意：使用雲端AI服務時，你發送的代碼會經過服務商的服務器。雖然主流服務商（Anthropic、OpenAI）承諾不會用用戶數據訓練模型，但如果你在處理高度敏感的代碼（如核心算法、密鑰等），建議使用本地部署方案。</p><p class='list-item'>**核心概念回顧：**</p><p class='list-item'>**三者的關係：**</p><pre><code>Vibe Coding（感覺驅動）
+   ↓ 項目變大、需要更多控制
+Agentic Engineering（系統化方法）
+   ↓ 需要精準的溝通&quot;合同&quot;
+SDD（規範驅動開發）</code></pre><p>學習目標：深入掌握主流AI編程工具，重點精通Claude Code的使用</p><p>完成標誌：能熟練使用Claude Code完成完整的編程任務，能根據場景選擇合適工具</p><p>這是本教程最核心的一部分。如果說前面是"認知準備"，這裏就是"真刀真槍"。我們將深入學習 Claude Code 的每一個細節，讓你從安裝配置到日常使用都遊刃有餘。</p><p>在深入 Claude Code 之前，先整體瞭解一下當前AI編程工具的格局，這樣你才能理解每個工具的定位和適用場景。</p><pre><code>L5 自主工程 ─── 端到端自主完成項目（探索中）
+   ↑
+L4 項目管理 ─── 多Agent協同、任務分解（Qoder）
+   ↑
+L3 任務執行 ─── 自主修改文件、運行命令（Claude Code、Cursor Agent）我們重點學這個
+   ↑
+L2 代碼生成 ─── 生成完整代碼塊（ChatGPT、Claude.ai）
+   ↑
+L1 代碼補全 ─── 行級/函數級補全（Copilot、TabNine）</code></pre><p>本教程的核心工具 Claude Code 處於 **L3 層級**，是目前日常開發中最實用、最強大的層級。</p><p>當你在選擇AI編程工具時，可以從這8個維度來評估：</p><p>在深入瞭解具體工具之前，先快速認識一下目前最主流的幾款AI編程工具——瞭解它們各自是什麼、核心特點是什麼，形成全局認知。</p><h3>本節是全教程的</h3><p>核心重點，將從安裝到進階全方位講解 Claude Code 的使用。</p><p>Claude Code 是 Anthropic 公司推出的 **AI 編程智能體**。它最經典的入口是終端 CLI，現在也提供 IDE、Desktop、Web 等形態。它能夠讀取項目代碼、修改文件、運行命令、安裝依賴 —— 就像你僱了一個 24 小時在線的遠程程序員，你用自然語言告訴它做什麼，它自己動手幹活。</p><p class='list-item'>*圖：Claude Code 核心能力架構 —— AI大腦接收你的指令，通過四大能力模塊操控項目*</p><p class='list-item'>**Claude Code 是什么？**</p><p>如果把AI編程工具比作不同的交通工具：</p><p class='list-item'>- ChatGPT/Claude.ai 就像**公交車**—— 你問路，它告訴你怎麼走，但你得自己走</p><p class='list-item'>- Cursor 就像**共享單車**—— 你騎着它走，它幫你指路和加速</p><p class='list-item'>- Claude Code 就像**出租車**—— 你說目的地，它自己開到</p><p>Claude Code 的核心特點：</p><p class='list-item'>**Claude Code vs Claude.ai 的核心区别：**</p><p>提示：Claude Code 和 Claude.ai 都使用 Claude 系列模型，核心區別在於“交互方式”和“工具權限”。Claude Code 給了 AI “手” —— 讓它能在你授權後直接觸碰項目文件和開發工具。</p><p>要理解 Claude Code 與你以前用過的 ChatGPT、Claude.ai 的本質差別，必須先弄懂一個機制 —— **LLM Loop（大模型循環）**。</p><p class='list-item'>**對話式 AI（ChatGPT/Claude.ai）的工作方式**：你問一句 → 它答一句 → 結束。如果答案不滿意，你再問一次。**主動權一直在你手裏**，AI 只是個"高級回答機器"。</p><p class='list-item'>**Claude Code 的工作方式**：你下達一個目標 → cc 自己拆解步驟 → 自己調用工具 → 看結果 → 決定下一步 → 再調用工具 → ……一直循環到任務完成。**主動權交給了 AI**。這個不斷"思考-行動-觀察-再思考"的循環，就叫 **LLM Loop**。</p><p class='list-item'>*图：LLM Loop —— Claude Code 的自主循环机制*</p><p>這就是爲什麼我們把 cc 稱爲 **Agent（智能體）** 而不是 Chatbot（聊天機器人）。也正因爲如此：</p><p class='list-item'>- 你可以給 cc 一個**模糊的高層目標**（如"幫我做一個番茄鍾"），它會自己一步步推進</p><p class='list-item'>- cc 在執行過程中**會自我糾錯**——某條命令報錯了，它會讀錯誤信息，調整方案再試</p><p class='list-item'>- 注意： cc **不一定每一步都問你**，所以在它"撒丫子跑"之前，你要給好上下文（CLAUDE.md、Skills、計劃等）</p><p>關鍵認知：cc 是一整套"程序+模型"的組合，底層的大模型其實可以替換——這也是爲什麼後面我們能用 DeepSeek、千問、GLM 等國產模型來驅動 cc。是這套 Loop 機制 + Harness 工程，讓 cc 比單純的對話式 AI 強大得多。</p><p>很多人對 Claude Code 有個誤解：以爲它會像其他 AI 工具一樣，需要先把項目代碼上傳到服務器建立“索引”。**事實上，Claude Code 不需要任何預先的代碼庫索引。**</p><p>官方把這種機制叫做 **Agentic Search（智能體式檢索）**，它的工作方式和**一個人類工程師冷啓動一個項目完全一樣**：</p><p class='list-item'>*圖：Agentic Search——像人一樣按需讀取代碼庫*</p><p class='list-item'>**與傳統 RAG/向量檢索的本質區別：**</p><p>關鍵意義：這意味着 Claude Code天生適合活躍代碼庫——它不依賴一份可能過期的預建索引，也不需要 IT 部門部署向量數據庫。但它讀取到的相關文件內容仍會作爲上下文發送給模型服務，所以處理敏感代碼時依然要遵守公司安全規範。</p><p>官方反覆強調一個觀點：**決定 Claude Code 表現的，不只是背後的模型，還有圍繞模型搭建的“腳手架 Harness”。**</p><p>理解方式：模型能力決定下限，項目上下文、工具權限、規則文件和工作流決定上限。實際生產中，圍繞模型搭建的工具生態會顯著影響最終表現。</p><p>本教程把 Claude Code 的工程化能力抽象成 **7 個擴展點**，建議按“從底到頂”的順序理解——先打好上下文和規則基礎，再接入更復雜的外部工具：</p><p class='list-item'>*圖：Harness 的 7 層擴展點——下三層是“紀律”（項目上下文、鉤子、知識），上四層是“武器”（包分發、IDE、外部、子代理）*</p><p>注意：</p><p>順序重要！初學者不要在基礎還沒搭好時就急着上 MCP 或 Subagents。先把 CLAUDE.md、Hooks、Skills 這三層基本功做紮實再說。</p><p>Codex 是 OpenAI 推出的 AI 編程 Agent，是 Claude Code 最主要的競爭對手之一。其中 **Codex CLI 是開源項目**，Codex App / Desktop / IDE 插件則更偏產品化入口。它目前常見的使用形態包括：</p><p>CLI 會使用本地 <code>~/.codex/</code> 配置目錄；桌面端和 IDE 插件也會共享 OpenAI 賬號體系，但具體配置項、插件能力和界面入口會隨版本變化，以當前客戶端顯示爲準。</p><p class='list-item'>**核心亮點：**</p><p class='list-item'>- **CLI 開源透明**（Apache 2.0）：可以閱讀源碼理解工具原理</p><p class='list-item'>- **沙箱與審批機制**：通過 sandbox / approval mode 控制文件修改和命令執行風險</p><p class='list-item'>- **AGENTS.md 項目說明**：用於記錄項目規則、上下文和工作約定，便於 Agent 在新會話中快速接手</p><p class='list-item'>- **多模型提供商**：原生支持 GPT 系列，也可接入 DeepSeek、Ollama、Mistral 等任何兼容 OpenAI API 的服務</p><p class='list-item'>- **三檔自主級別**：- `suggest`（每次確認）→- `auto-edit`（自動編輯，命令需確認）→- `full-auto`（完全自主），靈活控制</p><p class='list-item'>- **推理強度可控**：low / medium / high 三檔，根據任務複雜度平衡速度與質量</p><p class='list-item'>**Codex 与 Claude Code 核心对比：**</p><p class='list-item'>**何時選擇 Codex：**</p><p class='list-item'>- 已有 ChatGPT 賬號或 OpenAI API → 零配置開箱即用</p><p class='list-item'>- 看重開源透明、想閱讀源碼 → Codex CLI 可審計</p><p class='list-item'>- 需要明確控制命令和文件修改風險 → 關注 Codex 的 sandbox / approval 設置</p><p class='list-item'>- 想用 GPT 系列的代碼能力 → Codex 是 GPT 的原生入口</p><p class='list-item'>- 需要跨工具統一規範 → AGENTS.md 是開放標準</p><p>一句話總結：Codex 適合看重開源、安全沙箱和 GPT 生態的用戶；Claude Code 適合追求國內模型生態成熟度和 Coding Plan 省心體驗的用戶。兩者可在同一項目中共存，<code>AGENTS.md</code>和<code>CLAUDE.md</code>互不干擾。</p><p>如果說 Claude Code 是命令行中的"遠程程序員"，那 Cursor 就是坐在你旁邊、和你共用一個屏幕的"編程搭檔"。</p><p>Cursor 是一個基於 VS Code 改造的 **AI 原生 IDE（集成開發環境）**。它把AI能力直接嵌入到了代碼編輯器中，讓你在寫代碼的同時隨時獲得AI輔助。</p><p>提示：Claude Code 和 Cursor 不是競爭關係，而是互補關係。很多開發者的工作流是：用 Claude Code 搭建項目骨架和實現後端邏輯，用 Cursor 精調前端細節和日常編碼。</p><p>除了三大主流工具之外，還有一些各具特色的AI編程工具值得了解。</p><p>Qoder 是阿里推出的 AI 編程工具，主打更強的任務拆解、上下文檢索和 Agent 化開發體驗。由於這類工具迭代很快，具體功能入口和角色命名請以官網當前版本爲準。</p><p>可以把它理解爲更偏“項目團隊協作感”的 AI IDE：</p><h3>基本使用流程</h3><p>Qoder 的典型工作流：</p><pre><code>你描述需求 → 工具理解並拆分任務
+   → 檢索現有代碼
+   → 制定實施計劃
+   → 執行編碼
+   → 運行驗證
+   → 彙報結果與後續建議</code></pre><p>Qoder 特別適合**複雜項目**，因爲它的多Agent協作可以同時處理代碼編寫、測試、審查等多個環節，減少返工。</p><p>騰訊推出的AI編程助手，以 IDE 插件形式提供。特點是中文優化好、國內直接可用、企業級功能完善。</p><p>適合在騰訊雲生態中開發的團隊。</p><p>字節跳動推出的AI IDE，類似 Cursor，但深度集成了豆包大模型。國內直接可用，中文支持好。</p><p>這些工具不需要安裝任何東西，直接在瀏覽器中描述你想要什麼，它們會生成可運行的應用。適合快速驗證想法，但對於學習AI編程技能來說，Claude Code 和 Cursor 能讓你學到更多。</p><p>選擇AI編程方案時，**工具和模型要一起考慮**——就像買車不能只看車架不看發動機。以下是根據不同預算和需求，經過大量實戰驗證的最優組合：</p><p class='list-item'>**性能组：Claude Code + Claude 模型**</p><p>這是目前綜合體驗最好的組合。Claude Code 的 Agent 能力 + Claude 模型的代碼理解能力，兩者深度適配。缺點是需要國際支付方式，且按量付費需要留意用量。</p><p>適合：有國際信用卡的學生/開發者，對代碼質量要求高。</p><p class='list-item'>**免费组：Codex CLI + ChatGPT/Codex 账号额度**</p><p>Codex CLI 可以通過 ChatGPT 賬號或 API Key 使用，具體額度取決於你的賬號套餐和官方策略。Codex CLI 開源透明，沙箱和審批機制清晰，適合低成本入門。缺點是不同地區、套餐和時間段的可用額度可能變化。</p><p>適合：想零成本入門 AI 編程的新手。</p><p class='list-item'>**性价比组：Claude Code + GLM Coding Plan**</p><p>智譜的 Anthropic 兼容接口做得比較完整，三個模型槽位（Opus/Sonnet/Haiku）可自動映射到 GLM 系列，免去手動配置的麻煩。套餐價格、額度和高峯期倍率會調整，正式購買前以智譜官網爲準。</p><p>適合：國內大多數開發者，不想折騰配置、追求穩定省心。</p><p class='list-item'>**极客组：Claude Code + DeepSeek V4 Pro**</p><p>DeepSeek 官方提供了 Claude Code 的 Anthropic 兼容接入方式，當前文檔示例使用 <code>deepseek-v4-pro[1m]</code>，並可把輕量任務映射到 <code>deepseek-v4-flash</code>。價格通常較低，但需要自己配置端點、Key 和環境變量，並按官方文檔覈對最新模型名。</p><p>適合：動手能力強、追求極致性價比的學生和個人開發者。</p><p>選型建議：新手推薦從性價比組（GLM Coding Plan）或免費組（Codex CLI）開始，零風險體驗。等熟悉了再升級到性能組。</p><p>上一節是按"預算"選方案，這一節是按"場景"搭工具組合——你可以同時用多個工具，發揮各自優勢。</p><p class='list-item'>**雙工具流（推薦）**：Claude Code（後端/架構/數據庫）+ Cursor（前端/UI細節）</p><p>這是目前社區公認的最佳實踐。Claude Code 擅長從零搭建項目骨架、寫 Prisma Schema、設計 API；Cursor 擅長對着設計稿調像素、改 Tailwind 類名。兩者互補，效率最高。</p><p class='list-item'>**輕量組合**：Cursor + Claude.ai 網頁版輔助</p><p>不想學命令行的替代方案。主力用 Cursor 寫代碼，遇到複雜問題打開 Claude.ai 網頁版直接問。</p><p class='list-item'>**国内友好组合**：Trae + DeepSeek API</p><p>全程無需代理，Trae 的 IDE 體驗接近 Cursor，DeepSeek 提供高性價比的模型能力。</p><p class='list-item'>**前提條件：**</p><p>Claude Code 官方提供原生安裝器和 npm 等安裝方式。本教程已經在第零部分安裝 Node.js，因此優先使用 npm 安裝方式，和後續前端項目開發環境保持一致；如果你不想通過 npm 管理 Claude Code，也可以使用官方原生安裝器。</p><p class='list-item'>**方式一：npm 安裝（推薦本教程使用）**</p><pre><code>npm install -g @anthropic-ai/claude-code</code></pre><p>Windows 提醒：Claude Code 對 Windows 的支持方式會隨版本變化。若官方文檔提示通過 WSL 使用，請在 WSL 的 Linux 終端裏執行安裝和環境變量配置；如果你的當前版本支持原生 Windows，再按官方 Windows 說明操作。</p><p class='list-item'>**方式二：原生安裝器（可選）**</p><p>官方也提供原生安裝器，用於不想通過 npm 管理 Claude Code 的用戶。安裝命令和支持系統可能變化，使用前請以 Claude Code 官方 setup 文檔爲準。</p><pre><code># macOS / Linux / WSL 示例
+curl -fsSL https://claude.ai/install.sh | bash</code></pre><p class='list-item'>**驗證安裝：**</p><pre><code>$ claude --version</code></pre><p>預期輸出：</p><pre><code>claude-code v1.x.x</code></pre><p>驗證：如果能看到版本號，說明安裝成功！</p><p class='list-item'>**安裝常見問題排查：**</p><p>提示：</p><p>国内用户如果官方安装器网络不稳定，可以临时使用 npm 方式，并先配置 npm 镜像：<code>npm config set registry https://registry.npmmirror.com npm install -g @anthropic-ai/claude-code</code></p><p>安裝好 Claude Code 後，需要配置 API 密鑰或登錄方式才能使用。這一節提供三類配置方案，請根據你的情況選擇。</p><p class='list-item'>**核心配置參數速查表：**</p><p>提示：</p><p>參數關係說明：<code>ANTHROPIC_API_KEY</code>用於官方直連，<code>ANTHROPIC_AUTH_TOKEN</code>用於第三方服務。兩者不要同時設置，否則會衝突。<code>ANTHROPIC_BASE_URL</code>只在使用非官方端點時需要設置。</p><p class='list-item'>**三種配置方式對比：**</p><p>配置文件路徑說明：</p><p class='list-item'>- **全局**：- `~/.claude/settings.json`（Windows：- `C:\Users\<用户名>\.claude\settings.json`）</p><p class='list-item'>- **項目級（團隊共享）**：- `項目根目錄/.claude/settings.json`（可提交 Git）</p><p class='list-item'>- **项目级（个人私有）**：- `项目根目录/.claude/settings.local.json`（加入 .gitignore）</p><p class='list-item'>*圖：Claude Code 配置體系架構 —— 三種配置方式及其優先級層級*</p><pre><code>方案選擇指南：
+你能直接訪問 Anthropic 網站嗎？
+├── 能 → 方案一：使用 Anthropic 官方 API（推薦）
+└── 不能 → 你在國內嗎？
+   ├── 想用原版 Claude 模型 → 方案二：使用第三方API中轉服務 國內首選
+   ├── 想用其他模型（DeepSeek/千問/GLM等） → 方案三：接入其他模型
+   └── 想要包月套餐、省心不操心 → 在方案三中選擇廠商 Coding Plan</code></pre><p>這是最直接的配置方式，適合能穩定訪問 Anthropic 服務、具備合規支付方式的用戶。國內用戶可能會遇到註冊、支付、訪問穩定性等問題，建議按自己的網絡和合規條件謹慎選擇。</p><p class='list-item'>**註冊步驟（可直接訪問國際網絡的用戶）：**</p><p class='list-item'>- 访问 https://console.anthropic.com/</p><p class='list-item'>- 點擊 “Sign up” 註冊賬號</p><p class='list-item'>- 使用郵箱註冊並完成驗證</p><p class='list-item'>- 登錄後，進入 API Keys 頁面</p><p class='list-item'>- 点击 “Create Key” 创建一个新的 API Key</p><p class='list-item'>- 爲這個 Key 起個名字（如 “claude-code”）</p><p class='list-item'>- **立即複製並保存**—— API Key 只會顯示一次！</p><p>避坑：API Key 就像你的銀行卡密碼，絕對不要分享給別人，也不要把它寫在代碼文件裏提交到 GitHub。一旦泄露，別人可以用你的額度調用API，產生費用。</p><p class='list-item'>**計費說明：**</p><p>Anthropic API 採用**按量計費**模式（用多少付多少）：</p><p>提示：一個 Token 大約等於 4 個英文字符或 1-2 箇中文字符。一次普通的編程對話大約消耗 1000-5000 個 Token，具體費用取決於輸入/輸出比例和所選模型。新用戶是否有免費額度，以 Anthropic 當前頁面爲準。</p><p>（價格信息按 Anthropic 官方價格頁在 2026-05-18 覈對，請以官網最新價格爲準）</p><p class='list-item'>**Step 1：設置環境變量**</p><p>你需要將 API Key 設置爲系統環境變量，這樣 Claude Code 啓動時就能自動讀取。</p><p class='list-item'>**Windows 用户（PowerShell）：**</p><pre><code># 方法一：临时设置（仅当前终端窗口有效，关闭后失效）
+$env:ANTHROPIC_API_KEY = &quot;sk-ant-api03-你的实际API-Key&quot;
+# 方法二：永久设置（推荐，一次设置永久生效）
+[System.Environment]::SetEnvironmentVariable(&quot;ANTHROPIC_API_KEY&quot;, &quot;sk-ant-api03-你的实际API-Key&quot;, &quot;User&quot;)</code></pre><p>注意：永久設置後需要重新打開終端才能生效。</p><p class='list-item'>**macOS / Linux 用户：**</p><pre><code># 编辑 shell 配置文件（根据你使用的 shell 选择）
+# 如果用 zsh（macOS 默认）：
+$ echo &#x27;export ANTHROPIC_API_KEY=&quot;sk-ant-api03-你的实际API-Key&quot;&#x27; &gt;&gt; ~/.zshrc
+# 如果用 bash：
+$ echo &#x27;export ANTHROPIC_API_KEY=&quot;sk-ant-api03-你的实际API-Key&quot;&#x27; &gt;&gt; ~/.bashrc
+# 使配置立即生效
+$ source ~/.zshrc  # 或 source ~/.bashrc</code></pre><p class='list-item'>**Step 2：首次启动 Claude Code**</p><pre><code># 进入你的项目目录
+$ cd D:\ai-coding-projects  # Windows
+$ cd ~/ai-coding-projects   # macOS
+# 启动 Claude Code
+$ claude</code></pre><p>預期輸出：</p><pre><code>╭──────────────────────────────────────────╮
+│                                │
+│   Welcome to Claude Code!            │
+│                                │
+│   /help for available commands         │
+│                                │
+╰──────────────────────────────────────────╯
+&gt;</code></pre><p>你會看到一個交互式界面，光標等待你輸入。試試輸入你的第一條消息：</p><pre><code>&gt; 你好，請介紹一下你自己</code></pre><p>驗證：如果 Claude Code 正常回復了你的消息，恭喜，API配置成功！</p><p class='list-item'>**常見錯誤排查：**</p><p>如果你在國內無法直接訪問 Anthropic 的服務，這個方案是你的最佳選擇。</p><p class='list-item'>**注意：**很多個人搭建的中轉平臺，溢價嚴重，甚至有作假的情況，請仔細甄別。而且避免封號的情況也無法保證，這裏不做推薦。</p><p class='list-item'>**主流中轉服務對比：**</p><p>（價格倍率會隨市場波動，請以各服務商官網最新價格爲準）</p><p>提示：所謂"價格倍率"，是指相比 Anthropic 官方價格的加價比例。例如官方 $3/百萬Token，1.2x 倍率就是 $3.6/百萬Token。中轉服務需要維護服務器和線路，所以會有一定加價，這是正常的。</p><p class='list-item'>**以 OpenRouter 爲例的註冊流程：**</p><p class='list-item'>- 访问 https://openrouter.ai/</p><p class='list-item'>- 點擊 “Sign in” 註冊賬號（支持 Google 賬號登錄）</p><p class='list-item'>- 登錄後，進入 “Keys” 頁面</p><p class='list-item'>- 点击 “Create Key” 创建 API Key</p><p class='list-item'>- 複製並保存你的 API Key（以 `sk-or-`開頭）</p><p class='list-item'>- 在 “Credits” 頁面充值（支持信用卡）</p><p class='list-item'>**需要記錄的關鍵信息：**</p><pre><code>API Base URL: https://openrouter.ai/api/v1
+API Key: sk-or-v1-xxxxxxxxxxxxx（你的实际Key）</code></pre><p>注意：不同的中轉服務有不同的 API Base URL 格式。註冊後請仔細查看服務商提供的文檔，找到他們的 Base URL 和支持的模型列表。</p><p class='list-item'>**原理回顧：**</p><pre><code>你的 Claude Code ──请求──→ 中转服务器（国内可达）──转发──→ Anthropic API
+      ↑                                         │
+      └──────────────── 返回 AI 回复 ←───────────────────────┘</code></pre><p>中轉服務本質上就是一個"代理"，幫你把請求轉發給 Anthropic，再把結果返回。你在 Claude Code 中需要做的就是把"目的地地址"從 Anthropic 官方改成中轉服務。</p><p class='list-item'>**Step 1：獲取中轉服務的信息**</p><p>在 0.3.2 節你已經註冊了中轉服務，現在需要兩個關鍵信息：</p><pre><code>API Base URL：中轉服務的地址（每個服務商不同）
+API Key：在中轉服務上創建的 Key（不是 Anthropic 官方的 Key）</code></pre><p class='list-item'>**以 OpenRouter 为例：**</p><pre><code>API Base URL: https://openrouter.ai/api/v1
+API Key: sk-or-v1-你的OpenRouter-Key</code></pre><p class='list-item'>**Step 2：設置環境變量**</p><p>Claude Code 通过 <code>ANTHROPIC_BASE_URL</code> 环境变量来指定API地址。</p><p class='list-item'>**Windows 用户（PowerShell）：**</p><pre><code># 临时设置（当前窗口有效）
+$env:ANTHROPIC_BASE_URL = &quot;https://openrouter.ai/api/v1&quot;
+$env:ANTHROPIC_API_KEY = &quot;sk-or-v1-你的中转服务Key&quot;
+# 永久设置（推荐）
+[System.Environment]::SetEnvironmentVariable(&quot;ANTHROPIC_BASE_URL&quot;, &quot;https://openrouter.ai/api/v1&quot;, &quot;User&quot;)
+[System.Environment]::SetEnvironmentVariable(&quot;ANTHROPIC_API_KEY&quot;, &quot;sk-or-v1-你的中转服务Key&quot;, &quot;User&quot;)</code></pre><p class='list-item'>**macOS / Linux 用户：**</p><pre><code># 编辑 shell 配置文件
+$ vim ~/.zshrc  # 或你喜欢的编辑器
+# 在文件末尾添加以下两行：
+export ANTHROPIC_BASE_URL=&quot;https://openrouter.ai/api/v1&quot;
+export ANTHROPIC_API_KEY=&quot;sk-or-v1-你的中转服务Key&quot;
+# 保存后使配置生效
+$ source ~/.zshrc</code></pre><p class='list-item'>**Step 3：驗證配置**</p><pre><code># 重新打開終端（重要！）
+# 啓動 Claude Code
+$ claude</code></pre><p>輸入測試消息：</p><pre><code>&gt; 你好，請告訴我今天是星期幾</code></pre><p>如果收到正常回復，說明中轉配置成功。</p><p>驗證：Claude Code 正常回復即表示中轉服務配置成功。</p><p class='list-item'>**不同中轉服務的配置參考：**</p><p>注意：不同中轉服務的 Base URL 格式不同，請務必查閱你所使用的服務商的文檔。有些服務商要求 URL 末尾帶<code>/v1</code>，有些不需要，配錯會導致連接失敗。</p><p class='list-item'>**中轉服務常見問題：**</p><p>Claude Code 不僅可以使用 Claude 模型，還可以通過配置接入其他AI模型。這對國內用戶特別有價值 —— 你可以使用國內直連的模型服務，不需要任何代理。</p><p class='list-item'>**工作原理：**</p><p>Claude Code 內部有一個**三級模型槽位**體系。無論你用哪個模型提供商，它始終維護三個"角色位"：</p><p>接入第三方模型有兩種方式：</p><p class='list-item'>**方式一：直接指定模型（通用方式）**</p><pre><code># 设置 API Key 和 Base URL（大部分第三方模型都兼容 OpenAI 格式）
+export ANTHROPIC_AUTH_TOKEN=&quot;你的模型API-Key&quot;
+export ANTHROPIC_BASE_URL=&quot;模型的API地址&quot;</code></pre><p>然後在啓動 Claude Code 時指定模型：</p><pre><code># 使用指定模型啓動
+$ claude --model &quot;模型名稱&quot;</code></pre><p class='list-item'>**方式二：Anthropic 兼容接口（自動映射，包含 DeepSeek、GLM、Kimi）**</p><p>目前官方提供 Anthropic Messages API 兼容端點的國產廠商越來越多，包括：</p><p>配置後，Claude Code 界面仍然顯示 Opus/Sonnet/Haiku 的別名，但實際調用的是廠商的模型——這就是**服務端模型映射**。</p><p>以智譜 GLM 爲例：</p><pre><code># 智谱 GLM 最简配置
+export ANTHROPIC_AUTH_TOKEN=&quot;你的智谱API-Key&quot;
+export ANTHROPIC_BASE_URL=&quot;https://open.bigmodel.cn/api/anthropic&quot;</code></pre><p>智譜 GLM **默認**的服務端自動映射關係（根據官方文檔最新表述）：</p><p>提示：要用上旗艦型號GLM-5.1，需要手動覆蓋三個槽位（詳見下面「接入智譜 GLM」部分）。不要誤以爲默認就是 GLM-5.1。</p><p>現在GLM的Coding Plan非常搶手，不一定能買到，而且有限額、高峯期翻倍消耗額度。</p><p class='list-item'>**方式三：通過配置文件（推薦持久化配置）**</p><p>除了環境變量，還可以在 <code>settings.json</code> 的 <code>env</code> 塊中配置，效果相同但更持久、更清晰：</p><pre><code>// ~/.claude/settings.json（全局生效）
+{
+  &quot;env&quot;: {
+   &quot;ANTHROPIC_AUTH_TOKEN&quot;: &quot;你的API-Key&quot;,
+   &quot;ANTHROPIC_BASE_URL&quot;: &quot;https://open.bigmodel.cn/api/anthropic&quot;,
+   &quot;API_TIMEOUT_MS&quot;: &quot;3000000&quot;
+  }
+}</code></pre><p>提示：三種配置方式的優先級爲：啓動參數<code>--model</code>> 環境變量<code>ANTHROPIC_MODEL</code>> 配置文件<code>settings.json</code>中的<code>model</code>字段。選擇最適合你工作習慣的方式即可。</p><p class='list-item'>**接入智譜 GLM 的完整步驟：**</p><p>智譜 AI 提供了 Anthropic Messages API 兼容接口，是目前國內**配置最簡單**的方案之一。</p><p>官方文档：https://docs.bigmodel.cn/cn/coding-plan/tool/claude</p><p class='list-item'>**最簡配置（使用默認 GLM-4.7 映射）：**</p><pre><code># 环境变量方式
+export ANTHROPIC_AUTH_TOKEN=&quot;你的智谱Key&quot;
+export ANTHROPIC_BASE_URL=&quot;https://open.bigmodel.cn/api/anthropic&quot;</code></pre><p>或使用配置文件（智譜官方推薦方式）：</p><pre><code>// ~/.claude/settings.json
+{
+  &quot;env&quot;: {
+   &quot;ANTHROPIC_AUTH_TOKEN&quot;: &quot;你的智谱Key&quot;,
+   &quot;ANTHROPIC_BASE_URL&quot;: &quot;https://open.bigmodel.cn/api/anthropic&quot;,
+   &quot;API_TIMEOUT_MS&quot;: &quot;3000000&quot;,
+   &quot;CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC&quot;: 1
+  }
+}</code></pre><p>另外智譜官方要求在 <code>~/.claude.json</code> 中添加（跳過首次啓動的引導流程）：</p><pre><code>// ~/.claude.json
+{
+  &quot;hasCompletedOnboarding&quot;: true
+}</code></pre><p>配置完成後重啓終端，運行 <code>claude</code> 即可。默認服務端映射如上表（Opus/Sonnet → GLM-4.7，Haiku → GLM-4.5-Air）。</p><p class='list-item'>**使用 GLM-5.1（需手動覆蓋三個槽位）：**</p><p>GLM-5.1 / GLM-5-Turbo 作爲高階模型，對標 Claude Opus，使用時會按“高峯期 3 倍、非高峯期 2 倍”係數消耗套餐額度（"高峯期"爲每日 14:00～18:00 UTC+8）。如需使用，手動覆蓋：</p><pre><code>// ~/.claude/settings.json
+{
+  &quot;env&quot;: {
+   &quot;ANTHROPIC_AUTH_TOKEN&quot;: &quot;你的智谱Key&quot;,
+   &quot;ANTHROPIC_BASE_URL&quot;: &quot;https://open.bigmodel.cn/api/anthropic&quot;,
+   &quot;ANTHROPIC_DEFAULT_OPUS_MODEL&quot;: &quot;glm-5.1&quot;,
+   &quot;ANTHROPIC_DEFAULT_SONNET_MODEL&quot;: &quot;glm-5-turbo&quot;,
+   &quot;ANTHROPIC_DEFAULT_HAIKU_MODEL&quot;: &quot;glm-4.5-air&quot;,
+   &quot;API_TIMEOUT_MS&quot;: &quot;3000000&quot;,
+   &quot;CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC&quot;: 1
+  }
+}</code></pre><p>注意：</p><p>版本兼容提醒：第三方 Anthropic 兼容接口可能會受到 Claude Code 新功能影響。如果遇到工具調用或 Beta 參數報錯，優先查看對應廠商官方文檔的兼容說明，不要盲目複製舊版本配置。</p><p>提示：</p><p>一键脚本：macOS / Linux 用户可以直接运行官方脚本自动完成上述配置：<code>curl -O "https://cdn.bigmodel.cn/install/claude_code_env.sh" && bash ./claude_code_env.sh</code></p><p class='list-item'>**接入 Kimi（月之暗面）的完整步驟（嚴格按 Kimi 官方文檔）：**</p><p>Kimi 爲 Claude Code 提供了 Anthropic 兼容端點，推薦使用 <code>kimi-k2.5</code> 模型（在 Agentic / 工具調用場景下的主力型號）。</p><p>官方文档：https://platform.moonshot.cn/docs/guide/agent-support</p><p>Step 1：在 https://platform.kimi.com/console/api-keys 創建 API Key。建議同時在項目設置裏設置「項目日消費預算」防超支。</p><h3>Step 2：設置環境變量</h3><p class='list-item'>**Windows PowerShell：**</p><pre><code>$env:ANTHROPIC_BASE_URL=&quot;https://api.moonshot.ai/anthropic&quot;
+$env:ANTHROPIC_AUTH_TOKEN=&quot;&lt;你的 Moonshot API Key&gt;&quot;
+$env:ANTHROPIC_MODEL=&quot;kimi-k2.5&quot;
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL=&quot;kimi-k2.5&quot;
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL=&quot;kimi-k2.5&quot;
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL=&quot;kimi-k2.5&quot;
+$env:CLAUDE_CODE_SUBAGENT_MODEL=&quot;kimi-k2.5&quot;
+$env:ENABLE_TOOL_SEARCH=&quot;false&quot;
+claude</code></pre><p class='list-item'>**macOS / Linux：**</p><pre><code>export ANTHROPIC_BASE_URL=https://api.moonshot.ai/anthropic
+export ANTHROPIC_AUTH_TOKEN=&lt;你的 Moonshot API Key&gt;
+export ANTHROPIC_MODEL=kimi-k2.5
+export ANTHROPIC_DEFAULT_OPUS_MODEL=kimi-k2.5
+export ANTHROPIC_DEFAULT_SONNET_MODEL=kimi-k2.5
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=kimi-k2.5
+export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2.5
+export ENABLE_TOOL_SEARCH=false
+claude</code></pre><p>Step 3：进入 cc 后输入 <code>/status</code> 验证模型状态。如需启用 <code>kimi-k2.5</code> 的思考（Thinking）能力，进入 cc 后按 <code>Tab</code> 键切换，看到 “Thinking on” 即为生效。</p><p>注意：</p><p>重要：不要使用老写法<code>https://api.moonshot.cn/v1</code>+<code>moonshot-v1-128k</code>。它们是 Kimi 的 OpenAI 兼容端点与早期模型名，在 Claude Code 中会遇到工具调用不可靠。官方为 Claude Code 提供的是<code>/anthropic</code>端点 +<code>kimi-k2.5</code>。</p><p class='list-item'>**所有模型配置速查表（以各廠商官方文檔爲準）：**</p><p>注意：</p><p>重要區分：</p><pre><code>官方提供 Anthropic 兼容端点的厂商（DeepSeek、GLM、Kimi）：使用完整的&lt;code&gt;ANTHROPIC_*&lt;/code&gt;环境变量集进行三级槽位映射，无需。&lt;code&gt;--model&lt;/code&gt;
+OpenAI 兼容端点厂商（千问、Ollama、其他中转）：仍需&lt;code&gt;--model&lt;/code&gt;指定具体模型名。- 统一使用
+&lt;code&gt;ANTHROPIC_AUTH_TOKEN&lt;/code&gt;+&lt;code&gt;ANTHROPIC_BASE_URL&lt;/code&gt;进行认证；不要使用已废弃的&lt;code&gt;OPENAI_API_KEY&lt;/code&gt;+&lt;code&gt;OPENAI_BASE_URL&lt;/code&gt;方式。</code></pre><p>無論使用上述哪種方案，配置完成後都應進行驗證：</p><p class='list-item'>**快速驗證三步走：**</p><pre><code># Step 1：啓動 Claude Code
+$ claude
+# Step 2：在對話中檢查當前狀態
+&gt; /status
+# 查看當前使用的模型、API Endpoint 是否正確
+# Step 3：發送測試消息
+&gt; 你好，請告訴我你是什麼模型</code></pre><p>如果 AI 正常回復，說明配置成功。如果出現錯誤，請參考第三部分 3.7 節的 FAQ 進行排查。</p><p>提示：使用<code>/model</code>命令可以查看和切換當前模型，使用<code>/cost</code>命令可以實時查看 Token 消耗和費用。</p><p>Claude 系列模型受限、GLM 套餐難搶時，DeepSeek 是一個值得考慮的國內直連方案。</p><p>DeepSeek 是國內**極具性價比**的 AI 模型，代碼能力強。**官方爲 Claude Code 專門提供了 Anthropic 兼容端點**，不需要走 OpenAI 兼容接口。</p><p>官方文檔：https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/claude_code。下面的配置與模型名與該文檔一致，後續以官方文檔爲準。</p><p>Step 1：在 https://platform.deepseek.com/ 注册并获取 API Key。</p><p>Step 2：设置环境变量（注意 Base URL 是 <code>/anthropic</code> 端点，不是 <code>/v1</code>）</p><p class='list-item'>**Windows PowerShell：**</p><pre><code># 临时设置（仅当前终端窗口生效）
+$env:ANTHROPIC_BASE_URL=&quot;https://api.deepseek.com/anthropic&quot;
+$env:ANTHROPIC_AUTH_TOKEN=&quot;&lt;你的 DeepSeek API Key&gt;&quot;
+$env:ANTHROPIC_MODEL=&quot;deepseek-v4-pro[1m]&quot;
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL=&quot;deepseek-v4-pro[1m]&quot;
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL=&quot;deepseek-v4-pro[1m]&quot;
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL=&quot;deepseek-v4-flash&quot;
+$env:CLAUDE_CODE_SUBAGENT_MODEL=&quot;deepseek-v4-flash&quot;
+$env:CLAUDE_CODE_EFFORT_LEVEL=&quot;max&quot;</code></pre><p class='list-item'>**macOS / Linux：**</p><pre><code>export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+export ANTHROPIC_AUTH_TOKEN=&lt;你的 DeepSeek API Key&gt;
+export ANTHROPIC_MODEL=&quot;deepseek-v4-pro[1m]&quot;
+export ANTHROPIC_DEFAULT_OPUS_MODEL=&quot;deepseek-v4-pro[1m]&quot;
+export ANTHROPIC_DEFAULT_SONNET_MODEL=&quot;deepseek-v4-pro[1m]&quot;
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=deepseek-v4-flash
+export CLAUDE_CODE_SUBAGENT_MODEL=deepseek-v4-flash
+export CLAUDE_CODE_EFFORT_LEVEL=max</code></pre><p>或使用配置文件（推薦，不需重啓終端）：</p><pre><code>// ~/.claude/settings.json
+{
+  &quot;env&quot;: {
+   &quot;ANTHROPIC_BASE_URL&quot;: &quot;https://api.deepseek.com/anthropic&quot;,
+   &quot;ANTHROPIC_AUTH_TOKEN&quot;: &quot;&lt;你的 DeepSeek API Key&gt;&quot;,
+   &quot;ANTHROPIC_MODEL&quot;: &quot;deepseek-v4-pro[1m]&quot;,
+   &quot;ANTHROPIC_DEFAULT_OPUS_MODEL&quot;: &quot;deepseek-v4-pro[1m]&quot;,
+   &quot;ANTHROPIC_DEFAULT_SONNET_MODEL&quot;: &quot;deepseek-v4-pro[1m]&quot;,
+   &quot;ANTHROPIC_DEFAULT_HAIKU_MODEL&quot;: &quot;deepseek-v4-flash&quot;,
+   &quot;CLAUDE_CODE_SUBAGENT_MODEL&quot;: &quot;deepseek-v4-flash&quot;,
+   &quot;CLAUDE_CODE_EFFORT_LEVEL&quot;: &quot;max&quot;
+  }
+}</code></pre><p>Step 3：進入項目目錄，啓動 Claude Code</p><pre><code>cd /path/to/my-project
+claude</code></pre><p>啓動後**無需**傳 <code>--model</code> 參數，Claude Code 會通過環境變量調用 DeepSeek 官方示例中的模型映射。</p><h3>選擇主題：直接按數字即可</h3><p>按回車繼續：</p><h3>確認目錄：回車即可</h3><p>提示：DeepSeek 模型名、可用端點和 Claude Code 兼容能力會隨官方迭代變化。實際使用前請打開上面的官方文檔覈對，不要照抄舊教程裏的模型名。</p><h3>Step 4：验证</h3><pre><code>&gt; /status</code></pre><p>在 cc 會話中輸入 <code>/status</code>，可看到當前 Base URL 和模型是否已切換到 DeepSeek。</p><p>注意：</p><p>常见踩坑：如果你之前使用过<code>https://api.deepseek.com/v1</code>（OpenAI 兼容端点）+<code>claude --model deepseek-chat</code>的老写法，建议改为 DeepSeek 官方 Claude Code 文档中的 Anthropic 兼容端点<code>https://api.deepseek.com/anthropic</code>。</p><p>上面幾類方案你並不需要"二選一"——很多人的真實使用場景是：**今天偶爾走 Anthropic 官方、明天切中轉、後天乾脆用 DeepSeek，偶爾還要用 GLM Coding Plan 套餐**。手動改環境變量太麻煩，這時候就需要一個專門的多模型管理器。</p><p class='list-item'>**cc-switch** 是社區開源的一款桌面小工具，可以讓你在多個 Claude Code 配置間一鍵切換。</p><p class='list-item'>- **项目地址**：https://github.com/farion1231/cc-switch</p><p class='list-item'>- **下載**：進入 Releases 頁面，選對應系統（Windows、macOS、Linux）的安裝包</p><p class='list-item'>- **使用**：打开 cc-switch → 点击“新增” → 填入 API Key 和 BaseURL → 起个名字（如 “Anthropic-官方”、“DeepSeek”、“GLM-CodingPlan”）保存 → 需要哪个点哪个</p><p>工作機制：cc-switch 把你配置的多個 API Key 和 BaseURL 存起來，選擇哪個就自動修改對應的環境變量，然後重啓終端運行 <code>claude</code> 就生效。</p><p>注意：</p><p>最容易翻車的坑（必看）：切換 cc-switch 一定要在啓動！如果你已經在 cc 會話裏了再去 cc-switch 切換，是切不動的——環境變量在進程啓動時就被加載到內存了。正確順序是：先 cc-switch 選定配置 →<code>claude</code>之前重啓終端→ 運行<code>claude</code>。很多新手都在這裏上過當。</p><p>提示：</p><p>適用人羣：如果你只用一家服務商，直接走上面配置方案裏的<code>settings.json</code>即可，不需要 cc-switch。它是爲"多模型重度用戶"準備的。</p><p>學習目標：在掌握安裝與基礎配置後，深入掌握 Claude Code 的全部用法與進階技巧，讓 AI 真正成爲你的高效編程搭檔</p><p>完成標誌：能熟練使用 Claude Code 完成完整開發流程，並掌握高階配置、最佳實踐與進階能力</p><p>好，到這裏你已經能把 Claude Code 跑起來了。前面兩部分你完成了：</p><p class='list-item'>- 第零部分：準備好了開發環境（Node.js、Git、VS Code 等）</p><p class='list-item'>- 第二部分：瞭解了AI編程工具生態，安裝並配置好了 Claude Code，也理解了不同模型的特點與選型策略</p><p>但很多人就停在了這一步——會用，但用得不順手。用久了你會發現三個問題：</p><p class='list-item'>- **它怎麼把文件改壞了？**→ 你得學會管住它</p><p class='list-item'>- **用着用着怎麼變笨了？**→ 你得學會管理上下文</p><p class='list-item'>- **它對每個人都一樣，怎麼讓它懂我？**→ 你得學會個性化配置</p><p>本部分就是解決這三個問題的。先了解全局框架，再逐個深入。</p><p>Claude Code 的能力可以按 **7 層擴展（Harness）** 來理解。Anthropic 官方在 2026 年 5 月的企業級指南中總結了這個框架：</p><p class='list-item'>- **CLAUDE.md**— 項目說明書，每次會話自動加載</p><p class='list-item'>- **Hooks**— 事件觸發器，在特定時機自動執行</p><p class='list-item'>- **Skills**— 專業知識包，AI 按需加載</p><p class='list-item'>- **Plugins**— 把 Skills + Hooks + MCP 打包分发</p><p class='list-item'>- **LSP**— 給 AI 裝上 IDE 級的代碼導航</p><p class='list-item'>- **MCP**— 連接外部工具和數據源</p><p class='list-item'>- **子 Agent**— 獨立上下文並行幹活</p><p>這 7 層從底向上，每一層建立在前一層之上。前 3 層是基礎配置，後 4 層是高級擴展。本部分和第四部分會逐個展開。</p><p>官方反覆強調一個觀點：**模型能力是地板，配置質量纔是天花板**。花時間把配置做好，比追最新模型版本更有實際收益。</p><p>配置好API後，你可能會問："這麼多模型，我該用哪個？"這一節幫你解答。</p><p class='list-item'>**Claude 模型家族對比：**</p><p class='list-item'>**成本估算參考（2026-05-18 覈對）：**</p><p>提示：日常開發使用 Sonnet 就足夠了。只在遇到特別複雜的問題時才切換到 Opus。Haiku 適合大批量處理簡單的任務。</p><p class='list-item'>**在 Claude Code 中切換模型（四種方式）：**</p><p>Claude Code 提供了四種模型切換方式，按優先級從高到低排列：</p><p class='list-item'>**方法一：啓動時指定（臨時使用）**</p><pre><code># 使用模型别名（推荐，自动指向最新版本）
+$ claude --model opus      # 最强推理
+$ claude --model sonnet    # 日常编码（默认）
+$ claude --model haiku     # 快速轻量
+# 使用具体模型名时，请以当前服务商官方文档为准
+$ claude --model opus
+$ claude --model &quot;deepseek-v4-pro[1m]&quot;</code></pre><p>提示：Claude Code 提供了方便的模型别名，常见包括<code>opus</code>、<code>sonnet</code>、<code>haiku</code>、<code>default</code>等。具体别名会随版本变化，使用前以<code>/model</code>当前显示为准。</p><p class='list-item'>**方法二：運行中切換（使用斜槓命令）**</p><p>在 Claude Code 對話中直接輸入：</p><pre><code>&gt; /model           # 打开模型选择器（交互式）
+&gt; /model sonnet      # 直接切换到 Sonnet
+&gt; /model opus       # 直接切换到 Opus</code></pre><p>選擇後會保存到用戶設置，下次啓動也會生效。</p><p class='list-item'>**方法三：環境變量持久設置**</p><pre><code># 設置默認使用的模型（支持別名或具體名稱）
+export ANTHROPIC_MODEL=&quot;sonnet&quot;</code></pre><p class='list-item'>**方法四：配置文件持久設置（推薦）**</p><p>在 <code>settings.json</code> 中设置 <code>model</code> 字段，重启即生效：</p><pre><code>// ~/.claude/settings.json（全局生效）
+{
+  &quot;model&quot;: &quot;sonnet&quot;
+}</code></pre><pre><code>// 项目/.claude/settings.json（仅该项目生效）
+{
+  &quot;model&quot;: &quot;opus&quot;
+}</code></pre><p>注意：四种方式的优先级为：<code>--model</code>启动参数 ><code>ANTHROPIC_MODEL</code>环境变量 ><code>settings.json</code>中的<code>model</code>字段。<code>/model</code>命令的选择会保存到用户设置文件。</p><p class='list-item'>**配置文件層級說明：**</p><p class='list-item'>**不同模型的使用建議：**</p><p class='list-item'>**實際對比實驗：**</p><p>用同一個任務測試不同模型的表現，幫你直觀感受差異：</p><p class='list-item'>**測試任務**：用 Express.js 創建一個簡單的 RESTful API，包含 GET 和 POST 兩個端點。</p><pre><code>&gt; 請用 Express.js 創建一個簡單的待辦事項 API，包含：
+&gt; 1. GET /todos - 獲取所有待辦事項
+&gt; 2. POST /todos - 創建新的待辦事項
+&gt; 數據存在內存中即可，不需要數據庫。</code></pre><p>提示：模型選擇沒有絕對的對錯，關鍵是根據任務複雜度選擇合適的模型。簡單任務用貴的模型是浪費錢，複雜任務用便宜的模型是浪費時間。</p><p>Claude Code 有多層配置體系，從全局到項目級，層層覆蓋。</p><p class='list-item'>**配置層級：**</p><pre><code>全局配置（影響所有項目）
+  └── ~/.claude/settings.json
+項目級配置（隻影響當前項目）
+  └── 項目根目錄/.claude/settings.json
+項目上下文文件（告訴AI項目背景信息）
+  └── 項目根目錄/CLAUDE.md ← 最重要！</code></pre><p>Claude Code 的配置文件位于 <code>~/.claude/settings.json</code>（全局）或项目目录下的 <code>.claude/settings.json</code>（项目级）。</p><p>常用配置項：</p><pre><code>{
+  // 允许 Claude Code 执行的操作（不再需要每次确认）
+  &quot;permissions&quot;: {
+   &quot;allow&quot;: [
+     &quot;Read&quot;,        // 读取文件
+     &quot;Write&quot;,       // 写入文件
+     &quot;Bash(npm *)&quot;,   // 执行 npm 命令
+     &quot;Bash(git *)&quot;,   // 执行 git 命令
+     &quot;Bash(node *)&quot;   // 执行 node 命令
+   ],
+   &quot;deny&quot;: [
+     &quot;Bash(rm -rf *)&quot; // 禁止执行危险的删除命令
+   ]
+  },
+  // 默认使用的模型
+  &quot;model&quot;: &quot;sonnet&quot;,
+  // 自动紧凑阈值（上下文使用超过此比例时自动压缩）
+  &quot;autoCompactThreshold&quot;: 80
+}</code></pre><p>注意：權限設置要謹慎。過於寬鬆的權限可能導致AI執行你不期望的操作。建議初學者保持默認設置，讓 Claude Code 在執行每個操作前都詢問你確認。</p><p>CLAUDE.md 是 Claude Code 中**最重要的配置文件之一**。它就像你給新來的實習生寫的"項目入職手冊" —— 告訴AI這個項目的背景、技術棧、編碼規範和當前進度。</p><p class='list-item'>**爲什麼 CLAUDE.md 如此重要？**</p><p>沒有 CLAUDE.md 時，Claude Code 每次開始工作都要花時間"重新認識"你的項目。有了 CLAUDE.md，它一啓動就知道項目的全部背景，效率大幅提升。</p><p class='list-item'>**CLAUDE.md 模板（可直接複製修改）：**</p><pre><code># 项目名称
+## 项目概述
+一句话描述这个项目做什么。
+## 技术栈
+- 前端：Next.js 14 + TypeScript + Tailwind CSS
+- 后端：Next.js API Routes
+- 数据库：Prisma + SQLite
+- 部署：Vercel
+## 项目结构</code></pre><pre><code>src/
+├── app/         # Next.js App Router 页面
+│   ├── api/      # API 路由
+│   ├── layout.tsx # 全局布局
+│   └── page.tsx   # 首页
+├── components/   # React 组件
+│   ├── ui/      # 通用UI组件
+│   └── features/  # 业务组件
+├── lib/         # 工具函数和配置
+├── prisma/      # 数据库 schema 和迁移
+└── types/       # TypeScript 类型定义</code></pre><pre><code>## 編碼規範
+- 使用函數式組件 + React Hooks
+- 組件文件使用 PascalCase 命名（如 BookmarkCard.tsx）
+- 工具函數使用 camelCase 命名
+- API 路由返回統一格式：{ success: boolean, data?: any, error?: string }
+- 所有數據庫操作通過 Prisma Client 執行
+## 當前開發狀態
+-  項目初始化完成
+-  數據庫 Schema 設計完成
+-  書籤 CRUD API 開發中
+-  前端頁面待開發
+-  搜索功能待開發
+## 注意事項
+- SQLite 數據庫文件在 prisma/dev.db，不要提交到 Git
+- 環境變量在 .env 文件中，不要提交到 Git
+- 所有新功能先創建 Git 分支再開發</code></pre><p class='list-item'>**CLAUDE.md 的三個層級（由頂向下疊加生效）：**</p><p>很多人只知道 CLAUDE.md 可以放在項目根目錄，其實官方設計了 **3 個層級的 CLAUDE.md**，它們會同時生效、不衝突：</p><p>三層疊加生效，不衝突。優先級：文件夾級 > 項目級 > 全局級。</p><p class='list-item'>**兩個官方推薦的創建姿勢：**</p><p class='list-item'>- `/init`創建項目級- `claude`後輸入- `/init`，cc 會自動掃描項目並生成一份 CLAUDE.md 初稿，你再調整。官方建議：- **項目有一定規模再**（太空它掃不出什麼東西）。- `/init`效果更好</p><p class='list-item'>- `/memory`編輯全局級- `/memory`選擇“全局 CLAUDE.md”，會用默認編輯器打開該文件供你修改。- **修改全局後需重啓 cc 才生效。**</p><p class='list-item'>**最佳實踐：**</p><p class='list-item'>-  **保持更新**：項目級 CLAUDE.md 應該是動態的——項目加了功能、踩了坑，就同步更新</p><p class='list-item'>-  **足夠具體**：技術棧寫明具體版本號，目錄結構要與實際一致</p><p class='list-item'>-  **寫明禁忌**：把"不要做什麼"也寫清楚（如"不要修改數據庫遷移文件"）</p><p class='list-item'>-  **適度簡潔**：不要寫成論文，AI需要的是關鍵信息而非贅述</p><p class='list-item'>-  **只放"頂層不變原則"**：隨着實踐你會發現，CLAUDE.md 不該塞太多。卡帕西發佈的「claude.skills」幾百行通用規則就能拿 10 萬+ Star——寫點 “頂層、不變、須嚴守" 的東西就夠了。`https://github.com/multica-ai/andrej-karpathy-skills`</p><p>如果說 CLAUDE.md 是**你主動立下的規矩**，那 Auto Memory 就是 **cc 在幹活過程中默默記下的設計筆記**。你沒顯式寫進 CLAUDE.md 的習慣、反饋、項目踩坑，會被一個後臺 agent 靜靜記錄。</p><p class='list-item'>**如何啓用：**</p><pre><code># 在 cc 會話中輸入
+/memory
+# 在彈出的菜單裏選第一個選項 “啓用 Auto Memory”
+# 啓用後菜單裏會多出“打開自動記憶文件夾”選項</code></pre><p class='list-item'>**Auto Memory 會記哪幾類東西：**</p><p class='list-item'>**使用手感（重要）：**</p><p class='list-item'>- 它只在當前項目生效（文件存在項目目錄下），換項目需重新積累</p><p class='list-item'>- 啓用後 cc 不會每次都把所有記憶全部加載進上下文，只會讀一份 `memory.md`索引——**遇到具體問題纔去讀對應的子文件**，佔 token 很少</p><p class='list-item'>- 隨時可以用快捷鍵 `Ctrl+O`在會話中查看實際被調用過的記憶內容</p><p class='list-item'>- 記錯了就跟它說：“忘掉剛剛說的不喜歡深色主題”，它會自己刪掉</p><p>提示：</p><p>一句話區分 CLAUDE.md vs Auto Memory：CLAUDE.md 是第一優先級、全量注入的明規則；Auto Memory 是第二優先級、按需注入的隱規則。兩者配合，cc 越用越懂你。</p><p>除了上面兩層，你還可以仿照 Skill 的"**漸進式披露**"機制爲 cc 手動打造一套**專項參考文檔**。</p><p class='list-item'>**應用場景**：某些東西不適合全部塞進 CLAUDE.md（太長、太專門），但 cc 需要的時候必須能查到。比如做個產品，你希望：</p><p class='list-item'>- **品牌視覺規範**：顏色、字體、間距 →- `docs/brand-visual.md`</p><p class='list-item'>- **产品文本风格**：语调、术语表 →- `docs/copywriting-style.md`</p><p class='list-item'>- **API 约定**：请求响应格式、错误码 →- `docs/api-conventions.md`</p><p>然後在 CLAUDE.md 里加上指引：</p><pre><code>## 外部參考文檔
+- 修改前端視覺、調顏色、調間距時 → 必讀 `docs/brand-visual.md`
+- 寫產品文案、按鈕文字、提示語時 → 必讀 `docs/copywriting-style.md`
+- 寫 API 、定義返回格式時 → 必讀 `docs/api-conventions.md`</code></pre><p>這樣 cc 只在"需要的時候"纔去讀完整文檔，既保證了準確性，又不佔多餘上下文。</p><p>Claude Code 的三層記憶體系：第一層 CLAUDE.md（你主動寫，全量加載）→ 第二層 Auto Memory（cc 自己記，按需讀取）→ 第三層自建參考文檔（你寫，cc 遇到對應任務纔讀）。</p><p>本質認知：agent 的所有"記憶"，本質上都是在合適的時候向大模型注入壓縮過的上下文。粗暴點說 —— 這些記憶機制本質上還是提示詞工程，只不過由 cc 幫你組織了層次。</p><p>類似於 <code>.gitignore</code>，用來告訴 Claude Code 哪些文件/目錄不需要關注：</p><pre><code># .claudeignore 示例
+node_modules/      # 依赖包目录（太大了，AI不需要看）
+.next/            # Next.js 构建产物
+dist/            # 编译输出
+*.log            # 日志文件
+.env             # 环境变量（包含敏感信息）</code></pre><p>掌握 Claude Code 的日常使用，就像學會開車的基本操作 —— 方向盤、油門、剎車、倒車鏡。</p><pre><code># 最基本的啓動方式（在當前目錄啓動）
+$ claude
+# 指定項目目錄啓動
+$ claude --project-dir /path/to/your/project
+# 使用指定模型啓動
+$ claude --model sonnet
+# 單次執行模式（執行完就退出，適合腳本調用）
+$ claude -p &quot;請列出當前目錄下所有的 JavaScript 文件&quot;</code></pre><p>啓動 Claude Code 後，你就進入了一個交互式對話界面。你輸入需求，AI分析後執行。</p><p class='list-item'>**典型的交互流程：**</p><pre><code>你：幫我創建一個簡單的 HTML 頁面，顯示&quot;Hello AI Coding&quot;
+AI：好的，我來創建這個頁面。
+[AI 分析需求]
+[AI 請求確認：我將創建文件 index.html，是否允許？]
+你：是（按 Enter 確認）
+AI： 已創建 index.html，包含以下內容：
+   - 基本 HTML5 結構
+   - 一個標題顯示&quot;Hello AI Coding&quot;
+   - 簡單的居中樣式</code></pre><p class='list-item'>**權限確認機制：**</p><p>Claude Code 在執行以下操作前會先詢問你：</p><p>你可以：</p><p class='list-item'>- 按 **Enter**或輸入**y**→ 確認執行</p><p class='list-item'>- 輸入 **n**→ 拒絕執行</p><p class='list-item'>- 輸入補充信息 → 修改AI的計劃</p><p>提示：如果你發現每次確認很煩，可以在<code>settings.json</code>中配置自動允許的操作（見 4.2 節）。但初學者建議保持默認，讓自己有機會審查AI的每一步操作。</p><p>在 Claude Code 對話中，以 <code>/</code> 開頭的命令是“斜槓命令”，用來控制Claude Code 的行爲。在輸入框裏打一個 <code>/</code> 就會彈出完整命令清單；<code>/help</code> 列出所有可用指令。</p><p class='list-item'>**基礎高頻命令：**</p><p class='list-item'>**擴展管理命令：**</p><p class='list-item'>**最常用的三個命令詳解：**</p><h3>&lt;code&gt;/compact&lt;/code&gt; —— 上下文压缩（必须掌握）</h3><p>這是解決”用久了 AI 變笨”的核心武器。用 cc 一段時間會發現回答變慢、質量下降——這是因爲你聊的每句話、它讀的每個文件、它執行的每個操作的結果，都在擠佔上下文空間。模型上下文雖然有 200K，但實際有效比例只有 60%-80%，且會隨上下文增多能力下降。腦子裏塞多了東西，它就容易把握不住重點。</p><p><code>/compact</code> 命令會幫你”整理桌面” —— 把前面的對話壓縮成摘要，騰出空間。</p><pre><code>&gt; /compact
+AI: 上下文已壓縮。當前對話摘要：
+   - 我們正在開發一個書籤管理器項目
+   - 已完成：數據庫設計、API端點
+   - 當前正在：前端頁面開發</code></pre><p class='list-item'>**配套命令： /context —— 監控上下文餘量**</p><p>在 <code>/compact</code> 之前，先用 <code>/context</code> 看看當前狀況：它會詳細展示上下文佔比，包括各個 MCP、Skill 各佔用了多少 token，讓你知道是什麼在”喫掉”上下文。</p><pre><code>&gt; /context
+上下文使用情况：
+  已使用: 142,000 / 200,000 tokens (71%)
+  ├── 对话历史: 89,000 tokens
+  ├── CLAUDE.md: 2,100 tokens
+  ├── Skills: 12,500 tokens
+  └── MCP 工具: 4,800 tokens</code></pre><p>提示：</p><p>我的習慣：看到上下文高於 60% 了，就<code>/compact</code>一下。別等到接近滿載、cc 自動壓縮才動手——那時候它已經開始”遺忘”了。也可以讓 cc 幫你打開常駐顯示，重啓終端後底部就會一直顯示上下文餘量。</p><p><code>/compact</code> vs <code>/clear</code> —— 什么时候用哪个？</p><p>心法：寧可”多<code>/clear</code>幾次重新介紹背景”，也不要”一直聊一直聊”。每個<code>/clear</code>都是給 AI 一次重新聚焦的機會。</p><h3>&lt;code&gt;/rewind&lt;/code&gt; —— “后悔药”（双击 ESC 快捷启动）</h3><p>當你讓 cc 改了一些代碼、過後發現不滿意（或者項目被改壞了），cc 自帶一個回滾機制：**在對話裏輸入  /rewind，或者直接雙擊 ESC**，就會進入回滾界面：</p><pre><code>[Rewind] 選擇回滾方式：
+  1. 僅回滾對話        → 文件保留，只清除後面幾輪對話
+  2. 回滾對話 與 文件編輯 → 推薦！全部返回某個節點
+  3. 僅回滾文件        → 保留對話，只還原文件</code></pre><p>注意：</p><p>底線提醒：<code>/rewind</code>只能撤銷cc 自己編輯過的文件。它跑過的終端命令（安裝依賴、下載文件、修改數據庫）撤不了。真正靠譜的“後悔藥”還是 Git（參見 4.5 節“Git 集成最佳實踐”）。</p><h3>&lt;code&gt;/memory&lt;/code&gt; —— 记忆管理</h3><p>Claude Code 有一個跨會話的“長期記憶”系統。它會自動記住你的偏好和項目信息，下次啓動時依然記得。<code>/memory</code> 進去後可以編輯全局 / 項目 CLAUDE.md、開啓自動記憶。具體記憶體系見 **4.2 節 記憶系統**。</p><h3>&lt;code&gt;/review&lt;/code&gt; —— 代码审查</h3><p>完成功能開發後，讓 AI 審查你的代碼質量：</p><pre><code>&gt; /review
+AI: 正在審查項目代碼...
+審查結果：
+ 代碼結構清晰
+注意： api/bookmarks.ts 第15行：缺少輸入驗證
+注意： components/BookmarkList.tsx：建議添加 loading 狀態
+ 發現潛在安全問題：SQL 查詢未使用參數化查詢</code></pre><p>除了打字對話，cc 還有幾種交互方式能大幅提升效率。</p><p class='list-item'>**1.  ! 進入 Bash 模式（不用新開終端跑命令）**</p><p>在 cc 對話窗口裏輸入文字默認是在跟 cc 對話，不是跑 shell 命令。要跑命令有兩種常見做法：</p><pre><code> 推薦：在 cc 會話裏以 ! 開頭，進入 Bash 模式跑命令
+&gt; !npm run dev
+&gt; !node app.js
+# 取代方案：另外開一個終端跑命令</code></pre><p>提示：</p><p>後臺運行：運行中的命令會阻塞跟 cc 的對話（比如 dev 服務起來後不會退出）。這時按<code>Ctrl+B</code>，cc 會把它交到後臺跑，你可以繼續與 cc 對話。</p><p class='list-item'>**2.  @文件/目錄 引用（給 cc 精準上下文）**</p><p>cc 不會一直把所有項目文件加載到上下文裏（項目一大也加不進去），需要時會現場 grep。**你明確  @ 一個文件，就是在節省 cc 探路的 token 成本**。</p><pre><code># 直接 @ 文件路徑（輸入時會自動彈出候選）
+&gt; 參考 @src/auth/login.ts 的風格，在 @src/auth/ 下加個 register.ts
+# 提示詞太長、命令行裏打不下？先寫到 .md 文檔裏，再 @ 它
+&gt; 按 @docs/feature-spec.md 的需求實現</code></pre><p>提示：</p><p>反直覺小冗識：你給 cc 的指令越短，它反而可能花越多 token——因爲它要多費力探索項目才能猜到你想要什麼。描述越具體 + 明確 @ 文件，成本反而低，效果反而準。</p><p class='list-item'>**3. 貼圖片（多模態能力）**</p><p>直接將圖片拖拽到對話框、或者 Ctrl+V 粘貼。適合：</p><p class='list-item'>- 給設計參考圖讓 cc 實現一個類似的 UI</p><p class='list-item'>- 貼報錯截圖讓 cc 判讀</p><p class='list-item'>- 貼架架構圖讓 cc 按圖實現</p><p class='list-item'>**4. 三種啓動參數（命令行啓動時）**</p><pre><code>claude                        # 默认启动
+claude -c                      # = --continue，启动时直接接上次会话
+claude --permission-mode plan       # 启动后直接进 Plan Mode（8 节）
+claude --dangerously-skip-permissions # &quot;危险模式&quot;：一路绿灯不问任何确认</code></pre><p>注意：</p><p>危險模式使用須謹慎：<code>--dangerously-skip-permissions</code>（綠燈模式）適合在沙箱環境 / 有 Git 存檔 / 不重要的練手項目中使用。生產項目裏不推薦，新手也請從默認模式起手。</p><p>瞭解了基本操作後，讓我們來看一個完整的開發工作流。這就像學會了方向盤和油門後，實際上路開一圈。</p><p>Claude Code 的常見推薦工作流可以概括爲 **四階段**：</p><p class='list-item'>- **Explore（探索）**：Plan Mode 下讀代碼、搜引用，搞清楚現狀</p><p class='list-item'>- **Plan（規劃）**：出方案、評估邊界情況，你審覈</p><p class='list-item'>- **Implement（实施）**：切出 Plan Mode，按方案执行</p><p class='list-item'>- **Commit（提交）**：生成 commit message，提交</p><p>一輪結束後，回到第 1 步開始下個任務。</p><p class='list-item'>**各階段詳解：**</p><p>提示：</p><p>爲什麼要分階段？試想一下這種體驗：你說”加個軟刪除功能”，15 分鐘後 AI 改了 14 個文件、動了全局查詢過濾器、破壞了 3 個現有接口——你只能一個一個手工回退。這就是不規劃直接乾的代價。在 Plan Mode 裏多花 5 分鐘討論方案，換來執行階段節省 30 分鐘返工。Plan Mode 的詳細用法在4.9 節詳講。</p><p>在開始一個新項目之前，完成以下 6 項設置能讓後續開發順利多倍：</p><pre><code>Step 1: 項目初始化
+  ↓ 描述項目目標 → AI 生成項目骨架
+Step 2: 建立 CLAUDE.md（項目上下文）
+  ↓ 可運行 `/init` 讓 AI 自動生成
+Step 3: 配置權限與默認模式
+  ↓ .claude/settings.json、複雜項目可默認 plan 模式
+Step 4: 功能開發
+  ↓ 一次一個功能，逐個 Explore→Plan→Implement
+Step 5: 代碼審查與測試
+  ↓ 用 /review 讓 AI 生成測試並跑起來
+Step 6: 提交代碼
+  ↓ git commit 保存進度</code></pre><p>讓我們用一個小例子走完整個流程，讓你親身體驗 Claude Code 的威力。</p><p class='list-item'>**Step 1：初始化項目**</p><pre><code># 创建项目目录
+$ mkdir hello-api
+$ cd hello-api
+# 启动 Claude Code
+$ claude</code></pre><p>在 Claude Code 中输入：</p><pre><code>&gt; 请帮我初始化一个 Node.js Express 项目：
+&gt; 1. 使用 npm init 创建 package.json
+&gt; 2. 安装 express
+&gt; 3. 创建一个 app.js 入口文件
+&gt; 4. 实现一个 GET /hello 端点，返回 { message: &quot;Hello AI Coding!&quot; }
+&gt; 5. 端口使用 3000</code></pre><p>AI 會依次執行以下操作（每一步都會請求你確認）：</p><pre><code>[Claude Code] 将运行命令: npm init -y
+→ 确认？(y/n) y
+[Claude Code] 将运行命令: npm install express
+→ 确认？(y/n) y
+[Claude Code] 将创建文件: app.js
+→ 确认？(y/n) y</code></pre><p>預期生成的核心代碼（<code>app.js</code>）：</p><pre><code>// 引入 Express 框架
+const express = require(&#x27;express&#x27;);
+// 创建应用实例
+const app = express();
+// 定义端口号
+const PORT = 3000;
+// 定义 GET /hello 路由
+app.get(&#x27;/hello&#x27;, (req, res) =&gt; {
+  // 返回 JSON 格式的响应
+  res.json({ message: &#x27;Hello AI Coding!&#x27; });
+});
+// 启动服务器
+app.listen(PORT, () =&gt; {
+  console.log(`服务器已启动，访问 http://localhost:${PORT}/hello`);
+});</code></pre><p class='list-item'>**Step 2：運行並驗證**</p><p>在 Claude Code 中输入：</p><pre><code>&gt; 請啓動這個服務器，然後用 curl 測試 /hello 端點</code></pre><p>AI 執行的操作：</p><pre><code>[Claude Code] 将运行命令: node app.js
+→ 确认？(y/n) y
+输出: 服务器已启动，访问 http://localhost:3000/hello</code></pre><p>你也可以打開瀏覽器訪問 <code>http://localhost:3000/hello</code>，應該看到：</p><pre><code>{
+  &quot;message&quot;: &quot;Hello AI Coding!&quot;
+}</code></pre><p>驗證：如果瀏覽器能看到上面的 JSON 響應，恭喜！你用 Claude Code 成功創建了第一個 API！</p><p class='list-item'>**Step 3：提交代碼**</p><pre><code>&gt; 請幫我初始化 Git 倉庫並提交當前代碼，commit message 爲 &quot;初始化 Express Hello World API&quot;</code></pre><p>AI 會執行：</p><pre><code>git init
+git add .
+git commit -m &quot;初始化 Express Hello World API&quot;</code></pre><p>經過大量實踐總結出的使用技巧，幫你事半功倍。</p><p class='list-item'>**1. 任務描述要具體，不要模糊**</p><pre><code> 差：帮我做一个登录功能
+ 好：在 /api/auth/ 目录下创建登录 API：
+   - POST /api/auth/login
+   - 接受 { email, password }
+   - 使用 bcrypt 验证密码
+   - 成功返回 JWT token
+   - 使用项目已有的 prisma client 查询 User 表</code></pre><p class='list-item'>**2. 引用已有代碼作爲參考**</p><pre><code> 好：参考 /api/bookmarks/route.ts 的风格，
+   为 /api/tags/ 创建类似的 CRUD 接口。
+   数据模型参见 prisma/schema.prisma 中的 Tag 表。</code></pre><p class='list-item'>**3. 先讓AI制定計劃，確認後再執行**</p><pre><code> 好：我想給書籤管理器添加搜索功能。
+   請先分析一下需要修改哪些文件，列出計劃，
+   等我確認後再開始實現。</code></pre><p class='list-item'>**4. 一次只做一件事**</p><pre><code> 差：幫我同時添加搜索功能、標籤管理、用戶認證和導出功能
+ 好：幫我先實現書籤搜索功能。具體需求：
+   - 在書籤列表頁面添加搜索框
+   - 支持按標題和描述搜索
+   - 搜索時實時過濾結果（前端過濾即可）</code></pre><p>上面 <code>/compact</code> 詳解已覆蓋核心操作，這裏給你一個快速決策表：</p><p>在深入 Git 技巧之前，先給你一個直觀理解：**Git 就是你的"遊戲存檔系統"**。哪怕你不是程序員，只要在用 cc 做項目，Git 都是你的生命線。</p><p>想象你玩一個 RPG 遊戲：打到 BOSS 前存個檔 → 打輸了就讀檔重來 → 打贏了就存新檔繼續。Git 在項目中就是完全一樣的東西：**打到一個滿意的節點存一檔，後面翻車就讀檔回來。**</p><p>注意：</p><p>cc 有不確定性，這不是 bug 是特性：cc 不管是寫代碼還是其他文檔操作，都有不確定性——同一個需求問兩次，可能得到不同的實現。所以養成一個肌肉記憶：每做完一步就讓 cc 存檔一步。有 Git 兜底，你才能安心讓 cc 去嘗試各種方案。</p><p>Mac 自帶 Git，Windows 讓 cc 幫你裝。最好建個 GitHub 賬號——遠程倉庫可以讓你在其他電腦上拉下存檔點繼續工作，也方便協作。Git 的下載、安裝、登錄、提交、回滾，**全都可以讓 cc 用自然語言幫你完成**，比如說：</p><pre><code>&gt; 幫我下載 Git 並跟我的 GitHub 賬號綁定
+&gt; 幫我把現在的代碼提交到遠程倉庫
+&gt; 回滾到上一個存檔版本</code></pre><pre><code>黃金法則：在讓AI做大修改之前，先 commit
+開發流程：
+1. git commit → 保存當前狀態（&quot;存檔&quot;）
+2. 讓 AI 實現新功能
+3. 測試功能是否正常
+   ├── 正常 → git commit → 繼續下一個功能
+   └── 有問題 → git checkout . → 回到步驟1，換個方式重試</code></pre><pre><code># 實際命令示例
+# 1. 開始新功能前，先保存
+$ git add . &amp;&amp; git commit -m &quot;開始添加搜索功能前的存檔&quot;
+# 2. 在 Claude Code 中實現功能...
+# （如果功能做壞了）
+# 3. 回退到存檔點
+$ git checkout .
+# （如果功能做好了）
+# 3. 保存新功能
+$ git add . &amp;&amp; git commit -m &quot;完成搜索功能&quot;</code></pre><p>驗證：如果你在項目裏已經用了 git，現在停一下想想——你敢放心地讓 cc 去重構一段複雜代碼，因爲你知道改壞了隨時能回退嗎？如果答案是否定的，先把 git 配好再繼續。</p><p>避坑：很多初學者不 commit 就讓 AI 大改特改，結果改壞了卻無法回退。這是AI編程中最常見也最痛苦的失誤。“改之前先存檔”，記住這句話。</p><pre><code>&gt; /cost
+AI: 当前会话费用统计：
+   输入 Token: 15,234
+   输出 Token: 8,721
+   估算费用: $0.18</code></pre><p>以上技巧偏通用。如果你接手的是一個**多人協作、幾十萬行以上的大型代碼庫**，Anthropic 官方在大型代碼庫實踐中給出過多條專門建議。核心矛盾是：即使模型上下文已經很長，真實代碼庫仍然可能遠超窗口上限。前 3 條是紀律，後 3 條是武器。</p><p class='list-item'>**① 用  /init 自動生成 CLAUDE.md（項目初始化）**</p><p>第一次在一個新項目裏跑 Claude Code，**第一件事就是  /init**：</p><pre><code>&gt; /init</code></pre><p>AI 會自動瀏覽項目目錄、識別技術棧、讀 README 和關鍵配置文件，生成一份初版 <code>CLAUDE.md</code>。然後你只要在它的基礎上**手工補充三類信息**：</p><p>提示：</p><p>CLAUDE.md 是“起點上下文”，不是“全部上下文”。它就像一份給新人的入職手冊，AI 看完後再現場探索代碼——這正是 Agentic Search 的工作方式（參見 2.2.1 節）。</p><p class='list-item'>**② 任務粒度要小且聚焦（避免“萬能 prompt”）**</p><p>大型代碼庫裏**最害人的就是“一句話扔給 AI 整個大需求”**。正確做法：</p><pre><code> 反例：幫我重構整個支付模塊，加入新風控、新對賬、新通知、新報表
+ 正解：第一步——在 src/payment/risk/ 下抽出風控規則引擎，
+       接口簽名見 docs/risk-rules.md，先不動調用方代碼</code></pre><p class='list-item'>**經驗值**：每個 Claude Code 任務 ≤ 涉及 5 個文件 / 200 行代碼改動。超過這個量級就該拆。</p><p class='list-item'>**③ 頻繁重置上下文（ /clear 是好朋友）**</p><p>很多新手以爲對話越長 AI 越懂自己，**這恰恰是大型代碼庫裏最大的坑**：</p><p class='list-item'>- 上下文裏塞的越多，無關代碼片段越多，AI 越容易抓錯重點</p><p class='list-item'>- 上一任務的失敗嘗試、錯路徑、錯假設，會污染下一個任務</p><p class='list-item'>**官方建議**：</p><p>核心心法：寧可“多 clear 幾次重新介紹背景”，也不要“一直聊一直聊”。每個<code>/clear</code>都是給 AI 一次重新聚焦的機會。</p><p class='list-item'>**④ 複雜任務從 Plan Mode 起手（權限控制）**</p><p>詳見 4.9 節。一句話：**陌生代碼庫或一動牽全身的修改，永遠先  /plan 或 Shift+Tab×2**，讓 AI 在只讀模式下先勘探出方案再動手，回退成本幾乎爲零。</p><p class='list-item'>**⑤ 用 Skills 与 Subagents 卸载长任务**</p><p>大型代碼庫裏有些“調研型任務”天生很費 token：</p><p class='list-item'>- 找出所有調用了某廢棄 API 的地方</p><p class='list-item'>- 梳理某個模塊的依賴圖</p><p class='list-item'>- 跨 50 個文件的批量重命名前的影響評估</p><p>這類任務**不要讓主會話親自做**，而是：</p><p class='list-item'>- **派 Subagent**：讓一個獨立的子代理去調研，最後只把結論帶回主上下文（Plan Mode 下會自動調用）</p><p class='list-item'>- **寫成 Skill**：把高頻調研流程封裝成 Skill，每次一鍵觸發（詳見第四部分）</p><p>這樣主會話的上下文窗口儘量留給“看結論、做決策、寫代碼”這些核心動作。</p><p class='list-item'>**⑥ 接入 MCP / LSP（給 AI 裝上團隊協作工具）**</p><p>一個真正的工程師不是隻看代碼，還會查 Jira、讀 Confluence、連數據庫、用 IDE 的“跳到定義”。Claude Code 通過 **MCP（Model Context Protocol）** 把這些能力接進來：</p><p>提示：</p><p>配置入口：<code>.claude/settings.json</code>中的<code>mcpServers</code>字段，或运行<code>claude mcp add ...</code>。MCP 详细配置在第四部分 3.6 节讲解。</p><p>這三點在官方博客裏被反覆強調，但實際使用中最容易被新手跳過。</p><p class='list-item'>**1. 在子目錄初始化 Claude，別從倉庫根目錄開始**</p><p>這點在 monorepo 裏反直覺但極重要：</p><pre><code> 反例：在 monorepo 根目錄下啓動
+user@monorepo $ claude
+# AI 看到三百個服務、上千個包，上下文污染嚴重
+ 正解：進入你要改的子目錄啓動
+user@monorepo $ cd services/payment
+user@monorepo/services/payment $ claude
+# Claude 會自動向上遍歷加載所有 CLAUDE.md（根目錄的也會加）
+# 但工作範圍被精準限定在了相關代碼區域</code></pre><p class='list-item'>**配套做法**：每個子目錄都放一份小的 `CLAUDE.md`，寫明**該目錄專用的測試與 lint 命令**。不要讓 AI 改了一個服務就去跑整個倉的測試套件——那就等着超時吧。</p><p class='list-item'>**2. 配置要定期審查（每 3-6 個月）**</p><p>爲當前模型寫的指令，在下一代模型上可能適得其反。官方舉了兩個真實例子：</p><p>提示：</p><p>實踐建議：設個日曆提醒，每 3-6 個月、或每次大模型發佈後，重讀一遍<code>CLAUDE.md</code>/<code>.claude/settings.json</code>/<code>.claude/hooks</code>/<code>.claude/skills</code>，問三個問題：“這條還需要嗎？”“現在有更好的寫法嗎？”“這條是在彌補哪代模型的缺陷？”</p><p>注意：</p><p>預警信號：如果你覺得 Claude Code 表現到了某個瓶頸怎麼也上不去，問題很可能不在模型，而在你的配置沒跟上。模型都已經往前跑了，你的 CLAUDE.md 可能還停在三個月前。</p><p class='list-item'>**3. 团队内应该有个“人”负责 Claude Code（DRI / Agent Manager）**</p><p>這點是面向團隊使用者的，個人開發者可以跳過。Anthropic 觀察到：推廣最快的組織，都是“先有一小隊人把基礎設施搭好”才大面積開放的。</p><p>提示：</p><p>爲什麼重要：開發者第一次接觸 Claude Code 的體驗決定了後面全公司順不順推。如果第一次就是“AI 亂改東西”，要翻盤就難了。“野蠻生長”能激發熱情，但缺了組織層面的收斂，好實踐會變成“部落知識”。</p><p>如果你是要在企業裏推廣 Claude Code 的人，Anthropic 推薦的路徑是：**階段 1 先由小隊搭好工具鏈和規範 → 階段 2 小範圍試點 → 階段 3 大面積推廣**。核心原則是”開發者第一次接觸就能跑通”，第一印象壞了後面很難翻盤。</p><p>本節目標：掌握一套可複用的配置模板，新項目打開 Claude Code 就能直接幹活</p><p>每個新項目打開 Claude Code，它都像個剛入職的新人——不知道你的技術棧、不知道哪些文件不能碰、不知道你的規範。你得從零教起：</p><p class='list-item'>- 改一個 API，Claude 直接在組件文件裏寫 SQL——它不知道你的數據庫操作全在 `src/lib/services/`裏，沒人告訴過它</p><p class='list-item'>- 每執行一個命令彈一次權限確認，一個下午點了 30 次 Allow</p><p class='list-item'>- commit message 格式每次都靠臨時編</p><p>默認的 Claude Code 是什麼都能做、什麼都不知道的通用助手。通用不是好事。</p><p>這套配置把"通用"變成"你的項目的專屬"。**核心思路**：把一次性的解釋成本，變成可複用的配置文件。4 個文件 + 9 個命令，放到任何項目裏就能用。</p><p>CLAUDE.md 是 Claude Code 啓動時第一個讀的文件。寫在裏面的東西，Claude 在每一次對話裏自動遵守。全局 CLAUDE.md 的精簡模板：</p><pre><code>## 溝通方式
+- 默認中文回覆；代碼、命令、變量名、文件路徑保持英文
+- 結論先行，簡潔直接，不先鋪墊背景
+- 不諂媚，不誇&quot;這是個很好的問題&quot;，不以&quot;當然可以&quot;開頭
+- 給真實判斷——方案有問題直接指出，發現更好做法主動說明
+## Git
+- 不自動 `git commit` 或 `git push`，除非我明確要求
+- 提交前先展示將要提交的變更摘要
+- commit message 使用簡潔英文
+## 紅線操作
+以下操作即使在 auto-accept 模式下也必須先問我：
+- 刪除文件、目錄或 git 歷史
+- 修改 `.env`、密鑰、token、證書、CI/CD 配置
+- `git push`、`git rebase`、`git reset --hard`、強制推送
+- 公開發布（`npm publish`、生產部署等）</code></pre><p>項目級的 CLAUDE.md 再加一層：技術棧、目錄結構、commit 格式、禁區（如 <code>不要碰 migrations/ 目錄</code>）。兩個文件疊加，Claude 第一次打開項目就知道——跑測試是 <code>pnpm vitest run</code> 而不是 <code>npm test</code>，數據庫操作全在 <code>src/lib/services/</code> 裏。</p><p class='list-item'>**維護策略**：每被 Claude 坑一次，立刻加一條到 CLAUDE.md。過時的規則刪掉，內容保持精煉。三個月下來，這個文件就是"這個項目 Claude 犯過的所有錯誤的預防清單"。最有生產力的一句話是：“更新 CLAUDE.md，讓這件事不再發生”。</p><p>用 Claude Code 最煩的就是彈窗。這個文件把"該放行的放行、該鎖住的鎖住"寫死：</p><pre><code>{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [
+      &quot;Read&quot;, &quot;Glob&quot;, &quot;Grep&quot;, &quot;Edit&quot;, &quot;MultiEdit&quot;,
+      &quot;Write(src/**)&quot;, &quot;Write(tests/**)&quot;,
+      &quot;Bash(npm *)&quot;, &quot;Bash(pnpm *)&quot;, &quot;Bash(git status)&quot;, &quot;Bash(git diff *)&quot;,
+      &quot;Bash(git log *)&quot;, &quot;Bash(git add *)&quot;, &quot;Bash(git commit *)&quot;,
+      &quot;Bash(cat *)&quot;, &quot;Bash(head *)&quot;, &quot;Bash(tail *)&quot;, &quot;Bash(find *)&quot;
+    ],
+    &quot;deny&quot;: [
+      &quot;Read(**/.env*)&quot;, &quot;Read(**/*.pem)&quot;, &quot;Read(**/*.key)&quot;,
+      &quot;Read(**/secrets/**)&quot;, &quot;Read(**/credentials/**)&quot;,
+      &quot;Write(**/.env*)&quot;, &quot;Write(**/secrets/**)&quot;,
+      &quot;Write(package-lock.json)&quot;, &quot;Write(.github/workflows/*)&quot;,
+      &quot;Bash(rm -rf *)&quot;, &quot;Bash(sudo *)&quot;, &quot;Bash(git push *)&quot;,
+      &quot;Bash(git merge *)&quot;, &quot;Bash(git rebase *)&quot;,
+      &quot;Bash(docker *)&quot;, &quot;Bash(curl * | sh)&quot;, &quot;Bash(chmod *)&quot;
+    ],
+    &quot;defaultMode&quot;: &quot;acceptEdits&quot;
+  }
+}</code></pre><p class='list-item'>**allow 白名單**：日常安全操作，不應該每次都問——讀文件、寫源碼、跑測試、git 日常命令。</p><p class='list-item'>**deny 黑名单**：安全红线——读 .env、读密钥、`rm -rf`、`sudo`、`git push`。</p><p>配完之後：日常操作零彈窗，危險操作自動封堵。</p><p>注意：allow 按你的工具鏈改——用 yarn 就加<code>Bash(yarn *)</code>，用 bun 就加<code>Bash(bun *)</code>。deny 那幾行建議原樣留着，它們是安全底線。</p><p>除了常規忽略，多加幾行保護 AI 工具配置和密鑰不被提交到 git：</p><pre><code># AI 工具本地配置
+.claude/settings.local.json
+.cursor/
+.aider*
+.continue/
+.cody/
+# 密钥和凭证
+*.pem
+*.key
+credentials.json
+.npmrc
+.aws/
+.ssh/</code></pre><p>注意一个细节：<code>.claude/settings.local.json</code>被 gitignore 了，但<code>.claude/settings.json</code>和<code>.claude/skills/</code>没有。意思是——项目配置团队共享，个人偏好（含 API key）自己留着。</p><p>Skills 把你上線前的心理檢查清單變成命令——不用再臨時想"還有什麼沒查"，敲個 <code>/</code>，它按你的規矩跑完。每個 Skill 就是一個 Markdown 文件放在 <code>.claude/skills/[名字]/SKILL.md</code>。</p><p>9 個 Skill 的完整寫法見**第五部分**。這裏快速看三個最核心的：</p><p class='list-item'>** /review** — 審代碼。不看風格，按嚴重程度排：</p><p class='list-item'>- CRITICAL：邏輯錯誤、空指針、競態條件、安全漏洞</p><p class='list-item'>- WARNING：N+1 查詢、缺少錯誤處理、性能隱患</p><p class='list-item'>- INFO：命名、垃圾代碼、TODO</p><p class='list-item'>- 输出 checklist，结尾总结 “X critical, Y warnings, Z info”</p><p class='list-item'>** /commit** — 提交代碼。自動跑</p><p><code>git status</code> 和 <code>git diff --stat</code>，把改动按逻辑分组，格式遵循 <code>type(scope): description</code>。** /deploy-check** — 上线前检查。按顺序跑：类型检查 → 测试 → lint → 构建 → 搜</p><p><code>console.log</code> → 检查 .env 引用 → 确认没有未提交的改动。全绿才上线。另外 6 个：<code>/test</code>、<code>/pr</code>、<code>/debug</code>、<code>/refactor</code>、<code>/docs</code>、<code>/security</code>。套路相同——frontmatter 声明 name、description、allowed-tools，后面写检查步骤。</p><p>核心價值：寫一次，以後每次都是它替你查。詳見第四部分完整教程。</p><p class='list-item'>**推薦做法**：settings.json 和 skills 放全局，CLAUDE.md 每個項目單獨寫。權限和命令不用每個項目配一遍，但項目上下文是獨立的。</p><p>模板最大的意義不是"直接用"，是"以此爲起點，讓它越長越像你的項目"：</p><p class='list-item'>- **CLAUDE.md 是活的**：Claude 每犯一次錯就加一條。記住這句話：“更新 CLAUDE.md，讓這件事不再發生”</p><p class='list-item'>- **settings.json 跟着項目長大**：新工具來了加 allow，發現新的危險操作加 deny</p><p class='list-item'>- **Skills 長出自己的版本**：- `/review`里加你代碼庫特有的常見問題，- `/commit`裏寫團隊的 scope 命名規範</p><p class='list-item'>- **.gitignore 持續更新**：每用一個新工具，看它會不會在本地生成配置文件</p><p>三個月後回頭看，最初的模板已經被使用習慣磨成了不同的形狀。這個變化本身就是價值——你的項目越來越像你，Claude 也越來越懂你。</p><p class='list-item'>**Q1：安装时报  ENOENT: no such file or directory**</p><p class='list-item'>- **原因**：npm 緩存損壞</p><p class='list-item'>- **解决**：运行- `npm cache clean --force`，然后重新安装</p><p class='list-item'>**Q2：安裝成功但  claude 命令找不到**</p><p class='list-item'>- **原因**：npm 全局安裝路徑未加入系統 PATH</p><p class='list-item'>- **解決**：運行- `npm config get prefix`，將輸出的路徑加入系統 PATH 環境變量</p><p class='list-item'>**Q3：Windows 上報"無法加載文件，因爲在此係統上禁止運行腳本"**</p><p class='list-item'>- **原因**：PowerShell 執行策略限制</p><p class='list-item'>- **解决**：以管理员身份打开 PowerShell，运行- `Set-ExecutionPolicy RemoteSigned`</p><p class='list-item'>**Q4：启动后提示  Invalid API Key**</p><p class='list-item'>- **原因**：API Key 配置錯誤或過期</p><p class='list-item'>- **解决**：检查环境变量- `ANTHROPIC_API_KEY`是否正确设置。用- `echo $ANTHROPIC_API_KEY`（macOS）或- `echo $env:ANTHROPIC_API_KEY`（PowerShell）验证</p><p class='list-item'>**Q5：中轉服務配置後連接超時**</p><p class='list-item'>- **原因**：中轉服務地址錯誤或服務不可用</p><p class='list-item'>- **解決**：1. 檢查- `ANTHROPIC_BASE_URL`是否正確 2. 用瀏覽器訪問中轉服務網站確認其正常運行 3. 嘗試用 curl 直接測試API連通性</p><p class='list-item'>**Q6：提示  Rate limit exceeded**</p><p class='list-item'>- **原因**：短時間內發送了太多請求</p><p class='list-item'>- **解決**：等待 1 分鐘後重試。如果頻繁出現，考慮升級 API 套餐</p><p class='list-item'>**Q7：AI 修改了不該改的文件**</p><p class='list-item'>- **原因**：需求描述不夠明確，AI自行判斷需要修改</p><p class='list-item'>- **解決**：1. 用- `git checkout .`撤銷修改 2. 重新描述需求，明確指定"只修改 xxx 文件" 3. 在 CLAUDE.md 中註明"不要修改的文件"</p><p class='list-item'>**Q8：AI 陷入"改A壞B、改B壞A"的循環**</p><p class='list-item'>- **原因**：AI缺乏全局視角，修復一個問題引入新問題</p><p class='list-item'>- **解決**：1. 用- `git checkout .`回退到穩定版本 2. 用- `/clear`清空對話 3. 重新描述完整的需求，讓 AI 一次性考慮所有約束</p><p class='list-item'>**Q9：對話太長後 AI 開始"遺忘"早期內容**</p><p class='list-item'>- **原因**：上下文窗口接近滿載</p><p class='list-item'>- **解決**：使用- `/compact`壓縮上下文，或開新會話</p><p class='list-item'>**Q10：AI 生成了一個不存在的npm包或API**</p><p class='list-item'>- **原因**：AI “幻覺”（編造不存在的東西）</p><p class='list-item'>- **解決**：在使用 AI 推薦的包之前，先到 npmjs.com 搜索確認它是否存在</p><p class='list-item'>**Q11：感覺費用消耗太快**</p><p class='list-item'>- **原因**：可能在使用 Opus 模型或對話過長</p><p class='list-item'>- **解決**：1. 用- `/cost`查看當前費用 2. 切換到更便宜的模型 3. 減少不必要的對話輪次 4. 在 Anthropic Console 設置月度預算限額</p><p class='list-item'>**Q12：中轉服務的費用如何計算**</p><p class='list-item'>- **說明**：中轉服務通常按 Token 數量計費，價格 = 官方價格 × 倍率。不同中轉服務倍率不同（1.0x-1.5x），請查看你使用的中轉服務的價格頁面</p><p>你可以創建自己的斜槓命令，將常用操作封裝成快捷方式。</p><p>在項目根目錄創建 <code>.claude/commands/</code> 目錄，然後添加 Markdown 文件：</p><pre><code>&lt;!-- .claude/commands/deploy.md --&gt;
+# 部署檢查清單
+請執行以下部署前檢查：
+1. 運行所有測試：npm test
+2. 檢查是否有 lint 錯誤：npm run lint
+3. 確認 .env.example 已更新（如果添加了新的環境變量）
+4. 構建項目：npm run build
+5. 報告所有檢查結果</code></pre><p>使用方式：</p><pre><code>&gt; /deploy</code></pre><p>Claude Code 就會按照你定義的步驟執行部署檢查。</p><p>初學者常問：“用 Claude Code 是應該先讓它規劃整個項目再執行，還是自己分模塊逐步讓它做？”</p><p class='list-item'>**答案**：Claude Code 原生提供了 **Plan Mode（規劃模式）**。它不是“一種提示詞技巧”，而是官方內置的一個**只讀運行模式**，在該模式下 AI 只能分析不能修改，有專門的快捷鍵與命令可隨時切入。</p><p>Claude Code 內置 **三種互斥的運行模式**：</p><p>在 Plan Mode 下，AI 只能調用這些**只讀工具**：</p><h3>提示：Plan Mode 的重點是</h3><p>先探索和規劃，暫不修改文件。不同版本可能會用不同的內部檢索或子任務機制來輔助調研，不建議把某個內部實現細節當成穩定接口來記。</p><p class='list-item'>*圖：進入 Plan Mode 的四種方式，從臨時到永久*</p><p class='list-item'>**方式一：鍵盤快捷鍵 Shift+Tab（最常用）**</p><p>在 Claude Code 会话中连按两次 <code>Shift + Tab</code>：</p><pre><code>第一次 Shift+Tab → 切到 Auto-Accept Mode（状态栏： accept edits on）
+第二次 Shift+Tab → 切到 Plan Mode     （状态栏： plan mode on）
+第三次 Shift+Tab → 切回 Normal Mode</code></pre><p>注意：</p><p>Windows 用戶注意：某些 Windows 終端（如部分 PowerShell 配置）上<code>Shift+Tab</code>只能在 Normal/Auto-Accept 間切換，跳過了 Plan Mode。請改用切入 Plan Mode；該問題在官方 Issue 中已標記爲已知問題。<code>Alt + M</code></p><p class='list-item'>**方式二：會話中輸入  /plan 命令（v2.1.0+）**</p><p>Claude Code v2.1.0 之後支持直接在提示符中輸入斜槓命令：</p><pre><code>&gt; /plan</code></pre><p>會話會立即切入 Plan Mode。**特別適合“繼續聊到一半發現需要規劃”的場景**。</p><p class='list-item'>**方式三：啓動時直接進 Plan Mode**</p><p>如果你明確知道本次是複雜任務，可以從啓動就進入 Plan Mode：</p><pre><code># 交互式
+claude --permission-mode plan
+# 无头模式（可用于 CI / 脚本）
+claude --permission-mode plan -p &quot;分析认证模块并提出优化建议&quot;</code></pre><p class='list-item'>**方式四：設爲項目默認模式**</p><p>如果某個項目你一直希望默認“先規劃後執行”，可以在項目根的 <code>.claude/settings.json</code> 中配置：</p><pre><code>{
+  &quot;permissions&quot;: {
+   &quot;defaultMode&quot;: &quot;plan&quot;
+  }
+}</code></pre><p>以後只要在該項目目錄下運行 <code>claude</code>，就會默認進 Plan Mode。</p><p>推薦的使用順序：</p><pre><code>claude --permission-mode plan      ← 进 Plan Mode
+  ↓ Phase 1：Explore  —— “读一下 src/auth 目录，了解现有认证逻辑”
+  ↓ Phase 2：Plan    —— “请出详细计划：需改哪些文件、按什么顺序、边界情况是什么”
+  ↓ 你审核计划，反复打磨满意为止
+Shift+Tab → Auto-Accept Mode  ← 切出 Plan Mode
+  ↓ Phase 3：Implement —— “按上述计划实施”
+  ↓ Phase 4：Commit   —— “生成提交信息并 commit”</code></pre><p>實踐建議：複雜任務優先從 Plan Mode 開始。先讓 AI 探索和設計，再進入實現階段，通常能減少返工。</p><p>作者推薦的一句話準則：</p><p>“如果你能用一句話說清期望的 diff，就不用規劃；如果你說不清，就先規劃。”</p><p>核心原則：“簡單任務直接做，複雜任務先規劃”。不確定時，選 Plan Mode 總是更安全。</p><p>Claude Code 还提供了 <code>--model opusplan</code> 别名，它会：</p><p class='list-item'>- 用 **Opus**（推理能力更強、成本較高）作爲規劃階段的模型</p><p class='list-item'>- 用 **Sonnet**（代碼快、成本低）作爲執行階段的模型</p><pre><code>claude --model opusplan</code></pre><p>這是一種**“用貴模型思考、用便宜模型動手”的成本優化策略**，適合複雜任務。</p><p class='list-item'>*圖：決策樹——複雜任務走 Plan Mode，簡單任務走 Normal Mode*</p><p>這是一個用 Claude Code 從零構建的 Python Web 項目。在開始複雜的 Mini Mall 之前，先用這個小項目熟悉一下開發流程和</p><p><code>/plan</code>功能。</p><p>我們要做一個**帶 Web 界面的記賬工具**，在瀏覽器裏記錄和查看日常開銷。核心功能：</p><p class='list-item'>- **添加賬目**：金額、分類、日期、備註——在網頁表單裏填寫</p><p class='list-item'>- **查看列表**：按月份和分類篩選，表格展示所有記錄</p><p class='list-item'>- **分類統計**：柱狀圖 + 統計表，一目瞭然</p><p class='list-item'>- **刪除記錄**：輸入 ID 即可刪除</p><p class='list-item'>**技术栈**：Python + **Streamlit**（Web 界面框架）+ **sqlite3**（数据库，Python 自带，零配置）</p><p>選擇 Streamlit 的原因是它**只用 Python 代碼就能做出漂亮的 Web 界面**，不需要學 HTML/CSS/JavaScript。你寫的每一行都是 Python，Streamlit 自動把它變成網頁。</p><p class='list-item'>**項目結構**（4 個文件，不到 350 行代碼）：</p><pre><code>finance-cli/
+├── pyproject.toml        # 项目配置和依赖声明
+└── finance/            # Python 包
+   ├── __init__.py        # 空文件，标记为 Python 包
+   ├── models.py         # 数据结构定义（dataclass）
+   ├── database.py        # SQLite 建表 + 增删查 + 统计
+   └── web.py            # Streamlit Web 界面入口</code></pre><p>提示：你不需要手動創建這些文件。後面每一步都會告訴你如何用 Claude Code 來生成它們。</p><p>在終端中創建項目目錄，啓動 Claude Code：</p><pre><code>cd ~/ai-coding-projects
+mkdir finance-cli &amp;&amp; cd finance-cli
+claude</code></pre><p>告訴 AI 你的需求（注意：直接輸入自然語言即可，不需要特殊格式）：</p><pre><code>我要做一個 Python Web 記賬工具，功能包括：
+- 添加賬目（金額、分類、日期、備註）——在網頁表單裏填寫
+- 查看列表（按月份和分類篩選）——表格展示
+- 刪除賬目——輸入 ID 刪除
+- 分類統計——柱狀圖 + 統計表
+技術棧用 Python + streamlit + sqlite3。
+預設 6 個分類：餐飲、交通、購物、娛樂、居住、其他。
+我是編程新手，請先出方案再動手。</code></pre><p>Claude Code 會進入 Plan Mode（<code>Shift+Tab</code> 兩次或輸入 <code>/plan</code>），提出幾個問題確認你的需求（比如"你是新手還是老手？"、確認技術選型），然後生成一份包含以下內容的架構方案：</p><p class='list-item'>- 数据库表设计（categories 表 + records 表）</p><p class='list-item'>- 項目文件結構</p><p class='list-item'>- 每個文件的職責說明</p><p class='list-item'>- 實現步驟順序</p><p>審覈方案確認無誤後，告訴 AI “可以開始執行”。</p><p>提示：這就是第三部分講的Plan Mode——先讓 AI 出方案，人審覈後再動手。對於新手來說，這能避免 AI “一頓操作猛如虎，一看結果全白費”。</p><p>在 Claude Code 中输入：</p><pre><code>請幫我創建 pyproject.toml，聲明項目信息和依賴：
+- 項目名：finance-cli
+- Python 版本要求：&gt;=3.10
+- 依賴：streamlit</code></pre><p>AI 会生成 <code>pyproject.toml</code>，内容如下：</p><pre><code>[project]
+name = &quot;finance-cli&quot;
+version = &quot;0.1.0&quot;
+description = &quot;个人记账 Web 应用&quot;
+requires-python = &quot;&gt;=3.10&quot;
+dependencies = [
+    &quot;streamlit&gt;=1.42&quot;,
+]</code></pre><p>然後創建虛擬環境並安裝依賴：</p><pre><code># 创建虚拟环境（隔离本项目依赖，不影响系统 Python）
+python -m venv venv
+# 激活虚拟环境
+# Windows：
+venv\Scripts\activate
+# macOS / Linux：
+source venv/bin/activate
+# 安装依赖
+pip install -e .</code></pre><p>提示：<code>pip install -e .</code>中的<code>-e</code>表示"可編輯模式"（editable）。這意味着你改了代碼不需要重新安裝。Streamlit 安裝後就可以啓動 Web 服務了。</p><p>在 Claude Code 中繼續輸入：</p><pre><code>请创建 finance/models.py，定义数据模型：
+1. DEFAULT_CATEGORIES 列表：餐饮、交通、购物、娱乐、居住、其他
+2. Category 类（用 @dataclass），字段：id、name
+3. Record 类（用 @dataclass），字段：id、amount、category_id、record_date、note、created_at、category_name（运行时填充，非数据库字段）</code></pre><p>AI 生成的 <code>finance/models.py</code>：</p><pre><code>from dataclasses import dataclass
+# 预设的 6 个默认分类，用户首次使用时自动创建
+DEFAULT_CATEGORIES = [&quot;餐饮&quot;, &quot;交通&quot;, &quot;购物&quot;, &quot;娱乐&quot;, &quot;居住&quot;, &quot;其他&quot;]
+@dataclass
+class Category:
+   &quot;&quot;&quot;分类模型&quot;&quot;&quot;
+   id: int
+   name: str
+@dataclass
+class Record:
+   &quot;&quot;&quot;一笔账目的模型&quot;&quot;&quot;
+   id: int
+   amount: float
+   category_id: int
+   record_date: str     # 格式: YYYY-MM-DD
+   note: str = &quot;&quot;
+   created_at: str = &quot;&quot;
+   # 展示时可以带上分类名称（不从数据库来，运行时填充）
+   category_name: str = &quot;&quot;</code></pre><p>提示：<code>@dataclass</code>是 Python 的一個裝飾器，它會自動幫你生成，省去大量樣板代碼。你只需聲明字段名和類型就行。默認值（如<code>__init__</code>等方法<code>note: str = ""</code>）表示這個字段可以不傳，默認爲空字符串。</p><p>在 Claude Code 中输入：</p><pre><code>請創建 finance/database.py，實現數據庫操作層：
+1. 數據庫文件放在 ~/.finance-cli/data.db（用戶主目錄下）
+2. init_db() — 創建 categories 表和 records 表 + 寫入 6 個默認分類
+3. add_record(amount, category_name, date, note) — 插入一筆賬目，分類不存在時報錯
+4. list_records(month, category_name) — 查詢賬目，支持按月份和分類篩選
+5. delete_record(record_id) — 刪除一筆賬
+6. get_stats(month) — 按分類統計支出（總金額、筆數）
+要求：使用 sqlite3（Python 標準庫），查詢結果用 JOIN 關聯分類名。</code></pre><p>AI 生成的 <code>finance/database.py</code> 核心函数：</p><pre><code>import sqlite3
+import os
+from finance.models import DEFAULT_CATEGORIES, Record
+DB_DIR = os.path.join(os.path.expanduser(&quot;~&quot;), &quot;.finance-cli&quot;)
+DB_PATH = os.path.join(DB_DIR, &quot;data.db&quot;)
+def _get_conn():
+   &quot;&quot;&quot;获取数据库连接&quot;&quot;&quot;
+   os.makedirs(DB_DIR, exist_ok=True)
+   conn = sqlite3.connect(DB_PATH)
+   conn.row_factory = sqlite3.Row  # 让查询结果可以像字典一样取值
+   return conn
+def init_db():
+   &quot;&quot;&quot;初始化数据库：建表 + 写入默认分类&quot;&quot;&quot;
+   conn = _get_conn()
+   cursor = conn.cursor()
+   cursor.execute(&quot;&quot;&quot;
+      CREATE TABLE IF NOT EXISTS categories (
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         name TEXT NOT NULL UNIQUE
+      )
+   &quot;&quot;&quot;)
+   cursor.execute(&quot;&quot;&quot;
+      CREATE TABLE IF NOT EXISTS records (
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         amount REAL NOT NULL,
+         category_id INTEGER NOT NULL,
+         record_date TEXT NOT NULL,
+         note TEXT DEFAULT &#x27;&#x27;,
+         created_at TEXT DEFAULT (datetime(&#x27;now&#x27;, &#x27;localtime&#x27;)),
+         FOREIGN KEY (category_id) REFERENCES categories(id)
+      )
+   &quot;&quot;&quot;)
+   for cat_name in DEFAULT_CATEGORIES:
+      cursor.execute(
+         &quot;INSERT OR IGNORE INTO categories (name) VALUES (?)&quot;, (cat_name,)
+      )
+   conn.commit()
+   conn.close()
+def add_record(amount: float, category_name: str, date: str, note: str = &quot;&quot;) -&gt; int:
+   &quot;&quot;&quot;添加一笔账目，返回新记录的 ID&quot;&quot;&quot;
+   conn = _get_conn()
+   cursor = conn.cursor()
+   # 先查分类 ID
+   cursor.execute(&quot;SELECT id FROM categories WHERE name = ?&quot;, (category_name,))
+   row = cursor.fetchone()
+   if row is None:
+      conn.close()
+      raise ValueError(f&quot;未知分类：{category_name}。可用分类：{&#x27;, &#x27;.join(DEFAULT_CATEGORIES)}&quot;)
+   category_id = row[&quot;id&quot;]
+   cursor.execute(
+      &quot;INSERT INTO records (amount, category_id, record_date, note) VALUES (?, ?, ?, ?)&quot;,
+      (amount, category_id, date, note)
+   )
+   new_id = cursor.lastrowid
+   conn.commit()
+   conn.close()
+   return new_id</code></pre><p>其余三个函数（<code>list_records</code>、<code>delete_record</code>、<code>get_stats</code>）的结构类似，完整代码约 150 行（见项目源码 <code>finance/database.py</code>）。</p><p>提示：注意<code>add_record</code>在查不到分類時會拋出，告訴用戶哪些分類可用。這種"儘早報錯、給出清晰信息"的習慣在編程中非常重要。數據庫用<code>ValueError</code>並給出明確提示<code>?</code>佔位符傳參，防止 SQL 注入攻擊。</p><p>在 Claude Code 中输入：</p><pre><code>請創建 finance/web.py，實現 Streamlit Web 界面：
+1. 頁面配置：標題&quot;個人記賬助手&quot;，寬屏佈局
+2. 側邊欄導航：三個選項——添加記錄、賬目列表、分類統計
+3. &quot;添加記錄&quot;頁：金額輸入框、分類下拉框、日期選擇器、備註輸入框、提交按鈕
+4. &quot;賬目列表&quot;頁：月份和分類篩選、表格展示所有記錄、底部顯示合計
+5. &quot;分類統計&quot;頁：統計表（分類、筆數、合計、佔比）+ 柱狀圖
+6. 啓動時自動調用 init_db() 確保數據庫存在</code></pre><p>AI 生成的 <code>finance/web.py</code> 关键部分：</p><pre><code>import streamlit as st
+import pandas as pd
+from datetime import date
+from finance.database import init_db, add_record, list_records, delete_record, get_stats
+from finance.models import DEFAULT_CATEGORIES
+# 页面配置
+st.set_page_config(page_title=&quot;个人记账助手&quot;, layout=&quot;wide&quot;)
+init_db()
+# 侧边栏导航
+menu = st.sidebar.radio(&quot;导航&quot;, [&quot;添加记录&quot;, &quot;账目列表&quot;, &quot;分类统计&quot;])
+# &quot;添加记录&quot; 页面
+if menu == &quot;添加记录&quot;:
+    st.header(&quot;添加一笔账目&quot;)
+    amount = st.number_input(&quot;金额（元）&quot;, min_value=0.01, value=35.0, step=0.5)
+    category = st.selectbox(&quot;分类&quot;, DEFAULT_CATEGORIES)
+    record_date = st.date_input(&quot;日期&quot;, value=date.today())
+    note = st.text_input(&quot;备注（可选）&quot;, placeholder=&quot;例如：外卖&quot;)
+    if st.button(&quot;记录这笔账&quot;, type=&quot;primary&quot;):
+        record_id = add_record(amount, category, record_date.isoformat(), note)
+        st.success(f&quot;已记录 #{record_id}：{category} {amount:.2f} 元&quot;)
+# &quot;账目列表&quot; 页面
+elif menu == &quot;账目列表&quot;:
+    st.header(&quot;账目列表&quot;)
+    records = list_records()
+    if not records:
+        st.info(&quot;暂无记录&quot;)
+    else:
+        # 构建表格并展示
+        df = pd.DataFrame([{
+            &quot;ID&quot;: r.id, &quot;日期&quot;: r.record_date,
+            &quot;分类&quot;: r.category_name, &quot;金额&quot;: f&quot;{r.amount:.2f}&quot;,
+            &quot;备注&quot;: r.note
+        } for r in records])
+        st.dataframe(df, use_container_width=True, hide_index=True)</code></pre><p>完整代码见项目源码 <code>finance/web.py</code>，约 130 行。</p><p>提示：Streamlit 的魔法在於——你寫的<code>st.button()</code>、<code>st.selectbox()</code>、<code>st.dataframe()</code>這些 Python 函數調用，會自動變成網頁上的按鈕、下拉框、表格。你不需要寫一行 HTML 或 CSS，Streamlit 幫你處理了所有前端細節。這就是爲什麼它特別適合初學者。</p><p>激活虛擬環境後，啓動 Streamlit：</p><pre><code># 激活虚拟环境
+# Windows：venv\Scripts\activate
+# macOS/Linux：source venv/bin/activate
+# 启动 Web 服务
+streamlit run finance/web.py</code></pre><p>瀏覽器會自動打開 <code>http://localhost:8501</code>。如果沒自動打開，手動訪問這個地址即可。</p><p>你會看到一個完整的 Web 界面：</p><p class='list-item'>- 左側**側邊欄**有三個導航選項</p><p class='list-item'>- 點擊「添加記錄」→ 填寫金額、選擇分類、選擇日期、輸入備註 → 點擊按鈕，記錄成功</p><p class='list-item'>- 點擊「賬目列表」→ 看到所有記錄以表格展示，可按月份和分類篩選</p><p class='list-item'>- 點擊「分類統計」→ 看到柱狀圖和統計表</p><p>驗證清單：</p><p class='list-item'>- 添加一條「餐飲 35.5 元」的記錄</p><p class='list-item'>- 添加一條「交通 120 元」的記錄</p><p class='list-item'>- 在賬目列表中看到這兩條記錄</p><p class='list-item'>- 分類統計中有對應的柱狀圖</p><p class='list-item'>- 刪除一條記錄，列表刷新後該記錄消失</p><p>驗證：如果以上操作都能正常完成，恭喜！你完成了一個帶 Web 界面的記賬工具。試試關掉瀏覽器再打開 —— 數據還在，因爲 SQLite 已經把數據持久化到文件裏了。</p><p>總共 **不到 350 行代碼**，你就擁有了一個帶 Web 界面的記賬工具。數據庫文件自動創建在 <code>C:\Users\你的用戶名\.finance-cli\data.db</code>（Windows）或 <code>~/.finance-cli/data.db</code>（macOS/Linux），不會丟失。</p><p>提示：這個項目雖小，但完整演示了"用 Claude Code 從零構建項目"的全流程。你不需要自己寫任何一行代碼——你負責描述需求和審查結果，AI 負責寫代碼。而且這次你做出了一個有 Web 界面的應用，比命令行工具更有成就感！接下來，我們將進入更復雜的Mini Mall全棧 Web 項目，完整體驗 Claude Code 的 13 項核心功能。</p><p>學習目標：掌握 Skill 系統的使用與創建，構建個人AI效率工具箱</p><h3>完成標誌：能創建自定義 Skill 並集成到 Claude Code 中使用</h3><p>如果說前面幾部分教你的是"怎麼和AI對話"，這一部分教你的是"怎麼給AI寫操作手冊" —— 讓AI不僅能聽懂你的臨時指令，還能按照標準化的流程高效執行重複性任務。</p><p>還記得 Part 4 開頭的 Harness 七層框架嗎？Skill 是其中的**第三層**，也是最重要的一層：它把專業知識變成 cc 在需要時按需調用的"外接大腦"。大模型再聰明，也不可能把所有領域的最佳實踐都塞進訓練數據。但有了 Skill，你可以——這正是它如此重要的原因。</p><p class='list-item'>**Skill（技能）** 是一個**封裝了特定能力的可複用指令集**。</p><p>打個比方：你每次做一道菜，都要從頭回憶配料和步驟，很容易忘這忘那。但如果你把菜譜寫下來，下次照着做就行了，還能分享給別人。Skill 就是給AI寫的"菜譜" —— 把一個複雜的任務標準化、流程化，讓AI每次都能按照固定的高質量標準執行。</p><p class='list-item'>**Skill vs 单次 Prompt：**</p><p class='list-item'>- **一致性**：確保AI每次執行都遵循相同標準（不會這次用Tab縮進，下次用空格）</p><p class='list-item'>- **效率**：複雜流程一鍵觸發，無需每次重寫Prompt</p><p class='list-item'>- **可複用**：跨項目、跨團隊共享最佳實踐</p><p class='list-item'>- **可迭代**：持續優化和升級，越用越好</p><p>很多人以爲 Skill 就是一個 Markdown 文件，其實不是。**一個完整的 Skill 是一個目錄**，可以包含多種類型的文件，就像一個"能力包"。</p><p>打個比方：如果把 Skill 比作一本食譜，那麼：</p><p class='list-item'>- **SKILL.md**就是食譜本身（菜名、步驟、注意事項）</p><p class='list-item'>- **scripts/**就是配套的廚房小工具（削皮刀、量杯 —— 封裝好的輔助腳本）</p><p class='list-item'>- **resources/**就是附贈的食材包和調料配比表（模板、示例數據、配置）</p><p class='list-item'>- **references/**就是食譜末尾的"參考書目"（營養學標準、食品安全規範 —— AI 可隨時查閱的參考資料）</p><p class='list-item'>**標準 Skill 目錄結構：**</p><pre><code>skill-xxx/               # Skill 根目录（命名规范：小写+短横线）
+├── SKILL.md              # 核心：技能描述文件（必选）
+├── scripts/              # 辅助脚本目录（可选）
+│   ├── helper.py          # Python 辅助脚本
+│   └── utils.js           # JavaScript 工具函数
+├── resources/            # 配套资源目录（可选）
+│   ├── template/          # 模板文件（如代码模板、报告模板）
+│   ├── examples/          # 示例文件（如输入/输出示例数据）
+│   └── config/            # 配置文件（如规则定义、默认参数）
+├── references/            # 参考文档目录（可选）
+│   ├── best-practices.md    # 最佳实践文档
+│   ├── api-docs.md         # API 参考文档
+│   └── standards.md        # 行业/团队编码规范
+└── requirements.txt        # 依赖声明（可选，列出脚本需要的第三方包）</code></pre><p>提示：Skill 的核心是<code>SKILL.md</code>，其餘文件均爲輔助。如果你的 Skill 只需要一份指令說明，只放一個<code>SKILL.md</code>就夠了。但當 Skill 涉及複雜邏輯（如數據處理、格式轉換）時，配上<code>scripts/</code>、<code>resources/</code>和<code>references/</code>會大幅提升 Skill 的能力和可維護性。</p><p class='list-item'>**各組成部分詳解：**</p><p class='list-item'>**1. SKILL.md（必選）—— 技能的"說明書"**</p><p>這是 Skill 的核心載體。它包含兩部分：頭部的**元數據（Frontmatter） 和正文的具體指令**。</p><pre><code>---
+# 元數據（Frontmatter，YAML 格式）
+name: react-component-generator   # 技能名稱（唯一標識）
+version: 1.0                  # 技能版本
+description: 根據需求生成符合項目規範的 React 組件文件集  # 技能簡介
+trigger: [&quot;創建組件&quot;, &quot;新建React組件&quot;, &quot;生成組件&quot;]      # 觸發關鍵詞
+tools: [&quot;typescript&quot;, &quot;react&quot;]    # 依賴工具
+author: your-name              # 技能作者
+---
+# React 組件生成器
+## 執行步驟
+1. 確認組件名稱和功能需求
+2. 在 src/components/{componentName}/ 目錄下創建文件
+3. 按照 resources/template/ 中的模板生成代碼
+4. 運行 scripts/validate.js 驗證組件結構
+## 輸出規範
+- 所有文件創建完成後，報告創建的文件列表
+- 給出組件的使用示例代碼
+## 錯誤處理
+- 如果目錄已存在，提示用戶確認是否覆蓋
+- 如果缺少依賴包，提示安裝命令
+## 示例
+給一個完整的輸入→輸出示例。</code></pre><p>注意：Frontmatter（元數據）是可選的，很多簡單的 Skill 可以省略它。但如果你的 Skill 需要被 Agent 系統自動發現和匹配，Frontmatter 中的<code>trigger</code>和<code>description</code>就非常重要 —— Agent 啓動時只讀取元數據，只有當用戶任務匹配觸發條件時，纔會加載完整指令。這種"漸進式披露"的設計可以節省上下文窗口空間。</p><p class='list-item'>**2. scripts/（可选）—— 辅助脚本**</p><p>當 Skill 需要執行復雜邏輯時（如數據預處理、文件批量操作、格式驗證），把這些邏輯封裝到腳本中比寫在 SKILL.md 裏更清晰：</p><pre><code># scripts/helper.py —— 辅助脚本示例
+def fill_missing_value(df, column, strategy=&quot;mean&quot;):
+   &quot;&quot;&quot;缺失值填充：把复杂逻辑封装成函数，SKILL.md 中只需调用即可&quot;&quot;&quot;
+   if strategy == &quot;mean&quot;:
+      df[column].fillna(df[column].mean(), inplace=True)
+   elif strategy == &quot;empty&quot;:
+      df[column].fillna(&quot;&quot;, inplace=True)
+   return df</code></pre><p class='list-item'>**3. resources/（可选）—— 配套资源**</p><p class='list-item'>- `template/`：存放代碼模板、文檔模板。例如 React 組件的標準結構模板，AI 可以基於模板快速生成代碼</p><p class='list-item'>- `examples/`：存放輸入/輸出示例。幫助 AI 理解"好的輸出長什麼樣"</p><p class='list-item'>- `config/`：存放配置文件（JSON/YAML），定義規則和參數，避免在 SKILL.md 中硬編碼</p><p class='list-item'>**4. references/（可选）—— 参考文档**</p><p>與 <code>resources/</code> 不同，<code>references/</code> 存放的不是"模板和配置"，而是 **AI 執行任務時可以查閱的知識性文檔**。比如：</p><p class='list-item'>- 編碼規範文檔（團隊的代碼風格指南）</p><p class='list-item'>- 安全審計標準（如 OWASP Top 10 清單）</p><p class='list-item'>- API 文檔（第三方服務的接口說明）</p><p class='list-item'>- 技術選型文檔（爲什麼用 A 不用 B 的決策記錄）</p><p>提示：<code>references/</code>和<code>resources/</code>的區別可以這樣理解 ——<code>resources/</code>是"生產材料"（模板、配置，直接用於生成輸出），<code>references/</code>是"參考書"（規範、標準、文檔，用於指導 AI 做出正確決策）。</p><p class='list-item'>**5. requirements.txt（可选）—— 依赖声明**</p><p>如果 <code>scripts/</code> 中的腳本依賴第三方庫，在這裏聲明，方便部署時一鍵安裝：</p><pre><code>pandas&gt;=2.0.0
+openpyxl&gt;=3.1.0</code></pre><p class='list-item'>**簡單 vs 完整 Skill 的選擇：**</p><p>你不必從零開始造輪子。Skill 生態已經非常成熟，從 Anthropic 官方到頭部大廠、再到社區開發者，已經沉澱了大量可直接使用的高質量 Skill。學會"找到好 Skill → 評估 → 安裝 → 在此基礎上定製"，是比從頭寫更高效的路徑。</p><p class='list-item'>**仓库地址**：https://github.com/anthropics/skills</p><p>這是 Anthropic 官方維護的 Skill 庫，質量最高、最值得優先使用。官方對 Skill 的定義是：</p><p>“Skills are folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks.”</p><p>（Skill 是由指令、腳本和資源組成的文件夾，Claude 會動態加載它們以提升在專業任務上的表現。）</p><p class='list-item'>**官方 Skill 分類總覽：**</p><p class='list-item'>**安装方式（使用 Vercel Skills CLI）：**</p><pre><code># 安装 Anthropic 官方全部 Skill（全局安装）
+$ npx skills add anthropics/skills -g
+# 只安装指定 Skill（推荐按需安装）
+$ npx skills add anthropics/skills@frontend-design -g
+$ npx skills add anthropics/skills@mcp-builder -g
+$ npx skills add anthropics/skills@skill-creator -g</code></pre><p>提示：<code>skill-creator</code>是一個非常有趣的"元技能" —— 它的功能是幫你創建新的 Skill。如果你剛開始學習 Skill 編寫，可以先安裝它，然後告訴 AI"幫我創建一個 XXX Skill"，它會按照標準規範幫你生成 SKILL.md 和目錄結構。</p><p class='list-item'>**手動安裝（不使用 CLI）：**</p><p>如果你不想用 <code>npx skills</code> 命令，也可以手動操作：</p><pre><code># 克隆官方仓库到本地
+$ git clone https://github.com/anthropics/skills.git
+# 将需要的 Skill 目录复制到你的项目中
+$ cp -r skills/skills/frontend-design .claude/skills/</code></pre><p class='list-item'>**仓库地址**：https://github.com/vercel-labs/skills</p><p>Vercel（Next.js 的母公司）維護的 Skill 庫，專注於 **React、Next.js、AI SDK、部署** 等前端生態。如果你用 Next.js 技術棧開發，這個庫非常有價值。</p><p class='list-item'>**Vercel Skill 分类：**</p><p class='list-item'>**安裝方式：**</p><pre><code># 安装 Vercel 全部 Skill
+$ npx skills add vercel-labs/skills -g
+# 安装 find-skills（推荐首先安装，用于搜索发现其他 Skill）
+$ npx skills add vercel-labs/skills@find-skills -g -y</code></pre><p>提示：<code>find-skills</code>是一個"技能發現者" Skill —— 當你需要完成某個任務但不知道有沒有現成的 Skill 時，它會自動幫你搜索並推薦最合適的 Skill。強烈建議首先安裝它。</p><p>Vercel 還提供了一個命令行工具 <code>npx skills</code>，可以把它理解爲 **Skill 世界的 npm** —— 用來搜索、安裝、管理各種 Skill。</p><p class='list-item'>**基本用法：**</p><pre><code># 搜索 Skill（按关键词）
+$ npx skills find &quot;react testing&quot;
+# 安装 Skill（从 GitHub 仓库）
+$ npx skills add &lt;owner/repo&gt;        # 安装仓库中的全部 Skill
+$ npx skills add &lt;owner/repo&gt;@&lt;name&gt;   # 安装指定 Skill
+$ npx skills add &lt;owner/repo&gt; -g      # 全局安装（所有项目可用）
+# 列出已安装的 Skill
+$ npx skills list
+# 初始化（在当前项目创建 Skill 目录）
+$ npx skills init</code></pre><p class='list-item'>**支持的 AI 工具**：Claude Code、GitHub Copilot、Cursor、Qoder、OpenAI Codex、Cline、Windsurf 等多种 AI 编程工具。具体支持范围会随 CLI 版本变化，安装前以项目 README 为准。</p><p>除了官方庫，社區貢獻了大量 Skill 資源：</p><p class='list-item'>**精选 GitHub 仓库：**</p><p class='list-item'>**alirezarezvani/claude-skills 领域覆盖（235+ Skill）：**</p><pre><code>工程核心（37）：架構、前端、後端、QA、DevOps、安全、AI/ML
+高級工程（45）：Agent設計器、RAG架構師、數據庫設計、CI/CD構建器、MCP構建器
+產品（16）：產品經理、UX研究員、UI設計、落地頁、SaaS腳手架
+營銷（44）：內容、SEO、CRO、渠道、增長、情報、銷售
+項目管理（9）：Scrum Master、Jira集成、Confluence集成
+C-Level顧問（34）：全套C-Suite角色（CTO、CFO等）
+合規與質量（14）：ISO 13485、GDPR、FDA合規
+商業與增長（5）：客戶成功、銷售工程師、收入運營
+財務（4）：財務分析、SaaS指標教練</code></pre><p class='list-item'>**安裝社區 Skill：**</p><pre><code># 从社区仓库安装
+$ npx skills add alirezarezvani/claude-skills -g
+$ npx skills add ComposioHQ/awesome-claude-skills -g
+# 手动安装（克隆后复制需要的目录）
+$ git clone https://github.com/alirezarezvani/claude-skills.git
+$ cp -r claude-skills/engineering-team/frontend .claude/skills/</code></pre><p class='list-item'>**國內大廠 Skill 庫（ 國內用戶推薦）：**</p><p>國內頭部科技公司也在積極擁抱 Skill 生態，維護了多個高質量的 Skill 庫：</p><p class='list-item'>**安裝國內大廠 Skill 示例：**</p><pre><code># 科大讯飞 iFly-Skills（语音、OCR、翻译等 AI 能力）
+$ git clone https://github.com/iflytek/iFly-Skills.git
+$ cp -r iFly-Skills/ifly-pdf-image-ocr .claude/skills/
+# 注意：需要在讯飞开放平台申请 API Key，配置 XFEI_APP_ID 等环境变量
+# 字节跳动 AgentKit Samples
+$ git clone https://github.com/bytedance/agentkit-samples.git
+$ cp -r agentkit-samples/skills/byted-web-search .claude/skills/
+# 注意：需要火山引擎 API Key</code></pre><p>提示：國內大廠的 Skill 大多基於各自的雲服務 API，使用前需要註冊對應平臺並獲取 API Key。但它們在中文處理、語音識別、OCR等方面的能力遠超海外同類 Skill，非常適合國內開發者。</p><p>如果覺得逐個找倉庫太麻煩，還有專門的 Skill 聚合搜索平臺：</p><p>在這些平臺上，你可以按分類瀏覽、按關鍵詞搜索，找到需要的 Skill 後一鍵安裝。</p><p>提示：SkillsMP 從 GitHub 上自動索引包含 SKILL.md 的倉庫，所以你在 GitHub 上發佈的 Skill 也可能被收錄進去。</p><p>Cursor 使用 Rules 作爲項目級 AI 行爲規範。舊版常見 <code>.cursorrules</code>，新版更推薦 <code>.cursor/rules/*.mdc</code>。它和 Skill 不完全相同，但都屬於“把經驗寫成可複用上下文”的做法。社區貢獻了大量現成模板：</p><p>Skill 本質上是給 AI 的"操作指令"，某些惡意 Skill 可能包含危險操作。在使用任何第三方 Skill 之前，**必須進行安全評估**：</p><p class='list-item'>**安全檢查的最佳實踐：**</p><pre><code># 1. 安裝前先瀏覽 Skill 內容（不要盲目安裝）
+# 在 GitHub 上直接閱讀 SKILL.md
+# 2. 檢查 scripts/ 目錄中的腳本（如果有的話）
+# 確保沒有網絡請求、文件刪除等危險操作
+# 3. 在測試項目中先試用，確認安全後再用於正式項目</code></pre><p>注意：永遠不要盲目使用來歷不明的 Skill。安裝前至少通讀一遍 SKILL.md 的內容和 scripts/ 目錄中的腳本代碼，確保沒有危險操作。官方庫（Anthropic、Vercel）優先，社區高 Star 倉庫其次，個人倉庫最後。</p><p>在學習"如何創建 Skill"之前，先來體驗幾個經典的現有 Skill，建立直觀感受。</p><p class='list-item'>**案例一：用 skill-creator 让 AI 帮你创建 Skill**</p><p><code>skill-creator</code> 是 Anthropic 官方提供的一個"元技能" —— 它的功能就是幫你創建新的 Skill。這相當於請了一位 Skill 專家替你寫"操作手冊"。</p><pre><code># Step 1：安装 skill-creator
+$ npx skills add anthropics/skills@skill-creator -g</code></pre><p>安裝後，在 Claude Code 中輸入：</p><pre><code>&gt; 用 skill-creator 幫我創建一個名爲 weekly-report-generator 的技能。
+&gt; 功能：每週自動掃描本週的 Git 提交記錄和 TODO 變更，
+&gt; 生成一份結構化的週報 Markdown 文件。
+&gt; 需要的工具：Read、Glob、Bash（用於 git log）。</code></pre><p>Claude 會按照 skill-creator 的規範，自動幫你生成完整的 Skill 目錄：</p><pre><code>预期输出：
+~/.claude/skills/weekly-report-generator/
+├── SKILL.md        # 包含 Frontmatter 和详细执行步骤
+├── scripts/
+│   └── collect-commits.sh   # 收集本周提交的脚本
+└── resources/
+   └── template/
+      └── weekly-report.md  # 周报模板</code></pre><p>提示：skill-creator 會交互式地詢問你一些問題（技能名稱、觸發詞、執行步驟等），然後生成符合規範的 SKILL.md。初學者強烈建議先用 skill-creator 生成 Skill，再根據需要手動調整，比從零開始寫效率高得多。</p><p class='list-item'>**案例二：使用官方 PDF 文檔處理 Skill**</p><p>Anthropic 官方的 <code>pdf</code> Skill 可以讓 Claude 處理 PDF 文件 —— 解析內容、提取信息、生成摘要等。</p><pre><code># 安装 PDF 技能
+$ npx skills add anthropics/skills@pdf -g</code></pre><p>安裝後即可直接使用：</p><pre><code>&gt; 請讀取 docs/產品需求文檔.pdf，提取其中的核心功能列表和技術要求，
+&gt; 整理成一份 Markdown 格式的摘要。</code></pre><p>Claude 會調用 pdf Skill 中的腳本解析 PDF 文件結構，提取文本內容並按你的要求整理輸出。</p><p>提示：同類的官方文檔處理 Skill 還有<code>docx</code>（Word 文檔）、<code>xlsx</code>（Excel 表格）、<code>pptx</code>（PowerPoint 演示文稿）。它們的工作方式類似 —— 把文檔格式（本質是 ZIP + XML）"翻譯"成 Claude 能理解的結構，然後進行處理。</p><p class='list-item'>**案例三：使用官方 frontend-design Skill**</p><p><code>frontend-design</code> Skill 讓 Claude 具備專業的前端設計能力 —— 生成像素級精確的 UI 組件。</p><pre><code># 安装前端设计技能
+$ npx skills add anthropics/skills@frontend-design -g</code></pre><p>使用示例：</p><pre><code>&gt; 請使用 frontend-design 技能，爲書籤管理器設計一個響應式的卡片列表頁面。
+&gt; 要求：支持暗色模式，卡片包含標題、URL、標籤和收藏時間。
+&gt; 技術棧：React + Tailwind CSS。</code></pre><p>這是本部分最核心的內容。我們通過三個實戰案例，手把手教你創建自己的Skill。</p><p>觀察你日常使用AI時的重複行爲：</p><p class='list-item'>- 你是否經常給AI寫**類似的Prompt**？→ 把它變成Skill</p><p class='list-item'>- 你的項目是否有**固定的開發模式**？→ 把它變成Skill</p><p class='list-item'>- 你是否有**標準化的審查流程**？→ 把它變成Skill</p><p>提示：DRY原則（Don’t Repeat Yourself）不僅適用於代碼，也適用於Prompt。如果你發現自己連續3次寫了類似的Prompt，就是時候把它Skill化了。</p><p class='list-item'>**需求**：每次創建新的React組件時，需要遵循統一的文件結構和編碼規範。我們來創建一個包含模板和驗證腳本的**完整 Skill 包**。</p><p class='list-item'>**Step 1：创建 Skill 目录结构**</p><p>在項目根目錄下創建如下結構：</p><pre><code># 一次性创建完整的 Skill 目录
+$ mkdir -p .claude/skills/react-component/scripts
+$ mkdir -p .claude/skills/react-component/resources/template
+$ mkdir -p .claude/skills/react-component/resources/examples</code></pre><p>創建後的目錄結構：</p><pre><code>.claude/skills/react-component/    # Skill 根目录
+├── SKILL.md                  # 核心指令文件
+├── scripts/                  # 辅助脚本
+│   └── validate.js             # 组件结构验证脚本
+└── resources/                 # 配套资源
+   ├── template/               # 代码模板
+   │   ├── component.tsx.tpl      # 组件主文件模板
+   │   └── test.tsx.tpl         # 测试文件模板
+   └── examples/               # 示例
+      └── BookmarkCard-example/   # 一个完整的示例组件供参考</code></pre><p class='list-item'>**Step 2：编写 SKILL.md（核心指令）**</p><p>创建 <code>.claude/skills/react-component/SKILL.md</code>：</p><pre><code>---
+name: react-component-generator
+version: 1.0
+description: 根据组件名称和功能描述，生成符合项目规范的 React 组件文件集
+trigger: [&quot;创建组件&quot;, &quot;新建React组件&quot;, &quot;生成组件&quot;]
+tools: [&quot;typescript&quot;, &quot;react&quot;, &quot;tailwindcss&quot;]
+author: your-name
+---
+# React 组件生成器
+## 触发条件
+当用户要求创建新的 React 组件时使用此 Skill。
+## 输入参数
+- componentName（必填）：组件名称，使用 PascalCase 格式
+- description（必填）：组件功能描述
+- hasProps（可选，默认true）：是否需要 Props 类型定义
+- hasState（可选，默认false）：是否需要状态管理
+## 执行步骤
+1. 在 `src/components/` 目录下创建组件文件夹：
+   `src/components/{componentName}/`
+2. 参考 `resources/template/` 中的模板文件创建以下文件：
+   - `index.tsx` - 组件主文件（参考 component.tsx.tpl）
+   - `types.ts` - TypeScript 类型定义（如果 hasProps=true）
+   - `{componentName}.test.tsx` - 测试文件（参考 test.tsx.tpl）
+3. 组件代码规范：
+   - 使用函数式组件 + TypeScript
+   - Props 使用 interface 定义，命名为 {componentName}Props
+   - 使用 Tailwind CSS 处理样式
+   - 导出使用 named export
+   - 添加 JSDoc 注释说明组件功能
+4. 测试代码规范：
+   - 使用 @testing-library/react
+   - 至少包含：渲染测试、Props 传递测试
+5. 创建完成后，可运行 `scripts/validate.js` 验证组件结构完整性。
+## 输出规范
+- 所有文件创建完成后，报告创建的文件列表
+- 给出组件的使用示例代码
+## 参考示例
+参见 `resources/examples/BookmarkCard-example/` 中的完整示例。
+## 示例
+输入：
+- componentName: &quot;BookmarkCard&quot;
+- description: &quot;展示单个书签的卡片组件，显示标题、URL和标签&quot;
+- hasProps: true
+- hasState: false
+预期输出文件：
+- src/components/BookmarkCard/index.tsx
+- src/components/BookmarkCard/types.ts
+- src/components/BookmarkCard/BookmarkCard.test.tsx</code></pre><p class='list-item'>**Step 3：创建辅助脚本（scripts/）**</p><p>创建 <code>.claude/skills/react-component/scripts/validate.js</code>：</p><pre><code>// scripts/validate.js —— 验证组件目录结构是否完整
+// AI 在执行 Skill 后可以运行此脚本进行自检
+const fs = require(&#x27;fs&#x27;);
+const path = require(&#x27;path&#x27;);
+function validateComponent(componentName) {
+  const dir = path.join(&#x27;src/components&#x27;, componentName);
+  const requiredFiles = [&#x27;index.tsx&#x27;, &#x27;types.ts&#x27;];
+  const missing = [];
+  requiredFiles.forEach(file =&gt; {
+   if (!fs.existsSync(path.join(dir, file))) {
+     missing.push(file);
+   }
+  });
+  if (missing.length &gt; 0) {
+   console.error(` 组件 ${componentName} 缺少文件: ${missing.join(&#x27;, &#x27;)}`);
+   return false;
+  }
+  console.log(` 组件 ${componentName} 结构验证通过`);
+  return true;
+}
+// 从命令行参数获取组件名
+const componentName = process.argv[2];
+if (!componentName) {
+  console.error(&#x27;用法: node validate.js &lt;ComponentName&gt;&#x27;);
+  process.exit(1);
+}
+validateComponent(componentName);</code></pre><p class='list-item'>**Step 4：创建代码模板（resources/template/）**</p><p>创建 <code>.claude/skills/react-component/resources/template/component.tsx.tpl</code>：</p><pre><code>// resources/template/component.tsx.tpl —— 组件代码模板
+// AI 生成代码时参考此模板结构
+/**
+ * {componentName} 组件
+ * {description}
+ */
+import { {componentName}Props } from &#x27;./types&#x27;;
+export function {componentName}({ ...props }: {componentName}Props) {
+  return (
+   &lt;div className=&quot;...&quot;&gt;
+     {/* 组件内容 */}
+   &lt;/div&gt;
+  );
+}</code></pre><p>提示：<code>resources/template/</code>中的模板文件不是讓 AI 原樣複製的，而是給 AI 一個"參考樣式"。AI 會根據模板的結構和風格，結合用戶需求生成實際代碼。這比純文字描述更直觀，生成質量也更高。</p><p class='list-item'>**Step 5：在 CLAUDE.md 中引用此 Skill**</p><p>在你的 CLAUDE.md 文件中添加：</p><pre><code>## 可用 Skills
+- 创建 React 组件时，请读取 `.claude/skills/react-component/SKILL.md` 并严格遵循其中的规范</code></pre><p class='list-item'>**Step 6：使用 Skill**</p><p>在 Claude Code 中输入：</p><pre><code>&gt; 請按照 React 組件生成器 Skill 的規範，創建一個 BookmarkCard 組件。
+&gt; 組件功能：展示單個書籤的卡片，顯示標題、URL、描述和標籤列表。
+&gt; 需要 Props，不需要狀態管理。</code></pre><p>Claude Code 會按照 Skill 定義的規範，參考模板文件，自動創建所有文件。完成後你還可以運行驗證腳本確認結構：</p><pre><code>$ node .claude/skills/react-component/scripts/validate.js BookmarkCard
+ 组件 BookmarkCard 结构验证通过</code></pre><p>這個 Skill 相對簡單，不需要輔助腳本，只需一個 SKILL.md 加一份配置文件：</p><pre><code>.claude/skills/api-endpoint/
+├── SKILL.md                  # 核心指令
+└── resources/
+   └── config/
+      └── response-format.json   # API 统一返回格式定义</code></pre><p>创建 <code>.claude/skills/api-endpoint/SKILL.md</code>：</p><pre><code>---
+name: api-endpoint-generator
+version: 1.0
+description: 为指定的数据模型生成标准的 CRUD API 端点
+trigger: [&quot;创建API&quot;, &quot;生成端点&quot;, &quot;新建接口&quot;]
+---
+# RESTful API 端点生成器
+## 输入参数
+- modelName（必填）：数据模型名称（如 &quot;bookmark&quot;、&quot;tag&quot;）
+- fields（必填）：模型字段列表
+- operations（可选，默认全部）：需要的操作（create/read/update/delete/list）
+## 执行步骤
+1. 在 `src/app/api/{modelName}s/` 目录下创建 `route.ts`
+2. 实现以下端点：
+   - GET /api/{modelName}s → 获取列表（支持分页、搜索）
+   - POST /api/{modelName}s → 创建
+   - GET /api/{modelName}s/[id] → 获取单个
+   - PUT /api/{modelName}s/[id] → 更新
+   - DELETE /api/{modelName}s/[id] → 删除
+3. 代码规范：
+   - 使用 Prisma Client 操作数据库
+   - 统一返回格式参考 `resources/config/response-format.json`
+   - 包含输入验证
+   - 包含错误处理（try-catch）
+4. 创建完成后，列出所有 API 端点的 URL 和用法</code></pre><p>同时创建 <code>.claude/skills/api-endpoint/resources/config/response-format.json</code>：</p><pre><code>{
+  &quot;success_response&quot;: {
+   &quot;success&quot;: true,
+   &quot;data&quot;: &quot;&lt;返回数据&gt;&quot;
+  },
+  &quot;error_response&quot;: {
+   &quot;success&quot;: false,
+   &quot;error&quot;: &quot;&lt;错误信息&gt;&quot;
+  },
+  &quot;list_response&quot;: {
+   &quot;success&quot;: true,
+   &quot;data&quot;: &quot;&lt;数据数组&gt;&quot;,
+   &quot;pagination&quot;: {
+     &quot;page&quot;: 1,
+     &quot;pageSize&quot;: 20,
+     &quot;total&quot;: 100
+   }
+  }
+}</code></pre><p>提示：把 API 的返回格式定義抽到<code>resources/config/</code>中，好處是 SKILL.md 更簡潔，而且修改格式時只需改 JSON 文件，不用動 Skill 指令。</p><p>Git 規範化 Skill 非常簡單，不需要腳本和資源文件，**只需一個 SKILL.md 即可**。這說明並非所有 Skill 都要用上全套目錄 —— 夠用就好。</p><p>创建 <code>.claude/skills/git-commit/SKILL.md</code>：</p><pre><code>---
+name: git-commit-standard
+version: 1.0
+description: 在提交代码时，自动生成符合 Conventional Commits 规范的 commit message
+trigger: [&quot;提交代码&quot;, &quot;git commit&quot;, &quot;生成commit&quot;]
+---
+# Git 提交规范化
+## 执行步骤
+1. 运行 `git diff --staged` 查看暂存区的修改
+2. 分析修改内容，判断变更类型：
+   - feat: 新功能
+   - fix: 修复Bug
+   - refactor: 重构（不改变功能）
+   - style: 样式修改
+   - docs: 文档更新
+   - test: 测试相关
+   - chore: 构建/工具变更
+3. 生成 commit message，格式：</code></pre><h3>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
+   &lt;body&gt;</h3><pre><code>4. 顯示給用戶確認後執行 `git commit`
+## 示例
+修改了 src/components/BookmarkCard.tsx 中的樣式
+生成的 message：</code></pre><h3>style(BookmarkCard): 優化書籤卡片的響應式佈局</h3><p class='list-item'>- 調整了移動端下的卡片寬度</p><p class='list-item'>- 修復了標籤溢出問題</p><p>提示：注意對比三個實戰 Skill 的複雜度遞減關係 —— React 組件 Skill（完整包：SKILL.md + scripts + resources）→ API 端點 Skill（中等：SKILL.md + resources/config）→ Git 提交 Skill（最簡：僅 SKILL.md）。根據實際需求選擇合適的結構，不必過度設計。</p><p>前面三個案例分別展示了 <code>scripts/</code>、<code>resources/</code>、純 SKILL.md 的用法，這個案例重點展示 ** references/ 目錄** —— 當 Skill 需要 AI 依據特定的標準和規範來執行任務時，把參考文檔放入</p><p><code>references/</code> 是最佳實踐。**需求**：在提交代碼前，讓 AI 按照 OWASP 安全清單和團隊編碼安全規範，對代碼進行安全審計。</p><p class='list-item'>**Step 1：创建 Skill 目录结构**</p><pre><code>$ mkdir -p .claude/skills/security-audit/references
+$ mkdir -p .claude/skills/security-audit/resources/examples</code></pre><p>完成後的結構：</p><pre><code>.claude/skills/security-audit/
+├── SKILL.md                    # 审计流程指令
+├── references/                  #  参考文档（AI 审计时依据的&quot;法规&quot;）
+│   ├── owasp-top10-checklist.md     # OWASP Top 10 安全检查清单
+│   └── team-security-standards.md   # 团队安全编码规范
+└── resources/
+   └── examples/
+      └── audit-report-sample.md   # 审计报告示例（让 AI 知道输出长什么样）</code></pre><p class='list-item'>**Step 2：编写 SKILL.md**</p><p>创建 <code>.claude/skills/security-audit/SKILL.md</code>：</p><pre><code>---
+name: security-audit
+version: 1.0
+description: 對指定代碼進行安全審計，依據 OWASP Top 10 和團隊安全規範輸出審計報告
+trigger: [&quot;安全審計&quot;, &quot;security audit&quot;, &quot;安全檢查&quot;, &quot;代碼安全&quot;]
+---
+# 代碼安全審計
+## 執行步驟
+1. 讀取用戶指定的代碼文件或目錄
+2. 閱讀 `references/owasp-top10-checklist.md`，逐項檢查代碼是否存在對應漏洞
+3. 閱讀 `references/team-security-standards.md`，檢查代碼是否符合團隊安全規範
+4. 按照 `resources/examples/audit-report-sample.md` 的格式，生成安全審計報告
+5. 對每個發現的問題：標註嚴重等級（高危/中危/低危）、給出修復建議和修復代碼
+## 輸出規範
+- 使用 Markdown 表格列出所有問題
+- 每個問題包含：文件路徑、行號、問題描述、嚴重等級、修復建議
+- 最後給出安全評分（0-100）和總結
+## 錯誤處理
+- 如果代碼量過大，優先審計 API 路由和數據庫操作相關的文件
+- 如果無法判斷是否存在風險，標記爲&quot;待人工確認&quot;</code></pre><p class='list-item'>**Step 3：编写参考文档（references/）**</p><p>這是本案例的重點。<code>references/</code> 中的文件不會直接變成輸出，而是作爲 AI 做判斷時的"知識庫"。</p><p>创建 <code>.claude/skills/security-audit/references/owasp-top10-checklist.md</code>：</p><pre><code># OWASP Top 10 安全檢查清單
+## 1. 注入攻擊（Injection）
+- [ ] SQL 查詢是否使用參數化查詢或 ORM？
+- [ ] 是否存在字符串拼接 SQL 的情況？
+- [ ] 用戶輸入是否經過轉義和過濾？
+## 2. 身份認證失效（Broken Authentication）
+- [ ] 密碼是否明文存儲？（應使用 bcrypt 等加密）
+- [ ] 會話令牌是否使用安全的隨機數生成？
+- [ ] 是否有登錄失敗次數限制？
+## 3. 敏感數據泄露（Sensitive Data Exposure）
+- [ ] API 密鑰、數據庫密碼是否硬編碼在代碼中？
+- [ ] 敏感數據是否通過 HTTPS 傳輸？
+- [ ] 日誌中是否記錄了敏感信息？
+## 4. XSS 跨站腳本攻擊
+- [ ] 用戶輸入是否在渲染前經過轉義？
+- [ ] 是否使用 dangerouslySetInnerHTML 等危險 API？
+- [ ] CSP（Content Security Policy）頭是否設置？
+## 5. 安全配置錯誤
+- [ ] 是否關閉了調試模式？
+- [ ] 錯誤頁面是否暴露了堆棧信息？
+- [ ] 默認賬戶密碼是否已修改？
+（後續 6-10 條按同樣格式補充）</code></pre><p>创建 <code>.claude/skills/security-audit/references/team-security-standards.md</code>：</p><pre><code># 團隊安全編碼規範
+## 強制規則（違反即爲高危）
+1. 禁止在代碼中硬編碼任何密鑰、密碼、令牌，必須使用環境變量
+2. 所有數據庫操作必須通過 ORM（Prisma），禁止直接寫 SQL
+3. 所有用戶輸入必須在服務端驗證，不能只依賴前端驗證
+4. API 路由必須有權限校驗，不允許裸接口
+## 建議規則（違反爲中危）
+1. 文件上傳功能必須限制文件類型和大小
+2. 敏感操作（刪除、修改密碼等）需要二次確認
+3. 分頁查詢必須限制 pageSize 最大值，防止數據庫壓力攻擊
+4. 錯誤響應不應包含內部實現細節</code></pre><p class='list-item'>**Step 4：编写输出示例（resources/examples/）**</p><p>创建 <code>.claude/skills/security-audit/resources/examples/audit-report-sample.md</code>：</p><pre><code># 安全審計報告
+**審計範圍**：src/app/api/
+**審計時間**：2026-04-30
+**審計依據**：OWASP Top 10 + 團隊安全規範
+## 發現問題
+| # | 文件 | 行號 | 問題描述 | 等級 | 修復建議 |
+|---|------|------|---------|------|---------|
+| 1 | src/app/api/users/route.ts | 23 | SQL 字符串拼接，存在注入風險 |  高危 | 改用 Prisma 參數化查詢 |
+| 2 | src/lib/auth.ts | 45 | API 密鑰硬編碼 |  高危 | 移至 .env 環境變量 |
+| 3 | src/app/api/upload/route.ts | 12 | 文件上傳未限制類型 |  中危 | 添加 MIME 類型白名單 |
+## 安全評分：65/100
+## 總結
+發現 2 個高危、1 箇中危問題。建議優先修復高危問題後再上線。</code></pre><p class='list-item'>**Step 5：使用 Skill**</p><pre><code>&gt; 請使用安全審計 Skill，對 src/app/api/ 目錄下的所有文件進行安全檢查。</code></pre><p>AI 會先讀取 <code>references/</code> 中的兩份參考文檔作爲審計標準，然後逐一檢查代碼，最後按照 <code>resources/examples/</code> 中的示例格式輸出審計報告。</p><p>提示：注意<code>references/</code>的價值 —— 如果不提供參考文檔，AI 會按照自己的通用知識來審計，可能遺漏團隊特有的安全要求。有了<code>references/</code>，審計標準就變得確定、可控、可迭代—— 團隊安全規範更新了？改一下<code>references/team-security-standards.md</code>就行。</p><p class='list-item'>**現在回顧四個案例，每個都突出了不同的 Skill 目錄組件：**</p><p class='list-item'>**方法一：通過 CLAUDE.md 引用（推薦）**</p><p>在 CLAUDE.md 中添加 Skill 引用：</p><pre><code>## 项目 Skills
+以下 Skill 定义了标准化的开发流程（每个 Skill 是一个目录，核心指令在 SKILL.md 中）：
+- `.claude/skills/react-component/` - React 组件生成规范
+- `.claude/skills/api-endpoint/` - API 端点生成规范
+- `.claude/skills/git-commit/` - Git 提交规范
+- `.claude/skills/security-audit/` - 代码安全审计
+执行相关任务时，请先阅读对应 Skill 目录下的 SKILL.md 并严格遵循。
+如 Skill 中包含 scripts/、resources/ 或 references/，请一并参考。</code></pre><p class='list-item'>**方法二：通過自定義 slash commands**</p><p>將 Skill 的觸發文件放在 <code>.claude/commands/</code> 目錄下，即可通過 <code>/skill名稱</code> 直接觸發：</p><pre><code># 文件结构
+.claude/
+├── commands/
+│   ├── new-component.md   # 触发方式：/new-component（引用 skills 中的规范）
+│   └── security-check.md   # 触发方式：/security-check
+└── skills/
+   ├── react-component/   # 完整 Skill 包（SKILL.md + scripts + resources）
+   │   ├── SKILL.md
+   │   ├── scripts/
+   │   └── resources/
+   ├── api-endpoint/      # 中等 Skill 包（SKILL.md + resources/config）
+   │   ├── SKILL.md
+   │   └── resources/
+   ├── security-audit/    # 参考文档型（SKILL.md + references + resources/examples）
+   │   ├── SKILL.md
+   │   ├── references/
+   │   └── resources/
+   └── git-commit/       # 简单 Skill（仅 SKILL.md）
+      └── SKILL.md</code></pre><p>将 Skill 的核心规则写入 Cursor Rules（推荐 <code>.cursor/rules/*.mdc</code>，旧项目可用 <code>.cursorrules</code>）：</p><pre><code>When creating new React components:
+- Follow the structure defined in .claude/skills/react-component/SKILL.md
+- Reference templates in .claude/skills/react-component/resources/template/
+- Always create types.ts for Props definitions
+- Always include basic test file</code></pre><p>Skill 不是寫完就不管了。每次使用後，記錄：</p><p class='list-item'>- AI 哪些地方做得好？→ 保持</p><p class='list-item'>- AI 哪些地方做得不好？→ 在 Skill 中加入更明確的指令</p><p class='list-item'>- 有沒有遺漏的邊界情況？→ 補充到錯誤處理部分</p><p>用 Git 管理你的 Skill 目錄，就像管理代碼一樣：</p><pre><code># 提交整个 Skill 包（包括 SKILL.md、scripts、resources 等）
+$ git add .claude/skills/react-component/
+$ git commit -m &quot;feat(skills): 新增 React 组件生成 Skill v1.0&quot;
+# 更新 Skill 后，修改 SKILL.md 中的版本号并提交
+$ git add .claude/skills/react-component/SKILL.md
+$ git commit -m &quot;chore(skills): 升级 React 组件 Skill 至 v1.1，优化模板&quot;</code></pre><p>Superpowers 是 Claude Code 生態中的一類**社區增強插件 / Skills 集合**。它不是“必裝”的，但思路值得學習：把成熟工作流封裝成可複用能力，讓 AI 不只是會寫代碼，還會按固定方法做事。</p><p>Superpowers 本質是一套**工作方法論集合**，通常會封裝成多個可複用 Skill。安裝後，AI 可以在合適的任務中調用這些方法論。</p><p class='list-item'>**安裝前後對比：**</p><p class='list-item'>**方式一：npx 一鍵安裝（推薦）**</p><pre><code># 進入你的項目目錄（重要！不要在主目錄 ~ 下運行）
+$ cd /your/project
+# 英文版（原版）
+$ npx superpowers
+# 中文增強版（推薦國內用戶，包含 6 箇中國特色 Skill）
+$ npx superpowers-zh</code></pre><p>安裝後會在項目下生成 <code>.claude/skills/</code> 目錄，包含所有 Skill 文件。</p><p class='list-item'>**方式二：手動安裝（備選）**</p><pre><code># 克隆仓库
+git clone https://github.com/jnMetaCode/superpowers-zh.git
+# 复制 skills 到项目
+cp -r superpowers-zh/skills /your/project/.claude/skills</code></pre><p>注意：手動安裝只複製了 Skills 文件，不會配置自動觸發鉤子。推薦使用 npx 方式一鍵安裝。</p><p class='list-item'>**不是必須的。** Superpowers 是一個“錦上添花”的增強插件：</p><p class='list-item'>- **初學者**：建議先不裝，熟悉 Claude Code 基本操作後再考慮</p><p class='list-item'>- **日常開發**：強烈推薦安裝，能顯著提升代碼質量和開發流程規範性</p><p class='list-item'>- **團隊項目**：強烈推薦安裝，統一團隊的 AI 工作方法論</p><pre><code>~/.claude/
+└── commands/         ← 你的全局 Skills
+   ├── review.md      ← 代码审查 Skill
+   ├── refactor.md    ← 重构优化 Skill
+   └── test.md       ← 测试生成 Skill
+项目根目录/
+└── .claude/
+   ├── commands/      ← 项目级 Skills
+   │   ├── deploy.md   ← 部署流程 Skill
+   │   └── migrate.md  ← 数据库迁移 Skill
+   ├── settings.json   ← 项目配置
+   └── CLAUDE.md      ← 项目规则文件</code></pre><p class='list-item'>*圖：Superpowers Skills 目錄結構 —— 全局Skills對所有項目生效，項目級Skills僅對當前項目生效*</p><p>MCP 是 Anthropic 推出的一個標準化協議，讓 AI 工具可以連接外部服務和數據源。你可以把 MCP 理解爲給 AI 裝"插件"或"擴展能力"。</p><p class='list-item'>**MCP 的概念：**</p><pre><code>AI 工具（Claude Code）
+   │
+   ├── 内置能力：读写文件、运行命令
+   │
+   └── MCP 扩展能力：
+      ├── GitHub MCP Server → 操作 GitHub（创建PR、管理Issue）
+      ├── Database MCP Server → 直接查询数据库
+      ├── Browser MCP Server → 浏览器自动化测试
+      └── 更多第三方 MCP Server...</code></pre><p class='list-item'>**MCP 与 Skill 的关系：**</p><p class='list-item'>- **Skill**定義了"做什麼、怎麼做"（流程和規範）</p><p class='list-item'>- **MCP**提供了"能力擴展"（讓AI能做更多事情）</p><p>兩者互補：你可以在 Skill 中調用 MCP 提供的能力。例如，一個"部署檢查 Skill"可以調用 GitHub MCP 來創建 PR。</p><p>提示：MCP 是一個進階主題。初學者可以先專注於 Skill 的編寫和使用，等熟練後再探索 MCP 擴展。</p><p class='list-item'>**實踐練習：**</p><p class='list-item'>-  使用 `npx skills add anthropics/skills@skill-creator -g`安装官方 skill-creator，体验用 AI 创建 Skill</p><p class='list-item'>- 浏览 SkillsMP（skillsmp.com/zh）或 skills.sh，找到3个感兴趣的社区 Skill 并阅读其 SKILL.md</p><p class='list-item'>- 創建一個項目初始化 Skill（包含 SKILL.md + resources/template/ 技術棧配置模板）</p><p class='list-item'>- 創建一個代碼審查 Skill（包含 SKILL.md + references/ 審查標準文檔）</p><p class='list-item'>- 將自定義 Skill 集成到 Claude Code 中並實際使用一次</p><p class='list-item'>- 用 Git 提交你的 Skill 目錄</p><p>前面看了 4 個案例，現在輪到你自己動手了。下面會帶你從零創建一個 Git 提交規範化 Skill，整個流程大約 10 分鐘。</p><p class='list-item'>**第 1 步：創建 Skill 目錄**</p><pre><code>mkdir -p .claude/skills/git-commit</code></pre><p class='list-item'>**第 2 步：编写 SKILL.md**</p><p>创建 <code>.claude/skills/git-commit/SKILL.md</code>，写入以下内容：</p><pre><code>---
+name: git-commit-standard
+version: 1.0
+description: 在提交代码时，自动生成符合 Conventional Commits 规范的 commit message
+trigger: [&quot;提交代码&quot;, &quot;git commit&quot;, &quot;生成commit&quot;]
+---
+# Git 提交规范化
+## 执行步骤
+1. 运行 `git diff --staged` 查看暂存区的修改
+2. 分析修改内容，判断变更类型：
+   - feat: 新功能
+   - fix: 修复Bug
+   - refactor: 重构（不改变功能）
+   - style: 样式修改
+   - docs: 文档更新
+   - test: 测试相关
+   - chore: 构建/工具变更
+3. 生成 commit message，格式：`&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;`
+4. 显示给用户确认后执行 `git commit`
+## 示例
+修改了 `src/components/Header.tsx` 中的导航样式
+生成的 message：</code></pre><h3>style(Header): 優化導航欄的響應式佈局</h3><p class='list-item'>**第 3 步：在 CLAUDE.md 中注册 Skill**</p><p>在項目根目錄的 <code>CLAUDE.md</code> 文件中添加以下內容，讓 Claude Code 知道這個 Skill 的存在：</p><pre><code>## 项目 Skills
+- `.claude/skills/git-commit/` — Git 提交规范化
+  执行相关任务时请先阅读对应 SKILL.md。</code></pre><p class='list-item'>**第 4 步：實際使用**</p><p class='list-item'>- 隨便修改項目中的某個文件（加幾行註釋或改個變量名即可）</p><p class='list-item'>- 運行 `git add .`暫存修改</p><p class='list-item'>- 在 Claude Code 中输入：</p><pre><code>请用 git-commit Skill 帮我生成 commit message 并提交</code></pre><p class='list-item'>- Claude Code 會自動讀取你的 SKILL.md，分析 `git diff --staged`的內容，生成類似`style(Header): 優化導航欄的響應式佈局`這樣的規範化提交信息</p><p>驗證：如果 Claude Code 自動讀取了你的 Skill、分析了 git diff、並生成了符合 Conventional Commits 格式的 commit message，說明你的 Skill 創建成功！</p><p class='list-item'>**第 5 步：用 Git 提交你的 Skill**</p><pre><code>git add .claude/skills/git-commit/
+git commit -m &quot;feat(skills): 新增 Git 提交规范化 Skill&quot;</code></pre><p>提示：將 Skill 目錄提交到 Git 倉庫後，團隊其他成員 pull 代碼後也能使用這個 Skill。這就是 Skill 的共享價值。</p><p>完成基礎練習後，試試這些挑戰來鞏固你的 Skill 創建能力：</p><p class='list-item'>-  修改 Git 提交 Skill，加入對**中文 commit message**的支持</p><p class='list-item'>-  參考 5.3.2 節，爲你當前的技術棧創建一個**組件生成 Skill**（React/Vue/任意框架）</p><p class='list-item'>-  參考 5.3.5 節，創建一個包含 `references/`的**代碼審查 Skill**，加入你團隊的編碼規範</p><p>驗證：如果你能獨立創建一個 Skill 並在 Claude Code 中成功觸發使用，恭喜完成第四部分！</p><p>學習目標：通過從零到一的完整項目開發，掌握AI編程的全流程</p><h3>完成標誌：獨立使用 Claude Code 完成一個可運行的全棧項目</h3><p>前面部分講完了理論知識，這一部分動手做個項目：</p><p>一個完整可運行的微型商城——覆蓋商品、用戶、購物車、訂單、後臺管理全模塊</p><p>提示：本章的每個步驟都包含完整的 Prompt（可直接複製使用）和驗證方法。你可以一邊閱讀一邊跟做。</p><h3>跟做的 6 條經驗</h3><p class='list-item'>- 把 Claude Code 當同事用 — 直接描述你想幹什麼，不用糾結措辭。越具體越好。</p><p class='list-item'>- 多用 /plan 模式 — 複雜任務先讓它出方案，你審覈後再動手，避免返工。</p><p class='list-item'>- 小步快跑 — 一個任務一個任務來，別一口氣提太多需求。</p><p class='list-item'>- 善用 CLAUDE.md — 放在項目根目錄，cc 會自動讀取，理解你的項目規範。</p><p class='list-item'>- 創建任務列表 — 多步驟任務告訴它"創建任務列表"，cc 會跟蹤進度不遺漏。</p><p class='list-item'>- 反饋很重要 — 它做錯了就說，它會記下來以後改進。</p><p>這是一個完整的全棧電商項目，也是本教程的</p><p>核心案例。你將在這個項目中從零構建一個可部署的 Web 應用，並依次體驗<code>/plan</code>、CLAUDE.md、Hook、Memory、Skill、<code>/review</code>、<code>/security-review</code>、多模型切換等 Claude Code 全部核心功能。</p><p>在項目一中，你學會了用 Claude Code 做一個帶 Web 界面的記賬工具——那只是熱身。本項目將帶你從零構建一個**真正可部署到互聯網的 Web 應用**：一個微型商城。</p><p>更重要的是，本項目將**全程演示 Claude Code 的 13 項核心功能**。你不只是學會做一個商城，你還將學會如何把 Claude Code 用到極致。</p><p>一個**微型電商網站**，包含：</p><pre><code>買家視角：瀏覽商品 → 搜索篩選 → 查看詳情 → 註冊登錄 → 加入購物車 → 下單 → 模擬支付 → 查看訂單
+管理員視角：商品管理（增刪改查）→ 訂單管理（狀態流轉）→ 分類管理</code></pre><p>提示：</p><p>爲什麼不用 MySQL/PostgreSQL？SQLite 是一個單文件數據庫，不需要安裝數據庫服務器，開箱即用。對於學習階段和原型項目，它是完美的選擇。如果將來需要遷移到 PostgreSQL，只需要改一行配置。</p><h3>本節目標：學會用&lt;code&gt;/plan&lt;/code&gt;模式讓 AI 在動手前先出方案</h3><p>演示的 Claude Code 功能：<code>/plan</code>模式、AskUserQuestion</p><p>新手最容易犯的錯誤是：上來就讓 AI 寫代碼。結果往往是 AI 寫了一堆，方向偏了，又要重來。</p><p><code>/plan</code> 模式的思路是**先想清楚再動手**：</p><pre><code>你說&quot;我要做什麼&quot;
+  → AI 探索代碼庫、理解現狀
+  → AI 出一個詳細方案
+  → 你審覈，確認方向正確
+  → AI 按方案分步實施</code></pre><p>這就像裝修之前先出設計圖——你不會讓裝修隊直接開砸吧？</p><p>在終端中進入項目目錄後，啓動 Claude Code：</p><pre><code>$ claude</code></pre><p>然後告訴它你的需求：</p><pre><code>我要做一個微型電商項目，叫 Mini Mall。
+技術棧用 Next.js 16 + TypeScript + Prisma 5 + SQLite + TailwindCSS 4。
+功能包括：
+- 商品瀏覽（列表、詳情、搜索、分類篩選）
+- 用戶註冊登錄
+- 購物車
+- 下單和訂單管理（模擬支付）
+- 後臺管理（商品CRUD、訂單管理、分類管理）
+請用 /plan 模式幫我做架構設計。</code></pre><p>Claude Code 會進入 plan 模式，提出幾個問題來確認你的需求（這就是 AskUserQuestion 功能），比如：</p><p class='list-item'>- 用什么语言？（TypeScript）</p><p class='list-item'>- 用什麼樣式方案？（TailwindCSS）</p><p class='list-item'>- 你是新手還是老手？（新手友好）</p><p>確認後，AI 會生成一份完整的架構方案，包括：</p><pre><code>數據庫設計：6 個表的 ER 關係圖
+頁面路由：10 個頁面的路徑和權限
+API 設計：18 個接口的請求/響應格式
+項目目錄結構：每個文件放哪裏
+實施步驟：按什麼順序開發</code></pre><p>AI 出的方案不是聖旨——你纔是決策者。仔細看一下：</p><p class='list-item'>- 數據庫設計合理嗎？（用戶-商品-購物車-訂單的關係是否清晰）</p><p class='list-item'>- 頁面路由符合預期嗎？（有沒有漏掉什麼頁面）</p><p class='list-item'>- 技術選型合適嗎？（有沒有過度設計）</p><p>確認無誤後，告訴 AI “可以開始”。</p><p>驗證：AI 輸出了包含數據庫設計、頁面路由、API 列表的完整方案，你審覈後表示同意。</p><p>本節目標：創建 Next.js 項目，生成 CLAUDE.md 讓 AI 始終理解你的項目</p><p>演示的 Claude Code 功能：<code>/init</code>、CLAUDE.md</p><p>在終端執行以下命令：</p><pre><code># 1. 进入工作目录
+cd ~/projects
+# 2. 用 create-next-app 创建项目（会自动安装依赖）
+npx create-next-app@latest mini-mall --typescript --tailwind --app --src-dir
+# 3. 进入项目目录
+cd mini-mall
+# 4. 安装额外依赖
+npm install prisma @prisma/client bcryptjs
+npm install -D tsx @types/bcryptjs</code></pre><p>注意：</p><p>避坑：項目路徑不要用中文，否則某些工具會出奇怪的問題。</p><pre><code># 初始化 Prisma，选择 SQLite 作为数据库
+npx prisma init --datasource-provider sqlite</code></pre><p>这个命令会创建 <code>prisma/schema.prisma</code> 文件和 <code>.env</code> 环境变量文件。</p><p>CLAUDE.md 是 Claude Code 最核心的概念之一。它是一個放在項目根目錄的 Markdown 文件，**每次你和 AI 對話時，AI 都會自動讀取它**。</p><p>你可以把 CLAUDE.md 理解爲給 AI 的"項目說明書"——裏面寫了：</p><p class='list-item'>- 用了什麼技術棧</p><p class='list-item'>- 文件怎麼組織的</p><p class='list-item'>- 命名規範是什麼</p><p class='list-item'>- 有什麼特殊的約定</p><p class='list-item'>**方式一：讓 AI 自動生成**</p><p>在 Claude Code 對話中輸入：</p><pre><code>/init</code></pre><p>AI 會掃描你的項目結構，自動生成一份 CLAUDE.md。</p><p class='list-item'>**方式二：自己寫（更精確）**</p><p>你可以在 CLAUDE.md 中寫任何你想讓 AI 記住的信息。以下是我們項目的 CLAUDE.md 內容：</p><pre><code># Mini Mall 项目规范
+## 技术栈
+- 框架：Next.js 16 (App Router) + TypeScript
+- 样式：TailwindCSS 4
+- 数据库：SQLite + Prisma 5
+- 认证：自制 Cookie Session + bcryptjs
+## 目录结构
+- src/app/ — 页面和 API
+- src/components/ — 可复用组件
+- src/lib/ — 工具函数
+- prisma/ — 数据库模型
+## 命名规范
+- 文件名：kebab-case（如 product-card.tsx）
+- 组件：PascalCase（如 ProductCard）
+- 函数：camelCase（如 getProducts）
+## 约定
+- 所有 UI 文案和注释用中文
+- 优先使用 Server Components
+- API 返回 JSON，错误返回 { error: string }</code></pre><p>提示：有了 CLAUDE.md，你不需要每次對話都重新解釋項目背景。AI 會自動讀取它，就像新同事入職時先看員工手冊一樣。</p><p>在 <code>prisma/schema.prisma</code> 中定義 6 個數據模型。以下是完整的模型定義：</p><pre><code>// 用户
+model User {
+  id      Int      @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  password  String
+  role     String    @default(&quot;USER&quot;)  // USER 或 ADMIN
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartItems CartItem[]
+  orders   Order[]
+}
+// 商品分类
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  slug    String   @unique      // URL 友好的英文标识
+  products Product[]
+}
+// 商品
+model Product {
+  id        Int       @id @default(autoincrement())
+  name      String
+  description String     @default(&quot;&quot;)
+  price      Float
+  image      String     @default(&quot;&quot;)
+  stock      Int       @default(0)
+  categoryId  Int
+  category   Category   @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+}
+// 购物车项
+model CartItem {
+  id      Int     @id @default(autoincrement())
+  userId   Int
+  productId Int
+  quantity  Int     @default(1)
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@unique([userId, productId])  // 同一用户同一商品只允许一条记录
+}
+// 订单
+model Order {
+  id      Int       @id @default(autoincrement())
+  userId   Int
+  status   String     @default(&quot;PENDING&quot;)
+  total    Float
+  createdAt DateTime   @default(now())
+  user     User      @relation(fields: [userId], references: [id])
+  items    OrderItem[]
+}
+// 订单明细
+model OrderItem {
+  id        Int    @id @default(autoincrement())
+  orderId    Int
+  productId   Int
+  productName String  // 下单时锁定商品名，防止后续改名影响历史订单
+  price      Float   // 下单时锁定价格
+  quantity   Int
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [productId], references: [id])
+}</code></pre><p>然後執行遷移：</p><pre><code># 生成 Prisma 客户端 + 创建数据库表
+npx prisma migrate dev --name init</code></pre><p>提示：Prisma 的<code>migrate dev</code>做了三件事：1）對比 schema 和數據庫；2）生成遷移 SQL 文件；3）應用到數據庫。這些遷移文件可以提交到 Git，團隊成員都能復現相同的數據庫結構。</p><p>空數據庫沒法開發。寫一個種子腳本，插入 12 個商品和 2 個測試用戶。</p><p>创建 <code>prisma/seed.ts</code>：</p><pre><code>import { PrismaClient } from &quot;@prisma/client&quot;;
+import bcrypt from &quot;bcryptjs&quot;;
+const prisma = new PrismaClient();
+async function main() {
+  // 创建 5 个分类
+  const categories = await Promise.all([
+   prisma.category.create({ data: { name: &quot;数码电子&quot;, slug: &quot;digital&quot; } }),
+   prisma.category.create({ data: { name: &quot;服装鞋帽&quot;, slug: &quot;clothing&quot; } }),
+   prisma.category.create({ data: { name: &quot;家居生活&quot;, slug: &quot;home&quot; } }),
+   prisma.category.create({ data: { name: &quot;食品饮料&quot;, slug: &quot;food&quot; } }),
+   prisma.category.create({ data: { name: &quot;图书教育&quot;, slug: &quot;books&quot; } }),
+  ]);
+  // 创建 12 个商品（代码略，见完整源码）
+  // ...
+  // 创建管理员和测试用户
+  const adminPassword = await bcrypt.hash(&quot;admin123&quot;, 10);
+  const userPassword = await bcrypt.hash(&quot;user123&quot;, 10);
+  await prisma.user.create({
+   data: { name: &quot;管理员&quot;, email: &quot;admin@example.com&quot;, password: adminPassword, role: &quot;ADMIN&quot; },
+  });
+  await prisma.user.create({
+   data: { name: &quot;测试用户&quot;, email: &quot;user@example.com&quot;, password: userPassword, role: &quot;USER&quot; },
+  });
+  console.log(&quot;种子数据创建完成！&quot;);
+}
+main().finally(() =&gt; prisma.$disconnect());</code></pre><p>在 <code>package.json</code> 中添加 seed 配置：</p><pre><code>&quot;prisma&quot;: {
+  &quot;seed&quot;: &quot;tsx prisma/seed.ts&quot;
+}</code></pre><p>執行：</p><pre><code>npx prisma db seed</code></pre><p>驗證：終端輸出 “種子數據創建完成”。數據庫中已有 5 個分類、12 個商品、2 個用戶。</p><p>本節目標：配置 Claude Code 的進階設置，讓開發更安全、更高效</p><p>演示的 Claude Code 功能：Hook 配置、權限模式、Memory 系統</p><p>Hook（鉤子）是 Claude Code 的一個強大功能——你可以在特定事件發生時（比如 AI 修改了文件），自動觸發一條命令。</p><p>在我們的項目中，創建一個 <code>.claude/settings.json</code> 文件：</p><pre><code>{
+  &quot;permissions&quot;: {
+   &quot;allow&quot;: [
+     &quot;Bash(npm run dev)&quot;,
+     &quot;Bash(npm run build)&quot;,
+     &quot;Bash(npx prisma *)&quot;,
+     &quot;Bash(npm install *)&quot;
+   ]
+  },
+  &quot;hooks&quot;: {
+   &quot;PostToolUse&quot;: [
+     {
+      &quot;matcher&quot;: &quot;Write|Edit&quot;,
+      &quot;hooks&quot;: [
+        {
+         &quot;type&quot;: &quot;command&quot;,
+         &quot;command&quot;: &quot;echo \&quot;文件已修改，建议检查一下改了什么\&quot;&quot;
+        }
+      ]
+     }
+   ]
+  }
+}</code></pre><p>解釋一下這段配置：</p><p class='list-item'>- `permissions.allow`</p><p class='list-item'>- `hooks.PostToolUse`</p><p>提示：Hook 可以做很多事——自動運行 Prettier 格式化代碼、自動運行 ESLint 檢查、甚至自動提交 Git。但初期不建議配置太多，夠用就好。</p><p>Claude Code 有三種權限模式，針對不同的場景：</p><p>注意：建議初期使用 Approve 模式。當 AI 要執行<code>rm -rf</code>、<code>git push --force</code>等危險操作時，它會強制要求確認——這是保護你的最後一道防線。</p><p>Memory 是 Claude Code 的持久化記憶系統。你可以讓 AI 記住：</p><p class='list-item'>- 你的技術偏好：“我喜歡用 TypeScript 嚴格模式”</p><p class='list-item'>- 項目約定：“這個項目用 TailwindCSS，不要寫 CSS 文件”</p><p class='list-item'>- 你踩過的坑：“上次用 Prisma 7 有兼容問題，這次用 Prisma 5”</p><p>在任何對話中，直接告訴 AI：</p><pre><code>請記住：我所有的項目都用 TypeScript 嚴格模式，UI 文案用中文，代碼註釋用中文。</code></pre><p>AI 會把這條信息存到持久化記憶中，以後的對話都會自動讀取。</p><p>驗證：後續對話中問 AI “我們之前約定過編碼規範嗎？”——AI 會從 Memory 中檢索並回答你。</p><p>本節目標：手把手創建你的第一個自定義 Skill，理解 Skill 的完整結構</p><p>演示的 Claude Code 功能：自定義 Skill、Skill 的四層目錄結構</p><p>在電商項目中，你會反覆做同樣的事情：</p><pre><code>商品需要 CRUD → 寫 Prisma 查詢 + API Route + 管理頁面
+分類需要 CRUD → 寫 Prisma 查詢 + API Route + 管理頁面
+訂單需要 CRUD → 寫 Prisma 查詢 + API Route + 管理頁面</code></pre><p>每次都是相似的代碼結構，只是換了個模型名。如果每次都讓 AI 從零寫，不僅慢，而且每次的代碼風格可能不一致。</p><p>Skill 就是解決這個問題的——**把重複的模式封裝成可複用的"標準操作流程"**。</p><p>一個完整的 Skill 是一個目錄，推薦放在 <code>.claude/skills/</code> 下：</p><pre><code>.claude/skills/api-crud-generator/
+├── SKILL.md           ← 核心：技能描述文件（必选）
+├── scripts/           ← 辅助脚本（可选）
+├── resources/         ← 模板和配置（可选）
+└── references/         ← 参考文档（可选）</code></pre><p>對於我們這個項目，只需要 <code>SKILL.md</code> 就夠了。</p><p>创建 <code>.claude/skills/api-crud-generator/SKILL.md</code>：</p><pre><code>---
+name: api-crud-generator
+version: 1.0
+description: 根據 Prisma 模型生成標準的 Next.js API Route + 前端管理頁面
+trigger: [&quot;生成CRUD&quot;, &quot;生成接口&quot;, &quot;生成管理頁面&quot;]
+---
+# API CRUD 生成器
+## 功能說明
+根據指定的 Prisma 模型，自動生成標準的管理後臺 CRUD 代碼：
+1. API Routes（5 個）：GET 列表、GET 詳情、POST 創建、PUT 更新、DELETE 刪除
+2. 前端頁面：數據列表頁、創建/編輯表單
+## 執行步驟
+### 第 1 步：確認模型信息
+詢問用戶：
+- 要生成的模型名稱（如 Product、Category）
+- API 路徑（如 /api/admin/products）
+- 頁面路由（如 /admin/products）
+### 第 2 步：生成 API Route Handlers
+按照標準模板生成以下文件：
+1. `route.ts` — GET 列表 + POST 創建
+2. `[id]/route.ts` — GET 詳情 + PUT 更新 + DELETE 刪除
+### 第 3 步：生成前端管理頁面
+生成一個包含以下功能的管理頁面：
+- 數據表格（列出所有字段）
+- &quot;新增&quot;按鈕 + 表單
+- 每行的&quot;編輯&quot;和&quot;刪除&quot;按鈕
+- TailwindCSS 樣式
+### 第 4 步：確認並驗證
+- 列出所有生成的文件
+- 提醒用戶執行 npx prisma generate（如果模型有變更）
+- 給出測試方法
+## 注意事項
+- 所有 UI 文案使用中文
+- 使用 Next.js App Router 的 params 語法
+- 創建和更新前做輸入驗證
+- 密碼字段永遠不通過 API 返回</code></pre><p>每個 Skill 文件包含兩部分：</p><p class='list-item'>**1. Frontmatter（文件头部的 YAML 元数据）**</p><pre><code>---
+name: 技能唯一名稱
+description: 一句話描述
+trigger: 觸發關鍵詞列表
+---</code></pre><p class='list-item'>- `name`：技能的唯一標識</p><p class='list-item'>- `description`：幫助 AI 判斷什麼時候該用這個技能</p><p class='list-item'>- `trigger`：當用戶消息包含這些關鍵詞時，AI 知道要加載這個 Skill</p><p class='list-item'>**2. 正文（Markdown 格式的指令）**</p><p>這是 AI 執行任務時會閱讀的"操作手冊"。寫得好壞直接決定 AI 的輸出質量。</p><p>提示：寫 Skill 時想象你在給一個聰明的實習生寫工作說明書——告訴他做什麼、用什麼工具、注意什麼坑。</p><p>創建好 Skill 後，在 Claude Code 對話中，你只需要這樣說：</p><pre><code>请用 api-crud-generator Skill 为 Category 模型生成管理后台代码。
+API 路径放在 /api/admin/categories，页面放在 /admin/categories。</code></pre><p>AI 会：</p><p class='list-item'>- 自動加載 SKILL.md 中的指令</p><p class='list-item'>- 按照步驟 1-4 的標準流程執行</p><p class='list-item'>- 生成符合項目規範的代碼</p><p>這就是 Skill 的威力——**一次編寫，反覆使用，標準統一**。</p><p>本節目標：完成商品的增刪查改全流程，學會用 Skill 加速開發</p><p>演示的 Claude Code 功能：自定义 Skill 实战、/review、官方 Skill</p><p>商品模塊是最核心的模塊，包含：</p><pre><code>后端 API        前端页面
+──────────      ──────────
+GET /api/products    →  首页商品列表（搜索 + 分类筛选 + 分页）
+GET /api/products/[id] →  商品详情页
+GET /api/categories   →  顶部导航的分类标签</code></pre><h3>（管理員接口稍後在 6.8 節實現）</h3><p>在 Claude Code 對話中輸入：</p><pre><code>請實現商品模塊的公開 API：
+1. GET /api/products — 商品列表，支持 search（模糊搜索）、category（按slug篩選）、page（分頁，每頁9條）
+2. GET /api/products/[id] — 商品詳情，包含關聯的分類信息
+3. GET /api/categories — 分類列表，包含每個分類下的商品數量
+然後實現前端頁面：
+1. 首頁 — 商品網格展示 + 搜索框 + 分類標籤切換 + 分頁
+2. 商品詳情頁 — 大圖 + 名稱/價格/描述/庫存 + &quot;加入購物車&quot;按鈕
+要求：
+- 用 Server Component 做數據獲取
+- 用 TailwindCSS 做樣式
+- UI 文案用中文
+- 參考 CLAUDE.md 中的項目規範</code></pre><p>AI 会：</p><p class='list-item'>- 讀取 CLAUDE.md 瞭解項目規範</p><p class='list-item'>- 讀取 Prisma schema 瞭解數據模型</p><p class='list-item'>- 按照你的要求生成代碼</p><p class='list-item'>- 告訴你每個文件的用途</p><p>每個模塊開發完後，用 <code>/review</code> 讓 AI 做一次代碼審查：</p><pre><code>/review</code></pre><p>AI 會檢查：</p><p class='list-item'>- 代碼是否符合項目規範</p><p class='list-item'>- 有沒有潛在的性能問題（如 N+1 查詢）</p><p class='list-item'>- 錯誤處理是否完善</p><p class='list-item'>- 類型定義是否正確</p><p>提示：<code>/review</code>類似於讓一個高級工程師幫你 Code Review。它可能不會發現所有問題，但能幫你揪出大部分低級錯誤。</p><p>本節目標：實現註冊登錄系統，理解認證的基本原理</p><p>演示的 Claude Code 功能：/security-review、多模型切换</p><p>我們用最簡單也最透明的認證方案——**Cookie Session**：</p><pre><code>註冊：用戶填郵箱+密碼 → bcrypt 哈希密碼 → 存入數據庫
+登錄：驗證郵箱+密碼 → 生成 session token → 寫入 Cookie
+鑑權：每次請求讀取 Cookie → 解析出用戶 ID → 判斷權限</code></pre><p>提示：</p><p>爲什麼不直接用 next-auth？next-auth 很強大，但它是"黑盒"——你不知道內部怎麼工作的。對於教學來說，自己實現一個簡易的認證系統，能看到每一步的細節，更容易理解認證的本質。學會原理後，再用 next-auth 也不遲。</p><p>在 Claude Code 中输入：</p><pre><code>请实现一个简易的用户认证系统：
+1. 创建 src/lib/auth.ts，包含以下函数：
+   - hashPassword(password) — 用 bcryptjs 哈希密码
+   - verifyPassword(password, hash) — 验证密码
+   - setSession(userId, role) — 把用户信息写入 httpOnly Cookie
+   - getSession() — 从 Cookie 读取当前用户信息
+   - getCurrentUser() — 获取当前用户的完整信息
+   - clearSession() — 清除 Cookie（退出登录）
+2. 实现 API：
+   - POST /api/auth/register — 注册（验证邮箱唯一性，密码至少6位）
+   - POST /api/auth/login — 登录（验证密码，写入session）
+   - GET /api/auth/me — 获取当前用户
+   - POST /api/auth/logout — 退出登录
+3. 实现前端页面：
+   - /login — 登录表单
+   - /register — 注册表单
+要求：
+- 密码用 bcryptjs 哈希存储，绝不能存明文
+- 登录失败时不要暴露&quot;用户不存在&quot;和&quot;密码错误&quot;的区别（防止撞库攻击）
+- Session Cookie 设置 httpOnly + sameSite + secure（生产环境）</code></pre><p>認證模塊涉及用戶數據安全。讓 AI 做一次安全檢查：</p><pre><code>/security-review</code></pre><p>AI 會檢查：</p><p class='list-item'>- 密碼是否正確哈希存儲（絕對不能明文）</p><p class='list-item'>- 有沒有 SQL 注入風險（Prisma 已經幫我們預防了）</p><p class='list-item'>- Session Cookie 的安全屬性是否正確</p><p class='list-item'>- 錯誤信息是否泄露了系統內部信息</p><p>注意：<code>/security-review</code>是一個參考性檢查，不能替代專業的安全審計。但它能幫你發現大部分常見的安全問題，是上線前的重要一步。</p><p>在這個項目中，你可以體驗多模型切換的實際收益：</p><p>切換模型只需一條命令：</p><pre><code>/model opus     ← 切换到 Opus，处理复杂逻辑
+/model sonnet   ← 切回 Sonnet，日常开发
+/model haiku    ← 切换到 Haiku，快速轻量任务</code></pre><p>提示：</p><p>省錢技巧：每天開發結束時，用<code>/cost</code>查看當天的 API 費用。如果發現賬單太高，下次更多用 Haiku 處理簡單任務。</p><h3>本節目標：實現電商的核心交易流程</h3><p>演示的 Claude Code 功能：Task 任務列表、複雜業務邏輯處理</p><p>購物車和訂單模塊涉及多個子任務。告訴 AI：</p><pre><code>請創建任務列表，跟蹤購物車和訂單模塊的開發進度。</code></pre><p>AI 會幫你拆分成：</p><pre><code>□ 購物車 API（GET、POST、PUT、DELETE）
+□ 購物車頁面（展示、修改數量、刪除、提交訂單）
+□ 訂單 API（GET 列表、GET 詳情、POST 下單）
+□ 訂單頁面（列表頁、詳情頁）
+□ 訂單狀態機（PENDING → PAID → SHIPPED → COMPLETED）</code></pre><p>每完成一項，AI 會自動標記爲完成，你隨時知道進度。</p><p>在 Claude Code 中输入：</p><pre><code>請實現購物車功能：
+API：
+- GET /api/cart — 獲取當前用戶的購物車（需登錄）
+- POST /api/cart — 加入購物車（productId + quantity）
+  - 如果購物車已有該商品，增加數量
+  - 檢查庫存，庫存不足返回錯誤
+- PUT /api/cart/[id] — 修改數量
+- DELETE /api/cart/[id] — 刪除某項
+前端頁面 /cart：
+- 列表展示購物車商品（圖片、名稱、單價、數量、小計）
+- 每項可以 + / - 調整數量，或刪除
+- 底部顯示總價，&quot;提交訂單&quot;按鈕
+- 未登錄時跳轉到登錄頁</code></pre><pre><code>請實現訂單功能：
+API：
+- POST /api/orders — 從購物車創建訂單
+  - 在數據庫事務中：創建訂單 → 扣減庫存 → 清空購物車
+  - 如果庫存不足，返回具體哪個商品缺貨
+- GET /api/orders — 我的訂單列表
+- GET /api/orders/[id] — 訂單詳情
+- PUT /api/orders/[id] — 模擬支付（PENDING → PAID）
+前端頁面：
+- /orders — 訂單列表（訂單號、金額、狀態標籤、時間）
+- /orders/[id] — 訂單詳情（商品明細、合計、狀態、模擬支付按鈕）
+訂單狀態流轉：
+PENDING（待付款）→ PAID（已支付）→ SHIPPED（已發貨）→ COMPLETED（已完成）
+                                               CANCELLED（已取消）← 可從任意狀態取消</code></pre><p class='list-item'>**爲什麼下單要用數據庫事務？**</p><p>下單涉及三個操作：創建訂單 + 扣減庫存 + 清空購物車。這三個操作必須**要麼全做，要麼全不做**。如果創建了訂單但庫存扣減失敗了——用戶付了錢但庫存沒減，後續會超賣。</p><p>Prisma 的事務寫法：</p><pre><code>const order = await prisma.$transaction(async (tx) =&gt; {
+  // 1. 创建订单
+  const newOrder = await tx.order.create({ data: { ... } });
+  // 2. 扣减库存
+  await tx.product.update({ where: { id }, data: { stock: { decrement: qty } } });
+  // 3. 清空购物车
+  await tx.cartItem.deleteMany({ where: { userId } });
+  return newOrder;
+});
+// 如果任何一步失败，前面已执行的操作会自动回滚</code></pre><p class='list-item'>**爲什麼訂單明細要存 productName 和 price？**</p><p>歷史訂單不應該受後續商品修改影響。如果一個月後商品改名或漲價，你的歷史訂單不應該跟着變。所以下單時把商品名和價格"快照"到 OrderItem 表裏。</p><p>本節目標：用 Skill 快速生成後臺 CRUD，實現管理功能</p><p>演示的 Claude Code 功能：自定義 Skill 的複用、權限校驗</p><p>還記得 6.4 節創建的 <code>api-crud-generator</code> Skill 嗎？現在它派上用場了：</p><pre><code>请用 api-crud-generator Skill 为后台管理生成以下模块：
+1. 商品管理 /admin/products
+   - API: GET/POST /api/admin/products
+   - API: PUT/DELETE /api/admin/products/[id]
+   - 页面：表格列表 + 新增/编辑表单
+2. 订单管理 /admin/orders
+   - API: GET /api/admin/orders（所有订单列表）
+   - API: PUT /api/admin/orders/[id]（更新订单状态）
+   - 页面：表格列表 + 状态流转按钮
+3. 分类管理 /admin/categories
+   - API: GET/POST /api/admin/categories
+   - API: DELETE /api/admin/categories/[id]
+   - 页面：列表 + 新增表单
+所有后台页面需要验证当前用户是否为 ADMIN 角色。</code></pre><p>提示：這就是 Skill 的價值——如果沒有 api-crud-generator，你需要爲三個模塊分別寫幾乎相同的 Prompt。有了 Skill，一句話就搞定了。</p><p>後臺頁面通過 Server Component 做權限校驗：</p><pre><code>// src/app/admin/page.tsx
+import { getCurrentUser } from &quot;@/lib/auth&quot;;
+import { redirect } from &quot;next/navigation&quot;;
+export default async function AdminPage() {
+  const user = await getCurrentUser();
+  if (!user || user.role !== &quot;ADMIN&quot;) {
+   redirect(&quot;/login&quot;);  // 非管理员直接跳转
+  }
+  // ... 页面内容
+}</code></pre><p>注意：**服務端校驗是必須的**。不能只在客戶端隱藏按鈕——用戶可以通過瀏覽器開發者工具直接調用 API。所以 API Route 裏也要做權限檢查（本項目簡化處理，實際生產環境每個管理 API 都應該做）。</p><p>後臺模塊完成後，更新 Navbar 組件：</p><p class='list-item'>- 未登錄時：顯示"登錄"按鈕</p><p class='list-item'>- 登錄後：顯示用戶名 + 購物車 + 我的訂單</p><p class='list-item'>- 管理員：額外顯示"後臺管理"入口</p><p class='list-item'>- 點擊"退出"：清除 Cookie，回到首頁</p><p>AI 能根據會話狀態動態展示導航菜單，提升用戶體驗。</p><p>本節目標：用 /review 和 /security-review 做最終檢查，回顧完整項目</p><p>演示的 Claude Code 功能：/review、/security-review、Git 工作流</p><p>所有功能完成後，做一次完整的安全檢查：</p><pre><code>/security-review</code></pre><p>AI 會從多個維度檢查：</p><p>注意：AI 的安全審查不能替代專業安全審計。如果是真的上線的項目，還需要做滲透測試、依賴漏洞掃描等。</p><pre><code>/review</code></pre><p>AI 會給出代碼質量報告，包括：</p><p class='list-item'>- 代碼風格是否一致</p><p class='list-item'>- 有沒有未使用的變量/導入</p><p class='list-item'>- 有沒有潛在的運行時錯誤</p><p class='list-item'>- 改進建議</p><p>看看我們一路走來的提交歷史：</p><pre><code>git log --oneline</code></pre><p>理想情況下，你應該看到類似這樣的提交歷史：</p><pre><code>a1b2c3d feat: 後臺管理模塊（商品/訂單/分類 CRUD）
+d4e5f6g feat: 購物車 + 訂單模塊
+g7h8i9j feat: 用戶認證模塊（註冊/登錄/Session）
+j0k1l2m feat: 商品模塊（API + 前端頁面）
+m3n4o5p feat: 數據庫模型 + 種子數據
+p6q7r8s chore: 項目初始化</code></pre><p>每個功能一個 commit，提交信息清晰明瞭。這就是良好的 Git 實踐。</p><p>提示：用 AI 開發時，養成一個習慣——在讓 AI 做大改動之前，先。這樣即使 AI 改壞了，你也能隨時回到上一個正確的版本。這是無數 AI 編程老手的血淚經驗。<code>git add . && git commit</code></p><pre><code># 1. 进入项目
+cd mini-mall
+# 2. 安装依赖
+npm install
+# 3. 初始化数据库
+npx prisma migrate dev
+npx prisma db seed
+# 4. 启动开发服务器
+npm run dev
+# 5. 浏览器打开 http://localhost:3000</code></pre><p>測試賬號：</p><p class='list-item'>- 管理员：`admin@minimall.com`/`admin123`</p><p class='list-item'>- 用户：`user@example.com`/`user123`</p><pre><code>1. 打開首頁 → 看到 12 個商品，按分類篩選，搜索
+2. 點擊商品 → 查看詳情
+3. 註冊新賬號 → 登錄
+4. 加入購物車 → 修改數量 → 刪除某項
+5. 提交訂單 → 查看訂單列表 → 點擊&quot;模擬支付&quot;
+6. 退出 → 管理員登錄 → 訪問 /admin
+7. 後臺添加商品 → 編輯商品 → 管理訂單狀態</code></pre><p>完成了這個複雜項目，你已經掌握了 Claude Code 的核心用法。接下來進入第六部分——**獨立實戰**。從項目列表中選擇一個你感興趣的項目，不再依賴詳細的 Prompt，自己規劃、自己驅動。你準備好了。</p><p>如果你在獨立實戰中遇到問題，記住這個口訣：</p><pre><code>先想清楚再問 AI（/plan）
+讓 AI 知道項目背景（CLAUDE.md）
+小步快跑逐個來（Task）
+做完一步存一步（Git commit）</code></pre><p>學習目標：運用前五部分學到的方法，獨立完成至少一個適合 Vibe Coding 的真實項目</p><p>完成標誌：獨立完成一個項目，能運行、能展示、能部署，並能寫出清晰的覆盤說明</p><p>恭喜你走到了這裏！前面的章節是"師傅領進門"，這一部分是"修行在個人"。</p><p>從現在開始，你需要**自己選擇項目**、**自己驅動 AI 完成開發**。你可以使用 Claude Code，也可以使用 Codex Desktop，甚至兩者配合：Claude Code 負責深度編碼和代碼審查，Codex 負責文件整理、部署、自動化和桌面操作。</p><p class='list-item'>**獨立開發流程（複用第五部分的方法論）：**</p><pre><code>1. 選擇項目 → 寫一句話描述
+2. 用AI生成PRD → 人工審查修改
+3. 用AI生成SPEC → 確認技術方案
+4. 創建CLAUDE.md → 建立項目上下文
+5. 骨架搭建 → 驗證可運行
+6. 逐功能開發 → 每個功能一個commit
+7. Code Review + 測試
+8. 部署上線
+9. 覆盤總結</code></pre><p>不要只選“看起來高級”的項目。適合 Vibe Coding 的項目，最好滿足三個條件：</p><p class='list-item'>- **需求能用一句話說清楚**：比如“給我做一個可以記錄支出的記賬工具”。</p><p class='list-item'>- **有可視化結果**：頁面、圖表、報表、文件、部署鏈接都可以，方便你驗收。</p><p class='list-item'>- **邊界不太大**：第一版最好 3 天到 2 周能做完，不要一上來就做完整 SaaS。</p><p>Claude Code 和 Codex 的分工可以這樣理解：</p><p>初級項目的目標不是“技術多複雜”，而是完整跑通：需求 → 計劃 → 實現 → 驗收 → 部署 → 覆盤。</p><p>中級項目建議每個功能單獨提交一次 Git。讓 AI 做實現，你負責檢查業務邏輯是否真的閉環。</p><p>進階項目不要一次性全做。先做“最小可用版本”，再用 AI 幫你列第二階段路線圖。</p><p>如果你不知道從哪個開始，優先選下面五個。它們最適合訓練 Claude Code 和 Codex 的 Vibe Coding 工作流。</p><p class='list-item'>**通用开场 Prompt：**</p><pre><code>我想做一個「項目名稱」。請先不要寫代碼。
+請你先完成三件事：
+1. 用小白能看懂的話整理 PRD；
+2. 拆成 3-5 個開發階段；
+3. 告訴我第一版最小可用功能應該包含什麼。
+等我確認後，再開始創建項目文件。</code></pre><p>當你完成了一個項目並想分享給社區時：</p><p class='list-item'>**一個好的 GitHub 開源項目需要：**</p><p class='list-item'>- **README.md**：項目介紹、功能截圖、安裝使用說明</p><p class='list-item'>- **LICENSE**：開源協議（推薦 MIT 協議）</p><p class='list-item'>- **.gitignore**：確保不提交敏感信息</p><p class='list-item'>- **Contributing 指南**（可選）：告訴別人如何參與貢獻</p><p>你可以讓 Claude Code 幫你生成這些文件：</p><pre><code>&gt; 請爲這個項目生成一個完整的 README.md，包含：
+&gt; - 項目介紹和功能截圖位置
+&gt; - 技術棧
+&gt; - 本地開發環境搭建步驟
+&gt; - 使用說明
+&gt; - MIT License 聲明</code></pre><p>學習目標：認識 Codex Desktop 的產品定位，完成安裝配置，並掌握在真實項目中使用桌面 Agent 的基本方法。</p><p>完成標誌：你能獨立創建 Codex 項目、授權它讀取本地文件、讓它執行命令、管理記憶與插件，並知道什麼時候應該交給 Codex、什麼時候需要自己把關。</p><p>前面幾部分我們重點學習了 Claude Code、Skills、MCP 和項目實戰。到了這一部分，我們換一個視角：用 OpenAI 的 Codex Desktop 來理解“桌面 Agent”到底能幫我們做什麼。</p><p>不要把 Codex 只理解成一個聊天窗口。它更像是運行在你電腦旁邊的執行型助手：能讀項目文件、調用終端、創建文檔、部署網站、連接外部服務，也能在你授權後完成一些跨軟件的操作。本章的重點不是把每個按鈕背下來，而是建立一套使用桌面 Agent 的工作習慣。</p><p>Codex 和 Claude Code 都屬於編程 Agent，但二者的側重點不完全一樣。Claude Code 以終端開發工作流起家，現在也有 IDE、Desktop 和 Web 入口，適合深度編碼、代碼審查、複雜重構；Codex Desktop 更強調圖形界面、本地項目管理、插件連接和日常自動化，對零基礎用戶更友好。</p><p>實際選型可以簡單一點：</p><p class='list-item'>- **剛入門，害怕終端**：優先從 Codex Desktop 開始。</p><p class='list-item'>- **已經在做工程項目**：Claude Code 和 Codex 可以一起用，一個偏深度開發，一個偏日常執行。</p><p class='list-item'>- **要處理文件、部署、安裝軟件、定時任務**：Codex Desktop 的桌面形態會更順手。</p><p class='list-item'>- **要做複雜代碼設計和長鏈路重構**：Claude Code 的工程化體驗通常更適合。</p><p>不必糾結“只能選誰”。Agent 工具之間不是互斥關係，關鍵是讓不同工具承擔它擅長的工作。</p><p>使用 Codex Desktop 需要 ChatGPT 賬號。免費賬號通常也可以體驗，但額度和能力會受限制；付費套餐的可用額度更多，適合高頻使用。具體價格、額度和模型名稱會隨官方策略變化，正式使用前以 OpenAI 頁面顯示爲準。</p><p>官方下載入口：</p><pre><code>https://chatgpt.com/codex/download</code></pre><p>下載完成後按安裝嚮導操作即可。首次啓動時，系統可能會詢問你的主要用途，例如日常辦公、學習或編程。這個選擇只是爲了初始化體驗，不需要太緊張，後面可以繼續調整。</p><p>Codex Desktop 的界面大體可以分成三塊：</p><p>第一次打開時，不需要把所有入口都研究一遍。建議先創建一個測試項目，用一個無風險的小任務熟悉流程，例如“幫我整理這個文件夾裏的 Markdown 文件標題”。桌面 Agent 的學習方式和傳統軟件不同，邊交代任務邊觀察它如何申請權限、如何拆解步驟，會比單純看菜單更快。</p><p>Codex 能讀寫本地文件、執行命令、連接插件，所以權限設置非常重要。它不是普通聊天機器人，而是可能真正改變你電腦文件狀態的執行工具。</p><p>新手建議從**自動審查模式**開始。它能減少頻繁彈窗，又不會完全放開高風險操作。對於公司代碼、客戶資料、生產配置等重要目錄，建議切換到更謹慎的模式，並在執行前要求 Codex 先給出計劃。</p><p>一個好習慣是：</p><pre><code>先讓 Codex 說明它準備讀哪些文件、改哪些文件、執行哪些命令，再讓它動手。</code></pre><p>Codex Desktop 的“項目”本質上對應你電腦上的一個文件夾。你選擇了某個文件夾，它才能在授權範圍內讀取、分析和修改裏面的內容。</p><p>進入項目工作區後，Codex 會把該文件夾視爲當前任務的主要上下文。它可以根據文件內容回答問題，也可以生成、移動、重命名或修改文件。</p><p>適合練習的任務包括：</p><p class='list-item'>- 批量整理課程資料文件名</p><p class='list-item'>- 把零散筆記合併成一份 Markdown 文檔</p><p class='list-item'>- 根據圖片或視頻素材生成清單</p><p class='list-item'>- 檢查項目目錄結構是否混亂</p><p class='list-item'>- 把已有文檔改寫成更適合發佈的版本</p><p>建議一開始用副本文件夾測試，確認行爲符合預期後，再讓 Codex 處理正式資料。</p><p>一個項目裏可以並行存在多個會話。你可以讓一個會話分析需求，讓另一個會話整理文檔，也可以把不同任務拆開，避免上下文互相干擾。</p><p>不過，並行不等於隨意。涉及同一批文件的任務，最好避免同時修改，否則容易出現覆蓋或衝突。更穩妥的做法是：一個會話負責寫，另一個會話只負責審查或給建議。</p><p>Codex 在項目中生成的 Markdown、圖片、PDF、PPT、代碼文件等，都會保存到你的本地文件夾裏。這一點很關鍵：它不是隻在聊天記錄裏給你一段文本，而是能把結果變成真實文件。</p><p>記住一句話：項目文件夾既是 Codex 的工作臺，也是它能看見的主要上下文。</p><p>Codex 可以在你授權後運行終端命令。對非技術用戶來說，這個能力尤其有價值，因爲很多開發環境配置、依賴安裝和部署操作，本質上都是一串命令。</p><p>例如你可以直接說：</p><pre><code>請檢查我電腦上是否已經安裝 Node.js 和 Git。如果沒有，請給出安裝方案，確認後再執行。</code></pre><p>相比直接說“幫我安裝”，更推薦加上“先檢查、再說明、確認後執行”。這樣你可以知道它準備做什麼，也能避免重複安裝或裝錯版本。</p><p>當你想安裝某個新工具、CLI 或 Agent 時，可以讓 Codex 先搜索官方文檔，再根據系統環境選擇安裝方式。例如：</p><pre><code>幫我安裝 Hermes。請優先查官方倉庫或官方文檔，安裝後驗證版本，並告訴我啓動方式。</code></pre><p>這個提示詞比單純一句“幫我裝一下”更可靠，因爲它明確要求了來源、驗證和交付結果。</p><p>對於不太知名的工具，最好把 GitHub 倉庫、官網文檔或安裝說明鏈接直接發給 Codex。這樣能減少它誤判同名項目的概率。</p><pre><code>這是我要安裝的 Skill 倉庫鏈接：xxx。請閱讀 README，說明安裝位置和啓用方式，確認後再修改我的配置。</code></pre><p>Codex 支持同時運行多個任務，但不建議把多個會寫同一目錄的任務同時放出去。可以並行的任務通常有這些：</p><p class='list-item'>- 一個任務安裝工具，另一個任務閱讀文檔</p><p class='list-item'>- 一個任務生成方案，另一個任務做資料整理</p><p class='list-item'>- 一個任務部署項目，另一個任務準備發佈文案</p><p>涉及同一份代碼或同一批文件時，先排隊，再執行，會更穩。</p><p>對話越長，模型需要攜帶的歷史信息越多。Codex 會用界面上的上下文指示器提醒你當前會話的佔用情況。當上下文接近上限時，它可能會自動壓縮歷史。</p><p>一個任務完成後，也可以主動讓它總結當前狀態：</p><pre><code>請把當前項目進展、已修改文件、未完成事項和下一步建議壓縮成一份簡短摘要。</code></pre><p>如果界面支持斜槓命令，也可以使用對應的壓縮或狀態命令。命令名稱可能會隨版本變化，按你當前客戶端顯示爲準。</p><p>額度通常可以在設置或狀態面板中查看。有些版本也支持在對話中通過狀態命令顯示當前會話的上下文、短週期額度和週期額度。</p><p>這裏要注意兩點：</p><p class='list-item'>- 複雜任務、長上下文、高速模式或高推理強度通常會消耗更多額度。</p><p class='list-item'>- 額度、刷新週期和套餐權益會變化，不建議在教程裏寫死太多數字。</p><p>日常文件整理、文檔改寫、簡單腳本，可以選擇默認或中等智能程度。涉及架構設計、複雜調試、跨文件重構時，再提高模型能力或推理強度。</p><p>一個實用原則是：</p><pre><code>低風險任務追求速度，高風險任務追求可解釋和可確認。</code></pre><p>Codex 的持久記憶可以分成兩類：一類是你主動寫下來的規則，另一類是系統自動總結的記憶。對教程學習者來說，最值得掌握的是 <code>agents.md</code>。</p><p>全局規則適合存放跨項目都適用的偏好，例如：</p><pre><code>- 默認使用中文回答。
+- 修改文件前先說明計劃。
+- 重要操作前先列出影響範圍。
+- 文檔改寫時保留原意，不製造未經確認的數據。</code></pre><p>這些規則相當於你對 Codex 的長期工作約定。寫得越清楚，後續溝通成本越低。</p><p>項目級 <code>agents.md</code> 只服務當前項目，適合記錄技術棧、目錄結構、運行命令、測試方式、提交規範和禁止事項。</p><p>推薦在項目初步成型後，讓 Codex 讀取項目並生成一版草稿：</p><pre><code>請閱讀當前項目結構，幫我生成一份項目級 agents.md。內容包括技術棧、常用命令、目錄說明、開發約束和測試要求。先給我預覽，不要直接寫入。</code></pre><p>審覈通過後再寫入，比一開始憑空寫規則更貼合實際。</p><p>自動記憶適合作爲補充，不適合作爲唯一依賴。它可能會根據對話和任務自動總結信息，但觸發時機、記錄內容和召回方式不一定完全可控。</p><p>明確、穩定、重要的要求，仍然建議寫進 <code>agents.md</code>；臨時偏好和低風險背景，可以交給自動記憶輔助。</p><p>做複雜任務時，不要急着讓 Codex 直接寫文件。先進入計劃模式，讓它把需求拆開、列出步驟、說明風險，再決定是否執行。</p><p>你可以創建一個空項目，輸入：</p><pre><code>我想做一個個人主頁。請先用計劃模式和我確認目標用戶、內容模塊、視覺風格、技術棧和部署方式，不要立刻寫代碼。</code></pre><p>Codex 通常會追問你一些選擇題或開放問題，例如頁面內容、風格偏好、是否需要響應式、是否部署等。你確認方案後，它再開始初始化項目。</p><p>當 Codex 生成過程中方向不對，不需要等它全部做完再說。你可以直接補充：</p><pre><code>當前風格太像營銷頁了，請改成更像作品集：少用大段宣傳語，多展示項目和聯繫方式。</code></pre><p>很多時候，反饋會在下一輪工具調用前被加入上下文。這樣既保留了當前進度，也能及時修正方向。</p><p>如果前半段討論很有價值，但後面走偏了，可以從某條回覆 Fork 出一個新會話。它相當於從歷史分岔點重新開始，適合保留前面已經整理好的需求、方案和約束。</p><p>前端項目尤其適合使用內置預覽。你可以邊看頁面邊提出修改意見，有些版本還支持直接在預覽區域批註具體元素。</p><p>修改頁面時，儘量給 Codex 可執行的反饋：</p><p class='list-item'>- “按鈕太靠下，移動到首屏右上角”</p><p class='list-item'>- “移動端標題換行不好看，請調整字號和寬度”</p><p class='list-item'>- “這張圖與主題不符，請換成更貼近產品的圖片”</p><p>比起“優化一下”，這類反饋更容易得到穩定結果。</p><p>插件的作用，是讓 Codex 連接外部平臺和工具。不同版本、賬號和系統環境下可見插件可能不同，但常見方向大致包括部署、瀏覽器操作、代碼託管和外部應用連接。</p><p>以前端項目爲例，可以讓 Codex 先檢查構建命令，再連接部署平臺：</p><pre><code>請檢查這個項目是否可以部署到 Netlify。先運行構建驗證，說明需要的環境變量和部署步驟，確認後再連接插件執行部署。</code></pre><p>部署完成後，讓它返回訪問鏈接、構建日誌摘要和後續維護建議。</p><p>瀏覽器能力很適合做網頁驗證、後臺配置、資料蒐集和表單測試。但涉及賬號、付款、刪除、提交審批等敏感動作時，一定要求 Codex 停下來讓你確認。</p><p>可以加一條長期規則：</p><pre><code>凡是涉及登錄、付款、刪除、發佈、提交表單的操作，必須先說明影響並等待我確認。</code></pre><p>Skills 是把可複用流程沉澱下來的機制。前面我們已經詳細講過 Skills，在 Codex 中也可以用類似思路：把高頻、穩定、步驟清晰的任務封裝成技能。</p><p>適合做成 Skill 的任務包括：</p><p class='list-item'>- 每週生成技術資訊摘要</p><p class='list-item'>- 把課堂錄音整理成講義</p><p class='list-item'>- 檢查前端頁面的響應式問題</p><p class='list-item'>- 根據固定模板生成項目週報</p><p class='list-item'>- 按統一標準潤色課程文檔</p><p>創建 Skill 有兩種常用路徑。</p><p class='list-item'>**第一種：先描述目標，讓 Codex 幫你起草。**</p><pre><code>我想創建一個“課程文檔潤色”Skill，用於把口語稿改成正式教程。請先和我確認輸入、輸出、規則和示例。</code></pre><p class='list-item'>**第二種：先跑通一次真實任務，再沉澱。**</p><p>這種方式更推薦。因爲你已經知道流程中哪些步驟有效、哪些檢查必須保留，生成出來的 Skill 會更實用。</p><p>MCP 可以理解爲讓 Agent 連接外部數據源或工具服務的一種協議。對於初學者，不需要一開始就深入配置細節，先知道它解決什麼問題即可：當 Codex 需要訪問某個外部知識庫、數據庫、文檔系統或業務工具時，MCP 可能就是連接方式之一。</p><p>安裝 MCP 時建議遵循三個原則：</p><p class='list-item'>- 優先使用官方文檔或可信倉庫。</p><p class='list-item'>- 安裝前讓 Codex 說明配置文件位置、權限範圍和憑據保存方式。</p><p class='list-item'>- 安裝後用一個最小任務驗證是否真的連通。</p><p>示例提示詞：</p><pre><code>請根據這個 MCP 官方文檔幫我完成配置。先說明它會訪問哪些數據、需要哪些密鑰、配置會寫到哪裏，等我確認後再執行。</code></pre><p>自動化任務的價值，不是“定個鬧鐘讓 AI 說一句話”，而是把一套可重複流程交給 Agent 定時執行。</p><p>例如：</p><p class='list-item'>- 每週一彙總 GitHub 趨勢項目，生成中文推薦稿</p><p class='list-item'>- 每天早上檢查網站是否可訪問，並整理異常日誌</p><p class='list-item'>- 每三天彙總課程資料文件夾，生成新增內容清單</p><p class='list-item'>- 每週生成一次學習進度報告</p><p>你可以在自動化面板裏手動創建，通常需要填寫任務提示詞、觸發時間、模型和推理強度。</p><p>也可以直接在對話中描述：</p><pre><code>請幫我創建一個自動化任務：每週一上午 9 點，讀取我的項目資料文件夾，生成一份本週新增資料摘要。創建前先展示任務內容、執行頻率和輸出格式。</code></pre><p>自動化任務要特別注意邊界：它會在你不盯着屏幕的時候運行，所以提示詞必須寫清楚輸入來源、允許做什麼、禁止做什麼、結果發到哪裏。</p><p>部分版本支持通過 ChatGPT 手機 App 連接電腦上的 Codex，從手機端發起任務。這個能力適合臨時下發輕量任務，例如讓家裏電腦繼續整理資料、檢查項目狀態或生成草稿。</p><p>一般流程是：</p><p class='list-item'>- 手機 ChatGPT 和電腦 Codex 都更新到支持該功能的版本。</p><p class='list-item'>- 在手機端進入 Codex 入口。</p><p class='list-item'>- 按提示完成電腦端配對。</p><p class='list-item'>- 在電腦上確認允許該設備遠程控制。</p><p>遠程控制的便利性很高，但也意味着風險更高。建議只對可信設備開啓，並避免在手機端隨手發起刪除、部署、付款、批量修改等高影響操作。</p><p>這一部分我們從“會安裝”走到了“會安排任務”。Codex Desktop 的核心能力可以壓縮成這張表：</p><p>學完本章，請記住兩件事。</p><p>第一，Codex 不是“更會聊天的搜索框”，而是可以在你電腦上執行任務的工作代理。它能節省時間，也需要你設定邊界。</p><p>第二，使用 Agent 的能力不只在於會提問，更在於會管理：給清楚的目標，提供必要上下文，要求它先計劃，執行中及時糾偏，最後驗收結果。你越會管理任務，AI 編程工具越能發揮價值。</p><p class='list-item'>**Codex 和 Claude Code 怎么搭配？**</p><pre><code>我要創建一個 [項目類型] 項目。
+項目名稱：[名稱]
+簡述：[一句話描述]
+技術棧：[前端框架] + [後端框架] + [數據庫]
+核心功能（MVP）：
+1. [功能1]
+2. [功能2]
+3. [功能3]
+請先創建項目結構和基礎配置文件，暫不實現具體功能。</code></pre><pre><code>請在 [指定目錄/文件] 中實現 [功能名稱]。
+具體需求：
+1. [需求點1]
+2. [需求點2]
+3. [需求點3]
+技術約束：
+- 參考 [已有文件/模塊] 的風格
+- 使用 [指定技術/庫]
+- 返回格式遵循 [項目約定的格式]
+請先說明實現計劃，確認後再開始編碼。</code></pre><pre><code>發現一個Bug，需要修復：
+現象：[實際看到的行爲]
+期望：[應該是什麼行爲]
+復現步驟：
+1. [步驟1]
+2. [步驟2]
+錯誤信息：
+[粘貼完整的錯誤堆棧]
+我已經嘗試過：[你嘗試的解決方案]
+請定位問題原因並修復。</code></pre><pre><code>請對 [文件路徑或範圍] 進行代碼審查。
+審查重點：
+1. 安全性（輸入驗證、XSS防護、SQL注入）
+2. 錯誤處理（異常是否被正確捕獲和處理）
+3. 性能（是否有明顯的性能問題）
+4. 代碼質量（可讀性、命名規範、重複代碼）
+請按嚴重程度分級：Critical / Warning / Info
+並給出具體的修復建議。</code></pre><pre><code>我需要設計一個 [系統/功能] 的架構。
+業務需求：[描述]
+性能要求：[QPS/響應時間/併發用戶數]
+技術約束：[必須使用的技術/限制條件]
+請給出：
+1. 系統架構圖（文字描述即可）
+2. 技術選型建議及理由
+3. 數據模型設計
+4. API 接口設計
+5. 潛在的技術風險和應對方案</code></pre><p>結語請記住五個核心原則：</p><p>動手大於閱讀—— 學到的知識必須通過實踐才能變成技能
+項目驅動學習—— 帶着目標去學，效率最高
+擁抱錯誤—— AI會犯錯，你也會，但每次錯誤都是學習
+持續迭代—— 先做出來，再做好，沒有一步到位的完美
+記錄與分享—— 把經驗寫下來，分享出去，幫助他人也鞏固自己AI編程領域發展極快，保持學習的節奏，關注新工具和新技術。</p><p>祝你在AI編程的世界裏，創造出令自己驕傲的作品！</p><p class='list-item'>*本教程中的價格、版本信息已在 2026-05-18 做過一次覈對，請以各服務商官網最新信息爲準。*</p><p>符，請換成更貼近產品的圖片”</p><p>比起“優化一下”，這類反饋更容易得到穩定結果。</p><p>插件的作用，是讓 Codex 連接外部平臺和工具。不同版本、賬號和系統環境下可見插件可能不同，但常見方向大致包括部署、瀏覽器操作、代碼託管和外部應用連接。</p><p>以前端項目爲例，可以讓 Codex 先檢查構建命令，再連接部署平臺：</p><pre><code>請檢查這個項目是否可以部署到 Netlify。先運行構建驗證，說明需要的環境變量和部署步驟，確認後再連接插件執行部署。</code></pre><p>部署完成後，讓它返回訪問鏈接、構建日誌摘要和後續維護建議。</p><p>瀏覽器能力很適合做網頁驗證、後臺配置、資料蒐集和表單測試。但涉及賬號、付款、刪除、提交審批等敏感動作時，一定要求 Codex 停下來讓你確認。</p><p>可以加一條長期規則：</p><pre><code>凡是涉及登錄、付款、刪除、發佈、提交表單的操作，必須先說明影響並等待我確認。</code></pre><p>Skills 是把可複用流程沉澱下來的機制。前面我們已經詳細講過 Skills，在 Codex 中也可以用類似思路：把高頻、穩定、步驟清晰的任務封裝成技能。</p><p>適合做成 Skill 的任務包括：</p><p class='list-item'>- 每週生成技術資訊摘要</p><p class='list-item'>- 把課堂錄音整理成講義</p><p class='list-item'>- 檢查前端頁面的響應式問題</p><p class='list-item'>- 根據固定模板生成項目週報</p><p class='list-item'>- 按統一標準潤色課程文檔</p><p>創建 Skill 有兩種常用路徑。</p><p class='list-item'>**第一種：先描述目標，讓 Codex 幫你起草。**</p><pre><code>我想創建一個“課程文檔潤色”Skill，用於把口語稿改成正式教程。請先和我確認輸入、輸出、規則和示例。</code></pre><p class='list-item'>**第二種：先跑通一次真實任務，再沉澱。**</p><p>這種方式更推薦。因爲你已經知道流程中哪些步驟有效、哪些檢查必須保留，生成出來的 Skill 會更實用。</p><p>MCP 可以理解爲讓 Agent 連接外部數據源或工具服務的一種協議。對於初學者，不需要一開始就深入配置細節，先知道它解決什麼問題即可：當 Codex 需要訪問某個外部知識庫、數據庫、文檔系統或業務工具時，MCP 可能就是連接方式之一。</p><p>安裝 MCP 時建議遵循三個原則：</p><p class='list-item'>- 優先使用官方文檔或可信倉庫。</p><p class='list-item'>- 安裝前讓 Codex 說明配置文件位置、權限範圍和憑據保存方式。</p><p class='list-item'>- 安裝後用一個最小任務驗證是否真的連通。</p><p>示例提示詞：</p><pre><code>請根據這個 MCP 官方文檔幫我完成配置。先說明它會訪問哪些數據、需要哪些密鑰、配置會寫到哪裏，等我確認後再執行。</code></pre><p>自動化任務的價值，不是“定個鬧鐘讓 AI 說一句話”，而是把一套可重複流程交給 Agent 定時執行。</p><p>例如：</p><p class='list-item'>- 每週一彙總 GitHub 趨勢項目，生成中文推薦稿</p><p class='list-item'>- 每天早上檢查網站是否可訪問，並整理異常日誌</p><p class='list-item'>- 每三天彙總課程資料文件夾，生成新增內容清單</p><p class='list-item'>- 每週生成一次學習進度報告</p><p>你可以在自動化面板裏手動創建，通常需要填寫任務提示詞、觸發時間、模型和推理強度。</p><p>也可以直接在對話中描述：</p><pre><code>請幫我創建一個自動化任務：每週一上午 9 點，讀取我的項目資料文件夾，生成一份本週新增資料摘要。創建前先展示任務內容、執行頻率和輸出格式。</code></pre><p>自動化任務要特別注意邊界：它會在你不盯着屏幕的時候運行，所以提示詞必須寫清楚輸入來源、允許做什麼、禁止做什麼、結果發到哪裏。</p><p>部分版本支持通過 ChatGPT 手機 App 連接電腦上的 Codex，從手機端發起任務。這個能力適合臨時下發輕量任務，例如讓家裏電腦繼續整理資料、檢查項目狀態或生成草稿。</p><p>一般流程是：</p><p class='list-item'>- 手機 ChatGPT 和電腦 Codex 都更新到支持該功能的版本。</p><p class='list-item'>- 在手機端進入 Codex 入口。</p><p class='list-item'>- 按提示完成電腦端配對。</p><p class='list-item'>- 在電腦上確認允許該設備遠程控制。</p><p>遠程控制的便利性很高，但也意味着風險更高。建議只對可信設備開啓，並避免在手機端隨手發起刪除、部署、付款、批量修改等高影響操作。</p><p>這一部分我們從“會安裝”走到了“會安排任務”。Codex Desktop 的核心能力可以壓縮成這張表：</p><p>學完本章，請記住兩件事。</p><p>第一，Codex 不是“更會聊天的搜索框”，而是可以在你電腦上執行任務的工作代理。它能節省時間，也需要你設定邊界。</p><p>第二，使用 Agent 的能力不只在於會提問，更在於會管理：給清楚的目標，提供必要上下文，要求它先計劃，執行中及時糾偏，最後驗收結果。你越會管理任務，AI 編程工具越能發揮價值。</p><p class='list-item'>**Codex 和 Claude Code 怎么搭配？**</p><pre><code>我要創建一個 [項目類型] 項目。
+項目名稱：[名稱]
+簡述：[一句話描述]
+技術棧：[前端框架] + [後端框架] + [數據庫]
+核心功能（MVP）：
+1. [功能1]
+2. [功能2]
+3. [功能3]
+請先創建項目結構和基礎配置文件，暫不實現具體功能。</code></pre><pre><code>請在 [指定目錄/文件] 中實現 [功能名稱]。
+具體需求：
+1. [需求點1]
+2. [需求點2]
+3. [需求點3]
+技術約束：
+- 參考 [已有文件/模塊] 的風格
+- 使用 [指定技術/庫]
+- 返回格式遵循 [項目約定的格式]
+請先說明實現計劃，確認後再開始編碼。</code></pre><pre><code>發現一個Bug，需要修復：
+現象：[實際看到的行爲]
+期望：[應該是什麼行爲]
+復現步驟：
+1. [步驟1]
+2. [步驟2]
+錯誤信息：
+[粘貼完整的錯誤堆棧]
+我已經嘗試過：[你嘗試的解決方案]
+請定位問題原因並修復。</code></pre><pre><code>請對 [文件路徑或範圍] 進行代碼審查。
+審查重點：
+1. 安全性（輸入驗證、XSS防護、SQL注入）
+2. 錯誤處理（異常是否被正確捕獲和處理）
+3. 性能（是否有明顯的性能問題）
+4. 代碼質量（可讀性、命名規範、重複代碼）
+請按嚴重程度分級：Critical / Warning / Info
+並給出具體的修復建議。</code></pre><pre><code>我需要設計一個 [系統/功能] 的架構。
+業務需求：[描述]
+性能要求：[QPS/響應時間/併發用戶數]
+技術約束：[必須使用的技術/限制條件]
+請給出：
+1. 系統架構圖（文字描述即可）
+2. 技術選型建議及理由
+3. 數據模型設計
+4. API 接口設計
+5. 潛在的技術風險和應對方案</code></pre><p>結語請記住五個核心原則：</p><p>動手大於閱讀—— 學到的知識必須通過實踐才能變成技能
+項目驅動學習—— 帶着目標去學，效率最高
+擁抱錯誤—— AI會犯錯，你也會，但每次錯誤都是學習
+持續迭代—— 先做出來，再做好，沒有一步到位的完美
+記錄與分享—— 把經驗寫下來，分享出去，幫助他人也鞏固自己AI編程領域發展極快，保持學習的節奏，關注新工具和新技術。</p><p>祝你在AI編程的世界裏，創造出令自己驕傲的作品！</p><p class='list-item'>*本教程中的價格、版本信息已在 2026-05-18 做過一次覈對，請以各服務商官網最新信息爲準。*</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

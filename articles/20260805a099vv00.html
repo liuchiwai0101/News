@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Sand.ai 开源全球首个千亿 MoE 视频模型，“用得起”时代要来了_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Sand.ai 开源全球首个千亿 MoE 视频模型，“用得起”时代要来了_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260805A099VV00" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260805A099VV00" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>問AI · 0.5元生成視頻會如何重塑創作者的試錯成本</h3><h3>分析師/竹心</h3><h3>校對/Tina</h3><h3>策划/Eason</h3><p>2026年8月5日，視頻生成行業迎來了一場“震撼發佈”。</p><p>正式發佈並開源  Preview ——全球首個千億級開源 視頻生成模型，總參數約 114B，單次前向計算僅激活約 6B 參數。憑藉約 6B 激活參數，MAGI-2 Preview 進入 Artificial Analysis 視頻生成榜單前六。</p><p>模型權重和代碼同步上線，無需申請、無需排隊，任何一個研究者、開發者或企業技術團隊，都可以直接下載、部署、微調。</p><p>過去兩年，視頻生成最強能力被封裝進 API，按 token 收費、按幀計費。開源社區幾乎拿不到可用的大尺寸視頻模型，看不到權重、無法復現訓練、很難根據自己的數據繼續改造。</p><p>當一個千億級、統一音視頻的模型以開放權重和代碼的方式進入公共領域，這種不對稱正在被打破。除了爲開源社區增添了一款前沿模型，MAGI-2 Preview 還改變了一件事：視頻生成模型擴展的技術路線選擇。</p><p>在模型能力和尺寸正相關已是行業共識的背景下，此前視頻生成模型 Scaling 的路徑似乎只有一條，堆算力、堆數據，花更多的錢，把模型參數量擴大。</p><p>MAGI-2 Preview 的開源，讓行業第一次有機會審視另一條路：像大語言模型一樣，視頻 MoE 路線也可以讓視頻模型在繼續擴展規模的同時，控制住推理成本。</p><h3>01</h3><h3>封閉的兩年：開源社區等待一個可用的大規模視頻模型</h3><p>過去兩年，視頻生成是AI領域最熱鬧的賽道之一。</p><p>OpenAI Sora、Google Veo、Runway Gen、Pika、可靈、seedance……每隔幾個月就有一個視頻生成模型刷屏，這項能力從實驗室走向生產流程，只用了不到兩年。</p><p>但熱鬧之下，有一羣人始終沒有獲得入場券。</p><p>開發者可以看到生成結果，卻看不到權重；研究者可以閱讀技術報告，卻無法復現訓練過程；企業可以調用 API 生成視頻，卻很難根據自己的數據對模型進行微調和改造。</p><p>與此同時，LLM 領域正上演着完全不同的劇本。LLaMA 開源後，整個產業被徹底激活——研究、微調、私有化部署、工具鏈全面跟進，GLM5.2、Kimi K3、 等開源模型已經成爲學術研究和產業應用的基礎設施。</p><p>直到最近，這種不對稱纔出現鬆動。MiniMax H3 位列AA榜單第三並開放權重。一天之後，MAGI-2 Preview 又以千億級 MoE 的形態直接開源，模型權重和代碼同步上線。開源生態第一次真正進入了視頻生成的前沿競爭。</p><h3>備註：Sand.ai 新模型所生成的日式老電影風格視頻（截圖）</h3><p>同樣是開源，爲什麼 MAGI-2 Preview 值得被重點關注？當模型進入百億、千億參數區間，訓練和推理成本的急劇上升已經成爲所有參與者必須面對的現實問題。MoE 正在打開另一條路——模型可以繼續做大，但單次推理成本被控制在可用範圍內。</p><h3>02</h3><h3>視頻生成找到了另一條 Scaling 路線</h3><p>MAGI-2 Preview 不僅僅是一個更大的模型，更是一條完全不同的技術路線。要理解這條新路線，先要理解舊路線遇到了什麼問題。</p><p>過去幾年，視頻生成大模型遵循着一條樸素的 Scaling 邏輯：模型越大，能力越強。和大語言模型早期的稠密模型一樣，其擴展的方法是增加層數、加寬隱藏維度、堆更多參數。</p><p>但視頻模型面臨的挑戰更殘酷。一段視頻被拆成空間 patch 和連續幀，再疊加音頻與文本，序列長度輕鬆達到數萬甚至數十萬 token。稠密模型下，每一個 token 都要經過全部參數，計算量隨序列長度和參數規模同步膨脹。</p><p>視頻模型做一次前向計算，文本模型可以跑幾十次。換句話說，稠密模型擴展的成本，在視頻領域被急劇放大了。</p><p>MoE 換了一種思路。它不再讓每個 token 都經過全部參數，而是在模型內部設置了一個龐大的專家池，每個 token 只調用與當前任務相關的一小部分專家。總參數規模決定了模型的“知識容量”，激活參數決定了單次推理的“計算成本”。</p><p>MAGI-2 Preview 正是沿着這條思路設計的——114B 的總參數形成了足夠大的知識容器，每次前向計算只激活約 6B 參數，把實際計算控制在一個可執行的範圍內。更大的參數池用於學習更豐富的人物、動作、鏡頭語言、材質細節，以及語義、語音和環境聲等多模態信息。</p><h3>備註：Sand.ai 新模型所生成的人物表演舞蹈視頻（截圖）</h3><p>能力和成本只是結果。MoE 真正的設計難點，在於這 114B 參數如何被組織——誰來決定哪個專家處理什麼任務，如何讓數千個專家形成有效的分工。</p><p>傳統 MoE 的做法是“一個 token 選一組專家”，每個專家需要同時理解語義、動作、聲音等多種特徵——這是一種“通才型”分工，每種能力的精度都可能被稀釋。</p><p>MAGI-2 Preview 的思路相反：把任務拆細。它將隱藏表示分成12 個獨立的“頭”，每個頭獨立選擇自己的專家，不同頭可以分別專注人物、動作、聲音、語義等不同任務，最後再融合在一起。作爲參照，DeepSeek-V4-Pro 每層 384 個專家選 6，Kimi K3 爲 896 選 16，而 MAGI-2 Preview 每層形成 3,072 個專家單元。這種“通才拆成專才”的結構，恰恰是稠密模型做不到的。</p><h3>03</h3><h3>千億 MoE 不是簡單的增加參數</h3><p>和專家，系統能力纔是真正的門檻</p><p>MAGI-2 Preview 爲視頻生成開闢了一條新的 Scaling 路徑，但把這條路徑走通，靠的不只是架構設計。</p><p>在大模型競賽中，模型參數規模是可見的冰山，底下的系統能力纔是真正的水下部分。因爲把數千個細粒度專家在多臺機器間高效路由、穩定訓練，需要極高的系統工程門檻。</p><p>在傳統的 Expert Parallel 模式下，系統會先爲 token 選擇 Top-K 專家，再把 token 發送到專家所在的設備。路由結果隨輸入動態變化——某塊 GPU 可能突然收到大量 token，另一塊 GPU 卻沒有足夠任務；激活的專家越多，設備間需要傳輸的數據也越多。到了視頻的序列規模，通信和負載波動很快會成爲瓶頸。</p><p>模型的專家再多，如果數據傳輸和任務調度把大部分時間消耗在等待上，算力的規模優勢也會被抵消。</p><p>爲了解決這一問題，Sand.ai 做了三件事。</p><p>第一件事是 Head Parallel。它改變了通信順序——在路由發生前就按 head 分配計算，將固定形狀的表示分發到不同設備，數據抵達後再在本地選擇專家。傳統方式的通信量依賴路由結果，而 Head Parallel 的通信量由輸入本身決定，不再隨激活專家數線性增長。跨設備流量因此變得穩定、可預測。</p><p>第二件事是 MagiMoE kernel 庫。Ultra-fine-grained MoE 帶來了大量小矩陣計算和頻繁的顯存讀寫。MagiMoE 把原本分散的路由、排序和計算步驟融合執行，減少中間結果和顯存搬運，並針對 Multi-Head MoE 的計算形態優化前向與反向過程。</p><p>第三件事是 MagiMuon 優化器。千億參數 MoE 的訓練涉及性質完全不同的參數——主體矩陣參數、專家參數、路由參數——它們對更新方式的需求各不相同。MagiMuon 在 Muon 的基礎上做了擴展，保留其處理主體矩陣參數的優勢，同時引入 AdamW 處理更適合常規更新的參數，讓訓練在千億規模下保持穩定。</p><p>系統跑通後，Scaling 只完成了一半。另一半在數據。</p><p>過去行業普遍將“數據質量”等同於層層過濾——刪除畫質較差、構圖不夠整齊、動作不夠典型的數據，留下一個更乾淨的數據集。從訓練穩定性角度看，這確實能降低噪聲、提升收斂效率。但真實世界的多樣性，往往恰恰藏在那些“不夠標準”的數據裏——複雜運動、特殊鏡頭、罕見主體、非常規聲音、長尾組合。如果模型只在整齊的數據上訓練，它學到的世界就是一個被剪裁過的世界。</p><p>因此，MAGI-2 Preview 的數據策略更強調數據規模、多樣性與分佈覆蓋，工作的重心從“刪減”轉向“組織”——通過更準確、更細粒度的標註，讓模型理解主體、動作、場景、時序以及音頻與文本之間的對應關係。</p><p>模型設計、系統能力、數據處理——三者構成了 Sand.ai 在 Scaling 這條路上的完整判斷。MAGI-2 Preview 的價值，正在於它讓這三件事在同一次規模化訓練中同時得到了驗證。</p><h3>04</h3><p>10 秒 1080P 仅 0.5 元，</p><h3>MoE 的成本優勢意味着什麼</h3><p>驗證之後呢？最直接的變化，落在成本上。</p><p>按照當前 8 卡 H100 的月租金折算，MAGI-2 Preview（蒸餾後模型）生成一段 10 秒 1080P 視頻的推理成本約 0.5 元。每秒成本約爲行業主流模型的十分之一。</p><p class='list-item'>0.5 元和 5 元之間，看起來只是一個小數點的差別。但放到真實創作場景裏，它改變的是成本結構和內容生產方式。</p><p>在實際製作中，一條生成視頻很少一次就完全符合預期。成本足夠低之後，創作者可以測試不同的提示詞，調整動作、構圖和風格，再從多個版本中篩選真正可用的鏡頭。一個想法可以反覆試驗，逐步收斂。</p><p>視頻生成從“昂貴的一次性押注”轉向“多版本生成、自動篩選、人工選擇”的迭代模式。這不是效率的提升，這是工作方式的改變。</p><p>內容工具、廣告系統、遊戲資產生成、虛擬人互動，這些需要持續調用模型的場景，過去被成本卡住了門檻，現在 0.5 元打開了那扇門。</p><p>這就是 MoE 這條 Scaling 路線區別於稠密模型的核心價值。“用得起”三個字，是所有產業化的起點。只有當成本降到用戶可以“隨手用、反覆試、持續跑”的程度，技術纔算真正進入了生產環節。</p><h3>05</h3><h3>結尾：非共識選擇的再次驗證</h3><p>MAGI-2 Preview 不是 Sand.ai 的第一個開源模型，也不會是最後一個。</p><p>回顧這家公司過去三年的技術路線，會發現一個清晰的 Pattern：它總是在選擇非共識路線，然後把它跑通。</p><p>2024 年，視頻生成領域最主流的技術路線是擴散模型（Diffusion）。Sand.ai 的第一代視頻生成模型 Magi-1 選擇了。最終，Magi-1 跑通了，而自迴歸路線已經成爲了當下行業的主流選擇。</p><p>2025 年，行業的主流做法是“多流拼接”，但 Sand.ai 提出了，用GAGA-1 證明了統一架構在音畫同步上的優勢。</p><p>2026 年，行業的主流是稠密模型，Sand.ai 再次選擇了一條非共識路線—MoE，在 MAGI-2 Preview 出現之前，這條路能不能走通，沒有人知道。</p><p>三次選擇，三次非共識，每一次都跑成了可以被外界檢驗的模型。</p><p>這不是運氣。這是技術判斷力，一種在技術路線尚未收斂時，識別出哪條路有長期價值的能力。</p><p>MAGI-2 Preview 不是終點。MoE 路線從非共識變成行業新變量之後，視頻生成正在進入一個新的階段——不是“誰家模型更強”的靜態比較，而是“誰能用新路線做出更好的產品、更低的成本、更完整的工具鏈”的動態競爭。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
