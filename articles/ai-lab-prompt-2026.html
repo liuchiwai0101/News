@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>提示工程到脈絡工程：2026 AI Prompt 頂尖框架｜Data-DI 部落格 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>提示工程到脈絡工程：2026 AI Prompt 頂尖框架｜Data-DI 部落格</h1>
+<div class="meta"><span class="src">data-di.com</span>
+<span>· <a href="https://www.data-di.com/blog/ai-lab-prompt-2026" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.data-di.com/blog/ai-lab-prompt-2026" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>提示工程（Prompt Engineering）是把單次指令寫清楚的方法，脈絡工程（Context Engineering）則是決定「此刻該把哪些資訊放進模型視窗」的策略——2026 年兩者是疊加關係，不是取代關係。</p><p>在前兩篇文章中，我們介紹了基礎的互動模式與解決幻覺的進階技巧。</p><h3>提升對話品質！必學 Prompt 技巧 入門篇</h3><h3>提升對話品質！必學 Prompt 技巧 進階篇</h3><p>然而，隨著具備深度推理能力的模型（如 OpenAI 於 2026 年統一整併推出的 GPT-5 系列、Google 的 Gemini 3 系列）在 2025 年底至 2026 年上半年全面普及 [1][2]，Prompt Engineering 的典範也迎來了重大轉移。</p><p>在 2026 年，最頂尖的 AI 使用者不再只是「下指令（Instructing）」，而是在「構建思考框架（Structuring）」。</p><p>這篇文章是我們 AI 提示工程系列的最終章（趨勢篇）。我們將揭祕 4 個專為新一代推理模型與代理人（Agentic AI）設計的 Prompt 架構。這些技巧都有紮實的學術研究背書，能幫助你處理更高密度的資訊、更複雜的決策，甚至讓 AI 像一個團隊一樣運作。</p><p>提示工程（Prompt Engineering）是設計與組織向 AI 模型下達指令的方法，目的是讓語言模型穩定產出符合品質與格式要求的輸出，適用於所有需要頻繁與 AI 協作的工作者。</p><p>2025 年年中起，這個詞開始出現另一種說法。AI 研究者 Andrej Karpathy 與 Shopify 執行長 Tobi Lütke 相繼公開提出「脈絡工程（Context Engineering）」的概念——他們認為，當任務從單次問答演變成多輪、多工具的 Agent 工作流程後，決定成敗的關鍵不再只是「這句話怎麼寫」，而是「這一刻該塞進模型上下文視窗的是哪些資訊」。這個說法很快被業界採納，Anthropic 官方工程部落格也在 2025 年 9 月正式定義：脈絡工程是「在 LLM 推理過程中，持續策展並維護最佳 token 組合」的一整套策略，提示工程只是其中一個環節 [3]。</p><p>但這不代表提示工程過時了，恰好相反：脈絡工程做得好不好，取決於你有沒有能力把每一次「這個任務到底需要哪些資訊」的判斷，寫成清楚、可重複使用的結構。這正是本文接下來要介紹的四個框架的價值所在——它們是幫你把「隨口下的指令」升級成「結構化脈絡」的具體工具。如果你想先系統性瞭解脈絡工程的完整概念，可以參考我們另一篇 Context Engineering（脈絡工程）完整解析。</p><p class='list-item'>**痛點：** 每次寫 Prompt 都要東拼西湊，卻總是漏掉關鍵資訊，導致輸出品質不穩定。</p><p>這是由新加坡政府科技局（GovTech Singapore）數據科學團隊所提出的結構化提示法，並在首屆 GPT-4 Prompt Engineering 比賽中獲得極高評價 [4]。根據 GovTech 數據科學家 Sheila Teo 的分享，CO-STAR 框架能有效降低模型輸出的變異性，已成為全球企業導入 AI 時公認的結構化提示法之一 [4]。</p><p>CO-STAR 架構詳解：它將一個完整的 Prompt 拆解為六個不可或缺的要素：</p><p class='list-item'>**實戰 Prompt 範例：**</p><p>「（C）Context：我是一家 SaaS 軟體公司的產品經理，我們剛發布了 2026 年 Q1 的 AI 自動化新功能。</p><p>（O）Objective：請幫我撰寫一封電子郵件，邀請曾經流失的舊客戶回來免費試用。</p><p>（S）Style：簡潔有力，類似 Apple 的行銷文案風格，強調創新與極簡。</p><p>（T）Tone：充滿熱情但保持專業，不要過度推銷。</p><p>（A）Audience：過去 6 個月未登入的不活躍用戶，通常是企業的中高階主管。</p><p>（R）Response：請給我純文字格式，並包含 3 個不同切入點的主旨選項。」</p><p class='list-item'>**痛點：** 請 AI 寫摘要時，它要嘛寫太短漏掉細節，要嘛寫太長像流水帳。</p><p>這是由 Salesforce Research、MIT（麻省理工學院）與哥倫比亞大學研究團隊於 2023 年發表的論文《From Sparse to Dense》中所提出的技術 [5]。該研究證實，透過「遞迴優化」，CoD 生成的摘要在資訊密度上顯著優於傳統方法。它的核心邏輯是：要求 AI 在保持字數不變的情況下，不斷塞入更多「實體資訊（Entities）」。</p><p class='list-item'>**實戰 Prompt 範例：**</p><p>「請閱讀這篇關於 2025 年全球半導體供應鏈的報告。我需要你生成 5 個版本的摘要。</p><h3>【迭代規則】</h3><p>第 1 版：初步摘要（約 100 字）。</p><p>第 2 至 5 版：請找出上一版摘要中遺漏的「具體數據」「公司名稱」與「專有名詞」，將其融合進新的摘要中。</p><p>限制：每一版的字數都必須維持在 100 字左右（透過刪除不必要的修飾語來騰出空間）。</p><p>請依序列出這 5 個版本，讓我比較資訊密度的變化。」</p><p class='list-item'>**痛點：** AI 的建議往往太過「安全」或「單一」，缺乏批判性思考。</p><p>這項技巧源自 MIT 與 Google DeepMind 的合作研究 [6]。研究指出，單一模型的思維容易陷入「順從性偏誤（Sycophancy）」，即 AI 傾向於講使用者想聽的話。透過建立多個持「互斥觀點」的 AI 代理人（Agents）進行辯論，能顯著提升決策品質。既然現在的模型上下文視窗極大，不如讓 AI 一次扮演好幾個人，幫你開一場虛擬會議。</p><p class='list-item'>**實戰 Prompt 範例：**</p><p>「我正在考慮是否要在 2026 年投資開設一間無人咖啡廳。請啟動『多重角色辯論模式』：</p><p>角色 A（樂觀的創業家）：專注於自動化趨勢、節省人力成本與新奇體驗。</p><p>角色 B（保守的財務顧問）：專注於前期設備折舊、系統維護風險與現金流壓力。</p><p>角色 C（毒舌的市場評論員）：專注於批評競爭對手與消費者對無人服務的疲乏感。</p><p>請讓這三位角色針對我的創業計畫進行 3 輪對話辯論。在每一輪中，他們必須針對對方的論點提出反駁。最後，由你總結出一個客觀的建議。」</p><p class='list-item'>**痛點：** 使用推理模型（Reasoning Models）時，AI 給了答案但沒解釋過程，或是你難以驗證其邏輯。</p><p>新一代推理模型會在內部進行「隱藏思維鏈（Hidden Chain of Thought）」運算，再輸出最終答案。以目前主流的模型現況來說，OpenAI 已將先前各自獨立的推理模型整併進統一的 GPT-5 系列，透過內建路由自動判斷任務難度、決定要不要切換進更深層的推理模式；Google 的 Gemini 3 系列也提供對應的深度思考模式 [1][2]。無論版本如何迭代，只要是這種「可自動切換推理深度」的架構，這個技巧就持續有效。</p><p>值得一提的是，截至 2026 年 7 月底，OpenAI 的 GPT-5.6 Preview 與 Anthropic 的 Claude Opus 5 都新增了「Effort」設定，讓使用者自行調整推理深度（從 low 到 max） [8][9]——這等於把技巧 4 的核心邏輯從「你得在 Prompt 裡要求模型展示推理過程」提升到了「產品功能層已經幫你做好旋鈕」，但結構化標籤輸出仍然是讓你能驗證邏輯的關鍵。</p><p>根據 Google DeepMind 最早提出的 Chain-of-Thought 基礎理論 [7]，推理過程雖然多半被模型隱藏，但透過特定的 Prompt 架構，我們仍可以強制模型輸出結構化的思考標籤，以便人類進行審查（Human-in-the-loop）。</p><p class='list-item'>**實戰 Prompt 範例：**</p><p>「請幫我審查這段 Python 程式碼的潛在邏輯漏洞。</p><p>【輸出要求】請不要只給我修正後的程式碼。請使用明確的標籤結構輸出你的推理過程：</p><p>[假設 Analysis] 你對程式碼意圖的初步理解。</p><p>[規劃 Plan] 你打算從哪些邊界條件（Edge Cases）進行測試。</p><p>[執行 Execution] 逐步模擬程式執行的過程。</p><p>[驗證 Verification] 你如何確認修復方案不會產生新的 Bug。</p><h3>[最終結論 Conclusion] 優化後的程式碼與解釋。」</h3><p>本文介紹的四個框架，解決的是「一個人怎麼寫好一句指令」的問題。但如果你已經開始用 AI Agent 處理跨部門、多步驟的任務，可能會發現光靠結構化 Prompt 已經不夠——你需要管理的是整個對話脈絡、工具狀態、甚至多個 Agent 之間的協調。</p><p>2025 年中到 2026 年 7 月，業界正在快速堆疊出一條清晰的演化路徑 [10]：</p><p>重點在於：這四層是疊加關係，不是互相取代。Graph 建立在 Loop 之上，Loop 建立在 Context 之上，Context 建立在 Prompt 之上——你不會因為學了 Graph 就不需要寫好 Prompt，就像你不會因為會設計系統架構就不需要會寫程式。本文的四個框架，正是這整條演化路徑的「第一層地基」。</p><p>如果你對第二層（脈絡工程）感興趣，我們在 Context Engineering（脈絡工程）完整解析 有更完整的說明。</p><p>如果說 2024 年以前我們是在學「如何跟聊天機器人說話」，那麼 2025 至 2026 年，我們經歷了從系統指令到脈絡工程、再到 Loop 與 Graph 的快速演化。但不管名詞怎麼換，底層不變的事情只有一件：你有沒有能力把模糊的意圖，轉化成結構化的、可重複使用的思考框架。</p><p>不過，如果你正在企業內部推動 AI 導入，可能會遇到一個現實問題：讓一兩位同事把這 4 個框架練到出神入化並不難，但要讓整個團隊、甚至整間公司的 Agent 工作流程都維持一致的脈絡品質，靠人工複製貼上很快就會失控——這正是脈絡工程要解決的規模化問題。如果你正在評估要自建這套脈絡管理機制，還是採用已經把這些最佳實踐內建到工作流程裡的 No Code AI Agent 平臺，AltaBots.ai 提供的顧問陪跑服務可以先幫你看清現況，再決定怎麼走最省時間。掌握這幾個框架，你將不再受限於 AI 的隨機性，而是能穩定地輸出高品質成果，真正駕馭這個 Agentic AI 的時代。</p><p>更多趨勢解讀，歡迎參考我們的 更多 2026 AI 趨勢解讀文章。如果覺得這篇文章有幫助，也歡迎追蹤我們的 Threads，持續掌握最新的 AI 應用技巧與實戰經驗。</p><p>[1] OpenAI.（2026）。Model Release Notes.</p><p>https://help.openai.com/en/articles/9624314-model-release-notes</p><p>[2] Google DeepMind.（2026）。A New Era of Intelligence with Gemini 3. Google Blog.</p><p>https://blog.google/products-and-platforms/products/gemini/gemini-3/</p><p>[3] Anthropic.（2025）。Effective Context Engineering for AI Agents. Anthropic Engineering Blog.</p><p>https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents</p><p>[4] Teo, S.（2023）。How I Won Singapore's GPT-4 Prompt Engineering Competition. Towards Data Science.</p><p>https://towardsdatascience.com/how-i-won-singapores-gpt-4-prompt-engineering-competition-34c195a93d41</p><p>[5] Adams, G., Fabbri, A., Ladhak, F., Lehman, E., & Elhadad, N.（2023）。From Sparse to Dense: GPT-4 Summarization with Chain of Density Prompting. arXiv.</p><h3>https://arxiv.org/abs/2309.04269</h3><p>[6] Du, Y., Li, S., Torralba, A., Tenenbaum, J. B., & Mordatch, I.（2023）。Improving Factuality and Reasoning in Language Models through Multiagent Debate. arXiv.</p><h3>https://arxiv.org/abs/2305.14325</h3><p>[7] Wei, J., Wang, X., Schuurmans, D., et al.（2022）。Chain-of-Thought Prompting Elicits Reasoning in Large Language Models. arXiv.</p><h3>https://arxiv.org/abs/2201.11903</h3><p>[8] OpenAI.（2026）。Previewing GPT-5.6 Sol: A Next-Generation Model. OpenAI Blog.</p><h3>https://openai.com/index/previewing-gpt-5-6-sol/</h3><p>[9] Anthropic.（2026）。Introducing Claude Opus 5. Anthropic News.</p><h3>https://www.anthropic.com/news/claude-opus-5</h3><p>[10] MarkTechPost.（2026）。Prompt Engineering vs Loop Engineering vs Graph Engineering: What Changes at Each Layer.</p><p>https://www.marktechpost.com/2026/07/29/prompt-engineering-vs-loop-engineering-vs-graph-engineering-what-changes-at-each-layer/</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
