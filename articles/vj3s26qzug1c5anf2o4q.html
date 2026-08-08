@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Quick BI 数据分析智能体的可靠工程实践｜AICon深圳 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Quick BI 数据分析智能体的可靠工程实践｜AICon深圳</h1>
+<div class="meta"><span class="src">infoq.cn</span>
+<span>· <a href="https://www.infoq.cn/article/VJ3s26QZUG1C5ANF2O4Q" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.infoq.cn/article/VJ3s26QZUG1C5ANF2O4Q" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Agent 時代，哪些方向正在成爲行業關鍵變量？50 + 實戰案例揭曉答案！</p><p>模型參數規模不斷突破，推理成本持續下降，開源生態日益繁榮。當模型能力逐漸成爲行業共識，一個新的問題開始浮現：**當人人都能獲得強大的模型能力之後，真正的競爭力還剩下什麼？** 答案正在從模型能力本身，轉向圍繞模型構建可規模化的智能系統；從單點能力提升，轉向系統工程與組織級落地能力。</p><p>在這一背景下，2026 年 AICon 人工智能開發與應用大會 · 深圳站正式啓動。本次大會將於** 8 月 21 日—22 日**舉辦，聚焦 AI 基礎設施、大模型系統、智能體工程、數據智能、多模態技術與行業落地等關鍵方向，邀請來自騰訊、阿里、華爲、百度、螞蟻集團等 50 + 頭部科技企業技術負責人、科研機構一線專家，系統性分享前沿洞察與實戰乾貨，共同探討 AI 技術從能力到系統、從實驗到生產的真實路徑。</p><p>阿里雲智能集團高級技術專家王璟堯已確認出席 “智能體時代的數據供給與治理” 專題，並發表題爲**《**Quick BI 數據分析智能體的可靠工程實踐**》**的主題分享。數據智能體從"能對話"到"能信賴"，瓶頸從模型推理能力已逐漸轉到數據的可理解性和系統的可控性上。當分析場景從單一數倉的 ChatBI 擴展到多源異構數據的混合查詢——Agent 面臨的不再只是 NL2SQL 的準確性問題，而是"在大量的表、文件、內部知識中找到正確的那部分、用正確的口徑、給出數據權限範圍內可驗證的答案"。</p><p>本次分享將基於 QuickBI AI Pro 的落地實踐，圍繞三個核心問題展開：第一，如何用 BI 語義層消除數據歧義，讓 Agent 在海量異構資產中精準路由；第二，如何設計數據分析的 Harness 架構，讓 Agent 在分析等行爲上可編排、可溯源，並內嵌權限；第三，端到端評測閉環如何覆蓋從意圖理解到業務可解釋性的全鏈路，驅動 Agent 持續進化而非漂移。</p><p>王璟堯，阿里雲智能集團高級技術專家，10 餘年數據產品建設和技術架構經驗。先後負責或重度參與了數據地圖、MaxCompute 元倉、QuickBI、智能 小 Q 等產品的研發。現任阿里雲智能集團高級技術專家，負責 Quick BI 的研發工作，帶領團隊完成阿里巴巴分析 Agent 從 0 到 1 落地，在 BI+ AI 及數據 Agent 應用等方向上有豐富實踐經驗與理解。他在本次會議的詳細演講內容如下：</p><p>演講提綱：</p><p class='list-item'>1. 數據智能體落地的真實困境</p><h3>幾個典型失敗模式</h3><h3>待解決的關鍵問題</h3><p class='list-item'>2. 數據基礎設施：語義層和數據質量</p><h3>爲什麼自動化元數據檢索不夠</h3><h3>面向 BI 的語義設計和分層架構</h3><p>指標、血緣和溯源</p><h3>多源異構及非結構化數據的分析</h3><h3>數據治理：數據如何被 Agent 理解的更好</h3><p class='list-item'>3. Quick BI 的數據智能體設計</p><h3>數據分析 Harness 架構</h3><h3>多步推理編排和上下文窗口管理</h3><h3>數據權限與安全</h3><h3>知識與記憶</h3><h3>多源異構數據的融合分析</h3><p class='list-item'>4. 端到端評測：數據智能體的進化引擎</p><h3>數據分析評測爲什麼難</h3><h3>四層評測維度設計</h3><h3>評測體系和糾錯飛輪</h3><p class='list-item'>5. 用戶實踐和展望</p><h3>用戶實踐案例</h3><h3>能力邊界和未來發展展望</h3><h3>演講痛點</h3><p>Demo 驚豔，生產翻車。在演示時數準確率 90%，一上生產就掉到 50% 以下。同一個"銷售額"，銷售部門和財務部門問出兩個不同的數，業務方追問"到底哪個對"，答不上來。POC 拿到預算，規模化後被投訴——這是絕大多數 Data Agent 項目正經歷的窘境</p><p>Agent "越用越飄"。上週還答對的問題，這周突然錯了。是模型漂了還是 Schema 變了？或是知識庫裏寫髒了？沒有評測體系時，團隊只能靠"用戶投訴→人工救火"來發現問題，永遠在追着 bug 跑</p><p>結構化數據都還沒搞定，非結構化數據又壓過來。業務開始要求 Agent 分析 PDF 合同、銷售錄音、客戶評論、Excel、CRM 數據。多源異構不是簡單疊加，是把每類失敗模式都放大一個數量級</p><p>從" Agent 說了什麼"到"業務敢用"，中間隔着一道天塹。老闆問"這個數怎麼來的"，Agent 答不出，業務方問"我能信這個結論嗎"也給不出置信度。數據權限在 Agent 環節形同虛設——不該看的數據混進了推理鏈</p><h3>聽衆收益</h3><p>基於 BI 的語義層的構建、數據治理的落地順序</p><h3>數據智能體的 Harness 架構設計要點和工程落地</h3><h3>多源異構數據在推理分析中協同的編排模式</h3><p>DataAgent 評測體系、構建方法及糾錯飛輪</p><p>一份真實的踩坑清單、邊界、案例啓發和實踐經驗</p><p>除此之外，本次大會還策劃了AI Infra、推理工程與異構計算、超級個體與蜂羣智能的共生進化、邁向機器人 AGI 的關鍵技術與產業實踐、Agent 安全：從風險到可控、大模型效率工程與 Agent 系統實踐、AI Agent 高價值商業場景實戰等 10 個專題論壇，屆時將有來自不同行業、不同領域、不同企業的 50+資深專家在現場帶來前沿技術洞察和一線實踐經驗。</p><p>AICon 全球人工智能開發與應用大會·深圳站，限時 9 折專屬優惠，現在報名立減 580，更多詳情可掃碼或聯繫票務經理 13269078023 進行諮詢。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
