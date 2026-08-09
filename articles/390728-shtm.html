@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>科学网-连接基因与药物筛选体系 赋能虚拟细胞构建 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>科学网-连接基因与药物筛选体系 赋能虚拟细胞构建</h1>
+<div class="meta"><span class="src">news.sciencenet.cn</span>
+<span>· <a href="https://news.sciencenet.cn/sbhtmlnews/2026/8/390728.shtm?id=390728" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://news.sciencenet.cn/sbhtmlnews/2026/8/390728.shtm?id=390728" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p class='list-item'>**本報訊（記者王昊昊 通訊員趙赫）**中南大學教授李敏團隊聯合騰訊生命科學實驗室研究員姚建華團隊，提出統一的細胞擾動建模框架UniPert-G2CP，從分子表徵到表型建模兩個層面連接遺傳與化學擾動篩選，爲虛擬細胞構建提供了新的計算方法。相關成果近日在線發表於《細胞》。</p><p>近年來，構建能夠理解並預測生命系統行爲的“虛擬細胞”，已成爲人工智能（AI）與生命科學交叉融合的重要前沿方向。虛擬細胞需整合多尺度、多模態生物信息，模擬細胞在不同分子干預下的響應。</p><p>研究團隊提出UniPert-G2CP框架。UniPert首先通過融合大分子蛋白質和小分子化合物的多模態分子信息，並結合對比學習、圖神經網絡、序列比對等技術，構建連接遺傳擾動與化學擾動因子的統一表徵空間，學習不同類型分子干預之間潛在的生物學關聯。在此基礎上，G2CP進一步利用大規模基因擾動數據進行預訓練，學習遺傳擾動中蘊含的生物學知識，並通過化學擾動數據微調進行跨域擾動遷移學習，從而實現高效的細胞特異性藥物篩選表型建模。</p><p>研究團隊在多個大規模雙域細胞擾動數據集上對該框架進行了系統評估。結果顯示，UniPert-G2CP能夠實現遺傳擾動與化學擾動之間的有效知識遷移，在未見小分子條件下準確預測細胞表型響應，並保持對不同細胞背景下異質性響應模式的刻畫能力，同時降低化學擾動建模對大規模實驗數據的需求。進一步分析表明，該框架學習的擾動因子和表型聯合表徵空間能夠支持藥物作用機制解析和潛在靶點關聯發現。</p><p>該研究突破了傳統遺傳篩選與化學篩選相對獨立的數據分析模式，建立了從多模態分子表徵到跨域表型遷移的統一細胞擾動建模框架，爲整合不同類型分子干預信息、構建具有預測能力的虛擬細胞提供了新的計算範式，併爲全球虛擬細胞研究提供了新的計算方法和開放資源。</p><p class='list-item'>*相關論文信息：*</p><p class='list-item'>*https://doi.org/10.1016/j.cell.2026.06.005*</p><h3>《中國科學報》 (2026-08-04 第1版    要聞)</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
