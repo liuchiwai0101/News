@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>把推理延迟砍掉近一半：腾讯混元开源 HPC-Ops，三个算子搅动了推理圈 - Blog Post · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>把推理延迟砍掉近一半：腾讯混元开源 HPC-Ops，三个算子搅动了推理圈 - Blog Post</h1>
+<div class="meta"><span class="src">freeai.help</span>
+<span>· <a href="http://freeai.help/blog/ba-tui-li-yan-chi-kan-diao-jin_zh" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="http://freeai.help/blog/ba-tui-li-yan-chi-kan-diao-jin_zh" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>把推理延遲砍掉近一半：騰訊混元開源 HPC-Ops，三個算子攪動了推理圈</h3><h3>把推理延遲砍掉近一半：騰訊混元開源 HPC-Ops，三個算子攪動了推理圈</h3><p>搞大模型推理的人大概都有個共識：模型本身的參數量早就不是最頭疼的事了，真正燒錢、燒時間、燒工程師頭髮的，是把一個模型"伺候"到能穩定上線的那一堆底層算子。8 月 7 日，LMSYS（就是搞 Chatbot Arena 那幫人）的博客上掛出了一篇相當硬核的聯合文章——騰訊混元（Hunyuan）的 AI 基礎設施團隊和 SGLang 團隊一起宣佈：騰訊自研的開源算子庫 **HPC-Ops**，已經合併進了 SGLang 的主分支。</p><p>聽上去像是又一條"XX 開源了"的新聞，但這次的數據其實挺扎眼：在他們自家的混元 Hy3 模型上，端到端的 TPOT（每 token 輸出延遲）最高降了 **48.8%**。這不是某個孤立 kernel 的實驗室跑分，而是在 8 卡 H20、batch size 從 4 到 64 這一檔真實生產場景裏測出來的。</p><p>我覺得這件事值得一聊，不只是因爲數字漂亮，而是它把大模型推理裏最"磨人"的三個環節——Attention、Router GEMM、MoE——一起拿出來重新設計了。下面我儘量用人話把它拆開講講。</p><h3>先說背景：爲什麼 MoE 推理這麼難伺候</h3><p>現在主流的大模型，尤其是參數量上規模之後，基本都走 MoE（混合專家）路線。MoE 的好處不用多說，用更少的激活參數換更大的總參數量，性價比高。但它的推理過程有幾個天然的"坑"。</p><p>一個 batch 裏，不同請求的上下文長度天差地別：有的請求 KV cache 裏才 1K 個 token，有的已經堆到 16K、甚至 128K。注意力的計算量和 KV cache 長度是成正比的，所以一個 16K 的請求，乾的活兒差不多是 1K 請求的 16 倍。連續批處理（continuous batching）又習慣把處於不同生成階段的請求塞進同一次啓動裏，結果就是你打開一個 kernel，裏面有短有長、參差不齊。</p><p>這還不算完。路由器（router）要算每個 token 該走哪些專家，這個打分對精度極其敏感——第 k 個和第 k+1 個專家的分數可能就差那麼一點點，算得不夠準，選的專家就錯了，模型質量直接受影響。最後，被選中的專家每個只拿到一小撮 token，對應的矩陣乘又小又喫帶寬，GPU 的算力根本喫不飽，再加上一堆 gather、scatter、kernel launch 的開銷，很多時候這些"周邊開銷"比專家算子本身還大。</p><p>這就是 HPC-Ops 要解決的三個核心痛點。它沒有想用一個萬能方案一把梭，而是針對每個環節單獨做了一個算子。</p><h3>第一個：讓 Attention 學會&quot;看人下菜&quot;</h3><p>傳統做法用的是靜態 split-KV 調度，說白了就是把工作切成固定大小的塊，分給固定數量的 GPU 線程塊（CTA）去算。問題在於，它只有兩種策略，倆都不太行。</p><p>要麼固定切分數量：長請求會產生特別重的塊，短請求早早幹完在那乾等，整個 kernel 的尾巴就被那幾個長請求拖着。要麼固定塊大小：得按最長的那個請求來預留切分槽，短請求就佔着一堆空槽在那浪費調度資源。一個是活兒不均，一個是排了一堆根本不存在的活兒。</p><p>HPC-Ops 的思路是換成一個持久化（persistent）kernel，動態地按實際長度分佈把 KV 的 tile 均分給 CTA。每次 decode 時，一個分配 kernel 會先把所有序列切成統一的 64-token tile，把所有頭、所有請求的 tile 數量加起來，除以持久化 CTA 的數量，算出每個 CTA 該分多少"預算"。然後按這個預算把任務填進每個 CTA 的"桶"裏——長的序列就按比例橫跨多個 CTA，短的序列就只佔它實際擁有的那點 tile。爲了防止總活兒太少時過度切分，還設了一個最低工作量下限。</p><p>執行的時候，每個 CTA 把自己桶裏的活兒幹完，對每個描述符算一段連續 KV tile 的注意力，寫出帶 log-sum-exp 統計的部分結果，最後由一個 combine kernel 按正確的全局 softmax 歸一化把這些部分結果合併。因爲桶的大小基本相等，CTA 幾乎同時收工，那個"被長請求拖尾巴"的問題就沒了。</p><p>效果有多明顯？他們測了從均勻分佈到極度偏斜的六種場景。動態對靜態的領先是隨着偏斜程度增長的：在均勻的 64×0.5K 場景下兩者打平，但到了"1 個 128K + 31 個 4K"這種極端混搭，動態調度拿到了 **2.95 倍**。整體看，在所有測的場景裏，HPC-Ops 平均比 FlashInfer 和 FlashAttention 兩者中的較優者還要快 **2.25 倍**。</p><p>順帶一提，對 Hy3 的 FP8 路徑，它還把 attention 的"前奏"——QK-Norm、RoPE、Q 的量化、KV 寫入——都融合到一起了，省掉了一堆中間張量和它們在顯存裏的來回搬運。</p><h3>第二個：路由器，又快又準能不能都要</h3><p>Router 這一步很有意思。爲了保精度，一些生產模型哪怕隱狀態是 BF16，也會特意保留 FP32 的路由權重。你直接把權重轉成 BF16，能蹭上 BF16 張量核的吞吐，但低位的尾數被砍掉了，top-k 的選擇就可能翻車。你要是老老實實跑全 FP32 矩陣乘，精度是保住了，但張量核吞吐又下來了。魚和熊掌，很難兼得。</p><p>HPC-Ops 給了一個很巧的折中：它把 FP32 權重拆成兩個 BF16 分量。先用直接截斷拿到高位 BF16 部分，再把殘差（W − W_high）放大 256 倍取第二個 BF16 部分。這樣原權重近似等於"高位 + 低位/256"，矩陣乘就變成兩個 BF16 乘法，最後用 1/256 的縮放修正把低位貢獻找回來。一個 kernel 裏搞定兩次 BF16 乘法：從共享內存裏只加載一次激活，在 FP32 寄存器裏累加兩份部分結果，在 epilogue 裏做縮放，寫出最終 FP32 路由分數。</p><p>實測下來，在一個 K=4096、N=192 的通用 sweep 裏，HPC-Ops 比 FP32 cuBLAS 快 **1.30–3.22 倍**，比 TF32 cuBLAS 也快 1.25–1.78 倍。而精度上，相對 FP32 cuBLAS 的最大絕對誤差只有 **0.00177**——作爲對比，TF32 是 0.06464。等於說它用 BF16 的速度跑出了接近 FP32 的精度。</p><p>框架側也做了配合：SGLang 在模型加載時就緩存好這個分解後的權重對，跨請求和 CUDA graph 重放複用，還做了 shape 感知的派發——低於某個點的時候，單次 FP32 反而更快，那就走默認路徑。</p><h3>第三個：MoE，省掉那些&quot;看不見的開銷&quot;</h3><p>decode 階段，每個專家只收到一小撮 token，對應的矩陣乘又小又喫帶寬，GPU 的 SM 利用率很低。再加上負載還不均衡——每個專家拿到的 token 數每一步都在變——想把這些又小又不均的 tile 均勻攤到 SM 上很難。</p><p>更麻煩的是專家算子周圍那一圈開銷。傳統 MoE 路徑會串起一串單獨的 kernel：路由、把 token gather 到每個專家的 buffer、Gate-Up 矩陣乘、激活和量化、Down 矩陣乘、最後 top-k 加權還原回 token 位置。光那個 gather 步驟，就會在顯存裏攤開一整個 token 張量，後面每一步又各付一次 kernel launch 和顯存往返。當矩陣乘本身很小的時候，這些周邊開銷能佔到這階段牆鍾時間的一大塊。</p><p>HPC-Ops 的 MoE 後端把這些環節協調進一個低延遲流水線。Gate-Up 通過路由索引直接讀原始 token，跳過了單獨的 gather；SiLU-and-mul 和 FP8 重量化合成一個融合 kernel，輸出直接被 Down 矩陣乘讀走。它沒用現在很流行的"生產者-消費者"雙 warp group 的 warp 特化，而是讓單個 warp group 既搬運又算，提高 CTA 駐留率，把內存延遲隱藏從 CTA 內的軟件流水線挪到跨 CTA 的硬件調度上。再加上 PDL（Programmatic Dependent Launch，程序化依賴啓動）把每個下游 kernel 的啓動和上游的尾巴重疊起來，進一步壓縮間隙。</p><p>結果：在 Hy3 形狀下，TP8/EP1 平均每 batch 提速 **1.08 倍**，TP1/EP8 提速 **1.21 倍**，提升主要集中在中低 batch 這種低延遲 decode 最常見的區間。</p><h3>接入 SGLang，不是&quot;另起爐竈&quot;</h3><p>這點我覺得挺關鍵的。HPC-Ops 沒有搞一套自己的數據通路，而是通過 SGLang 原生的後端和派發接口，直接在它現有的運行時狀態上操作。Attention 直接用分頁 KV 存儲和設備側的實時序列元數據，不用額外做 layout 轉換；Router GEMM 跨請求和 CUDA graph 重放複用預處理好的權重和 workspace；MoE 跟着 SGLang 的專家 ID 和分區走，不用額外重映射。</p><p>想上手試的人現在很方便：HPC-Ops 已經包含在 SGLang 官方的 x86_64 開發鏡像裏（<code>lmsysorg/sglang:dev</code>），不用單獨裝。一條命令就能把 attention 和 MoE 後端都換成 <code>hpc_ops</code>，Hy3-FP8 配合 FP8 KV cache 直接跑起來。</p><h3>端到端：48.8% 不是實驗室噱頭</h3><p>把 Attention 和 MoE 一起打开，在 8×H20、Hy3-FP8 上，TPOT 在 batch size 4 到 64 这一档降了 **15.1%–48.8%**，TTFT（首 token 延迟）在 batch size 4 到 16 降了 3.3%–6.0%。举个最猛的例子：batch size 32 的时候，TPOT 从 35.33 毫秒干到 18.09 毫秒，差不多腰斩。在 LongCat-Flash-Lite-FP8 上单独测 Router GEMM，输入吞吐在 batch 4 到 64 提升 5.5%–6.1%。</p><p>在 H200 上的上游驗證也證明這些收益能跨 Hopper 系列泛化：FP8 attention 路徑相比 FlashAttention，輸出吞吐提升 3.7%–5.9%；Router GEMM 在 LongCat-Flash Lite 的 prefill 上提升輸入吞吐 2.8%–5.4%。而且他們做了數值和模型級保真檢查——Hy3 FP8 的 greedy 輸出和 BF16 路徑 token 級一致，Qwen3 的 MoE 路徑相對 Triton 的 FP32 誤差一致，餘弦相似度 0.99974，最大相對誤差 0.024。</p><h3>幾句想說的話</h3><p>做推理優化這兩年，大家越來越意識到：真正的護城河不在模型權重，而在這一層層把延遲和成本摳下來的工程細節裏。騰訊這次把生產裏驗證過的算子開源出來、合併進 SGLang，對整個開源推理生態是個實打實的貢獻。對跑 MoE 模型、又卡在 Attention 和 MoE 這兩塊的團隊來說，值得一試。</p><p>當然，這些收益目前主要在 NVIDIA Hopper（SM90）上，H20 是主戰場，H200 也做了驗證。對非 Hopper 架構的用戶，可能還得再等等。另外 MoE 這塊的提速幅度相對溫和（幾個點），Attention 在偏斜場景下的提升纔是最炸的——如果你的線上負載里長短請求混得很厲害，光這一項就夠回本了。</p><p>總之，HPC-Ops 不只是一個"又開源了"的新聞，它示範了一種把生產級推理優化回饋給開源的姿態。對真心想把推理成本和延遲打下來的團隊，這條值得放進收藏夾。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

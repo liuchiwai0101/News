@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>2026 年的 JavaScript 已经不是你认识的了：Vite+、Turbopack、TS v7、Vitest · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>2026 年的 JavaScript 已经不是你认识的了：Vite+、Turbopack、TS v7、Vitest</h1>
+<div class="meta"><span class="src">SegmentFault 思否</span><span>· 8月10日 周一</span>
+<span>· <a href="https://segmentfault.com/a/1190000047717675" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047717675" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>2026 年的 JavaScript 已經不是你認識的 JavaScript 了</h3><p>你好，我是冴羽。</p><p>如果有人問你 JS，大部分人可能還停留在 async/await、Promise、ES6 那個年代。</p><p>但 JavaScript 一年一個版本，語言早就不是原來的樣子了。</p><p>還有框架、運行時、構建工具……整個生態都在快速演進。</p><p>本篇帶你看看 2026 年的 JavaScript 和生態到底是什麼樣的。</p><h3>1. 語言新特性</h3><p>這裏重點說幾個真正能改變你寫代碼方式的新特性。</p><h3>#### 1.1 Iterator Helpers：鏈式操作不再創建中間數組</h3><h3>❌ 舊方式：每一步都創建新數組</h3><pre><code>const result = array
+.map(x =&gt; x * 2)
+.filter(x =&gt; x &gt; 10)
+.slice(0, 3);</code></pre><p>✅ 新方式：惰性求值，算到第 3 個就停</p><pre><code>const result = Iterator.from(array)
+.map(x =&gt; x * 2)
+.filter(x =&gt; x &gt; 10)
+.take(3)
+.toArray();</code></pre><p>使用迭代器助手，大數據量下內存佔用大幅降低，而且不只數組能用，Set、Map、生成器都可以。</p><h3>#### 2. Set 家族新方法：集合運算</h3><p>這組方法解決了一個很實際的問題，那就是兩個集合之間該怎麼比較：</p><pre><code>const 你会的 = new Set([&quot;JS&quot;, &quot;Python&quot;, &quot;CSS&quot;, &quot;SQL&quot;]);
+const 岗位要求 = new Set([&quot;JS&quot;, &quot;TypeScript&quot;, &quot;Python&quot;]);
+// 共同技能
+你会的.intersection(岗位要求); // Set {&quot;JS&quot;, &quot;Python&quot;}
+// 技能差距
+岗位要求.difference(你会); // Set {&quot;TypeScript&quot;}
+// 你会但岗位不需要的
+你会的.difference(岗位要求); // Set {&quot;CSS&quot;, &quot;SQL&quot;}
+// 两者并集
+你会的.union(岗位要求); // Set {&quot;JS&quot;, &quot;Python&quot;, &quot;CSS&quot;, &quot;SQL&quot;, &quot;TypeScript&quot;}
+// 有没有一种&quot;知己知彼&quot;的感觉？</code></pre><p>以前要寫一堆循環才能算出來的東西，現在一行代碼搞定。</p><h3>#### 3. RegExp.escape()：正则转义</h3><p>假設你正在構建一個搜索功能，用戶輸入搜索詞，你想用正則表達式來實現這個功能。</p><p>這可能存在一個風險，那就是用戶輸入的一些字符，比如 <code>$</code> 在正則表達式中屬於特殊字符，這就會導致搜索出錯。</p><p>通常你需要先做轉義處理，經過 15 年了，JS 終於提供了原生的方法：</p><pre><code>const query = &quot;$5.00 (off!)&quot;;
+// ❌ 旧方式：各种特殊字符要逐个转义
+const badRe = new RegExp(query, &quot;g&quot;); // 崩了
+// ✅ ES2025：一行搞定
+const goodRe = new RegExp(RegExp.escape(query), &quot;g&quot;);</code></pre><p>#### 4. Promise.try()：同步異常和異步拒絕，一個 catch 搞定</p><p>一個函數可能拋同步異常，也可能返回 Promise 拒絕態，以前要寫兩個錯誤處理分支：</p><pre><code>// ❌ 旧方式：两个错误路径
+let p;
+try {
+  p = loadUser(id); // 同步 throw 在这里捕获
+} catch (e) {
+  handleError(e);
+}
+p?.catch((e) =&gt; handleError(e)); // 异步 reject 在这里捕获</code></pre><p>現在一個 catch 搞定：</p><pre><code>// ✅ ES2025：一个入口，一个 catch
+Promise.try(() =&gt; loadUser(id))
+  .then((user) =&gt; render(user))
+  .catch((err) =&gt; showError(err)); // 同步异常和异步拒绝都在这</code></pre><p>代碼是不是清爽了很多？</p><h3>#### 5. Import Attributes：直接 import JSON 和 CSS</h3><pre><code>// 直接导入 JSON，不用再 fetch + parse 了
+import data from &quot;./file.json&quot; with { type: &quot;json&quot; };
+// 直接导入 CSS，配合 Web Components 使用
+import sheet from &quot;./styles.css&quot; with { type: &quot;css&quot; };</code></pre><p>不過這裏要注意：如果 import JSON 失敗了，會讓整個模塊一起崩潰。建議用動態 import 加 try-catch 來兜底：</p><pre><code>try {
+  const { default: data } = await import(url, {
+    with: { type: &quot;json&quot; },
+  });
+} catch (error) {
+  // 降级逻辑
+}</code></pre><h3>#### 6. Temporal API：以後時間處理就用這個了</h3><p>以後不再需要 Moment.js、Day.js 了：</p><pre><code>// 获取特定时区的当前时间
+const now = Temporal.Now.zonedDateTimeISO(&quot;America/New_York&quot;);
+console.log(now.toLocaleString());</code></pre><p>最經典的血案莫過於計算 1 月 31 日再加一個月了：</p><pre><code>const date = new Date(2026, 0, 31);
+date.setMonth(date.getMonth() + 1);
+console.log(date.toDateString()); // &quot;Sun Mar 03 2026&quot; ❌ 跳到 3 月了</code></pre><p>用 Temporal 就正確了：</p><pre><code>const jan31 = Temporal.PlainDate.from(&quot;2026-01-31&quot;);
+const feb = jan31.add({ months: 1 });
+console.log(feb.toString()); // &quot;2026-02-28&quot; ✅</code></pre><p>Safari 目前是最後一個還沒支持的瀏覽器，但已經在 Technical Preview 階段了，正式支持不遠了。</p><p>#### 7. Explicit Resource Management：不用手动写 cleanup 了</p><p>Node.js 裏的文件句柄、數據庫連接，用完還要手動關，這一直是個老大難問題。</p><p>ES2026 引入了 using 關鍵字，作用域結束自動調用清理邏輯：</p><pre><code>async function saveData() {
+  await using file = new FileHandle(&quot;output.txt&quot;);
+  await file.write(&quot;hello world&quot;);
+  // file 自动 flush + close，就算中间抛出异常也会执行
+}</code></pre><p>多個資源要用 DisposableStack:</p><pre><code>async function runJob() {
+  await using stack = new AsyncDisposableStack();
+  const db = stack.use(await openDatabase());
+  const file = stack.use(new FileHandle(&quot;output.txt&quot;));
+  const tmpDir = stack.defer(async () =&gt; removeTempDir(&quot;/tmp/job&quot;));
+  // ... 业务逻辑
+  // 退出时自动按逆序清理，三个资源全关掉
+}</code></pre><p>這就是 RAII 模式在 JavaScript 裏的落地。</p><p class='list-item'>- Array.fromAsync：異步迭代器直接轉數組，分頁場景很實用</p><p class='list-item'>- Error.isError()：跨 Realm（如 Web Worker、iframe）判断是否是真正的 Error 对象</p><p class='list-item'>- Math.sumPrecise：告别 0.1 + 0.2 = 0.30000000000000004 的尴尬</p><p class='list-item'>- toBase64() / toHex()：字节数组直接编码，不用再绕 TextEncoder</p><h3>2. 框架生態：React、Vue、Svelte 各有新動作</h3><h3>#### 2.1. React 生态系统</h3><p>React 19 在 2024 年底發佈，帶來了 3 個核心概念：</p><p class='list-item'>- RSC（React Server Components）：部分組件在服務端渲染，減少客戶端 JS 體積</p><p class='list-item'>- Server Actions：在服務端運行的函數，前後端調用更自然</p><p class='list-item'>- React Compiler：自动帮你做 useMemo、useCallback 这类性能优化</p><p>但也要提醒：這些技術去年經歷了兩次嚴重的安全漏洞事件，如果你在用 RSC，務必關注官方安全公告。</p><h3>#### 2.2. Vue 生态系统</h3><p>Vue 3.5 穩定運行，3.6 已經在 Alpha 階段，最大的看點是 Vapor Mode，作爲一種全新的編譯策略，據說性能可以和 Solid、Svelte 5 比肩。</p><p>另外，Vite 的親爸爸 VoidZero 收購了 NuxtLabs，Nuxt 4.0 也已經發布。</p><p>Vue 生態正在往更統一、更完善的方向走。</p><h3>#### 2.3. Svelte 生态系统</h3><p>Svelte 5 帶來了全新的 Runes API，實現了更細粒度的響應式，實際效果就是更高效、更快。</p><p>有意思的是，Svelte/SvelteKit 也是 Vercel 旗下的產品。</p><h3>3. JavaScript 運行時：Node 繼續領跑，Bun 有了大靠山</h3><h3>#### 3.1. Node.js：终于能直接跑 TypeScript 了</h3><p>從 Node 22.18.0 開始，不用再加任何實驗性 flag：</p><p><code>node my-script.ts</code>直接跑 TypeScript 文件。注意它只是**剝離類型**，不做類型檢查——所以生產環境還是要單獨跑 tsc。</p><p>Node 這幾年的方向很清晰：減少依賴、提升安全性、靠攏瀏覽器 API。原生測試運行器、內置 SQLite、權限模型……這些功能讓它越來越像一個“開箱即用的平臺”。</p><h3>#### 3.2. Bun：被 Anthropic 收购了</h3><p>Bun 1.3 帶來了更順滑的 DX 體驗——直接對着 HTML 文件跑，就能得到一個完整的開發服務器：</p><p><code>bun './**/*.html'</code>最重磅的消息是：Bun 被 Anthropic（Claude 的公司）收購了。有了一個資金充裕的穩定靠山，這對 Bun 的長期發展是好事。</p><p>速度依然是 Bun 的核心競爭力，只是穩定性方面偶爾會有一些問題。</p><h3>#### 3.3. Deno 2.0：最安全的选择</h3><p>Deno 最大的優勢是安全——默認情況下沒有文件系統訪問、網絡連接、環境變量讀取權限，必須顯式授權。</p><pre><code>// Deno 默認安全：
+// 不寫 --allow-read，就讀不了文件
+// 不寫 --allow-net，就發不了網絡請求</code></pre><p>如果你要運行不受信任的代碼，或者做邊緣部署，Deno 是最讓人放心的選擇。</p><h3>4. 構建工具：Vite 統治一切，Webpack 在努力追趕</h3><p>#### 4.1. Vite：v8 了，还出了个 Vite+</p><p>Vite 8 是近期最大的版本升級，不再依賴第三方打包工具 Rollup，而是用自己開發的 Rolldown。這一改變讓整個工具鏈更統一、可預測。</p><p>Vite 還在往“全家桶”方向走，推出了 Vite+ 概念：一個工具鏈覆蓋開發服務器、格式化、lint、測試、類型檢查、打包。同時還在做 Void 平臺——一個基於 Cloudflare 的部署平臺，數據庫、KV、AI 推理、認證、隊列……全都內置了。</p><p>現在的格局是：幾乎所有主流框架都在用 Vite——Astro、SolidStart、SvelteKit、Nuxt、Vue。</p><p>唯一的例外是 Next.js，它用 webpack，正在遷移到 Turbopack。</p><h3>#### 4.2. Turbopack: Next.js v16 的默认打包器</h3><p>Next.js v16 把 Turbopack 設爲默認打包器了。Turbopack 是 Vercel 用 Rust 寫的，據說比 webpack 快 5-10 倍。不過實際遷移過程中，確實有一些兼容性問題需要處理。</p><h3>#### 4.3. webpack：2026 年有改进计划</h3><p>webpack 雖然被很多人吐槽“太複雜”，但它依然是大量項目的基礎。官方已經發布了 2026 年改進計劃，目標就是簡化 loader 配置、降低使用門檻。</p><h3>5. TypeScript：v6 打基础，v7 是大招</h3><p>TypeScript v6 剛剛發佈，v7 預計 2026 年中期發佈，v7 纔是真正的大版本。</p><p>v6 主要做的是鋪路工作：爲 v7 換用 Go 語言重寫的編譯器做準備。</p><p>有幾個關鍵變化：</p><p class='list-item'>- strict: true 現在是默認配置</p><p class='list-item'>- types 默認值變成空數組，不再自動拉取 node_modules/ @types</p><p class='list-item'>- target 默認值浮動到當年的 ES 規範（現在是 es2025）</p><p>最後一條影響很大：不再自動拉 @types，包體積和類型檢查速度能提升 20-50%，但很多老項目會因此報錯，值得提前關注。</p><p>另外一個大趨勢：**TypeScript 已經登頂 GitHub 第一大語言**，年同比增長 66%，而且 92% 的開發者在用 AI 寫代碼——AI 對 TypeScript 的掌握度是最高的。</p><h3>6. 測試工具：Vitest + Playwright 組合越來越主流</h3><p>Vitest 基於 Vite 的測試框架，正在快速取代 Jest——它兼容 Jest 的寫法，遷移成本低，性能卻好很多，而且支持**瀏覽器模式**，可以跑真實的瀏覽器環境。</p><p>Playwright 在端到端測試領域的優勢也越來越明顯，比起 Puppeteer 和 Cypress，它的穩定性和跨瀏覽器支持都好出一個檔次。</p><h3>最後</h3><p>寫這篇文章的時候，我最大的感受是：</p><p class='list-item'>**JavaScript 生態正在經歷一個“收斂”的階段。**</p><p>以前要裝幾十個包才能乾的事，現在語言本身、運行時、框架都在往“內置”方向走。TypeScript 直接跑、內置 SQLite、內置測試運行器……</p><p>這當然是一種好的收斂——不是說包不重要，而是那些基礎能力，越來越不需要自己搭了。</p><p>作爲前端工程師，我們的精力應該放在理解這些工具的能力邊界上，然後專注真正重要的事：解決用戶問題。</p><p>我是冴羽，10 年筆耕不輟，專注前端領域，更新了 10+ 系列、300+ 篇原創技術文章，翻譯過 Svelte、Solid.js、TypeScript 文檔，著有小冊《Next.js 開發指南》、《Svelte 開發指南》、《Astro 實戰指南》。</p><p>歡迎圍觀我的“網頁版朋友圈“，關注我的公衆號：冴羽（或搜索 yayujs），每天分享前端知識、AI 乾貨。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

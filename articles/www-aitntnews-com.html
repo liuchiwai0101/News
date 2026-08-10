@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>世界模型不再「盲搜」9000次：浙大、清华等团队提出INTACT，直接从意图生成动作 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>世界模型不再「盲搜」9000次：浙大、清华等团队提出INTACT，直接从意图生成动作</h1>
+<div class="meta"><span class="src">aitntnews.com</span>
+<span>· <a href="https://www.aitntnews.com/newDetail.html?newId=27827" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.aitntnews.com/newDetail.html?newId=27827" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>浙大清華新作 INTACT，同構算子學習意圖動作映射新範式</p><p>Junhan Sun・Hao Zhao・Guofeng Zhang｜浙江大学・清华 AIR・InSpatio・RoboParty Lab</p><p>只訓練 1 個 epoch，不採樣任何候選動作序列，INTACT 在四項 LeWM 官方任務上取得 95.33% 的平均成功率；需要時，小規模局部驗證還能進一步提升到 96.86%，同比相關模型耗時降至 1/300。</p><p>世界模型已經能夠預測 “執行一個動作後，世界會發生什麼”，但真正部署時，它往往仍然無法直接回答另一個更關鍵的問題：現在應該怎麼做？</p><p>傳統方法通常依賴 CEM 或 MPPI，從大量隨機生成的候選動作中反覆預測、篩選答案。也就是說，世界模型雖然會預測未來，卻仍然需要通過大規模搜索才能決定下一步行動。</p><p>浙江大學、清華大學智能產業研究院、影溯 InSpatio、RoboParty Lab 等團隊提出的 INTACT（INtent-To-ACTion），一種基於端到端 JEPA 的無搜索世界模型控制方法，試圖改變這一範式：直接利用離線軌跡中已有的狀態、動作與未來結果，將運動意圖轉化爲動作模型可以讀取的語義接口，使模型無需搜索候選動作序列，就能直接生成動作計劃；只有在精細接觸或局部修正等複雜場景中，才引入小規模搜索進行驗證。</p><p class='list-item'>- 论文标题：Isomorphic Intent-to-Action Learning for Search-Free World Models</p><p class='list-item'>- 论文地址：https://arxiv.org/abs/2607.26056</p><p class='list-item'>- 项目主页：https://zju3dv.github.io/INTACT-JEPA/</p><p class='list-item'>- Github 主页：https://github.com/zju3dv/INTACT-JEPA</p><p class='list-item'>- 影溯 InSpatio： https://www.inspatio.com/</p><p class='list-item'>- RoboParty Lab ：https://lab.roboparty.com/</p><p class='list-item'>**背景**</p><p>傳統方案通常前向只是做了未來預測器亦或者是 mask 中間 latent 的還原器，把這個反問題交給 CEM 或 MPPI：隨機生成大量動作序列，讓世界模型逐條預測，再從中選出最接近目標的一條。</p><p>以 LeWM 的典型設置爲例，CEM 在一次規劃中最多評估 300×30，即 9000 條候選序列。搜索本身並沒有錯，但它會帶來額外延遲，也讓世界模型學到的動作信息在部署時無法被直接讀取。</p><p>與此同時，VLA 訓練過程凍結 Encoder 去訓練 Actor 的方式，只是將多模態過濾去進行動作生成，卻並沒有考慮到編碼後的潛空間和動作空間的語義信息對齊。這種沒有進行明確意圖族和動作族正確映射關係的訓練方式，會讓模型在生成意圖和意圖完整生成動作上存在明顯 GAP。</p><p class='list-item'>**相關工作**</p><h3>潛在世界模型與搜索式控制</h3><p>LeWM 一類方法首先訓練視覺編碼器與 Forward Predictor，讓模型在潛在空間中預測動作後的未來狀態。部署時，世界模型主要充當 “候選動作的裁判”：CEM 或 MPPI 提議動作，Forward Predictor 展開未來，目標代價再對候選進行排序。</p><h3>逆動力學與目標條件策略</h3><p>局部逆動力學可以從真實相鄰狀態恢復動作，目標條件策略則可以根據當前狀態和未來目標直接輸出控制。前者具有物理錨點卻無法在行動前獲得下一狀態，後者可部署卻容易退化成單獨的目標條件行爲克隆。INTACT 關注的正是這兩類條件如何通過同一個動作算子建立一致語義。</p><h3>從搜索先驗到直接動作接口</h3><p>已有工作也會訓練動作先驗來輔助採樣，但搜索仍然承擔尋找主方向的職責。INTACT 的區別在於，它讓目標意圖本身處在訓練支持上，並將同一個 INTACT Predictor 直接保留爲部署接口，使搜索從必選項變成可選驗證器。</p><p class='list-item'>**方法**</p><h3>系統概述</h3><p>如圖 1 所示，INTACT 在原有 Forward Predictor 之外增加一個共享的條件動作算子。訓練時，真實局部變化和未來目標變化被巧妙地以相同的輸入結構和不同的梯度傳播策略進行 INTACT Predict；推理時，目標分支直接生成動作塊，Forward Predictor 繼續負責未來展開、重規劃與可選驗證。</p><p>圖 1. INTACT 的共享編碼器、雙意圖分支與 Search-Free Direct 控制框架</p><h3>兩種運動意圖</h3><p>INTACT 的關鍵觀察很樸素：離線機器人軌跡裏已經同時存在狀態、動作和未來結果。每一段真實轉移都告訴模型，某個動作在當前狀態下造成了什麼局部變化；同一條軌跡中的未來幀，又可以描述機器人最終想實現的目標變化。也就是說，讓模型站在當前狀態下有一個想要去未來明確目標的意圖，以序列裏面下一幀的各種實際動作爲參考，給出最合適的貼近意圖的動作。</p><p>第一類條件是局部意圖：它來自真實相鄰狀態之間的變化，爲模型提供動作與物理可達性的錨點。第二類條件是目標意圖：它來自當前狀態與未來目標之間的完整位移，在執行動作之前即可獲得，因此能夠成爲直接控制條件。</p><h3>同构 Backbone 与同构 Input</h3><p>兩類條件進入同一個 INTACT Predictor，並共享相同的輸入結構和參數。這種同構模型架構並不強迫局部變化與未來目標在潛在空間中數值相等，而是讓它們在需要相近的控制行爲時，映射到相容的動作分佈。與此同時，Forward Predictor 繼續保留接觸、障礙和後續預測所需的信息。</p><p>INTACT 不要求兩種意圖 “長得一樣”，只要求：當它們需要相近的控制行爲時，模型能夠讀出相容的動作。</p><h3>Search-Free Direct 与可选 Guarded Verification</h3><p>INTACT 的目標不是 “徹底取消規劃”，而是讓世界模型先給出一個具有 intact 任務信息的意圖，再將意圖 intact 轉換成動作，直接執行動作查看是否成功，再決定是否需要額外搜索。</p><p>圖 2. 上：LeWM 從隨機動作開始搜索；下：INTACT 先生成 Direct plan，搜索只負責可選的局部驗證</p><p class='list-item'>**損失函數設計**</p><p>INTACT 的訓練目標由世界模型預測、真實局部逆動力學和目標意圖動作似然三部分組成。它們不是簡單堆在一起的輔助項，而是共同塑造 Encoder、Forward Predictor 與共享動作算子的端到端目標。</p><p class='list-item'>1. 世界模型損失</p><p>Forward Predictor 預測動作後的潛在狀態；SIGReg 用於維持潛在表示的健康分佈，避免塌縮。</p><p class='list-item'>2. 真實局部逆動力學損失</p><p>利用真實相鄰狀態的位移預測當前動作。終點由動作真實到達，因此這一分支把物理可達性和動作可恢復信息寫入視覺表示。</p><p class='list-item'>3. 目標意圖動作損失</p><p>利用當前狀態到未來目標的位移預測當前動作。未來目標作爲 stop-gradient 錨點，避免把終點誤當作下一時刻物理狀態。</p><p class='list-item'>4. 單任務聯合目標</p><p>完整 INTACT 在同一個 Predictor 內同時解釋局部意圖族和目標意圖族，使兩類條件通過動作分佈形成等價類對齊。</p><h3>四任務 Multi-Task 擴展</h3><p>在多任務設置中，PushT、Cube、Reacher 和 TwoRoom 共享同一個 Visual Encoder 與 Projector，但每個任務保留自己的 Forward Predictor、動作嵌入和 INTACT Predictor。這樣既讓四類視覺數據共同塑造共享表示，又避免把異構動作空間強行補零或拼接。</p><p class='list-item'>**結果**</p><p>單任務：1 個 epoch，零搜索達到 95.33%</p><p>研究團隊在 PushT、Cube、Reacher 和 TwoRoom 四項官方 LeWM 任務上進行評測。單任務模型均從頭訓練 1 個 epoch，Direct 模式不採樣候選動作，也不調用終點代價函數，四任務平均成功率達到 95.33%。</p><p>當局部驗證有幫助時，Guarded A 以 Direct plan 爲中心，僅評估 384 條候選序列，平均成功率進一步達到 96.86%。相比傳統 9000 條候選序列，採樣量減少 23.44 倍；規劃側延遲從約 1.48 秒下降到 2.9-5.5 毫秒。</p><h3>Multi-Task：一個共享編碼器同時學習四種任務</h3><h3>圖 3. 四任務共享編碼器的 E5 Direct 成功率</h3><p>Goal-displacement INTACT 在 E5 达到 89.39±0.77% 的四任务平均成功率，比 Goal intent only 高 8.78 个百分点。相对共享 LeWM，PushT、Cube、Reacher 和 TwoRoom 分别提升 5.66 / 32.23 / 12.56 / 42.44 个百分点。</p><p>表 1. Multi-Task 完整結果：Direct、關閉 Actor 後的 Pure CEM 與可選局部驗證</p><p>關閉 INTACT Predictor 後，Pure CEM 的平均成功率仍從 66.17% 提升至 70.08%。這說明多任務收益不只來自一個更強的動作頭，共享世界模型表徵本身也變得更可規劃；Guarded A 則把搜索保留爲低預算的可選驗證器。</p><p class='list-item'>**消融實驗**</p><p>動作監督是否真的改善了世界模型表徵？</p><p>論文在評測時完全移除 INTACT Predictor，只保留 Encoder、Forward Predictor 和原始 CEM。如果收益只來自額外的動作頭，那麼關閉 Actor 後不應繼續提升。結果卻顯示，加入局部意圖和目標意圖監督後，Actor-disabled Pure CEM 仍持續改善。</p><h3>圖 4. 關閉 Actor 後的規劃能力與凍結探針結果</h3><p>在 PushT 的控制鏈中，Pure CEM 成功率從 42.2% 依次提升到 57.7%、61.4% 和 69.4%；凍結探針也顯示更多物理狀態與動作信息被編碼器保留。這說明聯合動作監督不僅提供了更好的動作提議，也反過來塑造了共享視覺表示。</p><p>爲什麼必須共享同一個 INTACT Predictor？</p><p>把局部意圖和目標意圖交給參數量匹配的獨立 Actor，會損失 5.67 個成功率百分點；即使將獨立 Actor 容量翻倍，仍低於完全共享的設計。這個結果支持了論文的核心判斷：收益來自兩類條件在同一個動作算子中的語義耦合，而不是簡單增加參數。</p><p class='list-item'>**總結**</p><p>這項工作真正改變了什麼？</p><p>INTACT 創新性地讓 inverse latent 進行了意圖空間和動作空間的等價類對齊，這種自監督的範式能夠通過自然且巧妙的同構 backbone 和同構 input 進行聚類，這種聯合訓練的範式能夠自然讓 Encoder 更符合 Actor 輸出所需的格式，從而在推理過程直接輸入意圖能夠有較大魯棒性得到 dynamics 的動作 policy。</p><p>INTACT 並沒有宣稱搜索從此失去價值。它重新劃分了模型與優化器的職責：INTACT Direct 負責快速給出具有任務語義的動作計劃；Forward Predictor 以 Direct 爲動作主方向的輸出模式繼續維護對未來的預測；搜索則從 “尋找方向” 退到 “對主方向的驗證和修正”。</p><p>世界模型不一定只能充當 “候選動作的裁判”，當運動意圖被組織成可直接讀取的動作語義，它可以自然成爲一個更好的意圖表達者，同時也成爲一個快速的行動者。</p><p>论文：Isomorphic Intent-to-Action Learning for Search-Free World Models</p><h3>arXiv:2607.26056｜本文根據論文與作者提供原圖整理</h3><p>文章來自於微信公衆號 “機器之心”，作者 “機器之心”</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

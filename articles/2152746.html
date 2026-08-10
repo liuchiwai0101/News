@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>AI Agent上下文工程：核心框架与工业实践 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>AI Agent上下文工程：核心框架与工业实践</h1>
+<div class="meta"><span class="src">intelliparadigm.com</span>
+<span>· <a href="https://intelliparadigm.com/article/weixin_29044713/2152746" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://intelliparadigm.com/article/weixin_29044713/2152746" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>1. 項目概述：Agent時代的上下文工程核心價值</h3><p>在AI Agent技術爆發的2026年，上下文工程（Context Engineering）已成爲開發者構建智能系統的分水嶺技能。最新arXiv研究顯示，採用ACE框架的Agent在金融領域任務中實現了8.6%的性能躍升，而傳統方法正面臨兩大致命傷：信息壓縮導致的"摘要偏見"（Brevity Bias）和迭代優化中的"上下文坍縮"（Context Collapse）。這就像試圖用Tweet總結《戰爭與和平》，關鍵細節在傳遞過程中不斷流失。</p><p>我在開發Hermes Agent桌面版時深有體會：當系統提示詞超過3次迭代後，原始需求細節會丟失37%。而上下文工程通過模塊化的生成-反思-提煉循環，使智能體像老練的編劇管理劇本那樣，保持情節連貫性的同時動態調整細節。這種技術特別適合需要長期記憶的客服Agent、多輪對話系統等場景。</p><h3>2. 上下文工程的技術實現框架</h3><h3>2.1 ACE框架解剖圖</h3><p>arXiv:2510.04618論文提出的ACE框架包含三個核心模塊：</p><p class='list-item'>- **策略生成器**：基於LLM的並行推理流水線，同時產出N種解決方案</p><p class='list-item'>- **反思引擎**：通過執行反饋自動評估策略效果，類似強化學習的獎勵模型</p><p class='list-item'>- **知識庫管理器**：採用向量數據庫+圖結構的混合存儲，保留決策鏈路</p><h3>&lt;code&gt;python复制&lt;/code&gt;```</h3><h3>典型ACE工作流代碼示例</h3><pre><code>def ace_loop(user_query):
+    strategies = generate_strategies(query)  # 生成多种策略
+    feedback = execute_with_reflection(strategies)  # 带反思的执行
+    curated_knowledge = update_knowledge_base(feedback)  # 知识提炼
+    return curated_knowledge</code></pre><pre><code>### 2.2 關鍵參數調優指南
+
+在華爲雲DeepSeek Agent項目中，我們驗證了這些黃金參數：
+
+- **上下文保留率**：建議保持在0.65-0.8之間（太高導致信息冗餘，太低引發坍縮）
+- **反思深度**：3層反思可獲得最佳性價比（每增加1層耗時增加40%）
+- **知識塊大小**：</code></pre></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

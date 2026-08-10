@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Webpack 迁到 Rspack 实战：冷启动 38s→6s、HMR 400ms→&lt;100ms、构建 2min→15s · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Webpack 迁到 Rspack 实战：冷启动 38s→6s、HMR 400ms→&lt;100ms、构建 2min→15s</h1>
+<div class="meta"><span class="src">稀土掘金</span><span>· 8月10日 周一</span>
+<span>· <a href="https://juejin.cn/post/7669725784872894491" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7669725784872894491" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>我們組一個React中後臺項目，跑了三年多了，452個模塊。Webpack 5打包一次生產環境接近兩分鐘，CI排隊的時候看着進度條，總覺得在浪費生命。 上週刷GitHub看到Rspack已經2.1.7了，release note裏寫了不少性能優化，我尋思趁這周需求間隙試試。官方文檔看起來挺清爽的：改個配置文件名，換幾個loader，完事。半天就夠了吧。 結果折騰了兩天。文檔寫得挺清楚，但坑都在文檔沒寫的地方。</p><h3>SWC替換Babel，上來就給我一棒子</h3><pre><code>配置文件改名那步确实没啥好说的，&lt;code&gt;webpack.config.js&lt;/code&gt; 改成 &lt;code&gt;rspack.config.js&lt;/code&gt;，&lt;code&gt;webpack&lt;/code&gt; 换成 &lt;code&gt;@rspack/core&lt;/code&gt;，内置插件名字换一换，五分钟搞定。跑 &lt;code&gt;npx rspack build&lt;/code&gt;，直接就开始编译了，没报错。
+然后我把 &lt;code&gt;babel-loader&lt;/code&gt; 换成 &lt;code&gt;builtin:swc-loader&lt;/code&gt;，按照文档的示例改了改配置：</code></pre><pre><code>// 改之前
+{
+  test: /.(j|t)sx?$/,
+  loader: &#x27;babel-loader&#x27;,
+  options: {
+    presets: [
+      &#x27;@babel/preset-env&#x27;,
+      &#x27;@babel/preset-react&#x27;,
+      &#x27;@babel/preset-typescript&#x27;
+    ],
+    plugins: [
+      &#x27;@babel/plugin-proposal-decorators&#x27;,
+      &#x27;babel-plugin-styled-components&#x27;
+    ]
+  }
+}
+// 改之后（第一版，有问题的）
+{
+  test: /.(j|t)sx?$/,
+  loader: &#x27;builtin:swc-loader&#x27;,
+  options: {
+    jsc: {
+      parser: {
+        syntax: &#x27;typescript&#x27;,
+        tsx: true,
+        decorators: true
+      },
+      transform: {
+        react: { runtime: &#x27;automatic&#x27; },
+        legacyDecorator: true
+      }
+    }
+  }
+}</code></pre><p>編譯炸了。報錯大概長這樣：</p><pre><code>Error: Expected &#x27;;&#x27;, &#x27;}&#x27; or &lt;EOF&gt;
+   ,- src/utils/legacy-parser.ts:42:15
+   |
+42 |   const result = arr?.filter(x =&gt; x != null)
+   |                  ^</code></pre><p>可選鏈 <code>?.</code> 報語法錯誤？？我第一反應是項目裏是不是有什麼奇怪的語法沒注意到，檢查了一圈發現不是。然後我以爲是 SWC 配置哪裏寫錯了，試了好幾種寫法，改 parser、改 target、改 transform，折騰了一個多小時都不行。</p><p>最后去翻 Rspack 的 issues 才搞明白：<code>builtin:swc-loader</code> 的 <code>syntax: 'typescript'</code> 并不会自动开启所有 ES 新特性的解析。Babel 的 <code>@babel/preset-env</code> 默认就处理可选链、空值合并这些，但 SWC 不会，得在 <code>jsc</code> 配置里显式指定 <code>target</code>：</p><pre><code>// 最终能用的版本
+{
+  test: /.(j|t)sx?$/,
+  loader: &#x27;builtin:swc-loader&#x27;,
+  options: {
+    jsc: {
+      parser: {
+        syntax: &#x27;typescript&#x27;,
+        tsx: true,
+        decorators: true
+      },
+      transform: {
+        react: { runtime: &#x27;automatic&#x27; },
+        legacyDecorator: true
+      },
+      target: &#x27;es2020&#x27;  // 加上这行就好了
+    }
+  }
+}</code></pre><p>結果還沒完。我們項目裏有一些 <code>.js</code> 文件也用了 decorators（別問爲什麼，三年前的代碼，什麼妖魔鬼怪都有），TypeScript parser 不認 JS 文件裏的 decorators。又得給 <code>.js</code> 單獨寫一條規則：</p><pre><code>{
+  test: /.js$/,
+  loader: &#x27;builtin:swc-loader&#x27;,
+  options: {
+    jsc: {
+      parser: { syntax: &#x27;ecmascript&#x27;, decorators: true },
+      transform: { legacyDecorator: true }
+    }
+  }
+}</code></pre><p>光這一個 loader 就搞了我大半天。Babel 時代 <code>@babel/preset-env</code> 一把梭的日子一去不復返了。SWC 配置粒度更細，但你得真的知道自己在配什麼。</p><p>另外 <code>babel-plugin-styled-components</code> 這個——SWC 裏沒有直接對應的插件。我們項目裏用 styled-components 不多，趁這個機會直接遷到 CSS Modules 了。如果你們項目裏 styled-components 用得重，這個遷移成本得額外算。</p><h3>CSS Modules全炸了，差點回滾</h3><p>Loader 搞完之後編譯總算過了。心想最難的應該搞定了，跑起來看看效果吧。
+頁面出來了。然後我差點沒認出來——所有樣式都亂了。
+我們在 Webpack 裏 CSS Modules 用的 <code>[local]_[hash:8]</code> 命名：</p><pre><code>// Webpack的配置
+{
+  loader: &#x27;css-loader&#x27;,
+  options: {
+    modules: {
+      localIdentName: &#x27;[local]_[hash:8]&#x27;
+    }
+  }
+}</code></pre><p>我一開始在 Rspack 裏這麼寫的：</p><pre><code>// 有问题的版本
+{
+  test: /.module.css$/,
+  use: [rspack.CssExtractRspackPlugin.loader, &#x27;css-loader&#x27;],
+  type: &#x27;css/module&#x27;
+}</code></pre><p>問題出在 <code>type: 'css/module'</code> 走的是 Rspack 內置的 CSS Modules 處理，它用的是自己的默認命名規則，完全忽略了 css-loader 裏的 <code>localIdentName</code>。兩種機制不能混用，我當時不知道，配置寫上去跟沒寫一樣。</p><p>搞到第二天下午還沒搞定的時候，我一度想把配置回滾了，先不遷了。後來靜下心來翻 Rspack 文檔裏 CSS 那章，才發現內置方式要把命名配置放在 <code>module.parser</code> 裏：</p><pre><code>// 最终正确的版本
+module: {
+  parser: {
+    &#x27;css/module&#x27;: {
+      exports: &#x27;local&#x27;,
+      localIdentName: &#x27;[local]_[hash:8]&#x27;
+    }
+  },
+  rules: [
+    {
+      test: /.module.css$/,
+      type: &#x27;css/module&#x27;,
+      use: [rspack.CssExtractRspackPlugin.loader]
+    }
+  ]
+}</code></pre><p>改完樣式恢復了。哦對，還有一點——如果你的項目不是用 <code>.module.css</code> 後綴區分，而是在 webpack 裏配 <code>modules: { auto: true }</code> 按文件名自動識別的，Rspack 的 <code>auto</code> 行爲和 Webpack 不完全一致，這塊得多測試。</p><h3>剩下的坑不大但都挺煩人</h3><pre><code>&lt;code&gt;copy-webpack-plugin&lt;/code&gt; 换成 &lt;code&gt;rspack.CopyRspackPlugin&lt;/code&gt;，配置格式基本一样，这个倒丝滑。&lt;code&gt;fork-ts-checker-webpack-plugin&lt;/code&gt; 换成 &lt;code&gt;ts-checker-rspack-plugin&lt;/code&gt;，注意 Rspack 2.x 推荐搭配 TypeScript 7 使用，我们还在 TS 5.x，暂时兼容但最好计划升级。
+&lt;code&gt;thread-loader&lt;/code&gt; 和 &lt;code&gt;cache-loader&lt;/code&gt; 直接删掉就行——Rspack 本身就是 Rust 多线程编译，内置持久化缓存，这俩在 Webpack 时代用来加速的 loader 在这反而拖后腿。&lt;code&gt;webpack-dev-server&lt;/code&gt; 换成 &lt;code&gt;rspack serve&lt;/code&gt;，代理配置大部分兼容，但 &lt;code&gt;historyApiFallback&lt;/code&gt; 的 &lt;code&gt;rewrites&lt;/code&gt; 函数传参方式有点不一样，踩了一下。
+对了还有 &lt;code&gt;import.meta.env&lt;/code&gt;——我一开始看 2.1.6 的 changelog 说支持了，正高兴呢，结果 2.1.7 又给 revert 了。老老实实用 &lt;code&gt;DefinePlugin&lt;/code&gt; 吧。</code></pre><h3>遷移完的感受</h3><p>冷啓動從38秒降到6秒左右，HMR從400多毫秒降到不到100毫秒，生產構建從快兩分鐘降到15秒上下。內存從將近2G降到600多M。 冷啓動那個提升說實話感知不強，等6秒反正也會去倒杯水。但 HMR 是實打實的體感變化——改一行代碼頁面上幾乎是即時反饋，之前那400毫秒的延遲其實每次都在打斷思路。CI 構建時間縮短對發佈節奏的提升也是真的，push 完基本就能部署了。</p><p>值不值得遷，得看你自己的情況。我們項目是 Webpack 5，450多個模塊，構建兩分鐘，遷完確實爽。如果你項目規模差不多，我覺得可以試試。但如果你還在 Webpack 4，先升到5吧，Rspack對4的loader兼容性更差，遷移成本會高不少。已經在用Vite的就別折騰了，Rspack的優勢是Webpack存量項目的平滑遷移，跟Vite不在一個賽道。</p><p>最後一個建議：遷之前先把你那個 Webpack 配置理一遍。我們那個配置文件三年裏好幾個人往上疊，裏面有不少已經沒用的 loader。趁遷移清理一遍，比翻譯一份臃腫的配置省事得多。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

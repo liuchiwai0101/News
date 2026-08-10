@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>HPC-Ops × SGLang：腾讯混元高性能 Attention、Router GEMM 与 MoE 内核 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>HPC-Ops × SGLang：腾讯混元高性能 Attention、Router GEMM 与 MoE 内核</h1>
+<div class="meta"><span class="src">yingzheng.com</span>
+<span>· <a href="https://www.yingzheng.com/review/hpc-ops-sglang-hunyuan-kernels" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.yingzheng.com/review/hpc-ops-sglang-hunyuan-kernels" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>HPC-Ops × SGLang：腾讯混元高性能 Attention、Router GEMM 与 MoE 内核</h3><p>HPC-Ops（https://github.com/Tencent/hpc-ops）是專爲 LLM 推理設計的開源算子庫，已部署於騰訊混元的大規模生產服務中。其核心算子 Dynamic Attention 和 Fused MoE 在混元在線推理中發揮關鍵作用，最高可將 Hy3 模型的 TPOT 降低 48.8%。目前，HPC-Ops 的 Attention、Router GEMM 和 MoE 算子已集成至 SGLang 主分支，將這些生產驗證的優化帶給開源服務社區。</p><p>本文將介紹 HPC-Ops 三大算子的設計思路及其與 SGLang 的集成方式，並展示 H20 上的算子基準與服務結果，同時包含 H200 驗證數據。這些優化針對 NVIDIA Hopper GPU（SM90），已在 Qwen3、Hy3 和 LongCat 工作負載上驗證通過。</p><h3>亮點速覽</h3><p class='list-item'>- **Attention：**在 H20 上，HPC-Ops 动态调度比静态 split-KV 方案快 2.95 倍，平均比 FlashInfer 和 FlashAttention 中最优方案快 2.25 倍。在 H200 上，集成 Hy3-FP8 路径配合 FP8 KV cache，输出吞吐提升 3.7–5.9%。</p><p class='list-item'>- **Router GEMM：**在 H20 上，HPC-Ops 比 FP32 cuBLAS 快 1.30–3.22 倍，最大绝对误差仅 0.00177，优于 TF32 cuBLAS 的 0.06464。在 H200 LongCat-Flash 验证中，速度提升 4.31 倍。</p><p class='list-item'>- **MoE：**在 H20 上，HPC-Ops 在 TP8/EP1 配置下平均加速 1.08 倍，在 TP1/EP8 配置下加速 1.21 倍。在 Qwen3/H200 测试中，最高比 Triton 快 4.21 倍。</p><p class='list-item'>- **端到端服务：**8×H20 + Hy3-FP8 配置下，同时启用 HPC-Ops Attention 和 MoE，TPOT 在 batch 4–64 时降低 15.1–48.8%，TTFT 在 batch 4–16 时降低 3.3–6.0%。</p><h3>MoE 模型服務中的三大熱點路徑</h3><p>生產級 MoE 服務通常包含混合長度 Attention、精度敏感的路由以及稀疏專家執行，負載分佈不均。HPC-Ops 針對每個階段提供專用算子：負載感知的 Attention 調度、精度感知的 Router GEMM，以及減少 gather 開銷的融合 MoE 流水線。</p><h3>Attention：混合長度 decode 的負載均衡</h3><p>在 decode 階段，每個新 token 需要關注完整 KV cache，工作量隨序列長度線性增長。靜態 split-KV 調度難以應對混合長度批次，而 HPC-Ops 採用持久化內核，根據實際 KV 長度動態分配任務，實現近乎完美的負載均衡。</p><h3>Router GEMM：精度與吞吐的平衡</h3><p>路由器精度直接影響 MoE 模型質量。HPC-Ops 將 FP32 權重分解爲兩個 BF16 分量，通過兩次 BF16 GEMM 恢復低階尾數精度，同時利用 Tensor Core 加速，誤差遠低於 TF32 cuBLAS。</p><h3>MoE：降低小專家 GEMM 周圍開銷</h3><p>decode 時每個專家僅處理少量 token，傳統 MoE 路徑存在大量 gather、kernel launch 和 HBM 往返開銷。HPC-Ops 通過融合流水線顯著減少這些開銷。</p><h3>端到端性能驗證</h3><p>在 8×H20 上启用 HPC-Ops Attention 和 MoE 后，Hy3-FP8 模型 TPOT 大幅下降；LongCat-Flash-Lite-FP8 模型输入吞吐提升 5.5–6.1%。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

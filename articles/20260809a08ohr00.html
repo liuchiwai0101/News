@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>继何恺明团队ELF后，南京大学基于昇腾算力同步提出连续扩散语言模型_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>继何恺明团队ELF后，南京大学基于昇腾算力同步提出连续扩散语言模型_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260809A08OHR00" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260809A08OHR00" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>最近，何愷明老師團隊提出 ELF（Embedded Language Flows），在連續語義空間中建模語言模型，在文本生成類任務上取得了相當優秀的結果。這使得成爲了討論焦點：**語言能否像其他連續模態一樣，在連續空間裏完成生成？**</p><p>近日來自**南京大學模式識別實驗室（PRLab）的梁嘉駿、廖宇程，在司晨陽教授的指導下，聯合新加坡南洋理工大學、英國帝國理工學院，**提出**連續擴散語言模型 AURORA-LM**（Autoencoding Unified Representation for Continuous-Latent Diffusion Language Modeling），對連續空間下的語言建模作出了更多的思考和發現。AURORA-LM 的全部實驗均在**昇騰 NPU** 上完成，並進一步擴展至約 10 億參數規模，驗證了連續擴散語言模型在國產 AI 算力平臺上的訓練與擴展的可行性</p><p class='list-item'>- 论文标题：AURORA-LM: Autoencoding Unified Representation for Continuous-Latent Diffusion Language Modeling</p><p class='list-item'>- 論文：</p><p class='list-item'>- 项目主页：https://aurora-lm-project.github.io/</p><p class='list-item'>- 代码地址：https://github.com/fyv587/AURORA-LM</p><p class='list-item'>**連續空間下的語言建模難在哪裏？**</p><p>語言由離散 token 組成，即使生成過程轉到連續空間，最終結果仍需從連續表達（latent）序列映射回 token。於是，這條序列既要保留足夠的信息，供解碼器準確地映射回完整的文字；又不能讓模型面對過於難以學習的分佈。究竟如何構造連續空間下的 latent 序列映射，便成爲連續空間語言生成中的關鍵問題。</p><p>AURORA-LM 將這個問題拆解成兩步：</p><p class='list-item'>- 第一步，通過一個完全重新訓練的自編碼器爲文本構造語義信息足夠充分、可解碼的連續向量序列；</p><p class='list-item'>- 第二步，由一個特別設計的 “” 來學習這條編碼後的向量序列的生成分佈。</p><p>同時，AURORA-LM 針對帶噪狀態輸入、訓練過程和少步採樣等進行設計，保障在更大語義空間下的穩定高效的建模。</p><p class='list-item'>**模型結構**</p><p>AURORA-LM 將連續語言生成拆成兩個階段。第一階段，AURORA-LM 先爲文本構造一條按前綴順序組織的連續 latent 序列。隨着 latent 位置向後移動，它能夠讀取的 token 前綴逐步變長；反過來，解碼某個 Token 時，模型也只能使用相應的 latent 前綴。這樣，連續 latent 序列保留了與文本從左到右展開相對應的結構。</p><p>編碼器 - 解碼器以恢復原始 token 爲訓練目標：</p><p>第二階段，通過分塊因果擴散模型建模 latent 序列的生成分佈。AURORA-LM 將 latent 序列劃分爲連續的多個塊，塊與塊之間採用從左到右的因果注意力掩碼， 而塊內通過雙向注意力機制進行建模。對每個帶噪 latent 塊，模型直接預測其對應的乾淨 latent；所有塊的預測拼接後，在完整 latent 空間中計算訓練誤差：</p><p>推理時，塊與塊間從左到右按順序推理，並通過 kv cache 複用前綴計算結果；塊內不同位置可以採用雙向注意力機制、進行聯合去噪，同步輸出：</p><p>此外，AURORA-LM 對當前帶噪 latent 塊的預測可以利用兩類來源不同的附加信息。對於無條件生成，模型將當前 latent 塊在上一步所預測的乾淨 latent 回傳給下一步，爲後續預測提供了自身的軌跡信息；對於有條件生成，給定的提示文本先被編碼器轉換爲乾淨的 latent 前綴，提供了待生成文本的外部語義條件，從而強化模型對上下文的遵循。</p><p class='list-item'>**爲什麼要保留高容量 latent？**</p><p>這裏所說的「高容量」，主要體現爲每個 latent 向量有更大的維度。更高維的向量爲文本信息保留了更多豐富的語義，使詞語、語法和局部順序在噪聲擾動下仍更容易被解碼。</p><p>如圖（a）所示，增加 latent 向量的維度後，其在噪聲擾動下仍能保留更多可供解碼的文本信息；圖（b）展示了，不同寬度校準訓練噪聲分配後，生成質量也隨之提升。</p><p>但更高的 latent 容量也帶來代價：擴散模型需要從帶噪狀態中恢復完整的乾淨 latent 也同樣維度更高，學習目標隨之更加複雜。</p><p>通過實驗，研究團隊發現兩個關鍵策略對模型訓練效率有較大的影響：如圖（a）所示，研究團隊發現適度收窄帶噪輸入維度（bottleneck），極大程度提升最終模型文本生成的質量，圖（b）則顯示，提高在訓練過程中，輸入高噪聲狀態的概率可進一步提升生成結果。</p><p class='list-item'>**少步去噪時，如何避免誤差累積？**</p><p>此外，研究團隊進一步探索了 AURORA-LM 在少步去噪時如何抑制誤差沿去噪軌跡累積。訓練時，模型面對的是獨立採樣的帶噪 latent；實際生成時，卻需沿着自身預測連續推進。若相鄰去噪狀態下的判斷不一致，誤差便可能逐步累積。</p><p>爲此，AURORA-LM 引入：在訓練時，模型先根據當前帶噪 latent 得到對應的乾淨 latent 估計，再據此推進至相鄰的更低噪聲狀態，並約束相鄰狀態下的乾淨 latent 估計保持一致。</p><p>這一更新過程可寫爲：</p><p>訓練時，AURORA-LM 將 flow-matching 損失與這一一致性損失共同優化：</p><p>實驗顯示，自軌跡一致性在所有評測的生成步數下均能提升結果，其中少步生成時的改善最爲明顯。</p><p class='list-item'>**更多數據、更大模型規模下的效果驗證**</p><p>研究團隊先對齊 ELF-B 的測試設置，在 130M 規模模型下，採用 OpenWebText 與 Xsum 作爲訓練數據，通過自由生成與條件摘要兩個任務形式進行對比，再將分塊因果擴散模型擴展至 1B 參數，並基於更豐富的開源數據訓練，來驗證當下策略在更大的模型規模下的效果。</p><p class='list-item'>- **自由生成：**在 OpenWebText 上，AURORA-LM 與自迴歸、離散擴散和其他連續生成模型進行比較。AURORA-LM 的- **Gen-PPL 降至 23.56，MAUVE 達到 0.890，**在兩項指標上均取得表中最佳結果。</p><p class='list-item'>- **條件摘要：**在論文展示的 XSum 對比中，AURORA-LM 的- **ROUGE-1、ROUGE-2 和 ROUGE-L 分別達到 36.6、13.4 和 28.9，**三項結果均爲表中最高。</p><p class='list-item'>- **1B 規模驗證：**研究團隊進一步將擴散結構擴展至約 1B 參數，基於開源預訓練數據累計訓練計算量約爲- **1500 EFLOPs。**如圖（b）所示，在涵蓋常識推理、閱讀理解等九項語言基準任務的評測中，AURORA-LM-L 的平均得分爲- **32.6；**與一個公開可用、參數規模更大的連續語言模型相比，AURORA-LM-L 在論文表中的九項任務上均取得更高分數。</p><p class='list-item'>**結語**</p><p>AURORA-LM 先爲文本學習高容量、可映射回 token 的連續 latent，再讓分塊因果擴散模型對其分佈進行建模。圍繞這條 latent 所做的輸入、訓練與採樣設計，使連續擴散生成能夠同離散 token 解碼銜接起來，也爲更長上下文和更大規模的連續語言模型提供了一條可繼續探索的路徑。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
