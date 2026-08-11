@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>AI编程账单怎么减:Databricks靠调度不靠断粮 - ic.work · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>AI编程账单怎么减:Databricks靠调度不靠断粮 - ic.work</h1>
+<div class="meta"><span class="src">ic.work</span>
+<span>· <a href="https://www.ic.work/article/databricks-ai-coding-cost-routing-not-budget-caps" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ic.work/article/databricks-ai-coding-cost-routing-not-budget-caps" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Databricks在一篇技術博客裏公開了自己控制AI編程工具支出的做法。打開AI Gateway的智能路由後,單次任務平均成本能降超過**30%**;調整工具鏈和緩存策略後,生成的token數量和相關費用降幅接近**50%**。這兩個數字都寫在Databricks自己的博客和圖表裏，但網絡上流傳的"AI編程支出降70%"這個說法，在原文中找不到對應出處，更像是不同環節數字被疊加或轉述走樣後的版本。</p><p>這次披露真正值得看的,不是數字大小，是思路變化:企業管理AI編程成本，正從"卡預算、限用量"轉向給模型、任務和上下文做系統調度。這套經驗來自Databricks自身部署，也參考了Stripe、Coinbase、Uber、Ramp等公司的非正式交流——文中明說這是方向性數字，不是經過獨立審計的行業基準。別的公司照搬,未必管用。</p><h3>錢花在哪:不是那句話本身</h3><p>開發者輸入的指令通常就幾個字，比如"幫我修一下這個bug"。但代理接到指令後要做很多動作:搜代碼庫、調用工具、拉取系統提示和技能配置。真正送進模型推理的內容裏，開發者最初打的那幾個字只佔很小比例。</p><p>這解釋了爲什麼"少提問"這種直覺解法基本不管用——省不到關鍵的錢。真正的成本大頭是代理自動拉取的上下文和工具調用，不是開發者主動輸入的內容。</p><p>Databricks反過來壓縮上下文本身:更頻繁做壓縮(compaction)、換用更省話的harness、審查常用工具的輸出冗餘度，配合手動調優的prompt緩存命中率。僅這一項調優，就讓token生成量和相關成本降了近50%。</p><h3>模型換着用,但別信榜單</h3><p>Databricks說模型遷移是最大的省錢槓桿。前提是企業得自己評測——公開榜單基本判斷不出真實編碼表現。它跑了針對內部多百萬行代碼庫的評測，發現GLM系列性價比不錯，已經推給內部開發者用。</p><p>但這條路不是單向樂觀的:</p><p>真正的省錢槓桿在效率前沿，不在盲目追最強模型。但換模型要拿自己代碼庫測，不能只看公開基準分數——同一個模型,在別人的評測裏領先，在你的真實任務裏未必划算。</p><p>要頻繁換模型，開發者不能被綁死在某個harness上。這是Unity AI Gateway和meta-harness(Omnigent)存在的理由:開發者繼續用慣的Claude Code、Codex或Cursor，系統在後臺把請求路由到更便宜的模型或工具鏈，不用逼人天天換習慣。</p><h3>預算怎麼管:分級,不是一刀切</h3><p>Databricks的說法和多數直覺相反:硬性斷供幾乎所有公司都只當最後手段。原因很簡單——一刀切斷掉高消費開發者的權限,公司和員工都不想看到這個結果。其中一部分"燒錢大戶"恰恰是靠AI拿到了成倍產出的人，斷供等於誤傷真正在用工具賺回成本的人。</p><p>取而代之的是分級響應:先給可見的實時花費看板,超線後彈出可自行清除的預警,再往上要走審批,最後纔是降檔到便宜模型或徹底暫停。</p><p>這套邏輯對兩類人的落點不一樣。</p><p>企業裏負責開發工具、AI基礎設施和雲成本的技術管理者,第一步不是設月度硬頂，是先把AI Gateway這類網關接進現有工具鏈,看清楚錢到底花在路由、上下文還是工具調用上,再談分級降檔怎麼設線。</p><p>評估要不要引入或擴大AI編程工具的開發團隊和採購決策者,別隻比模型標價——GLM便宜不代表在你的代碼庫裏跑得動，Opus貴也不代表值回票價。真正該做的,是拿自己的代碼庫和真實任務跑一遍評測,再決定遷移還是擴量,這一步目前沒有現成的通用答案。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

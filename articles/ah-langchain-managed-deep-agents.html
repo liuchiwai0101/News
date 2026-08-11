@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>LangChain 推出 Managed Deep Agents 公开测试版：一键部署生产级 AI 智能体｜觉醒AI · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>LangChain 推出 Managed Deep Agents 公开测试版：一键部署生产级 AI 智能体｜觉醒AI</h1>
+<div class="meta"><span class="src">jxxy.net</span>
+<span>· <a href="http://www.jxxy.net/ai/articles/ah-langchain-managed-deep-agents" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="http://www.jxxy.net/ai/articles/ah-langchain-managed-deep-agents" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>一句話結論</h3><p>LangChain 將 Deep Agents 的生產基礎設施（持久化執行、記憶、沙箱、通道、評估）封裝爲託管服務，開發者專注於智能體行爲，一條命令完成從原型到上線。</p><h3>核心功能</h3><p>Managed Deep Agents 解決了智能體從原型到生產的核心工程難題。開發者可以用 Python 或 TypeScript 編寫 Deep Agent，在本地測試後通過 <code>mda deploy</code> 一鍵部署到 LangSmith 託管運行時。</p><p>該服務提供以下生產級能力：</p><p class='list-item'>- **持久化執行（Durable Execution）**：長時間運行的智能體可暫停、重試、恢復，不丟失工作進度</p><p class='list-item'>- **流式輸出（Streaming）**：用戶可實時看到智能體工作進展</p><p class='list-item'>- **狀態持久化（Persistence）**：線程狀態在多輪對話、重啓和故障中保持</p><p class='list-item'>- **沙箱（Sandboxes）**：智能體可在隔離環境中操作文件、運行代碼、使用 CLI</p><p class='list-item'>- **評估（Evals）**：基於 Harbor 框架，驗證智能體的工具調用、文件編輯和狀態變更</p><p class='list-item'>- **通道（Channels）**：智能體可直接接入 Slack、GitHub 等工具</p><p class='list-item'>- **記憶（Memory）**：跨對話保持持久化偏好和上下文</p><p class='list-item'>- **身份認證（Identity）**：基於 OIDC 的多用戶線程隔離和作用域記憶</p><h3>技術架構</h3><p>Managed Deep Agent 是一個代碼優先的項目，採用目錄結構組織智能體的所有組件：</p><pre><code>my-agent/
+  agent.py | agent.ts | agent.tsx    # 智能体主文件
+  instructions.md                      # 提示词同步到 Context Hub
+  identity.py | identity.ts            # 认证、线程作用域、记忆作用域
+  memory.py | memory.ts                # 记忆定义
+  tools/                               # 自定义工具
+  channels/                            # 接入入口（Slack、GitHub 等）
+  middleware/                          # 自定义中间件
+  schedules/                           # 托管定时任务
+  skills/                              # 技能同步到 Context Hub
+  sandbox/                             # 沙箱配置
+  evals/                               # 智能体评估</code></pre><p>部署時，<code>mda deploy</code> 會編譯項目、同步上下文到 LangSmith Context Hub、上傳構建產物並創建託管部署。</p><h3>沙箱與評估</h3><p>沙箱基於 LangSmith Sandboxes，每個持久化線程默認獲得獨立沙箱。開發者只需幾行代碼即可配置：</p><pre><code>from managed_deepagents import define_sandbox
+sandbox = define_sandbox(
+    provider=&quot;langsmith&quot;,
+    scope=&quot;thread&quot;,
+)</code></pre><p>評估系統基於 Harbor 框架，通過 <code>mda evals init</code> 和 <code>mda evals compile</code> 自動打包智能體爲 Harbor 可運行的測試工件。生產環境中的每次運行都會被追蹤，失敗案例可轉化爲未來測試用例。</p><h3>適用場景</h3><p>適合需要以下能力的團隊：</p><p class='list-item'>- 基於開源 Deep Agents 框架構建智能體</p><p class='list-item'>- 保持對模型、提示詞、工具、中間件和業務邏輯的完全控制</p><p class='list-item'>- 無需從零搭建智能體基礎設施即可部署到生產</p><p class='list-item'>- 需要持久化線程、記憶、沙箱、通道、定時任務和評估</p><p>當前公開測試版僅支持 LangSmith Cloud 美國區域，採用 CLI 優先方式，後續將增加更多區域和部署方式。</p><h3>原文信息</h3><h3>来源：LangChain Blog 作者：Victor Moreira</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

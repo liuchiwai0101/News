@@ -43,7 +43,7 @@ font-size:12.5px;color:var(--muted);}
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
 <h1>2026 年的 JavaScript 已经不是你认识的了：Vite+、Turbopack、TS v7、Vitest</h1>
-<div class="meta"><span class="src">SegmentFault 思否</span><span>· 8月10日 周一</span>
+<div class="meta"><span class="src">SegmentFault 思否</span><span>· 8月8日 周六</span>
 <span>· <a href="https://segmentfault.com/a/1190000047717675" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047717675" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><h3>2026 年的 JavaScript 已經不是你認識的 JavaScript 了</h3><p>你好，我是冴羽。</p><p>如果有人問你 JS，大部分人可能還停留在 async/await、Promise、ES6 那個年代。</p><p>但 JavaScript 一年一個版本，語言早就不是原來的樣子了。</p><p>還有框架、運行時、構建工具……整個生態都在快速演進。</p><p>本篇帶你看看 2026 年的 JavaScript 和生態到底是什麼樣的。</p><h3>1. 語言新特性</h3><p>這裏重點說幾個真正能改變你寫代碼方式的新特性。</p><h3>#### 1.1 Iterator Helpers：鏈式操作不再創建中間數組</h3><h3>❌ 舊方式：每一步都創建新數組</h3><pre><code>const result = array

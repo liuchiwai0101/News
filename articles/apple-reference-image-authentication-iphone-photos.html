@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Apple 開發 Reference Image 認證功能 驗證 iPhone 相片來源 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Apple 開發 Reference Image 認證功能 驗證 iPhone 相片來源</h1>
+<div class="meta"><span class="src">NewMobileLife 流動日報</span><span>· 8月11日 周二</span>
+<span>· <a href="https://www.newmobilelife.com/2026/08/11/apple-reference-image-authentication-iphone-photos/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.newmobilelife.com/2026/08/11/apple-reference-image-authentication-iphone-photos/" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Apple 正在開發新功能，以驗證相片是否真正出自 iPhone 相機。iOS 27 beta 5 的程式碼顯示，這項名為 Apple Reference Image 的功能，會利用與拍攝相機硬件相關的獨特資料，核實相片來源。</p><h3>防範虛假影像</h3><p>以合成影像冒充真實相片的問題並非新鮮，但生成式 AI 令情況更為迫切。以往需要專業編輯花數小時甚至數日處理的工序，現時只需輸入簡短提示便可完成。Google 開發 SynthID，在 AI 生成圖片中嵌入肉眼難以察覺的浮水印，OpenAI 等公司亦已採用。Meta 則在 Facebook、Instagram 及 Threads 加入 AI 生成內容標籤，但這類系統在可靠識別被操縱媒體方面仍有侷限。</p><h3>認證與私隱</h3><p>除了為 Image Playground 生成的影像加入中繼資料標記，Apple 開發 Apple Reference Image 時亦以私隱為先：Apple 無法讀取原始相片。系統會將相片送到 Private Cloud Compute 認證，只有若干感應器資料及相片中繼資料會傳回 Apple。功能預設關閉，啟用時需在「設定 ＞ 相機 ＞ Reference Image」開啟 Reference 模式，並會顯示私隱提示畫面；使用該模式拍攝的相片才會包含日後可用於認證的來源資料，一般拍攝的相片則不會。</p><p>Reference 模式不會自動認證，用戶其後可選擇認證，屆時原始相片及相關來源資料會送到 Private Cloud Compute 驗證，Apple 會為相片分配獨特 ID。若 Apple 判斷某感應器可能遭到入侵，或會撤銷該感應器以往的認證。</p><h3>分享及傳輸</h3><p>已認證相片可與他人分享，對方的 Apple 裝置可在本機檢查相片是否仍屬已認證狀態，無需向 Apple 披露正在查看哪些相片。分享時包含的資料視乎方式（AirDrop、Messages 等）及相片屬原始、編輯還是認證版本而定；Apple 表示，若選擇分享所有相片資料，傳輸內容可能包括獨特硬件識別碼及與相片相關的未裁剪片段。Apple 亦為 USB 傳輸加入 Transfer with Provenance 選項，啟用後，傳到 Mac 或 PC 的已認證相片會包含 Reference Image 資料，未認證相片亦可能帶有硬件識別碼等來源資料。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

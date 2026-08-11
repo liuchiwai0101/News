@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Categorical Flow Maps - 智源社区论文 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Categorical Flow Maps - 智源社区论文</h1>
+<div class="meta"><span class="src">hub.baai.ac.cn</span>
+<span>· <a href="https://hub.baai.ac.cn/paper/c6f91056-7b1d-49fb-bdf1-06e3d1234a46" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://hub.baai.ac.cn/paper/c6f91056-7b1d-49fb-bdf1-06e3d1234a46" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p class='list-item'>- 簡介我們提出了“分類流映射”（Categorical Flow Maps），這是一種基於自蒸餾的流匹配方法，旨在加速分類數據的少步生成。該方法建立在近期關於流匹配的變分建模框架之上，並順應了擴散模型與流模型領域整體向高效推理演進的趨勢。我們定義了一種朝向概率單純形（simplex）的流映射，使其能夠將概率質量持續輸運至一個預測的目標分佈，從而導出一種天然約束模型輸出的參數化形式。由於我們的軌跡是連續而非離散的，分類流映射既可採用現有的蒸餾技術進行訓練，也可藉助一種基於終點一致性的新型優化目標進行訓練。這種連續化的建模方式還自然地支持測試階段的推理：我們可直接複用現有針對分類數據的引導（guidance）與重加權（reweighting）技術，在採樣過程中靈活調控生成結果，以更好地滿足下游任務目標。實驗表明，我們在圖像、分子圖和文本三類任務上均取得了當前最優的少步生成性能；即便僅使用單步生成，仍展現出強勁的生成效果。</p><p class='list-item'>-</p><p class='list-item'>- 圖表</p><p class='list-item'>- 解決問題如何在分類數據（如圖像、分子圖、文本）上實現加速的少步（甚至單步）生成，同時保持高質量和可控性——這是擴散模型和流模型在離散/分類空間中推理速度慢、採樣步數多的核心挑戰。</p><p class='list-item'>- 關鍵思路提出Categorical Flow Maps：一種基於連續流匹配的變分框架，將離散類別分佈嵌入單純形（simplex），定義從均勻先驗到目標類別的連續概率流；通過自蒸餾訓練，聯合優化軌跡建模與端點一致性目標，使模型隱式學習約束性預測，並天然兼容連續空間中的指導（guidance）與重加權技術。</p><p class='list-item'>- 其它亮點在圖像（CIFAR-10/100）、分子圖（ZINC）、文本（WikiText-2）上均達到少步（1–4步）生成SOTA；首次在分類生成中實現單步高質量採樣；無需離散化近似或Gumbel-Softmax等鬆弛技巧；開源代碼；端點一致性損失和單純形流參數化是新設計；測試時可直接複用Classifier-free Guidance等連續域技術。</p><p class='list-item'>-  Flow Matching for Generative Modeling (Lipman et al., 2023); Rectified Flow (Liu et al., 2023); Discrete Diffusion Models (Hoogeboom et al., 2021; Austin et al., 2022); Categorical Score-Based Generative Modeling (Campbell et al., 2023); Self-Distillation in Diffusion (Salimans & Ho, 2022)</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

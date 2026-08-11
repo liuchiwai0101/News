@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>腾讯混元开源 HPC-Ops 算子库：集成 SGLang，Hy3 模型推理延迟最高降 48.8%｜觉醒AI · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>腾讯混元开源 HPC-Ops 算子库：集成 SGLang，Hy3 模型推理延迟最高降 48.8%｜觉醒AI</h1>
+<div class="meta"><span class="src">jxxy.net</span>
+<span>· <a href="http://www.jxxy.net/ai/articles/ah-hunyuan-hpc-ops-sglang" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="http://www.jxxy.net/ai/articles/ah-hunyuan-hpc-ops-sglang" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>一句話結論</h3><p>腾讯混元开源 HPC-Ops 算子库（GitHub: Tencent/hpc-ops），三大核心算子已合并至 SGLang 主分支，在 8 卡 H20 上将 Hy3-FP8 模型的 TPOT 从 35.33ms 降至 18.09ms（batch size 32），降幅达 48.8%。</p><h3>三大核心算子</h3><h3>1. Dynamic Attention（动态注意力）</h3><p class='list-item'>**解決的問題**：連續批處理中，不同生成階段的請求混合在同一批次，短 KV cache 與數萬 token 的長序列混合。傳統靜態 split-KV 調度因固定分割數或固定 chunk 大小，導致短請求的 CTA 提前完成、長請求決定尾部延遲。</p><p class='list-item'>**解決方案**：採用持久化內核動態平衡 KV tile 在 CTA 間的分配，每 64 個 token 切一個 tile，長 sequence 跨多個 CTA 執行，短 sequence 只貢獻實際擁有的 tile。任務映射每 decode step 生成一次，跨所有 Transformer 層複用。</p><p class='list-item'>**性能**：在極端偏斜場景（1 條 128K + 31 條 4K），動態調度比靜態調度快 2.95 倍，比 FlashInfer/FlashAttention 最佳值平均快 2.25 倍。</p><h3>2. Router GEMM（精度感知路由矩陣乘）</h3><p class='list-item'>**解決的問題**：MoE 層的路由器需要 FP32 精度保證 top-k 選擇正確，但 FP32 的 Tensor Core 吞吐遠低於 BF16。</p><p class='list-item'>**解決方案**：將 FP32 權重分解爲兩個 BF16 分量（W_high 和 W_low），在單個 kernel 中執行兩次 BF16 矩陣乘，從共享內存加載一次 activation tile，在 FP32 寄存器中累加。最終在 epilogue 中應用 1/256 縮放恢復 FP32 精度。</p><p class='list-item'>**性能**：比 FP32 cuBLAS 快 1.30 至 3.22 倍，最大绝对误差仅 0.00177（TF32 cuBLAS 为 0.06464）。</p><h3>3. Fused MoE（融合專家混合）</h3><p class='list-item'>**解決的問題**：解碼時每個專家只接收少量 token，expert GEMM 很小且 memory-bound，加上負載不均衡和 gather/量化開銷。</p><p class='list-item'>**解決方案**：融合路由索引構建（共享內存計數減少全局原子操作）、Gate-Up GEMM 直接讀取原始 token 跳過獨立 gather、SiLU-and-mul 和 FP8 重量化融合爲單 kernel、佔用優先設計（無 warp 特化）、PDL 鏈式階段重疊下游 kernel 啓動。</p><p class='list-item'>**性能**：TP1/EP8 配置下平均加速 1.21 倍，batch size 64 時加速 1.60 倍。</p><h3>端到端服務性能</h3><p>Hy3-FP8 在 8 卡 H20（TP8）上的 TPOT 改善（同时启用 Attention + MoE）：</p><p>TTFT 在 batch size 1-16 間降低 3.3% 至 9.0%。在 H200 上游驗證中，各算子也取得 2% 至 5.9% 的服務級吞吐提升。</p><h3>SGLang 集成</h3><p>HPC-Ops 通過 SGLang 原生後端和分派接口集成，相關 PR 已全部合併至主分支：</p><p>已驗證模型包括 Qwen3、Hy3 和 LongCat，目標硬件爲 NVIDIA Hopper GPU（SM90），在 H20 上表現最佳。</p><h3>原文信息</h3><h3>来源：LMSYS Blog 开源仓库：GitHub Tencent/hpc-ops</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
