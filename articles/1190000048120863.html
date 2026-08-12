@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>Vite 6.2 升级踩完坑：按需预构建 + 模块级缓存，大项目不用再删 .vite 重启 · 流動日報譯文</title>
+<title>Web 前端周刊 2026W32：React 19.3、Angular 转年度节奏、TC39 新提案 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,8 +42,8 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>Vite 6.2 升级踩完坑：按需预构建 + 模块级缓存，大项目不用再删 .vite 重启</h1>
-<div class="meta"><span class="src">SegmentFault 思否</span><span>· 8月8日 周六</span>
+<h1>Web 前端周刊 2026W32：React 19.3、Angular 转年度节奏、TC39 新提案</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 8月11日 周二</span>
 <span>· <a href="https://segmentfault.com/a/1190000048120863" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000048120863" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>現在幾乎新項目都上 Vite，但只要項目一膨脹，糟心事就跟着來。</p><p>手上有個公司內部的中後臺，monorepo，依賴堆了一百多個，之前用 6.1，日常開發很折磨：新裝依賴就要等很久預構建；改代碼偶爾頁面不刷新，只能刪掉<code> .vite</code> 文件夾重啓；TS 類型一多，打開項目都要卡半天。</p><p>看到 Vite 6.2 出正式版，週末抽時間把業務倉庫拉出來折騰了一遍。不是什麼翻天覆地的革新，但很多我們天天吐槽的老毛病，這次終於動手修了。</p><p class='list-item'>**按需預構建，大項目冷啓動肉眼變快**</p><p>老版本 Vite 的預構建邏輯比較粗暴：不管這個依賴代碼有沒有被項目實際用到，全部給你打包一遍。</p><p>倉庫越大，垃圾依賴越多，首次啓動、清緩存後的等待時間就越離譜。</p><p class='list-item'>6.2 做了細粒度的按需預構建，會讀你的路由、入口、組件引用，**只編譯真正被使用的依賴包**，沒用到的直接跳過。</p><p>拿我手上這個業務倉庫實測：</p><h3>冷啓動耗時直接少了接近三分之一</h3><h3>第一次預構建時間砍掉 40% 左右</h3><p>不需要寫任何額外配置，裝完包直接生效</p><p>monorepo、大型中後臺項目這個提升感知最明顯，小項目變化不大。</p><p class='list-item'>**最爽的改動：不用天天刪 .vite 緩存**</p><p>寫前端的應該都遇到過這種玄學：代碼明明改完了，瀏覽器刷出來還是舊邏輯；樣式改完一半生效一半殘留。網上的萬能解法就是刪緩存重啓。</p><p>根源就是舊版本是以整個依賴包做緩存單元。只要包一點點變動，就會引發連鎖重編譯，還容易出現緩存污染。</p><p class='list-item'>6.2 改成模塊級緩存，哪個模塊改了，就只重新編譯那一塊。同時優化了緩存的判斷邏輯，能區分開依賴版本變更、配置改動和普通業務代碼修改。</p><p>我跑了兩天業務開發，**幾乎沒再手動刪過緩存目錄**。大部分修改熱更新直接到位，少了很多無意義的重啓操作。這點對日常開發幸福感提升真的很大。</p><p class='list-item'>**CSS 一堆隱性 bug 被修復**</p><p>之前項目混寫 scss、css‑module，時不時出幺蛾子：熱更新樣式閃爍、不同組件同名 class 互相污染，打包上線偶爾丟樣式。這類問題復現看運氣，排查起來特別耗時間。</p><p class='list-item'>6.2 重寫了一部分 CSS 解析邏輯：</p><p>scss/less 編譯流程簡化，大樣式文件編譯速度上來了</p><p>css‑module 的作用域隔離更嚴格，多人協作寫樣式，互相搞崩樣式的概率降低</p><p>原生 CSS 嵌套語法容錯更好，部分場景可以少引預處理器</p><p>已經踩過樣式詭異 bug 的團隊，可以重點感受下這塊。</p><p class='list-item'>**TS 不再卡住項目啓動**</p><p>大 TS 項目有個痛點：啓動的時候要等類型校驗跑完，瀏覽器才能打開頁面；保存文件，類型檢查佔滿 CPU，編輯器都跟着卡。</p><p>新版本把編譯和類型校驗拆開。</p><p>對了。順嘴提一句，技術大廠，前後端-測試機會，全國一線及雙線城市均有坑位，待遇和穩定性還不錯，感興趣看看。</p><p class='list-item'>**頁面優先啓動渲染，類型校驗放到後臺異步跑。**</p><p>錯誤信息照樣控制檯給你報，但是不會卡住你打開頁面寫代碼。</p><p>只變更單個文件時，也只會校驗改動模塊，CPU 佔用降下來不少。</p><p>注意：它不是關閉 TS 校驗，只是不再阻塞開發服務啓動，類型安全還保留。</p><p class='list-item'>**生產打包也有小驚喜**</p><p>除了開發環境，打包也有調整：</p><p>tree‑shaking 做得更狠，可以刪掉更多沒執行到的代碼；靜態資源壓縮做了微調；也修復了部分場景 chunk 分包重複打包的老 bug。</p><p>同一套業務代碼，相同配置，打出來的包體積大概小了 10% 上下，屬於錦上添花。</p><p class='list-item'>**哪些項目可以升？哪些要謹慎**</p><h3>✅ 建議升級</h3><p>monorepo、依賴多的中後臺大型倉庫</p><p>TS 佔比高，本地啓動慢的項目</p><p>經常被緩存、CSS 詭異 bug 折磨的團隊項目</p><h3>⚠️ 升級前留意</h3><p>一些已經停止維護的老 vite 插件，升級後有可能報錯，需要同步更新插件版本</p><p>如果你寫過很複雜的自定義預構建配置，升級完簡單迴歸測試一遍</p><p>升級完成最好刪掉一次舊的 <code>.vite</code>，避免新舊緩存打架</p><h3>升級命令</h3><pre><code>bash

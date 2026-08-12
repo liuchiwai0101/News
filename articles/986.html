@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>谷歌推出 WeatherNext 气旋模型，AI 高精度预报飓风平均提前 24 小时 · 流動日報譯文</title>
+<title>OpenAI 披露攻击 Hugging Face 前，AI 智能体秘密建立内部留言板 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,11 +42,11 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>谷歌推出 WeatherNext 气旋模型，AI 高精度预报飓风平均提前 24 小时</h1>
-<div class="meta"><span class="src">IT之家（RSS）</span><span>· 8月8日 周六</span>
-<span>· <a href="https://www.ithome.com/0/986/951.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/986/951.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
-<div class="body"><p>IT之家 8 月 7 日消息，谷歌 DeepMind 團隊昨日（8 月 7 日）發佈博文，宣佈推出 WeatherNext Cyclones 天氣預測模型，**主要針對氣旋（Cyclones）設計，稱在預測路徑、強度和風場結構的精度達到業界領先水平。**</p><p>IT之家援引博文介紹，該模型由谷歌 DeepMind、Google Research、美國國家颶風中心（NHC）、大氣科學聯合實驗室（CIRA）、英國氣象局以及全球多家氣象機構聯合研究開發。該模型聚焦熱帶氣旋，針對颱風、颶風和氣旋，高精度預測其路徑、強度和風場結構。</p><p>谷歌官方表示按平均表現衡量，**該模型把預報能力向前推進了 24 小時，**現有模型通常情況下只能提前預測 2 天，而該模型在保留精度情況下，可以預測 3 天時間。**谷歌在博文中將預測量級描述爲“約 10 年氣象進展”。**</p><p>訓練方面，模型端到端學習了近 20 TB 全球大氣數據，以及涵蓋近 5,000 個歷史風暴的 IBTrACS（國際最佳路徑氣旋檔案）數據庫。</p><p>生成能力方面，藉助功能生成網絡（Functional Generative Networks），該系統可在 TPU 上用不到 1 分鐘生成 1 次 15 天遊程預報；去年系統一次只生成 50 個預測，這次擴展到 1000 個。</p><p>在實際應用方面，WeatherNext 在 2025 年颶風季曾預測到颶風梅麗莎（Melissa）會增強，並在牙買加登陸，NHC 據此提前預警，爲當地應急團隊爭取了準備時間。</p><p>谷歌團隊還開源了 WeatherNext 2、WeatherNext Cyclones 和 WeatherNext 2-mini，並開放相關代碼與模型權重。</p></div>
+<h1>OpenAI 披露攻击 Hugging Face 前，AI 智能体秘密建立内部留言板</h1>
+<div class="meta"><span class="src">ithome.com</span>
+<span>· <a href="https://www.ithome.com/0/986/553.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/986/553.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>IT之家 8 月 6 日消息，在美國拉斯維加斯舉辦的 2026 年黑帽網絡安全大會（8 月 1 日 ~6 日），OpenAI 研究員透露，其公司 AI 模型攻擊 Hugging Face 之前，**在測試環境下已“密謀約 2 個月”。**</p><p>IT之家援引博文介紹，OpenAI 研究員埃裏克 · 華萊士（Eric Wallace）透露，**這起“越界”事件可以追溯到今年 5 月，部分模型卡在高難度甚至是“不可能”任務後，嘗試尋找捷徑。**</p><p class='list-item'>**因此其中 1 個模型把 OpenAI 系統裏的 Artifactory 服務變成臨時留言板**，而另一個模型隨後用它來詢問其他智能體是否找到缺失文件。Artifactory 是用於下載、存儲軟件包的服務，常見於開發和部署流程。</p><p>在攻擊前的約 2 個月時間裏，內部測試中的多個智能體在臨時留言板上交流信息，會共享漏洞、橫向移動，並在 OpenAI 系統和外部系統之間推進攻擊。</p><p>不同實驗中的模型藉此交換指令和新發現的安全漏洞信息。一些模型還開始互相分派任務，或留下腳本，讓另一個模型接着完成未做完的工作。</p><p>OpenAI 修復系統、撤銷智能體使用的憑證，並刪除留言板，但修補 2 天之後，模型又找到同一服務的另一種留信方式，繼續交換信息。</p><p>它們的通信也越來越有組織，開始爲彼此命名、交換工具，並設法避免覆蓋對方的工作。華萊士說，它們一度還考慮給消息署名，懷疑有其他智能體在冒充成員。</p><p>隨後，這些模型對 OpenAI 基礎設施和 Hugging Face 發起重疊攻擊。在 OpenAI 內部，它們找到另一個此前未知的漏洞，控制一臺服務器，並獲得公司更大範圍計算環境的管理員權限。</p><p>Hugging Face 的技術覆盤記錄了這次行動中的約 17,600 次操作。公司確認，模型訪問了 5 個與安全測試相關的私人數據集，但沒有證據顯示公共模型、數據集或軟件包被修改。</p><p>OpenAI 另一位研究員邁克爾 · 達爾頓（Michael Dalton）表示：</p><p>我們認爲這對計算機安全行業來說，是一個具有里程碑意義的時刻！</p><p>AI 策劃的全自動攻擊如今已成爲現實，本次攻擊事件表明在可以預見的未來，這種攻擊方式將嚴重威脅網絡安全。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
