@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Waku：最小的 React 框架发布 Alpha 版本，专为 RSC 而生 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Waku：最小的 React 框架发布 Alpha 版本，专为 RSC 而生</h1>
+<div class="meta"><span class="src">InfoQ中文</span><span>· 8月13日 周四</span>
+<span>· <a href="https://www.infoq.cn/article/wyY96yPluPj9iE97UUod" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.infoq.cn/article/wyY96yPluPj9iE97UUod" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Waku，一個最小的 React 框架，已經發布了 1.0 alpha 版本，這標誌着它的公共 API 領域已經非常穩定，項目將重點轉移到缺陷修復和兼容性改進上。</p><p>Waku 1.0 alpha 對於這個輕量級框架來說是一個重要的里程碑，它已經開發了將近三年。這個版本的發佈穩定了框架的公共 API，並標誌着從功能開發轉向完善和穩定性。團隊承諾在每個版本中提供發佈說明，並在需要時提供遷移指南，因爲他們朝着 1.0 beta 和發佈候選階段努力。</p><p>這個版本強調的一個關鍵優勢是 Waku 在大多數具有動態路由的靜態站點中找到了自己的最佳點，包括營銷站點、博客、文檔站點和輕量級電子商務應用。該框架簡單的每個路由配置使得它可以直接在完全靜態或完全動態渲染之間進行選擇，甚至可以將這兩種方法混合在一起，佈局、切片和頁面都有自己的渲染配置。</p><p>與早期版本相比，1.0 alpha 版本的發佈引入了一個破壞性變更，這影響了實現基於配置的路由或部署適配器的用戶。入口文件已經從 <code>server-entry.ts</code> 和 <code>client-entry.ts</code> 重命名爲 <code>waku.server.ts</code> 和 <code>waku.client.ts</code> 。從早期版本升級的開發者需要相應地重命名這些文件。這個版本沒有遷移指南，但是有一個早期社區創建的遷移指南提供了從版本 0.25 升級到 0.27 的詳細升級說明。</p><p>Waku 將自己定位爲像Next.js這樣的更重框架的替代品，特別是對於那些想要直接使用React Server Components而不需要企業級特性複雜性的小型項目開發者。該框架建立在Vite和Hono之上，優先考慮了開發者體驗，同時支持所有最新的 React 19 特性，包括服務器組件和服務器操作。LogRocket上的一篇比較文章指出，雖然 Next.js 爲複雜應用提供了廣泛的功能，但 Waku 的極簡主義方法使其成爲不需要全面框架化重量級項目的理想選擇。</p><p>這個發佈在 React 社區引起了興趣。在Reddit上，一些用戶注意到了公告的簡潔性，Waku 的創造者Daishi Kato在一位用戶詢問框架的目的是什麼後，反饋到：</p><p>沒有解釋它是什麼，或者爲什麼我們應該好奇？</p><p>Waku 創造者回應：</p><p>好主意。它甚至沒有提到它是一個 React 框架...</p><p>希望https://waku.gg/#introduction有所幫助，但我不確定是否足以讓人們好奇。如果我要加一些話讓它變得有趣，那就是：</p><p class='list-item'>* 它是一個從一開始就爲 React Server Components 開發的 React 框架。</p><p class='list-item'>* 它是基於 Vite 和 Hono 的。</p><p class='list-item'>* 它的 API 很小，易於學習。</p><p class='list-item'>* 開發服務器和構建過程非常快，這主要歸功於 Vite。</p><p>這個公告也被Bytes newsletter和Netlify 2025網絡框架回顧所報道，後者指出 Waku 向 alpha 的轉變是 React Server Components 在整個生態系統中成熟的一部分。</p><p>開發者應該注意到一些架構考慮。Waku 在這個階段明確設計爲非生產項目，團隊通過他們的GitHub討論積極尋求反饋。框架目前缺乏一些開發者可能期望從成熟框架中獲得的功能，例如內置緩存層，儘管它支持部署到多個平臺，包括 Cloudflare 和 AWS Lambda。</p><p>Waku 是一個主要由 Daishi Kato 開發的開源項目，他以創建流行的 React 狀態管理庫Zustand、Jotai和Valtio而聞名。框架的名字，在日語中意味着“激發”，反映了它的目標是在保持輕量級和專注於 React Server Components 基礎的同時，提供一種令人興奮和愉快的開發者體驗。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

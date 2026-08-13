@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>阿里开放 Qwen3.8-2.4T-A95B 模型权重：2.4T MoE、激活 95B、原生 256K 上下文 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>阿里开放 Qwen3.8-2.4T-A95B 模型权重：2.4T MoE、激活 95B、原生 256K 上下文</h1>
+<div class="meta"><span class="src">IT之家（RSS）</span><span>· 8月13日 周四</span>
+<span>· <a href="https://www.ithome.com/0/989/001.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/989/001.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>IT之家 8 月 13 日消息，阿里雲“魔搭 ModelScope 社區”公衆號昨天（12 日）深夜宣佈，阿里 Qwen 團隊正式開放 **Qwen3.8-2.4T-A95B **模型權重。</p><p>此次是 Qwen-Max 級別的模型首次開源權重：模型總參數爲 2.4T，每個 Token 激活 95B 參數，**原生支持 262,144 Token 上下文，並可擴展至 1,010,000 Token**。</p><p>Qwen3.8 延續 Qwen3.5 的混合架構，重點提升**編程、辦公、科研和長週期 Agent 任務**的端到端完成能力。官方雲端版 Qwen3.8-Max 基於該開放權重模型，並加入更多生產環境能力。</p><p>官方公佈的評測覆蓋編程 Agent、通用 Agent、專業工作和長上下文等方向；與 Opus 4.8、Fable 5、GPT 5.6 Sol 等模型相比，各項結果**互有高低**，並在 PaperBench、IFBench 等 Benchmark 中取得所列模型中的較高成績。</p><p>IT之家附上有關鏈接如下：</p><p>Qwen3.8-2.4T-A95B 是一個因果語言模型，總參數爲 2.4T，每個 Token 激活 95B。模型每個 MoE 層包含 512 個專家，每個 Token 選擇 10 個路由專家，並同時激活 1 個共享專家。</p><p>模型還進行了多步 MTP（Multi-Token Prediction）訓練，爲支持相應機制的推理引擎提供預測多個後續 Token 的能力。</p><p>根據介紹，Qwen3.8-Max 的辦公與 Agent 後訓練概括爲三個環節：</p><p class='list-item'>- 持續擴展真實環境，並在這些獨立維度上解耦合：任務（Task）（單任務 → 多任務 → 跨天任務）、工作空間（Workspace）（多文件 → 層級目錄 → 複雜異構目錄）、Harness （不同的類別、版本、技能）。這使得環境數能夠以組合方式自然增長，而非依賴逐一定製化集成。</p><p class='list-item'>- 構建一個統一的獎勵系統，將真實任務中異構的驗證方式內化其中。該系統涵蓋基於執行的校驗、對文本及渲染後的視覺輸出的 rubric 評估、以及 agentic 檢查。我們將多種形式與模態統一在一個獎勵系統內，爲所有環境提供了一致而可靠的獎勵信號，消除維護任務專用的 verifier 所固有的不一致性。</p><p class='list-item'>- 構建一個在線數據均衡器，對每個 batch 進行重構，使其在任務、難度、工作區與 harness 上的分佈高度均衡，降低 batch 間梯度方差，從而支撐強化學習的訓練算力穩定、持續地擴展。</p><p>廣告聲明：文內含有的對外跳轉鏈接（包括不限於超鏈接、二維碼、口令等形式），用於傳遞更多信息，節省甄選時間，結果僅供參考，IT之家包含外鏈的文章均包含本聲明。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

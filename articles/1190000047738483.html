@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e7490">
-<title>Next.js 部署优化：从本地跑得欢到线上飞得稳 · 流動日報譯文</title>
+<title>Next.js 部署：从本地跑得欢，到线上飞得稳 · 流動日報譯文</title>
 <style>
 :root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
 --line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
@@ -42,11 +42,30 @@ font-size:12.5px;color:var(--muted);}
 <body>
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
-<h1>Next.js 部署优化：从本地跑得欢到线上飞得稳</h1>
-<div class="meta"><span class="src">SegmentFault 思否</span><span>· 7月24日 周五</span>
-<span>· <a href="https://shirley@segmentfault.com/a/1190000047738483" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文頁面無法擷取全文，請<a href="https://shirley@segmentfault.com/a/1190000047738483" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<h1>Next.js 部署：从本地跑得欢，到线上飞得稳</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 8月13日 周四</span>
+<span>· <a href="https://segmentfault.com/a/1190000047738483" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047738483" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p><code>你在本地</code><code>npm run dev</code>，頁面秒開，爽得不行。一部署到服務器，慢得像老太太過馬路，圖片加載半天，首屏白屏幾秒，用戶投訴。今天我們就來把Next.js應用“送上天”——從部署到優化，讓你的線上應用和本地一樣快。而且，還能免費蹭HTTPS和CDN。## 前言</p><p>Next.js最大的優勢之一就是**部署極其方便**。官方團隊就是做部署平臺Vercel的，所以你用Next.js，就等於半隻腳踩進了“一鍵部署”的門檻。但這不代表你可以隨便扔到服務器就跑。部署姿勢不對，照樣卡成狗。</p><p>今天我們講兩種部署方式：**無腦簡單版（Vercel）** 和 **手搓硬核版（自託管）**，以及上線前必做的優化。</p><h3>一、Vercel部署：連命令都不用記</h3><p>Vercel是Next.js的親爹（母公司）。你把代碼推到GitHub/GitLab，Vercel自動構建、部署、給CDN、給HTTPS，甚至自動給你一個<code>.vercel.app</code>域名。</p><p class='list-item'>**步驟**：</p><p class='list-item'>- 把代碼推到Git倉庫。</p><p class='list-item'>- 登錄vercel.com，用GitHub賬號登錄。</p><p class='list-item'>- 點擊“Import Project”，選擇你的倉庫。</p><p class='list-item'>- 默認配置（Next.js自動識別），點擊Deploy。</p><p class='list-item'>- 幾十秒後，你會得到一個鏈接 `https://你的項目.vercel.app`，已經上線了。</p><p>之後每次<code>git push</code>，Vercel自動重新部署。你連服務器都不用買。</p><p class='list-item'>**優點**：零運維、自動HTTPS、全球CDN、自動優化（圖片、字體）、免費額度夠用（個人項目）。  **缺點**：自帶域名在國內訪問可能慢（但可綁定自己的域名，解析到國內CDN節點）。流量超了要付費。</p><p class='list-item'>**生活比喻**：你把菜做好，遞給外賣騎手，他幫你送到客戶手裏，你什麼都不用管。</p><h3>二、自託管（自己買服務器）：更自由但更折騰</h3><p>如果你必須用國內服務器、或者公司要求私有化部署，那就得自己搭。</p><h3>方案一：Node.js服務器運行</h3><pre><code>npm run build   # 构建生产版本
+npm start       # 启动Node服务器（默认3000端口）</code></pre><p>然後用Nginx反向代理，配置HTTPS。注意：你需要自己管理進程（用PM2），自己配置CDN，自己處理日誌。</p><p><code>pm2 start npm --name "nextjs" -- start</code>### 方案二：静态导出（如果全站都是SSG）</p><p>如果你的所有頁面都用了<code>getStaticProps</code>（沒有<code>getServerSideProps</code>），可以導出純靜態文件，放到Nginx或OSS上。</p><p><code>next build && next export</code>會生成<code>out</code>文件夾，直接扔到任意靜態託管（如阿里雲OSS + CDN），超便宜，超快。</p><p class='list-item'>**缺点**：不能用`getServerSideProps`、API Routes等服务器特性。</p><h3>方案三：Docker容器化</h3><p>写Dockerfile，构建镜像，跑在K8s或Docker Compose上。</p><pre><code>FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD [&quot;npm&quot;, &quot;start&quot;]</code></pre><p>適合雲原生環境。</p><h3>三、上線前必做的優化：讓Next.js飛起來</h3><h3>1. 图片用`next/image`，别用`&lt;img&gt;`</h3><p><code>next/image</code>自動壓縮、懶加載、轉webp、響應式。你啥都不用做，圖片體積直接小一半。</p><pre><code>import Image from &#x27;next/image&#x27;;
+&lt;Image src=&quot;/hero.png&quot; width={1200} height={600} alt=&quot;Hero&quot; /&gt;</code></pre><p class='list-item'>**坑**：寬高必須指定，或者用`layout="fill"` + 父容器相對定位。</p><h3>2. 字体用`next/font`</h3><p>Next.js 13+內置字體優化，自動內聯CSS、避免佈局偏移。</p><pre><code>import { Inter } from &#x27;next/font/google&#x27;;
+const inter = Inter({ subsets: [&#x27;latin&#x27;] });
+&lt;html className={inter.className}&gt;</code></pre><h3>3. 脚本用`next/script`</h3><p>控制第三方腳本加載時機，不阻塞頁面。</p><pre><code>import Script from &#x27;next/script&#x27;;
+&lt;Script src=&quot;https://example.com/tracker.js&quot; strategy=&quot;afterInteractive&quot; /&gt;</code></pre><h3>4. 開啓壓縮（Vercel默認開啓，自託管需配置）</h3><p>在<code>next.config.js</code>中：</p><pre><code>module.exports = {
+  compress: true, // 开启gzip，Nginx也要配
+};</code></pre><h3>5. 移除未使用的CSS（結合Tailwind或PurgeCSS）</h3><p>如果你用Tailwind，默认已清理。如果用普通CSS，可以考虑<code>@fullhuman/postcss-purgecss</code>。</p><h3>6. 設置緩存頭</h3><p>自託管時，在Nginx裏對靜態資源（<code>_next/static</code>）設置永久緩存：</p><pre><code>location /_next/static {
+  expires 1y;
+  add_header Cache-Control &quot;public, immutable&quot;;
+}</code></pre><h3>7. 啓用增量靜態再生（ISR）</h3><p>不需要每个页面都<code>getServerSideProps</code>，能用<code>getStaticProps + revalidate</code>尽量用。</p><pre><code>export async function getStaticProps() {
+  return { props: { data }, revalidate: 60 };
+}</code></pre><h3>四、性能監控：別靠猜</h3><p>部署後，用**Vercel Analytics**（付費）或自建**Google Lighthouse CI**，定期跑分。也可以集成**Sentry**監控運行時錯誤。</p><p><code>npm install @sentry/nextjs</code>配置後，線上報錯自動發到Sentry，不用等用戶罵你。</p><h3>五、總結：從開發到上線，一條龍</h3><p class='list-item'>- **個人項目/創業公司**：無腦用Vercel，省下的時間寫代碼。</p><p class='list-item'>- **企业自托管**：用Node.js + PM2 + Nginx，或Docker + K8s。</p><p class='list-item'>- **纯静态站点**：- `next export`扔OSS。</p><p class='list-item'>- **優化必做**：圖片、字體、壓縮、緩存、ISR。</p><p>做了這些，你的Next.js應用就能從“本地火箭”變成“太空飛船”。用戶打開，秒開；谷歌爬蟲，狂喜；老闆看數據，點頭。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
