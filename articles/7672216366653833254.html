@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>React Hooks 进阶实战：受控组件 + 性能优化一站式掌握 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>React Hooks 进阶实战：受控组件 + 性能优化一站式掌握</h1>
+<div class="meta"><span class="src">掘金</span><span>· 8月13日 周四</span>
+<span>· <a href="https://juejin.cn/post/7672216366653833254" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7672216366653833254" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>這篇文章圍繞兩個實戰項目，覆蓋 React 中最核心的幾個 Hook：</p><p>分爲上下兩篇：上篇講表單狀態管理（**受控 vs 非受控**），下篇講渲染性能優化（**memo + useCallback + useMemo**）。</p><h3>上篇：受控組件 vs 非受控組件</h3><p>React 裏處理表單輸入，有兩條完全不同的路：</p><h3>#### 項目全景</h3><pre><code>src/
+├── main.jsx                          # 入口
+├── App.jsx                           # 主组件，一次性展示 5 个示例
+└── components/
+    ├── index.js                      # 统一导出（清单文件）
+    ├── ControlledInput.jsx           # ① 最简受控组件
+    ├── UncontrolledInput.jsx         # ② 最简非受控组件
+    ├── CommentBox.jsx                # ③ 非受控 textarea
+    ├── RegisterForm.jsx              # ④ 受控表单（对象 state）
+    └── LoginForm/
+        ├── index.jsx                 # ⑤ 受控表单 + 完整验证
+        └── index.css                 # ⑥ 样式文件</code></pre><h3>一、受控組件：React 是唯一數據源</h3><p>#### 1.1 最简版本 —— <code>ControlledInput.jsx</code></p><pre><code>function ControlledInput(const [value, setValue] = useState(&#x27;&#x27;);
+  return (
+    &lt;input
+      type=&quot;text&quot;
+      value={value}                          // value 永远等于 state
+      onChange={(e) =&gt; setValue(e.target.value)}  // 每次输入都更新 state
+    /&gt;
+  );
+}</code></pre><p class='list-item'>**受控的完整閉環**：</p><pre><code>用户输入 → onChange 触发 → setValue 更新 state → value 变化 → 屏幕刷新
+                                                                    ↑
+                              没有这一步，输入框就不会显示新内容</code></pre><p><code>value={value}</code> 意味着 input 的**显示值永远由 React state 决定**。如果你只写 <code>value={value}</code> 但不写 <code>onChange</code>，输入框会**完全无法输入** —— 因为 state 不变，value 就不变。</p><p>#### 1.2 对象 state 的受控表单 —— <code>RegisterForm.jsx</code></p><p>单个 input 用 <code>useState('')</code>，多个 input 呢？</p><pre><code>function RegisterForm(const [form, setForm] = useState({
+    username: &quot;&quot;,
+    password: &quot;&quot;
+  });
+  const handleChange = (e) =&gt; {
+    setForm({
+      ...form,                            // 保留其他字段
+      [e.target.name]: e.target.value     // 用计算属性名更新当前字段
+    });
+  };
+  return (
+    &lt;&gt;
+      &lt;input name=&quot;username&quot; value={form.username} onChange={handleChange} /&gt;
+      &lt;input name=&quot;password&quot; value={form.password} onChange={handleChange} /&gt;
+      &lt;button type=&quot;submit&quot;&gt;提交&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p>三個要點：</p><p class='list-item'>- **用一個**—— 跟 Vue 的- `useState`管全部字段- `reactive`思路一致（對象級別的響應式）</p><p class='list-item'>- `[e.target.name]`- `handleChange`通吃所有 input</p><p class='list-item'>- `...form`</p><p>#### 1.3 带完整验证的受控表单 —— <code>LoginForm/index.jsx</code></p><p>這是項目裏最完整的組件，加入了**驗證邏輯和錯誤提示**：</p><pre><code>function LoginForm(const [form, setForm] = useState({ username: &quot;&quot;, password: &quot;&quot; });
+  const [errors, setErrors] = useState({});
+  const validate = (name, value) =&gt; {
+    let msg = &quot;&quot;;
+    if (name === &#x27;username&#x27;) {
+      if (!value) msg = &#x27;用户名为空&#x27;;
+      else if (value.length &lt; 3) msg = &#x27;用户名长度不能小于3&#x27;;
+    }
+    if (name === &#x27;password&#x27;) {
+      if (!value) msg = &#x27;密码不能为空&#x27;;
+      else if (value.length &lt; 6) msg = &#x27;密码长度不能小于6位&#x27;;
+    }
+    setErrors(prev =&gt; ({ ...prev, [name]: msg }));
+  };
+  const handleChange = e =&gt; {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    validate(name, value);     // 输入的同时做校验
+  };
+  const isValid = form.username &amp;&amp; form.password
+    &amp;&amp; !errors.username &amp;&amp; !errors.password;
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input name=&quot;username&quot; value={form.username} onChange={handleChange} /&gt;
+      {errors.username &amp;&amp; &lt;span className=&quot;error&quot;&gt;{errors.username}&lt;/span&gt;}
+      &lt;input name=&quot;password&quot; value={form.password} onChange={handleChange} /&gt;
+      {errors.password &amp;&amp; &lt;span className=&quot;error&quot;&gt;{errors.password}&lt;/span&gt;}
+      &lt;button type=&quot;submit&quot; disabled={!isValid}&gt;登录&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre><p>受控組件的優勢在這裏體現得淋漓盡致：</p><p>因爲數據全在 state 裏，驗證、提交、禁用按鈕、錯誤提示 —— 所有 UI 都可以根據 state 實時決定。</p><h3>二、非受控組件：需要時才問 DOM</h3><p>#### 2.1 最简版本 —— <code>UncontrolledInput.jsx</code></p><pre><code>function UncontrolledInput(const inputRef = useRef(null);
+  const handleClick = (console.log(inputRef.current.value);  // 用到的时候再读 DOM
+  };
+  return (
+    &lt;&gt;
+      &lt;input type=&quot;text&quot; ref={inputRef} /&gt;
+      &lt;button onClick={handleClick}&gt;获取输入值&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p class='list-item'>**非受控的邏輯**：</p><pre><code>用戶輸入 → DOM 自己存着值 → 需要時 ref.current.value 取出來
+              ↑
+    React 不追蹤每次輸入，state 不改，不觸發重渲染</code></pre><p>沒有 <code>value</code> 綁定，沒有 <code>onChange</code> 處理，輸入框完全靠瀏覽器原生行爲工作。</p><p>#### 2.2 textarea 同理 —— <code>CommentBox.jsx</code></p><pre><code>function CommentBox(const textareaRef = useRef(null);
+  const handleSubmit = (const comment = textareaRef.current.value;
+    if (!comment) return;
+    console.log(comment);
+  };
+  return (
+    &lt;&gt;
+      &lt;textarea ref={textareaRef} placeholder=&quot;输入评论...&quot; /&gt;
+      &lt;button onClick={handleSubmit}&gt;提交评论&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p>逻辑和 <code>UncontrolledInput</code> 一模一样。React 里 <code><textarea></code> 的用法跟 <code><input></code> 完全一致 —— 不像原生 HTML 需要把内容放在标签中间。</p><h3>三、清单文件 —— `components/index.js`</h3><pre><code>// 组件越来越多，index.js 上导出所有组件 —— 清单文件
+export { ControlledInput, UncontrolledInput, CommentBox, RegisterForm, LoginForm };</code></pre><p>這是**barrel export（桶文件）**，一行導入所有組件：</p><pre><code>import { ControlledInput, UncontrolledInput, CommentBox, RegisterForm, LoginForm } from &#x27;./components&#x27;;</code></pre><h3>四、受控 vs 非受控 對比</h3><p class='list-item'>**核心判斷標準**：需要"邊輸入邊反饋"就用受控，只需要"提交時取值"就用非受控。</p><h3>下篇：memo + useCallback + useMemo 性能优化</h3><h3>五、問題根源：父組件渲染的&quot;連坐&quot;機制</h3><p>先看這段代碼：</p><pre><code>function App(const [count, setCount] = useState(0);
+  const [name, setName] = useState(&#x27;少林队&#x27;);
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;点击计数 {count}&lt;/button&gt;
+      &lt;button onClick={() =&gt; setName(&quot;峨眉队&quot;)}&gt;改变名字&lt;/button&gt;
+      &lt;RegularChild name={name} /&gt;
+      &lt;MemoChild name={name} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p>問：**點擊"點擊計數"時， RegularChild 會重新渲染嗎？**</p><p>直覺告訴你"不會吧，count 又沒傳給子組件"。但答案是 —— **會**。</p><p>React 的默認行爲：**父組件重新渲染，它所有的子組件也跟着渲染**。</p><pre><code>点击计数（只改 count）
+  → App 重渲染
+    → RegularChild 重渲染 ❌ 浪费！name 没变
+    → MemoChild  重渲染 ❌ 浪费！name 没变</code></pre><p>父組件有多個狀態，子組件只依賴其中的一些狀態。不想關的屬性改變時，希望子組件拒絕重新渲染。</p><h3>六、memo —— 讓組件&quot;記住&quot;自己</h3><h3>#### 6.1 對比實驗</h3><pre><code>import { useState, memo } from &#x27;react&#x27;;
+// 普通子组件 —— 父组件渲染它就渲染
+function RegularChild({ name }) {
+  console.log(&#x27;渲染了 RegularChild&#x27;);
+  return &lt;h1&gt;{name}&lt;/h1&gt;;
+}
+// memo 包裹 —— 只在 props 变化时才渲染
+const MemoChild = memo(({ name }) =&gt; {
+  console.log(&#x27;MemoizedChild 渲染了&#x27;);
+  return &lt;div&gt;Hello, {name}&lt;/div&gt;;
+});</code></pre><h3>#### 6.2 memo 的致命弱點：引用類型</h3><p><code>memo</code> 默认用**浅比较**（<code>Object.is</code>），所以：</p><pre><code>// ✅ 基本类型：没问题
+&lt;MemoChild name=&quot;少林队&quot; /&gt;  // &quot;少林队&quot; === &quot;少林队&quot; → true → 不渲染
+// ❌ 对象：每次都是新引用！
+&lt;MemoChild config={{ team: &#x27;少林队&#x27; }} /&gt;  // 新对象 ≠ 旧对象 → memo 白干
+// ❌ 函数：每次都是新引用！
+&lt;MemoChild onClick={() =&gt; handleClick()} /&gt;  // 新函数 ≠ 旧函数 → memo 白干</code></pre><p class='list-item'>**每次父組件渲染，對象字面量和箭頭函數都會創建全新的引用。** 這就是 `useCallback` 和 `useMemo` 存在的意義。</p><h3>七、useCallback —— 穩定函數引用</h3><pre><code>function App(const [count, setCount] = useState(0);
+  const [name, setName] = useState(&#x27;少林队&#x27;);
+  // ❌ 每次渲染都是新函数 → memo 失效
+  // const handleClick = () =&gt; { setName(&#x27;峨眉队&#x27;); };
+  // ✅ useCallback 缓存函数引用，依赖不变就返回同一个函数
+  const handleClick = useCallback(() =&gt; {
+    setName(&#x27;峨眉队&#x27;);
+  }, []);  // 空依赖 → 函数引用永远不变
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;点击计数 {count}&lt;/button&gt;
+      &lt;MemoChild name={name} onClick={handleClick} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><p><code>useCallback(fn, [依赖])</code> 的逻辑：</p><pre><code>首次渲染：創建函數 fn，緩存起來，返回 fn
+後續渲染：
+  → 依賴沒變？直接返回緩存的 fn（同一個引用！）
+  → 依賴變了？創建新函數，替換緩存，返回新 fn</code></pre><h3>#### 依賴的正確寫法</h3><pre><code>// ❌ 经典错误：函数里用了 count，但依赖没写 → 永远打印旧值！
+const handleClick = useCallback(() =&gt; { console.log(count); }, []);
+// ✅ 诚实写依赖
+const handleClick = useCallback(() =&gt; { console.log(count); }, [count]);</code></pre><h3>八、useMemo —— 穩定計算結果</h3><p><code>useCallback</code> 和 <code>useMemo</code> 本质是同一个东西：</p><pre><code>useCallback(fn, [a, b]);       // 缓存函数
+useMemo(() =&gt; fn, [a, b]);     // 缓存计算结果（上面那行的底层实现）</code></pre><h3>#### 兩個典型場景</h3><p class='list-item'>**① 昂貴的計算，避免每次渲染重算**</p><pre><code>// ❌ 每次渲染都重新过滤 + 排序
+const filteredTodos = todos.filter(t =&gt; t.status === filter).sort(...);
+// ✅ 只在依赖变了才重新算
+const filteredTodos = useMemo(() =&gt;
+  todos.filter(t =&gt; t.status === filter).sort(...),
+  [todos, filter]
+);</code></pre><p class='list-item'>**② 傳給 memo 子組件的對象 prop**</p><pre><code>// ❌ 每次都是新对象 → memo 失效
+&lt;MemoChild config={{ team: &#x27;少林队&#x27;, color: &#x27;red&#x27; }} /&gt;
+// ✅ useMemo 稳定对象引用
+const config = useMemo(() =&gt; ({ team: &#x27;少林队&#x27;, color: &#x27;red&#x27; }), []);
+&lt;MemoChild config={config} /&gt;</code></pre><h3>九、三劍合璧：完整優化鏈路</h3><pre><code>父組件狀態變化
+    │
+    ├── 要傳函數給 memo 子組件？
+    │     → useCallback 穩定函數引用
+    │
+    ├── 要傳對象/數組給 memo 子組件？或要做昂貴計算？
+    │     → useMemo 穩定值引用 / 緩存計算結果
+    │
+    └── 子組件本身是&quot;純展示&quot;、props 不常變？
+          → React.memo 包裹子組件</code></pre><pre><code>function App(const [count, setCount] = useState(0);
+  const [items, setItems] = useState([...]);
+  const handleDelete = useCallback((id) =&gt; {
+    setItems(prev =&gt; prev.filter(i =&gt; i.id !== id));
+  }, []);
+  const config = useMemo(() =&gt; ({ theme: &#x27;dark&#x27;, fontSize: 14 }), []);
+  const sortedItems = useMemo(() =&gt;
+    [...items].sort((a, b) =&gt; b.score - a.score),
+    [items]
+  );
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;计数 {count}&lt;/button&gt;
+      &lt;MemoList items={sortedItems} config={config} onDelete={handleDelete} /&gt;
+    &lt;/&gt;
+  );
+}
+const MemoList = memo(({ items, config, onDelete }) =&gt; {
+  console.log(&#x27;MemoList 渲染&#x27;);
+  return items.map(item =&gt; (
+    &lt;MemoItem key={item.id} item={item} onDelete={onDelete} /&gt;
+  ));
+});</code></pre><p>点击计数 → <code>count</code> 变 → <code>sortedItems</code>/<code>config</code>/<code>handleDelete</code> 依赖都没变 → 引用全部稳定 → <code>MemoList</code> 浅比较 props → 全都没变 → **不渲染**。</p><h3>十、全篇對比總結</h3><h3>#### Hooks 一览</h3><h3>#### 使用原則</h3><pre><code>受控 vs 非受控：
+  → 邊輸入邊反饋 → 受控（useState）
+  → 提交時才取值 → 非受控（useRef）
+性能優化三劍客：
+  → memo 包組件
+  → useCallback 包函數
+  → useMemo 包對象 / 昂貴計算
+  → 先寫正常代碼，有瓶頸再優化，不要無腦包</code></pre><p class='list-item'>*写于 2026-08-10*</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

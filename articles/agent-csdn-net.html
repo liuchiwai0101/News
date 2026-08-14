@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>AI Agent技术社区 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>AI Agent技术社区</h1>
+<div class="meta"><span class="src">agent.csdn.net</span>
+<span>· <a href="https://agent.csdn.net/6a17f041662f9a54cb77f98d.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://agent.csdn.net/6a17f041662f9a54cb77f98d.html" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>釦子（Coze）零基礎到實戰：從入門到搭建你的第一個AI智能體，半小時搞定！</h3><p>別再羨慕別人會用AI了。今天這篇教程，帶你從零到一，手把手用釦子搭建一個真正能幹活的智能體。全程零代碼，會複製粘貼就能學會。</p><p class='list-item'>- 一、先搞清楚：釦子到底是什麼？</p><p class='list-item'>- 二、爲什麼推薦釦子？三個無法拒絕的理由</p><p class='list-item'>- 三、註冊與界面速覽</p><p class='list-item'>- 四、實戰一：15分鐘創建你的第一個智能體</p><p class='list-item'>- 五、實戰二：搭建工作流，讓智能體自動幹活</p><p class='list-item'>- 六、進階：知識庫（RAG）—— 讓智能體不再「瞎編」</p><p class='list-item'>- 七、Function Calling：讓智能體學會「調用工具」</p><p class='list-item'>- 八、發佈你的智能體</p><p class='list-item'>- 九、常見問題與避坑指南</p><p class='list-item'>- 十、總結與下一步</p><h3>很多人一上來就問：「釦子和ChatGPT有什麼區別？」「釦子是不是就是聊天機器人？」</h3><p>別急，我用一個比喻讓你秒懂：</p><p>釦子像一個樂高工廠，智能體是樂高機器人，工作流是機器人內部的控制芯片。</p><p>拆開來說：</p><p class='list-item'>**一句話總結**：釦子不是AI，釦子是「造AI」的平臺。你不需要寫代碼，拖拖拽拽就能造出一個能幫你寫文案、做客服、生成視頻的專屬AI員工。</p><p>不需要Python，不需要懂大模型原理。釦子提供了**可視化的拖拽界面**，像搭積木一樣搭工作流。</p><p>我見過最極端的案例：一位60歲的退休教師，用釦子3天搭出了一個「古詩詞賞析智能體」，發佈到微信上給孫子用。</p><p>釦子內置了上百個官方插件：新聞搜索、天氣查詢、圖片生成、飛書通知、剪映對接……你需要的它基本都有。不滿足？還能自己寫自定義插件。</p><p>做好的智能體，可以**一鍵發佈**到：</p><p class='list-item'>- 釦子商店（公開展示）</p><p class='list-item'>- 飛書機器人</p><p class='list-item'>- 微信公衆號</p><p class='list-item'>- 微信客服</p><p class='list-item'>- Web網頁</p><p class='list-item'>- API接口</p><p>這意味着你做了一個智能體，就能同時在多個渠道使用，非常爽。</p><p class='list-item'>- 打开扣子官网：https://www.coze.cn</p><p class='list-item'>- 點擊右上角「登錄」，支持手機號、微信、抖音掃碼</p><p class='list-item'>- 首次登錄後，系統會引導你進入工作空間</p><p class='list-item'>- **左側導航欄**：個人空間、項目開發、資源庫、商店</p><p class='list-item'>- **中間主區域**：項目列表，顯示你創建的所有智能體和應用</p><p class='list-item'>- **右上角**：創建按鈕（點擊即可新建智能體）</p><h3>💡</h3><p>重點記住：個人空間 = 你的私人工作室，資源庫 = 插件/知識庫/工作流的公共倉庫，商店 = 發佈和發現智能體的市場。</p><p>目標：創建一個「小紅書爆款文案生成器」智能體，輸入主題，輸出3種不同風格的爆款文案。</p><p class='list-item'>- 登錄釦子 → 點擊「創建」→「創建智能體」</p><p class='list-item'>- 填寫名稱：「小紅書爆款文案助手」</p><p class='list-item'>- 填寫描述：「輸入主題，自動生成3種風格的小紅書爆款文案」</p><p class='list-item'>- 圖標可用AI自動生成，點擊「確認」</p><p>這是智能體的**靈魂**。一個好提示詞 = 角色設定 + 輸出結構 + 風格要求 + 示例。</p><p>進入編輯頁面後，在「人設與回覆邏輯」框中填入以下內容：</p><pre><code># 角色
+你是小紅書爆款文案創作專家，擁有5年新媒體運營經驗，精通小紅書平臺的爆款公式和流量密碼。
+# 技能
+- 根據用戶輸入的主題，創作3種不同風格的爆款文案
+- 風格1：種草推薦型（真誠分享口吻 + 使用體驗 + 種草理由）
+- 風格2：乾貨教程型（價值感標題 + 步驟拆解 + 收藏引導）
+- 風格3：情感共鳴型（情緒鉤子 + 故事感 + 互動引導）
+- 每種風格附帶標籤建議和使用場景說明
+# 輸出格式
+## 風格1：種草推薦型
+【標題】
+【正文】（包含使用體驗+種草理由）
+【推薦標籤】
+【適用場景】
+## 風格2：乾貨教程型
+……（同上）
+## 風格3：情感共鳴型
+……（同上）
+# 限制
+- 不編造虛假信息
+- 不推薦未經驗證的產品
+- 每個文案控制在300字以內</code></pre><p>寫完提示詞後，可以點擊右上角的「優化」按鈕，讓釦子幫你潤色一下。</p><p>在「編排」區域 → 「技能」→ 添加以下技能：</p><p class='list-item'>- **開場白**：設置歡迎語，例如「嗨～告訴我你想寫什麼主題，我幫你生成3種爆款文案！」</p><p class='list-item'>- **語音**（可選）：開啓語音對話功能</p><p>在右側「預覽與調試」面板輸入測試內容，比如「秋天的第一杯奶茶」，查看輸出效果。滿意後點擊右上角「發佈」。</p><p>如果說智能體是「一個AI員工」，那工作流就是「一條AI生產線」。</p><p>工作流 = 多個節點串聯的自動化流水線。每個節點完成一個任務，數據在節點之間流轉。</p><p>釦子提供兩種工作流類型：</p><p class='list-item'>- **工作流（Workflow）**：處理功能類任務，如數據採集、內容生成</p><p class='list-item'>- **對話流（Chatflow）**：處理對話類任務，如智能客服</p><p>這個工作流的功能：自動抓取科技新聞 → AI篩選精華 → 生成摘要 → 輸出給用戶。</p><p>釦子首頁 → 資源庫 → 工作流 → 新建工作流，命名爲「科技新聞精選」。</p><p class='list-item'>- 在畫布中點擊「添加節點」→「插件」</p><p class='list-item'>- 搜索「科技新聞」→ 添加 `Science_news`插件</p><p class='list-item'>- 將開始節點連接到 Science_news 節點</p><p class='list-item'>- 添加節點 → 「大模型」</p><p class='list-item'>- 連接在 Science_news 節點之後</p><p class='list-item'>- 重命名爲「新聞精選」</p><p class='list-item'>- 設置輸入參數，引用上一個節點的輸出</p><p>將結束節點連接到「新聞精選」節點後，設置輸出爲精選後的新聞內容。</p><p>點擊「試運行」，如果結果滿意，點擊「發佈」。</p><p>回到你的智能體編輯頁 → 編排 → 技能 → 添加工作流 → 選擇剛發佈的「科技新聞精選」。然後在人設中描述這個技能：</p><pre><code>當用戶需要科技新聞時，調用「科技新聞精選」工作流獲取最新資訊並整理輸出。</code></pre><p>大模型最大的問題是：**容易胡說八道**。要解決這個問題，就給它喂「靠譜的資料」—— 知識庫。</p><p>通俗理解：**知識庫 = AI員工的培訓手冊**。你把公司文檔、產品手冊、FAQ傳上去，智能體回答問題時先查知識庫，有了依據再回答。</p><p>釦子知識庫支持：</p><p class='list-item'>- 網頁鏈接（自動抓取內容）</p><p class='list-item'>- PDF / Word / Excel / Markdown 文件</p><p class='list-item'>- 飛書表格</p><p class='list-item'>- 手動錄入文本</p><p>上傳後系統自動將長文本「切片」，檢索到的片段作爲上下文送給大模型生成回答。</p><p class='list-item'>- 準備資料：產品使用手冊（PDF）、常見問題（Excel Q&A表格）</p><p class='list-item'>- 釦子 → 資源庫 → 知識庫 → 新建知識庫</p><p class='list-item'>- 上傳文件，等待系統自動切片（通常1-3分鐘）</p><p class='list-item'>- 在智能體中關聯該知識庫</p><p class='list-item'>- 設置檢索優先級</p><p class='list-item'>**舉個例子你就懂了**：</p><p>你說「幫我查一下明天北京的天氣」，大模型本身不知道天氣，但它知道應該調用天氣查詢工具，然後告訴你結果。</p><p>這個過程就是 Function Calling：**大模型不直接執行函數，而是返回「應該調用哪個函數 + 什麼參數」**，由釦子平臺實際去調用。</p><p>當官方插件無法滿足需求時，比如：</p><p class='list-item'>- 需要對接公司內部的API</p><p class='list-item'>- 需要調用特定數據源</p><p class='list-item'>- 需要實現獨有的業務邏輯</p><p>創建自定義插件的步驟：</p><p class='list-item'>- 資源庫 → 插件 → 新建插件</p><p class='list-item'>- 填寫 API 地址、認證方式</p><p class='list-item'>- 定義輸入輸出參數</p><p class='list-item'>- 測試通過後發佈</p><p class='list-item'>- 智能體編輯頁 → 右上角「發佈」</p><p class='list-item'>- 填寫發佈記錄</p><p class='list-item'>- 勾選「釦子智能體商店」</p><p class='list-item'>- 點擊「發佈」</p><p class='list-item'>- 發佈時勾選「微信」</p><p class='list-item'>- 按指引完成微信公衆號授權</p><p class='list-item'>- 配置自動回覆規則</p><p class='list-item'>- 發佈時勾選「飛書」</p><p class='list-item'>- 在飛書開放平臺創建應用，獲取 App ID 和 App Secret</p><p class='list-item'>- 回到釦子完成綁定</p><p class='list-item'>- **直接對話大模型**：問一位「無所不知但沒記憶」的萬能博士</p><p class='list-item'>- **智能體**：你親手打造的、有特定技能和長期記憶的「專屬專家員工」</p><p>按這個順序排查：</p><p class='list-item'>- 檢查每個節點的輸入輸出是否正確引用</p><p class='list-item'>- 檢查變量名是否拼寫正確</p><p class='list-item'>- 用「試運行」逐節點排查</p><p class='list-item'>- 檢查插件是否需要額外配置</p><p class='list-item'>- 新手先用免費額度學習</p><p class='list-item'>- 熟練後再升級專業版</p><p class='list-item'>- 知識庫可以減少不必要的 Token 消耗（有據可依，不用每次都長篇推理）</p><p class='list-item'>**AI機器人（Bot）是智能體（Agent）的子集**。Bot 通常是簡單的對話機器人；Agent 能自主規劃、調用多種工具、完成複雜多步驟任務。</p><p>恭喜你讀到這裏！你已經學會了：</p><p class='list-item'>- **鞏固**：把上面的實戰案例再做一遍</p><p class='list-item'>- **進階**：嘗試搭建一個「自動生成短視頻腳本+配音」的工作流</p><p class='list-item'>- **變現**：把你的智能體發佈到釦子商店，好的智能體可以收費</p><p class='list-item'>- **深入學習**：推薦黑馬程序員的 Coze智能體全套教程（B站免費），涵蓋提示詞工程、RAG、Function Calling、工作流實戰等完整內容</p><h3>🦞</h3><p>彩蛋：這篇文章就是我用 AI 助手 + 黑馬程序員課程體系 + 個人實操經驗整理而成的。AI時代，會用工具的人才是真正的高效者。</p><p class='list-item'>**參考資料**</p><p class='list-item'>- 扣子官网：https://www.coze.cn</p><p class='list-item'>- 扣子文档：https://www.coze.cn/docs</p><p class='list-item'>- 黑馬程序員 B站 Coze 教程：BV12omoB4ExF</p><h3>更多推薦</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>我用 50 行代码重写了 React Router 核心，终于搞懂了前端路由原理 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>我用 50 行代码重写了 React Router 核心，终于搞懂了前端路由原理</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 8月13日 周四</span>
+<span>· <a href="https://segmentfault.com/a/1190000047918721" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047918721" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>用了很多年的 React Router，一直是"會用但不懂原理"的狀態。<code><Route></code>、<code>useNavigate</code>、<code>hash</code>和<code>history</code>模式的區別——背過，但說不清底層到底怎麼實現的。上週末我花了兩個小時，從零手寫了一個 50 行的迷你路由，寫完之後有一種"原來就這麼回事"的頓悟感。這篇文章把完整代碼和思考過程分享出來，幫你也達到這個"頓悟時刻"。</p><h3>在動手寫之前，先想清楚 4 個問題</h3><p>很多人看源碼或手寫的方式是：上來就寫代碼。這樣寫完也記不住。</p><p>正確的做法是**先想清楚設計**，再寫代碼。我給自己提了 4 個問題：</p><p class='list-item'>- **前端路由的本質是什麼？**— 監聽 URL 變化 → 匹配對應處理函數 → 渲染內容。本質就是一個事件驅動的映射表。</p><p class='list-item'>- **hash 和 history 的區別到底在哪？**— hash 用- `hashchange`事件，history 用- `popstate`事件，但 API 應該統一，調用方不關心底層。</p><p class='list-item'>- **哪些場景容易遺漏？**— 直接訪問 URL（首次加載）、瀏覽器前進/後退按鈕、動態路由參數（- `/user/:id`）。</p><p class='list-item'>- **history 模式刷新 404 是前端還是後端的問題？**— 後端的。前端路由只管 JS 運行時的 URL 變化，刷新是瀏覽器發了一個真實請求，需要服務端 fallback。</p><p>想清楚這 4 個問題，代碼基本就能寫出來了。</p><h3>50 行代碼實現</h3><p>先看完整代碼，然後逐塊講解。</p><pre><code>class Router {
+  constructor(mode = &#x27;hash&#x27;) {
+    this.mode = mode;
+    this.routes = new Map();
+    this.currentPath = &#x27;&#x27;;
+    this._bindEvents();
+  }
+  _bindEvents() {
+    if (this.mode === &#x27;hash&#x27;) {
+      window.addEventListener(&#x27;hashchange&#x27;, () =&gt; {
+        this._handleRoute(location.hash.slice(1) || &#x27;/&#x27;);
+      });
+    } else {
+      window.addEventListener(&#x27;popstate&#x27;, () =&gt; {
+        this._handleRoute(location.pathname);
+      });
+    }
+  }
+  route(path, handler) {
+    this.routes.set(path, handler);
+    return this;
+  }
+  _handleRoute(path) {
+    this.currentPath = path;
+    const handler = this._matchRoute(path);
+    if (handler) handler(path);
+  }
+  _matchRoute(path) {
+    if (this.routes.has(path)) return this.routes.get(path);
+    for (const [pattern, handler] of this.routes) {
+      const regex = new RegExp(&#x27;^&#x27; + pattern.replace(/:(\w+)/g, &#x27;([^/]+)&#x27;) + &#x27;$&#x27;);
+      if (regex.test(path)) return handler;
+    }
+    return this.routes.get(&#x27;*&#x27;);
+  }
+  push(path) {
+    if (this.mode === &#x27;hash&#x27;) {
+      location.hash = path;
+    } else {
+      history.pushState(null, &#x27;&#x27;, path);
+      this._handleRoute(path);
+    }
+  }
+  start() {
+    const path = this.mode === &#x27;hash&#x27;
+      ? (location.hash.slice(1) || &#x27;/&#x27;)
+      : location.pathname;
+    this._handleRoute(path);
+  }
+}</code></pre><p>正好 50 行（去掉空行）。下面逐塊拆解。</p><h3>第一塊：構造函數和事件綁定</h3><pre><code>constructor(mode = &#x27;hash&#x27;) {
+  this.mode = mode;
+  this.routes = new Map();
+  this.currentPath = &#x27;&#x27;;
+  this._bindEvents();
+}</code></pre><p>用 <code>Map</code> 存路由映射表，而不是普通對象。面試加分點：**Map 的 key 可以保持插入順序，遍歷時有序，普通對象不保證。**</p><pre><code>_bindEvents() {
+  if (this.mode === &#x27;hash&#x27;) {
+    window.addEventListener(&#x27;hashchange&#x27;, () =&gt; {
+      this._handleRoute(location.hash.slice(1) || &#x27;/&#x27;);
+    });
+  } else {
+    window.addEventListener(&#x27;popstate&#x27;, () =&gt; {
+      this._handleRoute(location.pathname);
+    });
+  }
+}</code></pre><p>兩種模式的核心區別就在這裏：</p><h3>面試高頻追問：**&quot;popstate 什麼時候觸發？&quot;**</h3><p>答：瀏覽器前進/後退按鈕時觸發。** pushState 和 replaceState 不會觸發 popstate**，所以在</p><p><code>push</code> 方法里需要手动调用 <code>_handleRoute</code>。## 第二块：路由匹配</p><pre><code>_matchRoute(path) {
+  // 精确匹配
+  if (this.routes.has(path)) return this.routes.get(path);
+  
+  // 动态路由匹配（:id 这种参数）
+  for (const [pattern, handler] of this.routes) {
+    const regex = new RegExp(&#x27;^&#x27; + pattern.replace(/:(\w+)/g, &#x27;([^/]+)&#x27;) + &#x27;$&#x27;);
+    if (regex.test(path)) return handler;
+  }
+  
+  // 兜底：404
+  return this.routes.get(&#x27;*&#x27;);
+}</code></pre><p>這 10 行代碼做了三件事：</p><p class='list-item'>- **精确匹配**：- `/about`精确命中- `/about`</p><p class='list-item'>- **动态参数**：- `/user/:id`匹配- `/user/123`</p><p class='list-item'>- **404 兜底**：沒命中的路徑走- `*`通配符</p><p>面試加分點：這裏用正則 <code>/:(\w+)/g</code> 把 <code>:id</code> 轉成 <code>([^/]+)</code>。面試官可能會問你"這個正則的性能怎麼樣"——答：路由數量通常在 20-50 條，正則匹配的性能開銷可以忽略。如果路由上千條（不太現實），可以用 Trie 樹優化。</p><h3>第三塊：導航和啓動</h3><pre><code>push(path) {
+  if (this.mode === &#x27;hash&#x27;) {
+    location.hash = path;  // 自动触发 hashchange
+  } else {
+    history.pushState(null, &#x27;&#x27;, path);
+    this._handleRoute(path);  // pushState 不触发 popstate，手动调用
+  }
+}
+start() {
+  const path = this.mode === &#x27;hash&#x27;
+    ? (location.hash.slice(1) || &#x27;/&#x27;)
+    : location.pathname;
+  this._handleRoute(path);
+}</code></pre><p><code>push</code> 是编程式导航，对应 Vue Router 的 <code>router.push()</code> 和 React Router 的 <code>navigate()</code>。</p><p><code>start</code> 處理初始加載——用戶直接通過 URL 訪問頁面時，需要立即匹配當前路由。</p><h3>使用方式</h3><pre><code>const router = new Router(&#x27;history&#x27;);
+router
+  .route(&#x27;/&#x27;, () =&gt; {
+    document.getElementById(&#x27;app&#x27;).innerHTML = &#x27;&lt;h1&gt;首页&lt;/h1&gt;&#x27;;
+  })
+  .route(&#x27;/about&#x27;, () =&gt; {
+    document.getElementById(&#x27;app&#x27;).innerHTML = &#x27;&lt;h1&gt;关于我们&lt;/h1&gt;&#x27;;
+  })
+  .route(&#x27;/user/:id&#x27;, (path) =&gt; {
+    const id = path.split(&#x27;/&#x27;).pop();
+    document.getElementById(&#x27;app&#x27;).innerHTML = `&lt;h1&gt;用户 ${id}&lt;/h1&gt;`;
+  })
+  .route(&#x27;*&#x27;, () =&gt; {
+    document.getElementById(&#x27;app&#x27;).innerHTML = &#x27;&lt;h1&gt;404 页面不存在&lt;/h1&gt;&#x27;;
+  });
+router.start();
+// 编程式导航
+document.getElementById(&#x27;btn&#x27;).addEventListener(&#x27;click&#x27;, () =&gt; {
+  router.push(&#x27;/about&#x27;);
+});</code></pre><p>鏈式調用，API 乾淨，和 Vue Router / React Router 的使用體驗基本一致。</p><h3>面試中會被追問的 6 個問題</h3><p>理解了原理之後，這些常見面試題就不用背了——你能從原理推導出答案。</p><h3>Q1：&quot;hash 模式和 history 模式怎麼選？&quot;</h3><pre><code>hash 模式：
+  ✅ 不需要服務端配置
+  ✅ 兼容性好（IE9+）
+  ❌ URL 裏有 #，不美觀
+  ❌ 對 SEO 不友好
+history 模式：
+  ✅ URL 乾淨
+  ✅ SEO 友好
+  ❌ 刷新頁面會 404（需要服務端配置 fallback）
+  ❌ 需要 IE10+</code></pre><p class='list-item'>**一句話答：** 後臺管理系統用 hash，面向用戶的產品用 history。</p><h3>Q2：&quot;history 模式刷新 404 怎麼解決？&quot;</h3><p>Nginx 加一行配置：</p><pre><code>location / {
+  try_files $uri $uri/ /index.html;
+}</code></pre><p>所有未匹配的路徑都 fallback 到 <code>index.html</code>，由前端路由接管。</p><h3>Q3：&quot;如果路由很多，匹配性能會不會有問題？&quot;</h3><p>實際項目中路由通常不超過 50 條，線性遍歷沒有性能問題。如果極端場景需要優化，可以用 **Trie 樹**（前綴樹）做路由匹配，時間複雜度從 O(n) 降到 O(m)，m 是路徑深度。</p><h3>Q4：&quot;你這個路由怎麼支持路由守衛？&quot;</h3><p>加一个 <code>beforeEach</code> 钩子：</p><pre><code>beforeEach(guard) {
+  this._guard = guard;
+  return this;
+}
+_handleRoute(path) {
+  if (this._guard &amp;&amp; !this._guard(this.currentPath, path)) return;
+  this.currentPath = path;
+  const handler = this._matchRoute(path);
+  if (handler) handler(path);
+}</code></pre><p>用法：</p><pre><code>router.beforeEach((from, to) =&gt; {
+  if (to === &#x27;/admin&#x27; &amp;&amp; !isLoggedIn()) {
+    router.push(&#x27;/login&#x27;);
+    return false;
+  }
+  return true;
+});</code></pre><h3>Q5：&quot;怎麼提取動態路由的參數？&quot;</h3><p>當前實現裏參數要手動從 path 裏解析。優化版：</p><pre><code>_matchRoute(path) {
+  for (const [pattern, handler] of this.routes) {
+    const keys = [];
+    const regex = new RegExp(
+      &#x27;^&#x27; + pattern.replace(/:(\w+)/g, (_, key) =&gt; {
+        keys.push(key);
+        return &#x27;([^/]+)&#x27;;
+      }) + &#x27;$&#x27;
+    );
+    const match = path.match(regex);
+    if (match) {
+      const params = Object.fromEntries(keys.map((k, i) =&gt; [k, match[i + 1]]));
+      return () =&gt; handler(params);
+    }
+  }
+  return this.routes.get(&#x27;*&#x27;);
+}</code></pre><p>這樣 handler 收到的就是 <code>{ id: '123' }</code> 這種結構化參數了。</p><h3>Q6：&quot;Vue Router 和 React Router 的實現原理和你這個一樣嗎？&quot;</h3><p>核心原理一樣，都是基於 <code>hashchange</code> / <code>popstate</code> 監聽 URL 變化。但它們多了很多工程化的東西：</p><p class='list-item'>- **嵌套路由**：支持路由樹結構</p><p class='list-item'>- **懒加载**：- `React.lazy`+- `Suspense`/ Vue 的- `() => import()`</p><p class='list-item'>- **過渡動畫**：路由切換時的動畫鉤子</p><p class='list-item'>- **滾動恢復**：前進後退時恢復滾動位置</p><p>但底層原理，就是你面前這 50 行代碼。</p><h3>爲什麼要手寫，AI 不是一秒就能生成嗎</h3><p>確實，Claude Code 一句話就能給你一個完整的路由實現。但有兩個東西它給不了你：</p><p class='list-item'>- **理解力**：你讓 AI 生成的路由代碼出了 bug，你能 debug 嗎？如果你不理解- `popstate`不響應- `pushState`，你可能查半天都找不到問題。</p><p class='list-item'>- **設計判斷力**：新項目要選 hash 還是 history？什麼時候該用嵌套路由？路由守衛放在哪層合適？這些決策需要你理解底層原理才能做對。</p><p class='list-item'>**用 AI 寫代碼，用手寫學原理。兩者不矛盾。**</p><h3>寫在最後</h3><p>React Router 的源碼有幾千行，但核心原理就是這 50 行。那些多出來的代碼是在處理嵌套路由、懶加載、滾動恢復、SSR 等工程化問題。</p><p>搞懂了核心，再去看源碼就不會一臉懵了。</p><p>如果你也有類似"會用但不懂原理"的框架 API，試試花兩個小時手寫一個最小版本。**寫完之後的頓悟感，比看十篇文章都管用。**</p><p class='list-item'>**你還有哪些"用了很久但說不清原理"的前端知識？評論區說說，下次可以繼續寫。**</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

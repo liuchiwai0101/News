@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>偽 GitHub 下載頁竊取 Mac Keychain AmnesiaStealer 控制瀏覽器 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>偽 GitHub 下載頁竊取 Mac Keychain AmnesiaStealer 控制瀏覽器</h1>
+<div class="meta"><span class="src">NewMobileLife 流動日報</span><span>· 8月13日 周四</span>
+<span>· <a href="https://www.newmobilelife.com/2026/08/13/amnesiastealer-fake-github-mac-keychain/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.newmobilelife.com/2026/08/13/amnesiastealer-fake-github-mac-keychain/" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Jamf Threat Labs 發現一款名為 AmnesiaStealer 的 Mac 惡意軟件，會竊取敏感資料，並暗中啟動受害者的 Chrome 或 Safari 瀏覽器的可控制副本，讓攻擊者有機會進入已登入的帳戶。Jamf 在 8 月 5 日發佈的報告描述，該三階段感染已在真實環境中出現；攻擊不依賴未知的 macOS 漏洞，而是受害者必須執行攻擊者提供的指令並輸入有效密碼。</p><h3>假冒下載頁啟動攻擊</h3><p>攻擊始於仿照 GitHub 設計的虛假頁面，頁面帶有深色主題、Octocat 標誌及「Verified Publisher」徽章，但並非託管在 GitHub 網域。網站沒有提供正常的 Mac 下載檔案，反而要求訪客複製指令、透過 Spotlight 開啟 Terminal 並貼上；指令會從攻擊者控制的伺服器載入 shell script，下載受密碼保護的 ZIP 檔案，以類似 Apple 的名稱隱藏惡意軟件並在背景中執行。</p><p>這種做法屬 ClickFix 攻擊，受害者會手動執行攻擊者的指令；AmnesiaStealer 其後顯示偽造的安裝程式提示，利用收集到的 Mac 登入密碼存取 Keychain、瀏覽器資料、Apple Notes、Telegram 工作階段資料及個人檔案，並把密碼以明文寫入受害者的個人資料夾。</p><h3>隱藏瀏覽器竊取資料</h3><p>AmnesiaStealer 的串流模組只有在操作者向第一階段惡意軟件發送遠端指令後才啟動。這款以 Rust 撰寫的元件支援 Chrome、Brave、Microsoft Edge、Arc、Opera、Vivaldi 及 Chromium；它會把現有瀏覽器設定檔複製到隱藏目錄，以無頭模式啟動瀏覽器的實際執行檔，並透過 Chrome DevTools Protocol 控制瀏覽器。操作者可接收隱藏工作階段的即時畫面，幀率約為每秒三幀，並可下達導覽、鍵盤輸入、滑鼠點擊、捲動及分頁管理指令；惡意軟件亦可匯出已解密的 cookies，或將竊得的 cookies 插入瀏覽器，重複使用已登入的工作階段。</p><p>Jamf 的隔離測試證實這套控制機制可行，但未有顯示操作者曾用它攻擊真實受害者。</p><h3>更新系統及清理建議</h3><p>透過這個攻擊活動，AmnesiaStealer 無法在用戶未執行從網頁複製的指令的情況下感染 Mac；正規下載頁、CAPTCHA 或驗證頁面不會要求訪客開啟 Terminal。用戶應從 Mac App Store 或開發者官方網站下載軟件，安裝前檢查網址；如陌生軟件立刻要求管理員密碼，應取消提示並關閉應用程式。Apple 已封鎖 AmnesiaStealer 包含的多項 macOS 繞過技術，因此更新 macOS 仍然重要，但更新無法令不受信任的 Terminal 指令變安全。曾執行指令的人應中斷 Mac 的網絡連接，停止使用敏感帳戶；若是工作電腦，應聯絡機構的 IT 或保安團隊，而非自行刪除個別檔案。</p><p>應使用可信的裝置更改已外洩的密碼，並登出使用中的工作階段，尤其電郵、金融服務及加密貨幣帳戶；更改密碼後亦應在各服務的保安設定中撤銷其他瀏覽器和裝置的存取。在 Mac 完成清理或重設後，應更改 Mac 登入密碼，以及任何重複使用了該密碼的帳戶；若加密貨幣錢包的私鑰或復原詞句曾存於受影響 Mac，可能要更換錢包。刪除原本的指令碼並不足以證明 Mac 安全；如無法進行完整保安檢查，清除電腦並重新安裝 macOS 是最可靠的復原方式。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

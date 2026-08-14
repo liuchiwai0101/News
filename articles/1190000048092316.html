@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>useMemo 救不了你的 React 性能——精读 Vercel 官方性能优化 70 条军规 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>useMemo 救不了你的 React 性能——精读 Vercel 官方性能优化 70 条军规</h1>
+<div class="meta"><span class="src">SegmentFault</span><span>· 8月13日 周四</span>
+<span>· <a href="https://segmentfault.com/a/1190000048092316" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000048092316" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>你是否也有這樣的經歷：頁面卡了，第一反應是打開組件加一圈 <code>useMemo</code>、<code>useCallback</code>、<code>memo()</code>，加完用 Profiler 一測，首屏該慢還是慢。問題出在哪？出在優化的優先級排反了。</p><p><code>Vercel</code> 工程團隊在 2026 年初開源了一份 **React Best Practices**（vercel-react-best-practices），把內部沉澱的 70 條 <code>React</code> / <code>Next.js</code> 性能規則整理成機器可讀的 skill，餵給 <code>AI</code> 編碼工具做代碼生成和 review 的依據，人讀同樣受益。</p><p>這份清單最值錢的不是某條具體技巧，而是它給所有優化手段**按影響力排了序**：消滅請求瀑布流和砍包體積是 CRITICAL，大家最愛寫的 re-render 優化只排在 MEDIUM，<code>useMemo</code> 的部分用法甚至被列爲反模式。</p><p>我把整份規則讀完，這篇文章按 <code>ROI</code> 從高到低精講其中最有實戰價值的部分，附原版代碼對比和使用邊界。</p><p>在本篇文章中，我們將從淺入深，和大家一起學習以下知識：</p><p class='list-item'>- 這份清單的 8 大類規則與優先級全景</p><p class='list-item'>- CRITICAL 級第一名：消滅請求瀑布流的 6 種手法</p><p class='list-item'>- CRITICAL 級第二名：包體積優化，barrel import 一條就能省 200-800ms</p><p class='list-item'>- HIGH 級：服務端性能，`RSC`時代最容易踩的併發與序列化坑</p><p class='list-item'>- MEDIUM 級：re-render 優化的正確姿勢，以及哪些 `useMemo`應該刪掉</p><p class='list-item'>- 低優先級但常考的 `JavaScript`微優化速查表</p><p class='list-item'>- 怎麼把這份規則接入你的 `AI`編碼工作流</p><h3>一、先看全景 70 條規則怎麼分層</h3><p>清單按影響力分 8 類，優先級從上到下遞減：</p><p>這個排序背後的邏輯很硬：**一次串行的網絡往返是幾十到幾百毫秒，一次多餘的 re-render 通常不到一毫秒**。瀑布流每多一層就多付一次完整網絡延遲，而你精心 memo 掉的那次渲染，用戶根本感知不到。所以官方原話是「Waterfalls are the #1 performance killer」——先治網絡和包體積，再談渲染。</p><p>下面按這個順序逐層拆。</p><h3>二、消滅瀑布流 每一個多餘的await都在燒錢</h3><h3>2.1 Promise.all 是及格线</h3><p>最基礎的一條：沒有依賴關係的異步操作絕不串行。</p><p>這段是反面示例，三個請求串成三次往返：</p><pre><code>const user = await fetchUser()
+const posts = await fetchPosts()
+const comments = await fetchComments()</code></pre><p>改成並行後只付一次往返的時間，官方給的量化收益是 **2-10 倍**：</p><pre><code>const [user, posts, comments] = await Promise.all([
+  fetchUser(),
+  fetchPosts(),
+  fetchComments()
+])</code></pre><h3>2.2 部分依賴場景 先啓動再await</h3><p>真正拉开差距的是「半依赖」场景：<code>profile</code> 依赖 <code>user</code>，但 <code>config</code> 谁都不依赖。多数人会写成两段 <code>Promise.all</code>，结果 <code>profile</code> 白白等了 <code>config</code>。正确做法是**先创建所有 promise，最后统一 await**：</p><pre><code>const userPromise = fetchUser()
+const profilePromise = userPromise.then(user =&gt; fetchProfile(user.id))
+const [user, config, profile] = await Promise.all([
+  userPromise,
+  fetchConfig(),
+  profilePromise
+])</code></pre><p>這樣 <code>config</code> 和整條 <code>user → profile</code> 鏈是並行的，每個任務都在依賴就緒的第一時間啓動。同樣的思路用在 <code>API</code> 路由裏：<code>auth()</code> 和 <code>fetchConfig()</code> 互不依賴，就先把兩個 promise 都啓動，再按需 await，不要讓 <code>config</code> 排在 <code>auth</code> 後面白等一輪。</p><h3>2.3 defer await 把等待推進真正用到的分支</h3><p>另一條容易忽視的規則：<code>await</code> 應該出現在**用到結果的分支裏**，而不是函數開頭。比如權限校驗，如果 <code>resource</code> 不存在就直接返回 404，那 <code>fetchPermissions</code> 這次請求就完全不該發生。把 await 後移，走「資源不存在」快路徑的請求一次網絡開銷都不用付。同理，<code>flag && cheapCondition</code> 這種組合條件，先判本地的 <code>cheapCondition</code>，爲 false 就壓根不去 await 遠端的 flag。</p><h3>2.4 Suspense 讓骨架先上屏</h3><p>頁面級組件裏 <code>await</code> 一把梭，整個佈局都會被這次取數拖住。官方建議把取數下沉到子組件、外層包 <code>Suspense</code>：</p><pre><code>function Page() {
+  return (
+    &lt;div&gt;
+      &lt;Sidebar /&gt;
+      &lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;
+        &lt;DataDisplay /&gt;
+      &lt;/Suspense&gt;
+      &lt;Footer /&gt;
+    &lt;/div&gt;
+  )
+}
+async function DataDisplay() {
+  const data = await fetchData() // 只阻塞这一块
+  return &lt;div&gt;{data.content}&lt;/div&gt;
+}</code></pre><p><code>Sidebar</code> 和 <code>Footer</code> 立即上屏，數據流式補進中間區域。注意清單裏也寫明瞭不適用場景：影響佈局定位的關鍵數據、首屏 <code>SEO</code> 內容、以及快到不值得付出佈局抖動代價的小請求。關於 <code>Suspense</code> 與併發渲染的底層機制，可以搭配我之前寫的 React 18 併發機制詳解 一起看。</p><h3>三、包體積 一行import偷走你200-800ms</h3><p><code>bundle-</code> 類裏最觸目驚心的是 **barrel import** 這條。所謂 barrel 文件就是庫入口那個 <code>export * from ...</code> 的 <code>index.js</code>，流行的圖標庫、組件庫入口動輒上萬個 re-export：</p><pre><code>import { Check, X, Menu } from &#x27;lucide-react&#x27;
+// 实际加载 1583 个模块，dev 慢 ~2.8s，冷启动多付 200-800ms
+import { Button, TextField } from &#x27;@mui/material&#x27;
+// 实际加载 2225 个模块</code></pre><p>你以爲 tree-shaking 會救你，但清單裏點破了：庫被標爲 external 時打包器根本不做優化；要 tree-shake 就得全量分析模塊圖，build 時間又爆了。解法有兩個：<code>Next.js 13.5+</code> 直接靠內置的 <code>optimizePackageImports</code>，代碼不用改；其他項目走子路徑直連 <code>import Button from '@mui/material/Button'</code>。官方給的收益是 dev 啓動快 15-70%、構建快 28%、冷啓動快 40%。</p><p>受影響的常見庫包括 <code>lucide-react</code>、<code>react-icons</code>、<code>lodash</code>、<code>date-fns</code>、<code>rxjs</code> 等——檢查一下你的項目，大概率中招。</p><p>這一類還有三條高價值規則，邏輯一以貫之——**首包只留首屏必需的東西**：</p><p class='list-item'>- **重組件動態加載**：- `Monaco`、圖表庫這種 300KB 起步的大件用- `next/dynamic`按需拉，直接改善- `TTI`和- `LCP`</p><p class='list-item'>- **第三方庫延後**：analytics、錯誤上報不阻塞交互，- `ssr: false`等 hydration 完了再加載</p><p class='list-item'>- **按用戶意圖預加載**：按鈕- `onMouseEnter`/- `onFocus`時- `void import('./monaco-editor')`，等用戶真點開時模塊已經在緩存裏，體感零延遲</p><p>另外注意動態導入要保持**路徑靜態可分析**：<code>import(SOME_MAP[key])</code> 這種寫法打包器猜不出範圍，只能把可能的文件全打進來；改成顯式的 <code>{ home: () => import('./pages/home') }</code> 映射表，產物立刻收窄。</p><h3>四、服務端性能 RSC時代的新坑</h3><p><code>server-</code> 类 10 条规则里有三条是 <code>Next.js App Router</code> 项目几乎必踩的坑。</p><p class='list-item'>**第一坑：Server Action 忘了鑑權。** `"use server"` 函數會被編譯成公開 endpoint，middleware 和頁面級守衛攔不住直接調用。所以每個 action 內部都必須自帶 `verifySession()` + 權限校驗，這條被標爲 CRITICAL——它不是性能問題，是安全事故。</p><p class='list-item'>**第二坑：模塊級變量存請求數據。** 服務端併發渲染時模塊作用域是進程共享的，`let currentUser = null` 這種寫法會讓 A 用戶的數據串到 B 用戶的響應裏。請求級數據一律走 props 或 `React.cache()`，模塊級只放不可變的靜態資源。</p><p class='list-item'>**第三坑：RSC 邊界序列化超載。** Server/Client 邊界上所有 props 都會被序列化進 `HTML`，50 個字段的 `user` 對象只用一個 `name` 也全量傳輸。清單的建議是隻傳用到的字段，並且**不要在服務端做  .filter() / .toSorted() 再和原數組一起傳**——序列化按引用去重，新引用意味着同一份數據傳兩遍。</p><p>取數方面還有兩條組合拳值得記住。<code>React.cache()</code> 做請求內去重（數據庫查詢、鑑權這類非 fetch 的異步操作收益最大，<code>fetch</code> 本身 <code>Next.js</code> 已自動去重）；跨請求就上 <code>LRU</code> 緩存。嵌套取數則要把依賴鏈塞進每個 item 自己的 promise 裏：</p><pre><code>// 反例：一个慢 chat 卡住全部 author 请求
+const chats = await Promise.all(chatIds.map(id =&gt; getChat(id)))
+const authors = await Promise.all(chats.map(c =&gt; getUser(c.author)))
+// 正解：每个 item 独立成链，互不阻塞
+const authors = await Promise.all(
+  chatIds.map(id =&gt; getChat(id).then(chat =&gt; getUser(chat.author)))
+)</code></pre><p>最後是 <code>after()</code>：日誌、埋點、通知這類副作用放進 <code>after(() => ...)</code>，響應先發出去，副作用在後臺跑。這些能力在 <code>Next.js 15</code> 之後已經穩定，相關背景我在 Next.js 15 如何讓 React 應用更快 裏寫過。</p><h3>五、re-render優化 一半的useMemo本該刪掉</h3><p>到了大家最熟的領域，清單反而在潑冷水。15 條 <code>rerender-</code> 規則裏，我認爲最值得內化的是這四條。</p><p class='list-item'>**第一條：能推導就別存狀態。** `fullName` 能從 `firstName + lastName` 算出來，就直接在 render 裏算，不要 `useState` + `useEffect` 同步——那會多一輪渲染還容易狀態漂移。這條對應 `React` 官方文檔著名的《You Might Not Need an Effect》。</p><p class='list-item'>**第二條：簡單表達式別包 useMemo。** 這是清單裏少見的「反 memo」規則：</p><pre><code>// 反例：hook 调用 + 依赖比较的开销超过表达式本身
+const isLoading = useMemo(() =&gt; {
+  return user.isLoading || notifications.isLoading
+}, [user.isLoading, notifications.isLoading])
+// 正解：直接算
+const isLoading = user.isLoading || notifications.isLoading</code></pre><p><code>useMemo</code> 本身有依賴數組比較的成本，包一個布爾運算純屬倒貼。**memo 的對象應該是真正昂貴的計算，而不是所有計算。**</p><p class='list-item'>**第三條：絕不在組件內定義組件。** 每次父組件 render 都會產生一個新的組件類型，`React` 視爲不同組件直接**整棵重掛載**——輸入框失焦、動畫重放、`useEffect` 反覆執行，全是它的症狀。想少傳 props 不是理由，老老實實把子組件提到模塊頂層。</p><p class='list-item'>**第四条：functional setState 换稳定回调。** `setItems([...items, newItem])` 迫使 `useCallback` 依赖 `items`，回调随状态一起重建；写成 `setItems(curr => [...curr, newItem])` 后依赖数组清空，回调终身稳定，还顺手消灭了 stale closure。</p><p>其餘規則可以歸成一句話：**高頻瞬時值用  useRef（鼠標座標、interval 句柄），非緊急更新用 startTransition / useDeferredValue，交互邏輯放事件處理器而不是 effect。** 值得注意的是清單在多處標註：如果項目開了</p><p><code>React Compiler</code>，手動 <code>memo</code> / <code>useMemo</code> 大部分可以不寫了——這也是 React 19 新特性 之後官方一直在推的方向。## 六、渲染與JS微優化 速查表</p><p><code>rendering-</code> 和 <code>js-</code> 兩類偏「知道就能用」，我整理成速查表：</p><p>這一類單條收益不大，但它們經常出現在 code review 和麪試裏，屬於「便宜的好習慣」。</p><h3>七、把這份清單接進AI編碼工作流</h3><p>這份規則從第一天起就是給 <code>AI</code> 用的——官方在文檔開頭寫明「mainly for agents and LLMs」。落地方式很簡單：</p><p class='list-item'>- **装成 skill**：- `Claude Code`/- `Codex`等工具把- `vercel-react-best-practices`装进 skills 目录，写- `React`代码时自动按规则生成，review 时按规则挑错</p><p class='list-item'>- **人讀薄版**：- `SKILL.md`是 70 條規則的一句話索引，通讀只要十分鐘；- `AGENTS.md`是帶完整代碼對比的全量版，適合按需精讀</p><p class='list-item'>- **按優先級還債**：存量項目先查瀑布流（搜索連續- `await`）、再跑 bundle analyzer 查 barrel import 和大依賴，最後才輪到組件層的 memo 整治</p><p>我的實際體驗是：把 skill 裝上之後，<code>AI</code> 生成的取數代碼默認就是「先啓動 promise 再統一 await」的形態，比事後人肉 review 省力得多。</p><h3>總結</h3><p>Vercel 這份 React 性能優化清單最大的貢獻是把「優化什麼」變成了一個有明確優先級的工程問題：</p><p class='list-item'>- **CRITICAL**：消灭请求瀑布流（- `Promise.all`、defer await、- `Suspense`流式）、砍首包体积（barrel import、动态加载），这两类动辄 2-10 倍收益</p><p class='list-item'>- **HIGH**：服務端注意 Server Action 鑑權、模塊狀態隔離、- `RSC`序列化最小化，- `React.cache`+- `LRU`做兩級去重</p><p class='list-item'>- **MEDIUM**：re-render 優化講究姿勢——派生值直接算、簡單表達式不 memo、組件不嵌套定義、setState 用函數式</p><p class='list-item'>- **LOW**：- `JS`微優化當習慣養，別當主戰場</p><p>如果你只有半小時，讀完本文第二、三節並檢查自己項目裏的串行 <code>await</code> 和 barrel import，就能拿走這份清單 80% 的收益；全量精讀 <code>AGENTS.md</code> 大約需要兩小時。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

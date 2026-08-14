@@ -45,8 +45,137 @@ font-size:12.5px;color:var(--muted);}
 <h1>从零搭建 React + TypeScript + Vite 项目：model/api 分层架构实践</h1>
 <div class="meta"><span class="src">掘金</span><span>· 8月13日 周四</span>
 <span>· <a href="https://juejin.cn/post/7670194675605569582/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7670194675605569582/" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7670194675605569582/" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>最近在帶團隊做前端項目時，發現很多初級前端開發者有一個通病：**拿到需求就寫組件，寫完組件就堆狀態，堆完狀態就調接口**。項目跑到後期，代碼裏到處散落着 <code>any</code> 類型、重複的接口定義、以及誰也看不懂的數據流。</p><p>這篇文章以一個看似簡單的 **RGB 拾色器（Color Picker）** 項目爲例，聊聊我在實際項目中沉澱下來的一套輕量級前端架構思路——**model/api 分層 + TypeScript 類型約束**。</p><p>项目源码：GitHub | 技术栈：React 19 + TypeScript 6 + Vite 8</p><h3>一、先看成品</h3><p>我們的 Color Picker 長這樣：</p><p>三個滑塊分別控制 RGB 三個通道（0-255），上方色塊實時預覽當前顏色，下方還有一個模擬異步請求的成員列表。</p><p>功能雖簡單，但代碼結構一點都不"簡單"——它是一套可複用到大型項目的工程模板。</p><h3>二、爲什麼選 TypeScript？</h3><p>如果你寫過 10 個以上 React 組件的中型項目，大概率遇到過這種場景：</p><pre><code>// 😱 没有类型约束的噩梦
+function ColorBrowser({ color }) {
+  // color 是什么结构？red 是 number 还是 string？
+  // 传错了怎么办？
+  return &lt;div style={{ backgroundColor: `rgb(${color.red}, ...)` }} /&gt;
+}</code></pre><p class='list-item'>**TypeScript 解決的核心問題不是"語法檢查"，而是"團隊協作中的認知對齊"。**</p><p>當項目有 5 個以上的開發者、100 個以上的組件時，類型系統就是活文檔——你不需要去翻 README、不需要問同事，IDE 會直接告訴你這個 props 長什麼樣。</p><h3>三、model 層：前端數據模型的&quot;單一真理來源&quot;</h3><h3>3.1 什么是 model？</h3><p>在傳統前端架構中，我們習慣把"數據模型"放在後端。但現代前端應用越來越複雜，**前端也需要自己的領域模型**。</p><p>在我的架構中，<code>model/</code> 目錄專門放 **TypeScript 接口定義**——它就是前端所有數據結構的"憲法"。</p><pre><code>src/
+├── model/
+│   ├── color.ts      # 颜色数据模型
+│   └── member.ts     # 成员数据模型
+├── api/
+│   └── memberApi.ts  # 接口层
+├── components/
+│   ├── ColorPicker.tsx
+│   ├── ColorBrowser.tsx
+│   └── MemberTable.tsx
+└── App.tsx</code></pre><h3>3.2 定義 Color 模型</h3><pre><code>// src/model/color.ts
+// 数据接口——项目中被多处引用
+// model 是项目架构的核心目录之一
+export interface Color {
+  red: number;
+  green: number;
+  blue: number;
+}</code></pre><p class='list-item'>**就這麼簡單。** 但它的價值在於：</p><p class='list-item'>- **一處定義，全局引用**——5 個組件、10 個組件都在用同一個- `Color`類型</p><p class='list-item'>- **改類型即改全局**——如果將來 RGB 擴展爲 RGBA，只需在這一個地方加- `alpha?: number`</p><p class='list-item'>- **IDE 自動補全和類型檢查**——拼錯字段名？編譯不過</p><h3>3.3 定义 Member 模型</h3><pre><code>// src/model/member.ts
+export interface MemberEntity {
+  id: number;
+  login: string;
+  avatar_url: string;
+}</code></pre><p>同樣簡潔，同樣重要。這個接口既約束了 API 返回的數據格式，也約束了組件渲染需要的數據格式。</p><p>核心認知：model 不是"後端接口返回什麼我就定義什麼"，而是"前端需要什麼數據，我就定義什麼模型"。後端接口的字段名和前端模型可以不同——那是 api 層要做的事情（本文暫不展開）。</p><h3>四、api 層：統一接口管理，告別散落的 fetch</h3><h3>4.1 爲什麼需要 api 層？</h3><p>有多少項目是這麼寫接口的：</p><pre><code>// ❌ 散落在组件里的接口调用
+function MemberTable(useEffect(() =&gt; {
+    fetch(&#x27;/api/members&#x27;)
+      .then(res =&gt; res.json())
+      .then(data =&gt; setMembers(data))  // data 是什么类型？不知道
+  }, [])
+}</code></pre><p class='list-item'>**問題很明顯**：</p><p class='list-item'>- 接口地址散落在各個組件裏，改一個 URL 要全局搜索</p><p class='list-item'>- 返回值沒有類型約束，`data`是`any`</p><p class='list-item'>- 沒法統一做錯誤處理、請求攔截、緩存策略</p><h3>4.2 api 層的實踐</h3><pre><code>// src/api/memberApi.ts
+// 接口文件——前端需要的接口都在这里模块化定义
+// 统一接口声明，好管理（application interface）
+import { type MemberEntity } from &quot;../model/member&quot;;
+export const getMembersCollection = (): Promise&lt;MemberEntity[]&gt; =&gt; {
+  return new Promise((resolve) =&gt; {
+    setTimeout(() =&gt; {
+      resolve([
+        {
+          id: 1457912,
+          login: &quot;brauliodiez&quot;,
+          avatar_url: &quot;https://avatars.githubusercontent.com/u/1457912?v=3&quot;
+        },
+        {
+          id: 4374977,
+          login: &quot;Nasdan&quot;,
+          avatar_url: &quot;https://avatars.githubusercontent.com/u/4374977?v=3&quot;
+        }
+      ])
+    }, 500)
+  })
+}</code></pre><p>亮點：</p><p class='list-item'>- **返回類型明確聲明**：- `Promise<MemberEntity[]>`——調用方不用猜</p><p class='list-item'>- **模塊化**：一個 api 文件對應一個業務域</p><p class='list-item'>- **可以隨時切換實現**：現在是 mock 數據，將來換成- `fetch()`調用，- **組件一行不改**</p><h3>五、組件層：類型安全的 Props 設計</h3><h3>5.1 ColorPicker——受控組件的正確打開方式</h3><pre><code>// src/components/ColorPicker.tsx
+import { type Color } from &#x27;../model/color&#x27;;
+interface Props {
+  color: Color;
+  onColorUpdated: (color: Color) =&gt; void;
+}
+const ColorPicker: React.FC&lt;Props&gt; = (props) =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;input
+        type=&quot;range&quot;
+        min=&quot;0&quot;
+        max=&quot;255&quot;
+        value={props.color.red}
+        onChange={event =&gt; props.onColorUpdated({
+          ...props.color,      // 展开旧状态
+          red: +event.target.value,  // 只更新 red 通道
+        })}
+      /&gt;
+      {props.color.red}
+      {/* green 和 blue 同理 */}
+    &lt;/div&gt;
+  )
+}</code></pre><p class='list-item'>**設計要點**：</p><p class='list-item'>- **受控組件模式**——狀態在父組件，ColorPicker 只負責展示和通知</p><p class='list-item'>- **不可變更新**——用展開運算符- `...props.color`拷貝舊值，再覆蓋修改的字段</p><p class='list-item'>- `+event.target.value`- `+`號將字符串轉數字，簡潔且類型安全</p><h3>5.2 ColorBrowser——纯展示组件</h3><pre><code>// src/components/ColorBrowser.tsx
+interface Props {
+  color: Color
+}
+const ColorBrowser: React.FC&lt;Props&gt; = (props) =&gt; {
+  const divStyle: React.CSSProperties = {
+    width: &quot;11rem&quot;,
+    height: &quot;7rem&quot;,
+    backgroundColor: `rgb(${props.color.red},${props.color.green},${props.color.blue})`
+  }
+  return &lt;div style={divStyle} /&gt;
+}</code></pre><p class='list-item'>**這裏有個容易被忽略的細節**：`divStyle` 的類型是 `React.CSSProperties`。這不是多此一舉——當你拼錯 `backgroundColor` 爲 `backgroudColor` 時，TypeScript 會直接報錯。</p><h3>5.3 MemberTable——異步數據加載的最佳實踐</h3><pre><code>const MemberTable: React.FC = () =&gt; {
+  const [memberCollection, setMemberCollection] = React.useState&lt;MemberEntity[]&gt;([])
+  React.useEffect(() =&gt; {
+    // 挂载后请求接口，不会阻塞首屏渲染
+    (async () =&gt; {
+      const members = await getMembersCollection();
+      setMemberCollection(members);
+    })()
+  }, [])
+  return (
+    &lt;table&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;Avatar&lt;/th&gt;
+          &lt;th&gt;Id&lt;/th&gt;
+          &lt;th&gt;Name&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        {memberCollection.map((member: MemberEntity) =&gt; (
+          &lt;MemberRow key={member.id} member={member} /&gt;
+        ))}
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  )
+}</code></pre><p class='list-item'>**關鍵技巧**：</p><p class='list-item'>- **useEffect 中的 IIFE**——- `(async () => { ... })()`是处理异步 Effect 的经典模式（因为 useEffect 的回调不能直接是 async 函数）</p><p class='list-item'>- **空依賴數組**——只在組件掛載時執行一次- `[]`</p><p class='list-item'>- **初始值是空數組**——渲染前不會報- `[]`- `map of undefined`</p><h3>六、App.tsx——狀態的&quot;中央廚房&quot;</h3><pre><code>function App(// TypeScript 适合大型项目：代码量大、团队成员多
+  const [color, setColor] = useState&lt;Color&gt;({
+    red: 20,
+    green: 240,
+    blue: 180
+  });
+  return (
+    &lt;&gt;
+      &lt;ColorBrowser color={color} /&gt;
+      &lt;ColorPicker color={color} onColorUpdated={setColor} /&gt;
+      &lt;MemberTable /&gt;
+    &lt;/&gt;
+  )
+}</code></pre><p class='list-item'>**架構意圖**：</p><p class='list-item'>- **状态提升**——- `color`状态在 App 层，ColorBrowser 和 ColorPicker 通过 props 共享</p><p class='list-item'>- **單向數據流**——ColorPicker 不直接修改 color，而是通過- `onColorUpdated`回調通知父組件</p><p class='list-item'>- `setColor`直接作为回调传递- `(color: Color) => void`</p><p>到這裏，整個應用的數據流就非常清晰了：</p><pre><code>App (状态持有者)
+ ├── ColorBrowser  ← color (只读)
+ ├── ColorPicker   ← color + onColorUpdated (读写)
+ └── MemberTable   ← 自己管理自己的状态</code></pre><h3>七、這套架構的核心價值</h3><p>回顧一下，我們這個"小"項目做到了哪些"大"項目才需要的東西：</p><h3>八、總結：好的架構不是&quot;大項目的專利&quot;</h3><p>很多開發者覺得：</p><p>"我就寫個小 demo，不需要 TypeScript 吧？" "才 3 個組件，分層幹嘛？"</p><p>但我的觀點是：**好的架構習慣，恰恰要在小項目中刻意練習。**</p><p>就像這個 Color Picker——功能可能你 30 分鐘就能寫完，但用上 model/api 分層 + TypeScript 後，它變成了一個**可直接複用的項目模板**。下次你接到一個新需求，直接在這個骨架上填代碼就行：</p><p class='list-item'>- 在 `model/`裏定義新的數據模型</p><p class='list-item'>- 在 `api/`裏封裝接口方法</p><p class='list-item'>- 在 `components/`里写组件</p><p class='list-item'>- 在 `App.tsx`里组装</p><p class='list-item'>**架構不是約束，是腳手架——它讓你不用每次都從零思考"代碼放哪"。**</p><h3>參考</h3><p>如果這篇文章對你有幫助，歡迎點贊、收藏、評論 🎉 關於前端架構設計的更多實踐，我會持續更新。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
