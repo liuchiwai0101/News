@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>TypeScript 條件類型與 infer：構建類型安全的 fetch · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>TypeScript 條件類型與 infer：構建類型安全的 fetch</h1>
+<div class="meta"><span class="src">騰訊雲開發者社區</span><span>· 8月14日 周五</span>
+<span>· <a href="https://cloud.tencent.com/developer/article/2724440" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://cloud.tencent.com/developer/article/2724440" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>本篇依然來自於我們的 《前端週刊》 項目！ 由團隊成員</h3><p>嘿嘿翻譯，他的文章風格穩健而清晰，注重結構與邏輯的嚴謹性，善於用簡潔的語言將複雜技術拆解成易於理解的知識點～ 歡迎大家進羣與他探討 TypeScript 條件類型的最新趨勢，並持續追蹤全球前端領域的最新動態！ 原文地址：Building a typed fetch in TypeScript with conditional types and infer</p><p>最近，我在處理基於 OpenAPI schema 生成的 API 請求和響應類型時，發現使用 TypeScript 的**條件類型**，我的 fetch 邏輯能夠根據調用的路徑和 HTTP 方法自動推斷出適當的參數和響應類型，這很酷。我試圖在文檔中查找更多信息，但發現它們實際上並沒有深入講解這種類型推斷，所以我想我應該更廣泛地分享一下這個很酷的特性。</p><p><code>type GetReturnType<Type> = Type extends (...args: never[]) => infer Return ? Return : never;</code>我将向你展示 TypeScript 如何通过 <code>extends</code> 和 <code>infer</code> 关键字的强大功能，巧妙地从复杂的嵌套结构中提取类型。</p><p>我爲本文整理了一個簡化的 API schema，你可以在 GitHub 上探索它 — 以及所有代碼，都是實時可運行的。通過從倉庫中按 <code>.</code> 鍵啓動 GitHub Codespace，這樣你就能看到所有內容的實際運行效果。</p><p>請注意，本文假設你對 TypeScript 中的泛型有一些基礎瞭解！</p><p>將條件類型想象成 TypeScript 中的小 if 語句："如果滿足這個條件，就是*這種*類型，否則就是*那種*類型。" 語法看起來很像 JavaScript 的三元運算符，它在諸如爲可能根據傳入內容返回不同返回類型的函數編寫類型時很有用：</p><p><code>type myFn = (arg: SomeType | OtherType) => arg extends SomeType ? string : number;</code>你可能在类型声明中熟悉 <code>extends</code>，我们会说"这个类型 X 继承自另一个类型 Y"。当在类型声明内部使用时，<code>extends</code> 不像一个语句，而是一个问题。"<code>schema[P][M]</code> 是否继承自这个对象？"</p><p>如果 <code>extends</code> 條件爲真，TypeScript 返回問號 <code>?</code> 後面的類型。如果爲假，則返回冒號 <code>:</code> 後面的類型。</p><p><code>infer</code> 允許我們提取類型如果你查看 TypeScript 條件類型文檔，<code>infer</code> 只有幾個小例子。例如，這裏是他們建議用它來獲取函數返回類型的方法：</p><pre><code>type GetReturnType&lt;Type&gt; = Type extends (...args: never[]) =&gt; infer Return ? Return : never;
+type Num = GetReturnType&lt;() =&gt; number&gt;; // type Num = number
+type Str = GetReturnType&lt;(x: string) =&gt; string&gt;; // type Str = string
+type Bools = GetReturnType&lt;(a: boolean, b: boolean) =&gt; boolean[]&gt;; // type Bools = boolean[]</code></pre><p>我認爲這並沒有充分展現這個小關鍵字的強大之處。你實際上是在對 TypeScript 編譯器說，"*你*告訴我這是什麼類型，我不想把整個類型都寫出來"。當我們處理許多具有相同屬性不同組合的不同類型時，這變得*真的*很有用。</p><h3>開始之前：使用 VSCode 調試 TypeScript 類型的技巧</h3><p>我經常希望 TypeScript 有一個類型調試器，這樣你就可以在編譯時準確地看到編譯器在特定行上的想法，就像你可以用運行時值做的那樣。在沒有這個的情況下，我傾向於通過將類型分配給類型變量並在 VSCode 中懸停它們來調試/測試我的類型，看看 IntelliSense 如何評估它。這就是我在整篇文章中測試我們創建的類型時要做的。</p><pre><code>type MyComplexType&lt;T,Q&gt; =  {....}
+type test = MyComplexType&lt;&quot;test value&quot;, &quot;another test value&quot;&gt;</code></pre><p>這裏是場景：我們正在用 TypeScript 構建一個觀鳥網站，它顯示不同鳥類的信息，讓你跟蹤你發現的鳥類目擊記錄。有一個前端和一個用於獲取數據的 API。</p><p>我們希望確保我們發出的請求包含正確的參數，然後我們希望能夠以類型安全的方式使用我們獲得的返回數據。爲此，我們需要一些 API 類型。</p><p>我們有一個 API 規範可以用來構建，它準確告訴我們請求需要哪些參數，以及響應返回什麼。出於本文的目的，這是一個非常簡化的 API 規範。</p><p>我們運行了一個腳本來自動爲該規範生成類型，生成的接口給了我們所有的路徑、它們允許的方法，以及這些方法的參數和響應類型。</p><p>我們生成的 API 類型看起來像這樣：</p><pre><code>export interface schema {
+    &#x27;/birds&#x27;: {
+        get: {
+            parameters: {
+                query?: {
+                    /**
+                     * @description 按类型过滤鸟类
+                     * @example waders
+                     */
+                    type?: string;
+                    /**
+                     * @description 列出特定栖息地的鸟类
+                     * @example wetlands
+                     */
+                    habitat?: string;
+                    /** @description 按颜色过滤鸟类 */
+                    colour?: string;
+                };
+            };
+            response: {
+                content: {
+                    /**
+                     * Format: int64
+                     * @example 10
+                     */
+                    id?: number;
+                    /** @example Avocet */
+                    name?: string;
+                    /**
+                     * @description 鸟的种类
+                     * @example wader
+                     */
+                    type?: string;
+                    /**
+                     * @description 鸟类可以找到的地方
+                     * @example [
+                     *       &quot;lakes&quot;,
+                     *       &quot;wetlands&quot;
+                     *     ]
+                     */
+                    habitats?: string[];
+                    /** @description 鸟的颜色 */
+                    colours?: string[];
+                    /** @description 需要注意的任何独特特征 */
+                    distinctiveFeatures?: string;
+                    /** @description 翼展，以厘米为单位 */
+                    wingspan?: number;
+                    /** @description 图片的 URL */
+                    image?: string;
+                };
+            };
+        };
+    };
+    &#x27;/users&#x27;: {
+        post: {
+            requestBody?: {
+                content: {
+                    /** @description 用户姓名 */
+                    name?: string;
+                    /** @description 用户邮箱地址 */
+                    email?: string;
+                    /** @description 用户最喜爱的鸟类（鸟类 ID） */
+                    favouriteBird?: number[];
+                };
+            };
+            response: {
+                content: {
+                    /** @example 21 */
+                    id?: number;
+                    /** @example Billie Sandpiper */
+                    name?: string;
+                    /** @example [12, 14] */
+                    favouriteBirds?: number[];
+                    /** @example billie@example.com */
+                    email?: string;
+                };
+            };
+        };
+    };
+}</code></pre><p>要進行 API 調用本身，我們通常會使用原生的 <code>fetch</code> 函數。但這本身不會對我們創建的那些類型做任何事情。</p><pre><code>const rsp = await fetch(&#x27;&lt;https://api.example.com/bird/12&gt;&#x27;);
+const data = await rsp.json(); // 此时不知道这是什么类型</code></pre><p><code>fetch</code> 不是一個泛型函數，所以我們不能傳遞類型註解來說明請求和響應的形狀：</p><p><code>await fetch<GetBirdRequest, GetBirdResponse>(....) // 你不能這樣做</code>我們*可以*告訴 <code>fetch</code> 它返回什麼類型，但這非常冗長和不便（而且每次使用時都必須這樣做）：</p><pre><code>import schema from &#x27;./api&#x27;
+[...]
+const rsp = await fetch(&#x27;&lt;https://api.example.com/birds/12&gt;&#x27;)
+const data = await rsp.json() as schema[&#x27;/bird/{birdId}&#x27;][&#x27;get&#x27;][&#x27;response&#x27;][&#x27;content&#x27;]</code></pre><p>當然，我們可以提取這些類型，這樣就不必如此冗長了，但是我們需要爲每個想要的響應類型都這樣做。</p><pre><code>type ListBirdsResponse = paths[&#x27;/birds&#x27;][&#x27;get&#x27;][&#x27;response&#x27;][&#x27;content&#x27;];
+type GetBirdResponse = paths[&#x27;/bird/{birdId}&#x27;][&#x27;get&#x27;][&#x27;response&#x27;][&#x27;content&#x27;];
+type AddSightingResponse = paths[&#x27;/users/{userId}/sightings&#x27;][&#x27;post&#x27;][&#x27;response&#x27;][&#x27;content&#x27;];
+// 我已经觉得无聊了。</code></pre><p>所以，如果我們想要在參數和響應中更容易的類型安全，我們需要構建某種圍繞 <code>fetch</code> 的包裝器來編碼類型信息。由於我們有 API schema 的生成類型，我們可以讓 TypeScript *告訴我們*類型，而不是每次都指定它們：它可以**僅從 API 調用的路徑和方法推斷參數和響應類型。**</p><p>我們將構建一個 <code>createFetcher</code> 函數，它接受一個路徑和一個 HTTP 方法，並返回另一個函數，該函數確切地知道它期望什麼參數，以及你得到什麼返回類型。</p><p>我們稱返回函數的函數爲高階函數。</p><pre><code>function createFetcher(path, method) {
+    return async (params) =&gt; { // ... }
+}
+const getBird = createFetcher(&#x27;/birds/{birdId}&#x27;, &#x27;get&#x27;)
+const data = await getBird({ path: { birdId: 12 } })</code></pre><p>向 <code>getBird</code> 傳遞錯誤的參數 — 或不夠的參數 — 將導致一些友好的錯誤：</p><pre><code>const data = await getBird({});
+// Argument of type &#x27;{}&#x27; is not assignable to parameter of type &#x27;Params&lt;&quot;/birds/{birdId}&quot;, &quot;get&quot;&gt;&#x27;.
+// Property &#x27;path&#x27; is missing in type &#x27;{}&#x27; but required in type &#x27;{ path: { birdId: number; }; }&#x27;.ts(2345)</code></pre><p>懸停在 <code>data</code> 上將給我們響應類型：</p><pre><code>const data: {
+    id?: number;
+    name?: string;
+    type?: string;
+    habitats?: string[];
+    colours?: string[];
+    distinctiveFeatures?: string;
+    wingspan?: number;
+    image?: string;
+}[];</code></pre><p>爲了給我們這些請求和響應的正確類型，我們的 <code>createFetcher</code> 函數需要知道：</p><p>第一個很容易：我們可以在定義此函數的文件中導入 API schema 的類型，所以它會在作用域內。</p><p>對於第二和第三點，我們將向函數傳遞兩個**類型參數**，一個用於路徑 <code>P</code>（例如 <code>/birds/{birdId}</code>），一個用於方法 <code>M</code>（例如 <code>get</code>）。</p><pre><code>import { schema } from &#x27;./api&#x27;
+function createFetcher&lt;P, M&gt;(path: P, method: M) {
+    return async (params) =&gt; { // TODO }
+}</code></pre><p>在 API schema 中包含着嵌套對象，使用路徑作爲鍵，然後方法作爲這些嵌套對象的鍵：</p><pre><code>export interface schema {
+        &#x27;/birds/{birdId}&#x27;: {
+            get: {
+            parameters: {
+              query?: {
+              [...]</code></pre><p>我们需要明确告诉 TypeScript 第一个类型参数 <code>P</code>（上面例子中的 <code>/birds/{birdId}</code>）是我们 <code>schema</code> 的键，第二个类型参数 <code>M</code>（例子中的 <code>get</code>）是 <code>schema[P]</code> 的键。我们用 <code>extends</code> 来做这件事。</p><pre><code>import { schema } from &#x27;./api&#x27;
+function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async (params) =&gt; { // TODO }
+}</code></pre><p>注意：這不是條件類型，即使我們使用了</p><p><code>extends</code>關鍵字：它實際上是一個帶有約束的類型參數。這個上下文中的<code>extends</code>如果你有任何面向對象編程經驗，或者在 JS 中使用過類，可能會很熟悉：<code>T extends X</code>意味着"類型<code>T</code>包含類型<code>X</code>的屬性"，約束限制了可以傳入的類型種類。</p><p>上面的代碼告訴 TypeScript **它應該能夠對**我們給它的類型參數**做什麼樣的事情**。例如，我們可以使用它們在我們的 <code>schema</code> 中查找嵌套類型，因爲我們特別告訴 TypeScript <code>P</code> 指的是 <code>schema</code> 的鍵，<code>M</code> 指的是 <code>schema[P]</code> 對象的鍵。</p><p>此時我們沒有給它*特定的*路徑或方法，而是說"我們在這裏傳入的任何路徑都應該有效，因爲它是 <code>keyof schema</code>"。如果我們嘗試將此類型用於 schema 中不存在的東西，編譯器會給我們一個錯誤。</p><pre><code>const wrong = createFetcher(&#x27;cheese&#x27;, &#x27;get&#x27;);
+// error: Argument of type &#x27;&quot;cheese&quot;&#x27; is not assignable to parameter of type &#x27;keyof schema&#x27;.ts(2345)</code></pre><p>我們的 <code>createFetcher</code> 函數將在底層使用 <code>fetch</code>。（注意：出於本文的目的，我們不擔心錯誤處理，但通常我會在這裏用 try/catch 包裝 <code>fetch</code> 並確保任何錯誤都得到適當處理。）</p><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async params =&gt; {
+        const baseUrl = &#x27;&lt;https://api.example.com&gt;&#x27;;
+        const fetchUrl = new URL(path, baseUrl);
+        const options: RequestInit = {
+            method: method as string
+        };
+        const data = await fetch(fetchUrl, options);
+        return await data.json();
+    };
+}</code></pre><p>注意這裏我們需要顯式地將我們的 <code>method</code> 參數（<code>M extends keyof schema[P]</code>）轉換爲字符串，以便將其分配給 <code>RequestInit</code> 中的 method 屬性（它期望一個字符串）。即使我們知道它是一個字符串，但從技術上講，<code>M</code> 可能不是字符串（*我們*知道它不會是，但 TypeScript 編譯器不知道。）</p><p class='list-item'>**這個 fetch 還不能工作**，因爲我們正在用路徑的模板字符串版本（例如 `/birds/{birdId}`）進行獲取。我們需要從請求的參數中獲取路徑值，但首先我們需要知道我們期望什麼參數（以及我們是否期望任何參數）。</p><p>現在我們需要定義我們的 <code>Params</code> 類型，它屬於我們返回的部分應用函數中進行實際獲取的參數：</p><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async (params?: Params) =&gt; { ... // 获取逻辑 }
+}
+// type Params = ???</code></pre><p>我們將此參數標記爲可選的，因爲某些請求可能具有可以完全省略的參數（例如帶有可選搜索查詢參數的"列出所有鳥類"請求）。</p><p>就像 <code>createFetcher</code> 函數一樣，<code>Params</code> 類型也需要知道它正在處理什麼 schema、路徑和方法，以便告訴我們該路徑和方法組合的正確參數。所以這將具有與 <code>createFetcher</code> 完全相同的類型參數。</p><p><code>type Params<P extends keyof schema, M extends keyof schema[P]> = {};</code>这里是生成的 schema 类型中我们参数的几个例子：</p><pre><code>&quot;/birds/{birdId}&quot;: {
+    get: {
+    parameters: {
+      path: {
+        birdId: number
+      }
+    }
+    ...
+  }
+},
+&quot;/users&quot;: {
+  post: {
+    requestBody?: {
+      content: {
+        name?: string
+        email?: string
+        favouriteBirdIds?: number[]
+      }
+    }
+    ...
+  }
+}</code></pre><p>所有路徑 + 方法組合都在我們的規範中定義了 <code>parameters</code>，但它們可能實際上沒有在請求中使用。在 <code>POST /users</code> 的例子中，<code>query?: never</code> 意味着沒有查詢，你可以完全省略該字段。</p><p><code>requestBody.content</code> 可以包含任意键/值对，就像 <code>POST /users</code> 那样，或者在没有主体的请求中，<code>requestBody</code> 字段应该完全省略（就像 <code>GET /birds/{birdId}</code> 那样，它在生成的类型中有 <code>requestBody?: never</code>）。</p><p>我們希望確保在我們不同的請求中捕獲各種參數組合，而不讓你必須顯式提供不需要的字段。我們想要*自動*做到這一點。</p><p>這裏是重點：我們現在將以**依賴於  P 和 M 的值**的方式從 API 規範中獲取各種參數的類型。</p><p>首先，我們必須用 <code>extends</code> 檢查我們的類型是否包含我們正在尋找的字段，然後我們使用 <code>infer</code> 關鍵字從條件類型中獲取那些嵌套類型。然後我們可以在從條件返回的分支的類型中**使用這些推斷的類型**。</p><pre><code>type Params&lt;P extends keyof schema, M extends keyof schema[P]&gt; = schema[P][M] extends {
+    parameters: {
+        query?: infer Q;
+        path?: infer PP;
+        requestBody?: { content: infer RB };
+    };
+}
+    ? {
+          query: Q;
+          path: PP;
+          requestBody: RB;
+      }
+    : never;</code></pre><p>注意我們的 <code>requestBody</code> 實際上是一個嵌套對象 — 你可以遍歷對象直到找到要推斷的屬性，這很巧妙。</p><p>最後，如果條件*不*匹配，我們返回 <code>never</code>，因爲條件賦值時你總是必須有兩個分支，即使你知道你的類型將始終匹配你正在評估的條件，第二種情況永遠不會發生。</p><p><code>never</code>說："這不應該發生"。與<code>undefined</code>（意味着"這個值還沒有初始化"）不同，<code>never</code>告訴 TypeScript 編譯器這裏永遠不會有值，如果有，就出了問題。如果我們嘗試給類型爲<code>never</code>的東西賦值，編譯器會對我們大喊大叫。</p><p>我們可以通過爲特定路徑和方法聲明類型來測試它：</p><p><code>type GetBirdParams = Params<'/birds/{birdId}', 'get'>;</code>在 VS Code 中悬停在这上面它会给我们：</p><pre><code>type GetBirdParams = {
+    query: undefined;
+    path: {
+        birdId: number;
+    };
+    requestBody: undefined;
+};</code></pre><p>現在讓我們將這個 <code>Params</code> 類型放入 <code>createFetcher</code> 中，看看我們的編譯器說什麼。</p><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async (params?: Params&lt;P,M&gt;) =&gt; { ... }
+}
+const getBird = createFetcher(&quot;/birds/{birdId}&quot;, &quot;get&quot;)
+getBird({ path: { birdId: 1 }})</code></pre><p>不幸的是，最後一行給我們一個類型錯誤：</p><pre><code>Argument of type &#x27;{ path: { birdId: number; }; }&#x27; is not assignable to parameter of type &#x27;{ query: undefined; path: { birdId: number; }; requestBody: undefined; }&#x27;.
+Type &#x27;{ path: { birdId: number; }; }&#x27; is missing the following properties from type &#x27;{ query: undefined; path: { birdId: number; }; requestBody: undefined; }&#x27;: query, requestBody</code></pre><p>嗯。<code>path</code> 字段是正確的，但似乎我們仍然必須顯式提供 <code>query</code> 和 <code>requestBody</code> 字段來讓 TypeScript 滿意。它們是 <code>undefined</code> 因爲 <code>/birds/{birdId}</code> 在 schema 中沒有查詢字符串或請求主體，但我們在 <code>Params</code> 中將這些字段聲明爲非可選的。</p><p>我們將修復它，使這些參數中不需要的任何字段都用 <code>?</code> 標記爲**可選**。我們可以通過檢查哪些參數是未定義的，並在最終結果中使它們可選來做到這一點。我將爲我們的 <code>Params</code> 創建一個包裝器類型來做這件事，並將原始 <code>Params</code> 重命名爲 <code>ParamsInner</code>。</p><pre><code>type ParamsInner&lt;P extends keyof schema, M extends keyof schema[P]&gt; = schema[P][M] extends {
+    parameters: {
+        query?: infer Q;
+        path?: infer PP;
+    };
+    requestBody?: { content: infer RB };
+}
+    ? {
+          query: Q;
+          path: PP;
+          requestBody: RB;
+      }
+    : never;
+export type Params&lt;P extends keyof schema, M extends keyof schema[P]&gt; = (unknown extends ParamsInner&lt;P, M&gt;[&#x27;query&#x27;] ? { query?: never } : { query?: ParamsInner&lt;P, M&gt;[&#x27;query&#x27;] }) &amp; (unknown extends ParamsInner&lt;P, M&gt;[&#x27;path&#x27;] ? { path?: never } : { path: ParamsInner&lt;P, M&gt;[&#x27;path&#x27;] }) &amp; (unknown extends ParamsInner&lt;P, M&gt;[&#x27;requestBody&#x27;] ? { requestBody?: never } : { requestBody: ParamsInner&lt;P, M&gt;[&#x27;requestBody&#x27;] });</code></pre><p>這裏我們有三個條件類型的**聯合**。如果一個字段返回爲 <code>unknown</code>（因爲我們的路徑 + 方法組合沒有它），我們用類型 <code>never</code>（因爲它永遠不應該存在）將其標記爲**可選**。</p><p>如果我們提取的參數上存在 <code>requestBody</code> 或 <code>path</code>，我們將使必要的字段成爲必需的。<code>query</code> 即使存在也應該仍然是可選的，因爲查詢參數可能是可選的（例如可選搜索過濾器）。</p><h3>這裏有一個陷阱：確保使用</h3><p><code>unknown extends</code>而不是<code>extends unknown</code>。<code>[unknown](https://www.typescriptlang.org/docs/handbook/2/functions.html#unknown)</code>是<code>[any](https://www.typescriptlang.org/docs/handbook/2/functions.html#unknown)</code>的类型安全等价物。因为它在类型层次结构的顶部，每个类型都继承自unknown，但unknown只能继承自它自己。</p><p>如果你颠倒这个<code>extends</code>语句的顺序，你最终会在这种情况下得到所有返回为<code>never</code>的东西（例如<code>ParamsInner<P, M>['query'] extends unknown</code>将始终为真，即使它有值）。</p><p>現在讓我們確保我們的類型看起來正確：</p><pre><code>const getBird = createFetcher(&#x27;/birds/{birdId}&#x27;, &#x27;get&#x27;);
+getBird({ path: { birdId: 1 } });</code></pre><p>萬歲，沒有錯誤！讓我們做一些錯誤的事情來確保，通過完全刪除路徑參數。</p><p><code>getBird({});</code>这应该出错：</p><pre><code>Argument of type &#x27;{}&#x27; is not assignable to parameter of type &#x27;Params&lt;&quot;/birds/{birdId}&quot;, &quot;get&quot;&gt;&#x27;.
+Property &#x27;path&#x27; is missing in type &#x27;{}&#x27; but required in type &#x27;{ path: { birdId: number; }; }&#x27;.</code></pre><p>太棒了！現在參數類型正確了，讓我們確保我們在 <code>createFetcher</code> 中正確處理參數。</p><p>首先，我們將檢查我們傳入的路徑中 <code>{花括號}</code> 中的任何路徑參數，並使用正則表達式用適當的參數值替換它們。我們可以用 <code>/{([^}])}/</code> 匹配一對花括號內的*任何不是右花括號的字符*，使用捕獲組（在圓括號中）捕獲內部的字符，這樣我們可以再次使用它。<code>match()</code> 給我們一個 <code>{paramName}</code> 形式的匹配數組，我們可以遍歷它，去掉花括號，並在提供的路徑中對每個實例執行字符串替換。</p><p>同樣，我們需要在這裏將 <code>path</code> 轉換爲字符串，因爲 TypeScript 需要確保它絕對是字符串，然後我們才能對它進行字符串操作。</p><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async (params?: Params&lt;P, M&gt;) =&gt; {
+        /** 新部分 **/
+        const pathParams = path.match(/{([^}]+)}/g);
+        let pathWithValues = path as string;
+        if (params?.path) {
+            pathParams?.forEach(param =&gt; {
+                const paramName = param.replace(/{|}/g, &#x27;&#x27;);
+                pathWithValues = pathWithValues.replace(param, params?.path?.[paramName]);
+                console.log({ paramName, path: pathWithValues });
+            });
+        }
+        /** 新部分结束 **/
+        const fetchUrl = new URL(pathWithValues, &#x27;&lt;https://api.example.com&gt;&#x27;);
+        const options: RequestInit = {
+            method: method as string
+        };
+        const data = await fetch(fetchUrl, options);
+        return await data.json();
+    };
+}</code></pre><p>然後我們可以將 <code>query</code> 添加到 URL（如果有的話），通過將每個查詢鍵/值對附加到我們 URL 的搜索參數：</p><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async (params?: Params&lt;P, M&gt;) =&gt; {
+        const templateParams = path.match(/{([^}]+)}/g);
+        let realPath = path as string;
+        if (params?.path) {
+            templateParams?.forEach(templateParam =&gt; {
+                const paramName = templateParam.replace(/{|}/g, &#x27;&#x27;);
+                realPath = realPath.replace(templateParam, params?.path?.[paramName]);
+            });
+        }
+        const baseUrl = &#x27;&lt;http://api.example.com&gt;&#x27;;
+        const fetchUrl = new URL(realPath, baseUrl);
+        /** 新部分 **/
+        if (params?.query) {
+            Object.entries(params.query).forEach(([key, value]) =&gt; {
+                fetchUrl.searchParams.append(key, value as string);
+            });
+        }
+        /** 新部分结束 **/
+        const baseUrl = &#x27;&lt;http://api.example.com&gt;&#x27;;
+        const options: RequestInit = {
+            method: method as string
+        };
+        const data = await fetch(fetchUrl, options);
+        return await data.json();
+    };
+}</code></pre><p>最後，我們添加請求主體（如果有的話）。這需要與適當的內容類型（出於本文的目的是 JSON）一起放在 fetch 選項中。</p><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(basePath: P, method: M) {
+    return async (params?: Params&lt;P, M&gt;) =&gt; {
+        const templateParams = path.match(/{([^}]+)}/g);
+        let realPath = path as string;
+        if (params?.path) {
+            templateParams?.forEach(templateParam =&gt; {
+                const paramName = templateParam.replace(/{|}/g, &#x27;&#x27;);
+                realPath = realPath.replace(templateParam, params?.path?.[paramName]);
+            });
+        }
+        const baseUrl = &#x27;&lt;http://api.example.com&gt;&#x27;;
+        const fetchUrl = new URL(realPath, baseUrl);
+        if (params?.query) {
+            Object.entries(params.query).forEach(([key, value]) =&gt; {
+                fetchUrl.searchParams.append(key, value as string);
+            });
+        }
+        const options: RequestInit = {
+            method: method as string
+        };
+        /** 新部分 **/
+        if (params?.requestBody) {
+            options.body = JSON.stringify(params.requestBody);
+            options.headers = {
+                &#x27;Content-Type&#x27;: &#x27;application/json&#x27;
+            };
+        }
+        /** 新部分结束 **/
+        const baseUrl = &#x27;&lt;http://api.example.com&gt;&#x27;;
+        const data = await fetch(fetchUrl, options);
+        return await data.json();
+    };
+}</code></pre><p>現在我們知道需要傳入什麼，是時候定義函數最終返回什麼了。現在，我們的響應類型是 <code>any</code>，這是 <code>Response.json()</code> 的默認返回類型。</p><p>所有請求都有響應，即使是空的。在本文中，爲了簡單起見，我們每個路徑和方法組合只有一個可能的響應。</p><p>例如，我們的 <code>/bird/{birdId}</code> 路徑將返回有關鳥類的信息：</p><pre><code>[...]
+&quot;/birds/birdId&quot;: {
+    get: {
+        [...]
+        responseBody: {
+            content: {
+				id?: number
+				/** @example Avocet */
+				name?: string
+				/**
+				* @description 鸟的种类
+				* @example wader
+				*/
+				type?: string
+				/**
+				* @description 鸟类可以找到的地方
+				* @example [
+				*       &quot;lakes&quot;,
+				*       &quot;wetlands&quot;
+				*     ]
+				*/
+				habitats?: string[]
+				colours?: string[]
+				/** @description 需要注意的任何独特特征 */
+				distinctiveFeatures?: string
+				/** @description 翼展，以厘米为单位 */
+				wingspan?: number
+				/** @description 图片的 URL */
+				image?: string
+            }
+        }
+    }
+}</code></pre><p>就像我們之前做的一樣，我們將使用 <code>extends</code> 和 <code>infer</code> 提取這些類型，將相同的類型參數傳遞給我們的 Response 類型（我稱之爲 <code>ResponseT</code> 來區別於原生的 <code>Response</code>）。</p><p>像 <code>responseBody</code> 一樣，<code>response</code> 包含一個包含我們想要的數據的嵌套對象；但 <code>response</code> 將始終存在，**永遠不是可選的**，所以我們不需要擔心這一點。我們可以再次使用 <code>infer</code> 提取類型：</p><p><code>type ResponseT<P extends keyof schema, M extends keyof schema[M]> = schema[P][M] extends { response: { content: infer R } } ? R : never;</code>因为 <code>Response.json()</code> 返回 <code>Promise<any></code>，我们需要将返回类型**转换**为 <code>ResponseT<P, M></code>。</p><pre><code>[...]
+return fetch(fetchUrl, options).then(
+	(res) =&gt; res.json() as ResponseT&lt;P, M&gt;
+)</code></pre><pre><code>function createFetcher&lt;P extends keyof schema, M extends keyof schema[P]&gt;(path: P, method: M) {
+    return async (params?: Params&lt;P, M&gt;) =&gt; {
+        const templateParams = path.match(/{([^}]+)}/g);
+        let realPath = path as string;
+        if (params?.path) {
+            templateParams?.forEach(templateParam =&gt; {
+                const paramName = templateParam.replace(/{|}/g, &#x27;&#x27;);
+                realPath = realPath.replace(templateParam, params?.path?.[paramName]);
+            });
+        }
+        const baseUrl = &#x27;&lt;http://api.example.com&gt;&#x27;;
+        const fetchUrl = new URL(realPath, baseUrl);
+        if (params?.query) {
+            Object.entries(params.query).forEach(([key, value]) =&gt; {
+                fetchUrl.searchParams.append(key, value as string);
+            });
+        }
+        const options: RequestInit = {
+            method: method as string
+        };
+        if (params?.requestBody) {
+            options.body = JSON.stringify(params.requestBody);
+            options.headers = {
+                &#x27;Content-Type&#x27;: &#x27;application/json&#x27;
+            };
+        }
+        return fetch(fetchUrl, options).then(res =&gt; res.json() as ResponseT&lt;P, M&gt;);
+    };
+}</code></pre><p>讓我們看看編譯器對它的看法：</p><p><code>const getBird = createFetcher('/birds/{birdId}', 'get');</code>记住，我们的</p><p><code>createFetcher</code>函數是一個高階函數，它返回異步函數。所以我們不需要在這裏<code>await</code>任何東西 - 只有在我們實際進行 API 調用時才需要。</p><p>悬停在 <code>getBird</code> 上给我们：</p><pre><code>(params?.requestBody) {
+init
+const getBird: (params?: Params&lt;&quot;/birds/{birdId}&quot;, &quot;get&quot;&gt; | undefined) =&gt; Promise&lt;{
+  id?: number;
+  name?: string;
+  type?: string;
+  habitats?: string[];
+  colours?: string[];
+  distinctiveFeatures?: string;
+  wingspan?: number;
+  image?: string;
+}&gt;</code></pre><p>看起來不錯！讓我們試試另一個：</p><p><code>const addSighting = createFetcher('/users/{userId}/sightings', 'post');</code>得到：</p><pre><code>const addSighting: (params?: Params&lt;&#x27;/users/{userId}/sightings&#x27;, &#x27;post&#x27;&gt; | undefined) =&gt; Promise&lt;{
+    id?: number;
+    birdId?: number;
+    timestamp?: string;
+    lat?: number;
+    long?: number;
+    notes?: string;
+}&gt;;</code></pre><p>當我們想要實際進行 API 調用時，我們可以像調用任何異步函數一樣調用這些函數中的每一個：</p><pre><code>const listBirds = createFetcher(&#x27;/birds&#x27;, &#x27;get&#x27;);
+const allBirds = await listBirds();
+const getBird = createFetcher(&#x27;/birds/{birdId}&#x27;, &#x27;get&#x27;);
+const bird = await getBird({ path: { birdId: 12 } });
+const addSighting = createFetcher(&#x27;/users/{userId}/sightings&#x27;, &#x27;post&#x27;);
+const mySighting = await addSighting({
+    path: { userId: 1 },
+    requestBody: {
+        birdId: 226,
+        timestamp: &#x27;2025-06-04T13:00:00Z&#x27;,
+        lat: 51.4870924,
+        long: 0.2228486,
+        notes: &#x27;我听到它在树上唱歌！&#x27;
+    }
+});</code></pre><p>現在你已經掌握了本文所寫的內容 — 如何使用條件類型和 <code>infer</code> 創建一個完全類型化的 fetch 函數。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

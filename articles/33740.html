@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>别卷模型了！OpenAI 工程师都在偷偷用的“Harness Engineering“，才是 AI 编程的终极杀器 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>别卷模型了！OpenAI 工程师都在偷偷用的“Harness Engineering“，才是 AI 编程的终极杀器</h1>
+<div class="meta"><span class="src">rrmt.cn</span>
+<span>· <a href="http://www.rrmt.cn/news/33740" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="http://www.rrmt.cn/news/33740" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>一、當所有人都在卷模型OpenAI 工程師在做什麼2024 年以來AI 編程領域最熱的關鍵詞無疑是大模型——更大參數量、更長上下文、更強推理能力。開發者們瘋狂追逐最新模型彷彿只要換一個更強的基座代碼質量就能自動飛躍。然而在 OpenAI 內部一個截然不同的理念正在悄然流行Harness Engineering約束工程。它不追求模型能力的無限膨脹而是通過精心設計的約束框架讓現有模型發揮出遠超預期的效果。簡單來說Harness Engineering 的核心思想是與其讓模型變強不如讓任務變簡單。</p><p>二、什麼是 Harness EngineeringHarness Engineering 並非一個學術術語而是 OpenAI 工程師在實踐中總結出的一套方法論。它的本質是爲 AI 模型設計一套約束系統Harness引導模型在可控範圍內生成高質量輸出。這套約束系統通常包含以下要素角色設定明確告訴模型它是什麼角色如資深 Python 架構師代碼審查專家激活特定知識域。輸出格式約束規定輸出必須遵循的結構如 JSON Schema、Markdown 模板、函數簽名減少自由發揮空間。上下文錨點在 prompt 中嵌入關鍵代碼片段、API 文檔或業務規則讓模型站在已知地基上思考。</p><p>漸進式推理將複雜任務拆解爲多個子步驟每一步都給出中間結果避免模型一步到位導致的幻覺。驗證與回退在輸出後自動檢查是否符合約束不符合時觸發重試或降級策略。用一句話概括Harness Engineering 不是教模型更聰明而是給模型更清晰的跑道。三、爲什麼 Harness Engineering 比換模型更有效我們來看一個真實案例。假設你需要讓 AI 生成一個符合 RESTful 規範的 API 接口代碼。傳統做法換模型用戶幫我寫一個用戶註冊的 API 接口。</p><p> GPT-4好的以下是代碼……輸出一段自由格式的代碼可能缺少錯誤處理、參數校驗或文檔註釋Harness Engineering 做法用戶你是一個 Spring Boot 後端開發專家。</p><p>請按照以下約束生成代碼 1. 使用 RestController 和 PostMapping 註解 2. 請求體必須包含 username、password、email 三個字段 3. 返回格式爲 { code: 0, message: success, data: { userId: 123 } } 4. 必須包含參數校驗Valid和全局異常處理 5. 在代碼上方添加 JavaDoc 註釋說明接口用途和參數含義 AI輸出完全符合約束的代碼可直接複製使用。對比之下Harness Engineering 的優勢顯而易見確定性更高約束越明確模型輸出越可預測。成本更低不需要調用更貴的模型甚至可以用小模型配合強約束達到大模型的效果。</p><p>可維護性更強約束本身就是文檔後續修改只需調整約束條件。幻覺更少模型在狹窄的跑道上犯錯概率遠低於自由發揮。四、Harness Engineering 的三大實戰模式模式一模板化生成適用於重複性高的代碼生成任務如 CRUD 接口、DTO 類、配置文件等。核心思路是預定義輸出模板讓模型填空。</p><p>約束模板 --- 功能描述{用戶輸入} 語言Java 框架Spring Boot 3.x 輸出結構 1. Controller 類包含 CRUD 四個接口 2. Service 接口  實現類 3. Repository 接口 4. Entity 類使用 JPA 註解 5. 每個方法必須包含 Operation 註解Swagger 文檔 ---模式二漸進式推理鏈適用於複雜算法或架構設計任務。將任務拆解爲多個步驟每一步都要求模型輸出中間結果並作爲下一步的輸入。</p><p>步驟1分析需求列出所有功能點和非功能需求 步驟2設計系統架構圖用 Mermaid 描述 步驟3選擇技術棧並說明理由 步驟4編寫核心模塊的僞代碼 步驟5生成完整代碼並添加註釋模式三多輪校驗循環適用於對代碼質量要求極高的場景如生產環境部署。模型生成代碼後自動觸發一輪代碼審查約束讓模型以審查者身份檢查自己的輸出。第一輪生成代碼遵循所有約束 第二輪以代碼審查專家身份檢查上述代碼列出所有潛在問題 第三輪根據審查結果修正代碼 第四輪生成單元測試用例覆蓋所有邊界條件五、如何在自己的項目中落地 Harness Engineering不需要任何特殊工具你只需要改變與 AI 對話的方式。</p><p>以下是三個可以直接上手的實踐建議寫 prompt 前先列約束清單在輸入框裏先寫下輸出必須滿足以下條件1...2...3...再寫具體需求。使用結構化 prompt 模板將常用的約束組合保存爲模板每次只需替換變量部分。建立反饋閉環每次 AI 輸出後檢查是否滿足所有約束不滿足時明確告訴 AI第 X 條約束未滿足請重新生成。</p><p>以下是一個可直接複用的 Harness Engineering prompt 模板## 角色 你是一個 [具體角色如資深前端工程師] 任務 [具體任務描述] 輸出約束 [約束1如使用 TypeScript 嚴格模式] [約束2如所有函數必須有完整的 JSDoc 註釋] [約束3如錯誤處理使用 Result 模式不拋出異常] [約束4如代碼行數不超過 200 行] 上下文 [相關代碼片段、API 文檔或業務規則] 輸出格式 [期望的輸出結構如 JSON Schema 或代碼文件列表]六、結語AI 編程的下一個分水嶺當所有人都把目光聚焦在下一個更強的模型時真正的效率提升往往來自如何更好地使用現有模型。</p><p>Harness Engineering 代表的是一種思維轉變從讓 AI 更聰明到讓任務更適合 AI。OpenAI 工程師們早已明白在 AI 能力快速迭代的今天約束能力纔是真正的核心競爭力。誰能設計出更精妙的約束框架誰就能讓現有模型發揮出 200% 的價值。所以下次當你準備升級模型時不妨先問問自己我的約束工程做到位了嗎</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

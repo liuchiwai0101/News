@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Vite 構建鏈路優化與大型專案工程治理：升級前先做這幾項確認 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Vite 構建鏈路優化與大型專案工程治理：升級前先做這幾項確認</h1>
+<div class="meta"><span class="src">CSDN</span><span>· 8月14日 周五</span>
+<span>· <a href="https://blog.csdn.net/cannonmonster01/article/details/163616317" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/cannonmonster01/article/details/163616317" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>Vite 構建鏈路優化與大型項目工程治理：升級前先做這幾項確認</h3><p>範圍說明：這是升級檢查示例；具體結論取決於 Vite、插件、Node.js 和項目依賴版本。</p><p>去年底我們團隊對一個跨國大型 Sass 前端項目做構建工具升級，從 Vite 4.x 直接跨版本升級到了最新的 Vite 5/6。</p><p>本地 build 測試一切正常，構建速度快了近 3無業務流量，大家興奮不已，當晚就直接發佈上線。</p><p>結果到了第二天早上，客服羣直接被打爆——上百個一直在頁面上操作的留存用戶，在點擊切換路由時，瀏覽器控制檯狂刷 <code>TypeError: Failed to fetch dynamically imported module</code>，整個頁面瞬間陷入白屏！</p><p>這類故障通常發生在新版本部署清理了舊 hash 資源，而仍在運行的舊頁面繼續請求自己的異步 chunk。<code>manifest.json</code> 一般由構建工具或服務端使用，瀏覽器客戶端通常緩存的是 HTML 和 JavaScript 入口；Hash 變化會擴大受影響範圍，但不是 404 的唯一原因。</p><p>很多人做 Vite 構建工具大版本升級，以爲就是改改 <code>package.json</code> 裏的版本號，跑通 <code>npm run build</code> 就可以直接全量發佈。</p><p>這是極其危險的盲動。</p><p>大型項目的構建工具升級，涉及靜態資源保留策略、HTML 緩存、CDN 發佈順序，以及異步 Chunk 失敗時的恢復路徑。升級前應先確認這些邊界。</p><h3>1. 從 Vite 4 升級到 Vite 6，上線當晚上百位用戶瀏覽器拋出 404 Chunk Load Failed</h3><p>爲什麼 Vite 升級會導致異步 Chunk 404 白屏？</p><p>我們可以把跨版本構建部署時的靜態資源加載鏈路畫出來：</p><pre><code>flowchart TD
+    A[User Stays on Old App Version v1.0] --&gt; B[User Clicks Navigation Menu]
+    B --&gt; C[Browser Tries to Load: /assets/route-dashboard.A1B2C3.js]
+    
+    C --&gt; D{CDN Edge Server Status}
+    D --&gt;|v2.0 Full Overwrite Build| E[File Not Found (404 Error)]
+    E --&gt; F[Uncaught Dynamic Import Exception]
+    F --&gt; G[Client Page Crashes to White Screen]
+    
+    D --&gt;|Dual-Version Manifest Gate| H[Serve v1.0 Chunk from Multi-Version Storage]
+    H --&gt; I[Page Rendered Successfully]
+    
+    F --&gt;|Runtime Retry SDK Catch| J[Trigger Soft Version Refresh &amp; Fallback]
+    J --&gt; K[Automatic Clean Reload to v2.0]</code></pre><p>問題的核心在於兩個錯配：</p><p class='list-item'>- **靜態資源保留不足**：部署流程刪除了仍可能被舊頁面請求的資源，導致未刷新的在線用戶拿到 404。</p><p class='list-item'>- **缺乏運行時資源加載重試機制**：前端對- `import()`產生的 Promise Rejection 沒有任何兜底手段，任由 404 錯誤演變成致命的白屏。</p><h3>2. 靜態 Hash 離散化、ESM 強緩存與老舊瀏覽器 Polyfill 的版本陷阱</h3><p>在決定升級 Vite 版本之前，必須在工程控制清單上逐一確認以下 4 項關鍵風險：</p><p class='list-item'>- **確認 1：Hash 算法連貫性與 Chunk 切片規則**。升級前後同一個模塊生成的 Hash 是否發生全量變更？是否配置了- `vendor`庫的獨立分包策略？</p><p class='list-item'>- **確認 2：CDN 目錄的多版本共存（Multi-Version Side-by-Side Deployment）**。CI/CD 必須嚴格禁止全量清空（Clean Sync），新舊版本的靜態資源必須在 CDN 上至少保留 7 天共存期。</p><p class='list-item'>- **確認 3：Target 瀏覽器語法下限（Build Target）**。Vite 新版本默認的 ES 目標可能提升到了- `es2022`，導致老舊平板或 Safari 14 瀏覽器拋出語法解析錯誤。</p><p class='list-item'>- **确认 4：异步 Chunk 404 运行时重试机制（Runtime Retry Boundary）**。</p><h3>3. 設計雙版本灰度發佈、Manifest 映射與平滑回滾機制</h3><p>爲了降低風險，部署應讓帶 hash 的靜態資源在合理的 TTL 內與新版本共存；HTML 保持短緩存或可重新驗證，併爲動態導入失敗提供一次受限的刷新恢復。</p><h3>4. 動手實現具有版本兼容防護與 CDN 兜底重試的 Vite 構建配置及 Runtime SDK</h3><p>下面的 TypeScript 代碼包含了兩個部分：第一部分是穩健的 Vite 生產構建配置（保持 Hash 穩定與分包隔離）；第二部分是掛載在客戶端的異步 Chunk 404 自動重試與版本感知 SDK。</p><h3>#### 第一部分：穩健的 &lt;code&gt;vite.config.ts&lt;/code&gt; 構建收口配置</h3><pre><code>import { defineConfig } from &#x27;vite&#x27;;
+import vue from &#x27;@vitejs/plugin-vue&#x27;;
+import { resolve } from &#x27;path&#x27;;
+export default defineConfig({
+  plugins: [vue()],
+  build: {
+    // 强制声明构建 Target，防止大版本升级默认提升导致老设备白屏
+    target: [&#x27;es2015&#x27;, &#x27;chrome80&#x27;, &#x27;safari13&#x27;],
+    
+    // 生成 manifest.json，供部署或服务端读取构建产物映射
+    manifest: true,
+    
+    rollupOptions: {
+      output: {
+        // 命名约定便于资源管理，但不能保证跨构建或跨版本的 hash 稳定。
+        entryFileNames: &#x27;assets/js/[name]-[hash:8].js&#x27;,
+        chunkFileNames: &#x27;assets/js/[name]-[hash:8].js&#x27;,
+        assetFileNames: &#x27;assets/[ext]/[name]-[hash:8].[ext]&#x27;,
+        
+        // 显式拆分 Vendor，减少不相关变更影响；仍需以实际产物验证缓存命中率。
+        manualChunks(id) {
+          if (id.includes(&#x27;node_modules&#x27;)) {
+            if (id.includes(&#x27;vue&#x27;) || id.includes(&#x27;pinia&#x27;)) {
+              return &#x27;vue-vendor&#x27;;
+            }
+            if (id.includes(&#x27;lodash-es&#x27;) || id.includes(&#x27;axios&#x27;)) {
+              return &#x27;utils-vendor&#x27;;
+            }
+            return &#x27;vendor&#x27;;
+          }
+        },
+      },
+    },
+  },
+});</code></pre><h3>#### 第二部分：客戶端 404 Chunk 加載失敗自動重試與降級 SDK</h3><pre><code>// 客户端异步 Chunk 错误拦截与自动平滑刷新 SDK
+export class ChunkLoadErrorGuard {
+  private static STORAGE_KEY = &#x27;vite_chunk_retry_timestamp&#x27;;
+  private static RETRY_INTERVAL_MS = 10000; // 10秒内避免无限刷新的死循环保护
+  public static init() {
+    // 1. 全局监听捕获未处理的 Promise 拒绝 (Dynamic Import 失败会抛出此事件)
+    window.addEventListener(&#x27;unhandledrejection&#x27;, (event) =&gt; {
+      const error = event.reason;
+      
+      if (ChunkLoadErrorGuard.isChunkLoadError(error)) {
+        console.error(&#x27;[ChunkGuard] 捕获到 404 异步 Chunk 加载失败:&#x27;, error);
+        event.preventDefault(); // 阻止错误向上抛出导致白屏
+        
+        ChunkLoadErrorGuard.handleChunkError();
+      }
+    });
+    // 2. 监听资源加载失败事件 (如 CSS / Script 标签 404)
+    window.addEventListener(
+      &#x27;error&#x27;,
+      (event) =&gt; {
+        const target = event.target as HTMLElement;
+        if (target &amp;&amp; (target.tagName === &#x27;SCRIPT&#x27; || target.tagName === &#x27;LINK&#x27;)) {
+          console.warn(&#x27;[ChunkGuard] 静态资源标签加载失败:&#x27;, target);
+          ChunkLoadErrorGuard.handleChunkError();
+        }
+      },
+      true
+    );
+  }
+  // 判断是否为典型的动态 import 404 异常
+  private static isChunkLoadError(error: any): boolean {
+    if (!error) return false;
+    const message = typeof error === &#x27;string&#x27; ? error : error.message || &#x27;&#x27;;
+    return (
+      message.includes(&#x27;Failed to fetch dynamically imported module&#x27;) ||
+      message.includes(&#x27;Loading chunk&#x27;) ||
+      message.includes(&#x27;Importing a module script failed&#x27;)
+    );
+  }
+  // 触发平滑刷新策略
+  private static handleChunkError() {
+    const lastRetryTime = Number(sessionStorage.getItem(ChunkLoadErrorGuard.STORAGE_KEY) || &#x27;0&#x27;);
+    const now = Date.now();
+    if (now - lastRetryTime &lt; ChunkLoadErrorGuard.RETRY_INTERVAL_MS) {
+      console.error(&#x27;[ChunkGuard] 短时间内已尝试过自动刷新，说明 CDN 资源确定丢失，不再死循环刷新。&#x27;);
+      // 此处可弹出友好的用户提示弹窗：“版本更新，请手动刷新页面”
+      return;
+    }
+    sessionStorage.setItem(ChunkLoadErrorGuard.STORAGE_KEY, String(now));
+    console.log(&#x27;[ChunkGuard] 正在请求最新 HTML 并刷新页面...&#x27;);
+    
+    // 添加查询参数有助于绕过部分缓存；服务端仍需正确设置 HTML 缓存策略。
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set(&#x27;_v_timestamp&#x27;, String(now));
+    window.location.href = currentUrl.toString();
+  }
+}
+// 在应用入口最顶端立即初始化 Guard
+ChunkLoadErrorGuard.init();</code></pre><h3>5. 升級驗證清單</h3><p>把這套“構建分包 Hash 穩固 + CDN 雙版本 7 天保留 + Runtime 重試 SDK”方案部署落地後，我們完成了從 Vite 4 到 Vite 6 的大版本無縫升級。</p><p>升級當晚的觀測數據非常平穩：</p><h3>6. 寫在最後：構建工具大版本升級不是敲個 npm update</h3><p>作爲一個有工程潔癖的技術手藝人，最看不得那種不管三七二十一把依賴包往最新版本升、出了問題靠線上用戶當測試員的野路子做法。</p><p>構建工具大版本升級，改的不只是 CLI 工具本身，它背後牽動的是整個 CDN 資源發佈策略、瀏覽器緩存機制和運行時容錯能力。</p><p>升級前，把分包 Hash 策略理順，把 CDN 的退路留夠，把客戶端的 404 捕獲 SDK 掛上。把所有最壞的情況想在前面，用硬核的工程代碼做好防護，才能在享受到最新工具鏈性能紅利的同時，給業務帶來明確的確定性與安全感。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
