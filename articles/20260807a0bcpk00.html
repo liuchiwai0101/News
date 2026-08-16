@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>OpenAI联合微软、亚马逊等5家大厂联手发布Agent Plugins：AI插件终于要统一了_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>OpenAI联合微软、亚马逊等5家大厂联手发布Agent Plugins：AI插件终于要统一了_腾讯新闻</h1>
+<div class="meta"><span class="src">view.inews.qq.com</span>
+<span>· <a href="https://view.inews.qq.com/a/20260807A0BCPK00" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://view.inews.qq.com/a/20260807A0BCPK00" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>大家好，我是程序員晚楓。</p><p>睡前我順手打開OpenAI的主頁看看有沒有更新，結果還真有重磅消息。</p><p>沒有新模型，沒有跑分，沒有“再見了某某行業”。頁面只說了一件事：給 AI 智能體的插件（**Agent Plugins**），規定一種大家都能看懂的包裝方式。</p><p>但我把參與名單看完，還是愣了一下。</p><p class='list-item'>**Amazon、Cursor、Microsoft、OpenAI 和 Vercel 的维护者，正在一起推动 Agent Plugins 这套开放标准。**</p><p class='list-item'>**如果它真的被廣泛採用，未來一個插件可能不必爲 Codex、Cursor、GitHub Copilot 各做一遍。AI 插件正在等自己的“USB-C 接口”。**</p><p class='list-item'>*圖片來源：Agent Plugins 官方網站*</p><h3>一個插件就可以在所有 AI 智能體上用</h3><p>你是不是也有這種煩惱？</p><p>現在每家 AI 智能體都有自己的插件體系。Codex、Cursor、GitHub Copilot、Kiro，看起來都能安裝技能、連接外部服務，但目錄放哪裏、配置怎麼寫、哪些部分能被識別，並不完全相同。</p><p>對普通人來說，這種區別很像買了五臺電器，結果收到五種插頭。</p><p>東西都能用，但換一臺設備，就要重新找轉接頭。最忙的不是 AI，而是那個四處複製文件的人。</p><h3>Agent Plugins 想做的事情很剋制：**先規定一個插件最小應該長什麼樣。**</h3><p>每個插件都要有一張“身份證”，告訴客戶端它叫什麼、採用哪個版本；裏面可以放教 AI 怎麼做事的技能，也可以放連接外部工具和數據的 MCP 服務。某一家產品想增加自己的獨有能力，也可以放進單獨的擴展區，其他產品看不懂就忽略，不影響公共部分。</p><p>官網把這叫作“可移植的最低標準”。我覺得這個詞特別準確。</p><p>它沒有要求所有產品長得一樣，也不管每家商店怎麼安裝、怎麼收費、怎麼彈權限提醒。它只負責讓大家收到同一個包裹時，至少知道標籤在哪、說明書在哪、工具放在哪。</p><p>目前公開的是 **Agent Plugins 1.0.0**。官網把規範狀態標爲 **Working Draft，也就是工作草案**。</p><p>所以它已經是一份可以實現的正式版本，但還不是刻在石頭上的行業終局。坦率地講，現在就喊“所有 AI 插件徹底統一”，跟裝修剛打完地基就開始收婚禮份子錢差不多，氣氛到了，房子還沒封頂。</p><h3>真正值錢的，是讓AI能力跟着人走</h3><p>很多朋友可能不知道，一個 AI 智能體能不能幹好活，不只取決於它背後的模型。</p><p>我一直覺得，模型更像一個聰明的大腦。但只有大腦，沒有工作方法，也沒有可以動手的工具，它最多是坐在會議室裏給建議。</p><p>這裏順手把三個容易混在一起的概念講明白。</p><h3>Skill教它怎麼做，MCP讓它真的能做</h3><p class='list-item'>**Skill，也就是技能，像一份經過驗證的工作手冊。**</p><p>它會告訴 AI，什麼時候應該使用這項能力，要按什麼步驟做，有哪些坑不能踩。像公衆號寫作規範、合同檢查流程、公司內部發布清單，都可以被整理成技能。</p><p class='list-item'>**MCP 更像一套通用工具接口。**</p><p>它讓 AI 可以在得到授權後讀取資料、查詢系統或者執行操作。一個負責教方法，一個負責把手伸到真實世界裏幹活。</p><p>而 Plugin，就是把這些東西裝進同一個行李箱，再貼上一張統一託運標籤。</p><p>這個設計的“啊哈時刻”就在這裏：**標準沒有試圖統一所有 AI 的大腦，它先統一大腦隨身攜帶的經驗和工具。**</p><p>模型今天用 Codex，明天換 Cursor，後天團隊決定使用 GitHub Copilot。如果技能和工具可以跟着走，用戶積累下來的就不再只是某個平臺裏的幾段聊天記錄，而是一套能搬家的工作能力。</p><h3>首批兼容名單，已經不是小圈子實驗</h3><p>我把官網的兼容客戶端逐項看了一遍，目前公開列出的有 5 類：</p><p>再看項目治理名單，也很有意思。</p><p>最初的技術指導委員會共有 5 位核心維護者，分別來自 Amazon、Cursor、Microsoft、OpenAI 和 Vercel。章程還特意規定，任何單一廠商都不能控制多數核心維護席位，技術討論和提案要公開進行。</p><p>這話聽着有點像委員會文件，但背後的信號很現實：**大家都想做自己的 AI 入口，卻也發現插件生態繼續各修各的路，最後誰都要多交一遍維護費。**</p><p>對插件作者來說，統一格式可以減少重複打包。對公司來說，一套內部流程更容易同時分發給不同工具。對普通用戶來說，最直接的好處是少一點平臺綁定。</p><p>你喜歡哪個 AI，可以繼續用哪個。你的能力包，不必被一起扣在裏面。</p><h3>先別急着喊大一統，它還缺最難的一半</h3><p>看到這裏，可能有小夥伴納悶：以後是不是隨便下載一個插件，Codex、Cursor、Copilot 都能安全使用？</p><p>還真不能這麼理解。</p><p>Agent Plugins 1.0.0 目前只統一兩類公共組件：Skills 和 MCP 服務。插件的分發、安裝、更新、權限提示、用戶界面，仍然由各家客戶端自己決定。</p><p>更重要的是，官方的“未來考慮”文件非常坦誠，v1.0.0 還沒有統一下面這些問題：</p><p>這幾件事可不是邊角料。</p><p>插件既能教 AI 做事，又可能讓它連接文件、賬號和外部服務。一個來路不明的插件，危險的地方不在於“回答錯一道題”，而在於它可能拿着你給的鑰匙，認真執行了一份有問題的說明書。</p><p>所以我自己的判斷是：**Agent Plugins 解決了可移植性問題，但還沒有替用戶解決信任問題。**</p><p>這也是爲什麼它現在更像 USB-C 的接口標準，而不是一個已經審覈好所有應用的手機商店。接口統一之後，劣質充電器仍然是劣質充電器。能插進去，不代表應該插進去。</p><p>我自己也還在摸索這套規範，但有三件事已經可以提前做：</p><p class='list-item'>- 涉及公司資料和重要賬號時，不要因爲“兼容標準”四個字就放棄審覈。</p><p>回到 Agent Plugins 這塊，我是真的覺得它會火。</p><p>不是因爲今天多了一個新名詞，而是 AI 智能體終於開始面對一個成熟生態遲早要回答的問題：**我們積累的能力，到底屬於某個平臺，還是應該屬於我們自己？**</p><p>過去大家爭的是誰的模型更聰明。下一階段，大家還會爭誰能讓用戶帶着自己的技能、工具和工作方法自由遷移。</p><p>接口只是第一步。</p><p>但很多真正改變行業的事情，最開始看起來，也只是一張很無聊的接口說明書。</p><h3>參考鏈接</h3><p class='list-item'>- Agent Plugins 官方网站：https://agent-plugins.org/</p><p class='list-item'>- Agent Plugins 1.0.0 完整规范：https://agent-plugins.org/specification</p><p class='list-item'>- Agent Plugins 兼容客户端名单：https://agent-plugins.org/compatible-clients</p><p class='list-item'>- Agent Plugins 项目治理章程：https://github.com/agentplugins/agent-plugins-spec/blob/main/GOVERNANCE.md</p><p class='list-item'>- Agent Plugins 未来考虑事项：https://github.com/agentplugins/agent-plugins-spec/blob/main/FUTURE_CONSIDERATIONS.md</p><p class='list-item'>- Agent Plugins 规范源码仓库：https://github.com/agentplugins/agent-plugins-spec</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
