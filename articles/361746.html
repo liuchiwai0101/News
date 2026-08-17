@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Claude Code官方省Token指南：11個技巧讓額度用得更久 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Claude Code官方省Token指南：11個技巧讓額度用得更久</h1>
+<div class="meta"><span class="src">tw.theblockbeats.news</span>
+<span>· <a href="https://tw.theblockbeats.news/flash/361746" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://tw.theblockbeats.news/flash/361746" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>據動察 Beating 監測，Anthropic 發佈 Claude Code 省 Token 指南。核心就一句：上下文越長，後面每一輪越貴。聊天、文件和命令輸出都會繼續佔用 Token，也會因此更快消耗額度。</p><p>整理下來，有 11 個最實用的技巧：</p><p class='list-item'>1. 換任務就 /clear。一個任務做完就清掉上下文。還在做同一個任務，只是前面的內容沒用了，再用 /compact 壓縮。長會話越往後越貴，因為每一輪都會重新帶上之前的內容。</p><p class='list-item'>2. 模型和 effort 開局就選好。中途執行 /model 或 /effort 會打掉 prompt cache（提示詞快取），下一輪需要重新處理整段上下文。Fast mode 也是一樣，最好一開始就開。</p><p class='list-item'>3. 離開前先 /compact。訂閱用戶的快取約 1 小時過期，API Key 默認約 5 分鐘。快取過期後再回來，下一輪通常要重新處理整個上下文。趁快取還在時壓縮更便宜。</p><p class='list-item'>4. 最近幾輪跑偏就 /rewind。它只刪掉後面幾輪，前面的快取還能繼續用。/compact 會重寫整個對話，成本更高。</p><p class='list-item'>5. 文件直接用 @ 文件名。Claude 會在第一輪直接拿到文件，可以省掉一次 Read 或搜索。一個文件通常只需要 @ 一次，重複 @ 反而可能把同一文件再塞一份進上下文。</p><p class='list-item'>6. Prompt 儘量說具體。與其說「測試掛了」，不如直接告訴 Claude 哪個測試、哪個文件。否則它可能先 grep、搜索、讀一堆文件，這些結果之後每一輪都會繼續佔上下文。</p><p class='list-item'>7. 測試和日誌儘量少輸出。Build、測試、git log 的輸出都會留在上下文。可以加 quiet 參數、只輸出錯誤，或者用 tail 截斷。Claude Code 對超過 3 萬字符的命令輸出反而會自動寫入文件，只把摘要和路徑留在會話裡。</p><p class='list-item'>8. 用 /context 查啟動負擔。新會話一開始就可以看 CLAUDE.md、MCP 和工具定義佔了多少上下文。CLAUDE.md 只放通用規則，專項流程放進按需加載的 Skill，不用的 MCP 用 /mcp 關掉。</p><p class='list-item'>9. 簡單任務用更小的模型、更低的 effort: 大模型輸入和輸出都更貴，thinking 也屬於輸出 Token。純執行類任務沒必要一直用最高檔模型和最高推理強度。</p><p class='list-item'>10. 大日誌交給 subagent，小任務別濫用。Subagent 有獨立上下文，只把最終結果帶回主會話，適合讀大量日誌、搜索文檔。但它也要重新讀文件、自己跑多輪，小任務反而可能更貴。搜索、讀日誌這類任務還可以指定 Haiku 或 Sonnet。</p><p class='list-item'>11. /loop 最好單獨開會話。每次循環都是完整的一輪，會重複攜帶當前會話的全部上下文。如果間隔超過快取時間，還可能疊加一次快取失效。官方建議另開終端，用一個乾淨會話專門跑循環。</p><p>Anthropic 的建議歸根結底就是：少塞無用內容，任務結束及時清，會話別拖得太長。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>开源 48 小时涨 10k 星：React 大佬用 AI 写测试，整出前端文本测量新思路 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>开源 48 小时涨 10k 星：React 大佬用 AI 写测试，整出前端文本测量新思路</h1>
+<div class="meta"><span class="src">segmentfault.com</span><span>· 8月15日 周六</span>
+<span>· <a href="https://segmentfault.com/a/1190000047685161" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://segmentfault.com/a/1190000047685161" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Pretext 是由前 React 核心開發者 Cheng Lou 創建的瀏覽器文本測量庫，核心能力是**不觸碰 DOM 就能精確計算段落高度和換行位置**。它通過離屏 Canvas 預測量字符寬度、純算術模擬瀏覽器換行邏輯，實現了零布局抖動（layout thrashing）、接近實時的文本排版計算。項目於 2026 年 3 月開源，已在社區引發廣泛關注。</p><h3>一、瀏覽器文本測量爲什麼難？</h3><p>在傳統 Web 開發中，計算一段文字在特定寬度下的高度，通常需要：</p><p class='list-item'>- 將文字插入 DOM 中的一個隱藏元素</p><p class='list-item'>- 觸發瀏覽器佈局（layout）</p><p class='list-item'>- 读取 `offsetHeight`或`getBoundingClientRect()`</p><p class='list-item'>- 每次容器寬度變化就重複上述過程</p><p>這個過程有兩個根本性缺陷：</p><p class='list-item'>- **同步強制佈局**（Forced Synchronous Layout）：讀取尺寸會打斷渲染流水線，導致掉幀</p><p class='list-item'>- **無法預測**：在元素被渲染前無法知道高度，虛擬滾動、富文本編輯器只能靠估算</p><p>Pretext 繞開了這條路，改用**純算術**復現瀏覽器的換行邏輯。</p><h3>二、核心架构：prepare() + layout()</h3><p>Pretext 的 API 只有兩個核心函數，分工明確：</p><h3>prepare()：預測量與緩存</h3><pre><code>import { prepare } from &#x27;pretext&#x27; // [包名待覈實，以 npm 發佈名爲準]
+// 傳入文本和字體配置，離線測量每個字符片段的寬度
+const segments = prepare(text, {
+  fontFamily: &#x27;monospace&#x27;,
+  fontSize: 16,
+})
+// 結果被緩存，相同字符不會重複測量</code></pre><p><code>prepare()</code> 負責將文本按**軟連字符、非拉丁字符、Emoji** 等規則分段，使用離屏 Canvas 測量各段寬度並緩存。這一步只需執行一次，後續寬度變化無需重新測量字符。</p><h3>layout()：純算術換行計算</h3><pre><code>import { layout } from &#x27;pretext&#x27; // [包名待核实，以 npm 发布名为准]
+// 传入预处理结果和容器宽度，立即返回换行结果
+const result = layout(segments, containerWidth)
+console.log(result.lines)       // 每行的文本内容
+console.log(result.totalHeight) // 段落总高度（px）</code></pre><p><code>layout()</code> 模擬瀏覽器的 word-wrap 邏輯，給定寬度參數立即返回行數和總高度，**不觸碰 DOM，不觸發重排**。容器寬度變化時只需重新調用 <code>layout()</code>，無需重新測量字符。</p><h3>三、與傳統 DOM 測量的對比</h3><h3>四、多語言與字體支持</h3><p>Pretext 在設計上明確覆蓋了非拉丁語系的複雜場景。根據項目文檔，測試集包含：</p><p class='list-item'>- **CJK**：中文、日文、韓文（需處理字符級換行）</p><p class='list-item'>- **阿拉伯文**：從右到左書寫方向</p><p class='list-item'>- **泰文**：無空格分詞</p><p class='list-item'>- **Emoji**：Unicode 組合字符的寬度計算</p><p>開發者通過**將《了不起的蓋茨比》全文**在 Chrome、Firefox、Safari 多個瀏覽器上渲染結果與 Pretext 輸出逐行對比，驗證換行結果的準確性。[數據待覈實：建議確認官方文檔的測試語言完整列表]</p><h3>五、性能：能力全面 vs 極限速度的取捨</h3><p>Pretext 的性能在社區引發了討論。開發者 leeoniya 在 Hacker News 評論區給出了一組對比數據：</p><p>Pretext 作者 Cheng Lou 對此的回應是：Pretext 的目標是**通用性**而非單場景極限性能，其緩存機制在首次測量後、多次寬度變化的場景下優勢明顯——<code>prepare()</code> 只跑一次，後續每次 <code>layout()</code> 是純算術，速度很快。</p><p class='list-item'>**結論**：對於 ASCII 文本的一次性大批量測量，專用工具可能更快；對於需要**反覆響應容器寬度變化**的場景（虛擬滾動、響應式編輯器），Pretext 的緩存架構更有優勢。</p><h3>六、適用場景</h3><p class='list-item'>**不推薦場景**：樣式複雜的混排（內聯圖片、多種字號混用、複雜 CSS 僞元素），這類場景的佈局邏輯難以用算術完整復現。</p><h3>七、CSS 新特性能替代 Pretext 嗎？</h3><p>CSS 的 <code>text-wrap: balance</code> 和 <code>interpolate-size</code> 等新特性在部分場景下可以減少對文本測量庫的需求，但兩者解決的問題不同：</p><p class='list-item'>- `text-wrap: balance`：讓瀏覽器自動平衡多行文本的行寬，- **不提供高度數值**給 JavaScript 使用</p><p class='list-item'>- `interpolate-size`：允許對- `height: auto`做過渡動畫，- **不解決預計算問題**</p><p>Pretext 的核心價值在於**把高度作爲數值暴露給 JS**，供虛擬滾動、編輯器等需要提前知道尺寸的場景使用。CSS 新特性無法替代這一需求。</p><h3>八、AI 輔助開發背景</h3><p>Pretext 的開發過程本身是一個值得關注的案例。Cheng Lou 使用 **Claude 和 Codex** 輔助完成了大量測試迭代工作——讓 AI 系統生成測試用例、與瀏覽器真實渲染結果對比、反覆修正換行算法，歷時數週。</p><p>社區對此的普遍看法是：**"AI 特別適合處理需要大量重複測試迭代的工程工作"**。文本換行算法的核心挑戰不在於邏輯複雜度，而在於邊界情況（edge cases）數量龐大——不同語言、字體、Unicode 特殊字符的組合幾乎無窮無盡，正是 AI 輔助開發能大幅提速的類型。</p><p>這種開發模式也在 Simon Willison 的評測文章中被重點提及，他認爲這是 AI 輔助構建精確技術庫的典型示範。</p><h3>常見問題</h3><p class='list-item'>**Q：Pretext 是純前端庫嗎？可以在 Node.js 中用嗎？**`layout()` 是純算術函數，無需瀏覽器環境，可以在 Node.js 或 Worker 中直接使用。`prepare()` 依賴 Canvas API 測量字符寬度，在 Node.js 中需要搭配 `node-canvas` 等庫提供 Canvas 實現。</p><p class='list-item'>**Q：Pretext 支持可变字体（Variable Fonts）吗？**</p><p>演示頁面中有可變字體 ASCII 演示，說明已考慮可變字體場景。具體支持範圍建議參考項目 GitHub 文檔。</p><p class='list-item'>**Q：Pretext 和 React 怎么配合使用？**</p><p>Cheng Lou 本人是前 React 核心開發者，設計上考慮了 React 場景。<code>prepare()</code> 可在數據加載階段執行，<code>layout()</code> 結果可作爲 state 驅動列表渲染，避免 useLayoutEffect 中的強制同步佈局。</p><p class='list-item'>**Q：項目活躍嗎？有 npm 包嗎？**</p><p>项目于 2026 年 3 月开源，GitHub 仓库地址为 <code>github.com/chenglou/pretext</code>。</p><h3>延伸資源</h3><p class='list-item'>- 官方演示：somnai-dreams.github.io/pretext-demos</p><p class='list-item'>- Simon Willison 评测：simonwillison.net/2026/Mar/29/pretext</p><p class='list-item'>- GitHub 源码：github.com/chenglou/pretext</p><p class='list-item'>- 交互式解释工具：tools.simonwillison.net/pretext-explainer</p><p class='list-item'>*本文內容基於 2026 年 3 月項目公開信息整理，庫的 API 和功能可能隨版本迭代變化，建議以 GitHub 倉庫最新文檔爲準。*</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

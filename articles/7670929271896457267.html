@@ -45,8 +45,85 @@ font-size:12.5px;color:var(--muted);}
 <h1>React useEvent Hook：告别过期闭包的稳定回调 (2026)</h1>
 <div class="meta"><span class="src">掘金</span><span>· 8月15日 周六</span>
 <span>· <a href="https://juejin.cn/post/7670929271896457267" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7670929271896457267" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7670929271896457267" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>每個 React 開發者遲早都會走到同一個岔路口。你寫了一個讀取 state 的事件處理函數，把它傳給子組件或 effect，然後必須二選一：要麼保持內聯函數原樣，看着每次渲染都產生一個新引用——<code>React.memo</code> 失效、effect 反覆執行、監聽器反覆重新訂閱；要麼用 <code>useCallback</code> 包起來，開始玩依賴數組打地鼠——漏掉一個依賴，處理函數看到的就是三次渲染之前的 state。</p><p>第二種失敗模式有個名字——**過期閉包（stale closure）**——它大概是生產代碼裏最常見的 React bug。解決方案也有個名字：<code>useEvent</code>，源自 2022 年的官方 React RFC，今天可以直接用 <code>@reactuses/core</code> 裏的 <code>useEvent</code>。它給你一個**引用在渲染之間永不變化**、但函數體**總能讀到最新 state 和 props** 的函數。岔路口的兩邊，全都要。</p><p>本文涵蓋它的 API、讓這一切成立的三行實現技巧、與 <code>useCallback</code> 及 React 19.2 內置 <code>useEffectEvent</code> 的對比、真實使用模式，以及必須遵守的一條規則（不要在渲染期間調用它）。TypeScript 優先。</p><h3>三十秒看懂問題</h3><p>這就是 bug 製造機。一個聊天組件定時把當前草稿文本發送心跳：</p><pre><code>function Composer({ roomId }: { roomId: string }) {
+  const [draft, setDraft] = useState(&#x27;&#x27;);
+  useEffect(() =&gt; {
+    const id = setInterval(() =&gt; {
+      sendHeartbeat(roomId, draft); // ⚠️ 哪个 draft？
+    }, 3000);
+    return () =&gt; clearInterval(id);
+  }, [roomId]); // 故意省略 draft——我们不想重置定时器
+  return &lt;textarea value={draft} onChange={e =&gt; setDraft(e.target.value)} /&gt;;
+}</code></pre><p>interval 閉包捕獲的是 effect 運行時的那個 <code>draft</code>——空字符串。此後每次心跳發的都是 <code>''</code>。把 <code>draft</code> 加進依賴數組，閉包倒是新鮮了，但定時器會在**每次按鍵**時銷燬重建。<code>useCallback</code> 幫不上忙：它有一模一樣的依賴數組，所以逼你做一模一樣的選擇——要麼值過期，要麼引用不停變。</p><p>你真正想要的，是一個在組件生命週期內*始終是同一個東西*、但觸發時*讀到當前值*的函數。這就是 <code>useEvent</code>：</p><pre><code>import { useEvent } from &#x27;@reactuses/core&#x27;;
+function Composer({ roomId }: { roomId: string }) {
+  const [draft, setDraft] = useState(&#x27;&#x27;);
+  const beat = useEvent(() =&gt; {
+    sendHeartbeat(roomId, draft); // ✅ 永远是最新的 draft 和 roomId
+  });
+  useEffect(() =&gt; {
+    const id = setInterval(beat, 3000);
+    return () =&gt; clearInterval(id);
+  }, [beat]); // beat 永不变化——effect 只运行一次
+  return &lt;textarea value={draft} onChange={e =&gt; setDraft(e.target.value)} /&gt;;
+}</code></pre><p><code>beat</code> 在每次渲染中引用完全相同，所以 effect 只運行一次，定時器在打字過程中穩如泰山。當它觸發時，通過最新一次渲染的閉包讀取 <code>draft</code>。依賴數組甚至是誠實的——<code>beat</code> 列在裏面，只是它恰好穩定。</p><h3>完整 API</h3><p>幾乎沒有學習成本：</p><pre><code>const stableFn = useEvent(fn);</code></pre><p class='list-item'>- `fn`- `this`也一样。</p><p class='list-item'>- `stableFn`- `fn`完全相同，但引用在組件生命週期內固定不變。</p><p>类型是精确的，不是 <code>(...args: any[]) => any</code>：</p><pre><code>const format = useEvent((n: number, unit: string) =&gt; `${n}${unit}`);
+format(3, &#x27;px&#x27;);   // ✅ string
+format(&#x27;3&#x27;, &#x27;px&#x27;); // ❌ 类型错误</code></pre><p>開發環境下，如果傳入的不是函數，會在控制檯打印 <code>useEvent expected parameter is a function, got …</code>，而不是悄悄失敗。</p><h3>內部實現原理</h3><p>整個實現短到一杯咖啡就能讀完，而且每一行都有它的道理：</p><pre><code>export const useEvent = &lt;T extends Fn&gt;(fn: T) =&gt; {
+  const handlerRef = useRef(fn);
+  useIsomorphicLayoutEffect(() =&gt; {
+    handlerRef.current = fn;
+  }, [fn]);
+  return useCallback((...args) =&gt; {
+    const fn = handlerRef.current;
+    return fn(...args);
+  }, []) as T;
+};</code></pre><p>三個值得注意的細節：</p><p class='list-item'>-</p><p class='list-item'>**用 ref 攜帶最新閉包。**每次渲染都產生一個捕獲最新 state 的新`fn`；effect 把它存進`handlerRef`。返回的包裝函數——用空依賴數組只 memoize 一次——在*調用時*而非渲染時讀取`handlerRef.current`。外殼穩定，內核新鮮。</p><p class='list-item'>-</p><p class='list-item'>**ref 在 layout effect 裏更新，而不是普通 effect。**`useIsomorphicLayoutEffect`在 DOM 變更後同步執行，早於瀏覽器繪製、也早於被動的`useEffect`回調。如果 ref 在普通`useEffect`裏更新，這個間隙中觸發的任何事件——或同一次 commit 中更早運行的其他 effect——調用包裝函數時就會命中上一次渲染的閉包。layout 時機堵上了這個窗口。</p><p class='list-item'>-</p><p class='list-item'>**Isomorphic 意味着 SSR 安全。**服務端使用`useLayoutEffect`會打印 hydration 警告；`useIsomorphicLayoutEffect`在 SSR 時換成`useEffect`，瀏覽器裏再換回真傢伙。沒有警告，你的代碼也不用做特殊處理。</p><p>如果這個 ref 持有技巧看着眼熟，那是因爲它和 <code>useLatest</code> 是同一個思路——<code>useEvent</code> 本質上就是 <code>useLatest</code> 加一個穩定的可調用外殼。想在某個現有回調裏*讀取*最新值時用 <code>useLatest</code>；當回調本身就是你要到處傳遞的東西時用 <code>useEvent</code>。</p><h3>useEvent vs useCallback</h3><p>它們解決的是不同的問題，對比一下兩者都更清楚：</p><p>「渲染期間」這一行是真正的分界線。<code>useCallback</code> 的結果是個普通值——你可以在渲染時調用它來計算 JSX。<code>useEvent</code> 的包裝函數讀取的 ref 只保證在 commit *之後*是最新的，渲染期間調用可能觀察到上一次渲染的 state（也違反了 RFC 謹慎設計的併發渲染契約）。經驗法則不言自明：**如果函數是響應某件事而觸發的——點擊、定時、消息——用  useEvent；如果它在渲染期間計算東西——用 useCallback。**</p><h3>useEvent vs React 官方的 useEffectEvent</h3><p>2022 年的 RFC 最終被取代：React 把這個想法以 <code>useEffectEvent</code> 的形式發佈，自 React 19.2 起穩定。如果你在 19.2+ 上，應該瞭解兩者的關係：</p><p class='list-item'>- `useEffectEvent`刻意收窄了範圍。- *effect 內部*調用（ESLint 規則強制執行），也不能傳給其他組件或 Hook。React 團隊把它限定在他們認爲萬無一失的那一種模式：在 effect 裏讀最新值而不重新觸發 effect。</p><p class='list-item'>- `useEvent`覆蓋更寬的場景。- `useEffectEvent`的 linter 全都會拒絕——恰恰是用戶態- `useEvent`的用武之地。代價是更寬的場景包含了上面那個渲染期調用的坑，紀律從 linter 轉移到了- *你*身上。</p><p class='list-item'>- **兩者可以共存。**React 19.2+ 上 effect 內部用- `useEffectEvent`，跨組件邊界的穩定引用用- `useEvent`；19.2 以下則全部用- `useEvent`——那裏根本沒有- `useEffectEvent`。</p><h3>使用模式</h3><h3>不破壞 React.memo 的處理函數 prop</h3><p>經典的列表行場景——memoized 的行組件照樣重渲染，因爲父組件每次渲染都重新創建 <code>onSelect</code>：</p><pre><code>const Row = React.memo(function Row({ item, onSelect }: RowProps) {
+  return (
+    &lt;li onClick={() =&gt; onSelect(item.id)} className=&quot;row&quot;&gt;
+      {item.label}
+    &lt;/li&gt;
+  );
+});
+function List({ items }: { items: Item[] }) {
+  const [selected, setSelected] = useState&lt;string[]&gt;([]);
+  const handleSelect = useEvent((id: string) =&gt; {
+    // 读到最新的 selected，没有依赖数组要维护
+    setSelected(selected.includes(id)
+      ? selected.filter(s =&gt; s !== id)
+      : [...selected, id]);
+  });
+  return (
+    &lt;ul&gt;
+      {items.map(item =&gt; (
+        &lt;Row key={item.id} item={item} onSelect={handleSelect} /&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre><p><code>handleSelect</code> 每次渲染都是同一個引用，<code>React.memo</code> 才真正 memo 得起來。換 <code>useCallback</code> 的話，你要麼把 <code>selected</code> 列進依賴（引用變來變去，memo 白費），要麼到處用函數式更新（這裏還行，一旦處理函數要讀兩份 state 就沒轍了）。</p><h3>永不重新訂閱的訂閱</h3><p>WebSocket、<code>EventSource</code>、SDK——任何僅僅因爲閉包過期就要拆掉連接重建的地方，都很難堪：</p><pre><code>function usePriceFeed(symbol: string, threshold: number) {
+  const [price, setPrice] = useState(0);
+  const onMessage = useEvent((e: MessageEvent) =&gt; {
+    const next = JSON.parse(e.data).price as number;
+    setPrice(next);
+    if (next &gt; threshold) notify(symbol, next); // 永远是最新的 threshold
+  });
+  useEffect(() =&gt; {
+    const ws = new WebSocket(`wss://feed.example.com/${symbol}`);
+    ws.addEventListener(&#x27;message&#x27;, onMessage);
+    return () =&gt; ws.close();
+  }, [symbol, onMessage]); // 只有 symbol 变化才重连
+  return price;
+}</code></pre><p>socket 在 <code>symbol</code> 變化時重連——這是正當理由——而 <code>threshold</code> 變化時絕不重連。注意：對於普通 DOM 目標，<code>useEventListener</code> 內部已經做了這件事（它用 <code>useLatest</code> 包住你的 handler），所以只有當訂閱管道由*你自己*掌管時才需要 <code>useEvent</code>。</p><h3>定時器——或者直接用庫裏現成的</h3><p>上面的心跳例子太常見了，<code>@reactuses/core</code> 直接內置瞭解法：<code>useInterval</code> 讓回調保持新鮮而不重啓定時器——它自己的實現就構建在 <code>useEvent</code> 和 <code>useLatest</code> 之上。<code>useTimeout</code>、<code>useDebounceFn</code>、<code>useThrottleFn</code> 也是同樣的故事：過期閉包防護是內置的，所以在自己動手接 <code>useEvent</code> 之前，先看看你要造的 Hook 是不是已經存在了。</p><h3>傳給命令式組件的穩定回調</h3><p>圖表庫、地圖 SDK、編輯器通常在構造時接收處理函數：</p><pre><code>function Editor({ docId }: { docId: string }) {
+  const [dirty, setDirty] = useState(false);
+  const handleSave = useEvent((content: string) =&gt; {
+    saveDocument(docId, content); // 最新的 docId
+    setDirty(false);
+  });
+  useEffect(() =&gt; {
+    const editor = createEditor(&#x27;#mount&#x27;, { onSave: handleSave });
+    return () =&gt; editor.destroy();
+  }, [handleSave]); // 稳定 → 编辑器只创建一次
+  return &lt;div id=&quot;mount&quot; data-dirty={dirty} /&gt;;
+}</code></pre><p>僅僅因爲 <code>docId</code> 在閉包裏換了個引用就重建一個重量級編輯器——這正是 <code>useEvent</code> 要消滅的浪費。</p><h3>兩條規則</h3><p>只有兩條，都是 ref 更新時機的直接推論：</p><p class='list-item'>- **不要在渲染期間調用返回的函數。**它屬於事件處理、effect、定時器、回調——commit 之後才觸發的東西。渲染期間，ref 可能還指向上一次的閉包。</p><p class='list-item'>- **不要用它對 effect 撒謊。**如果一個 effect 確實- *應該*在某個值變化時重新運行（比如篩選條件變化時重新請求數據），用- `useEvent`包住邏輯來讓 linter 閉嘴，等於埋掉了一個真實依賴。- `useEvent`是「讀最新值、不重新觸發」；它不是依賴數組的萬能靜音鍵。</p><h3>要點回顧</h3><p class='list-item'>- `useEvent`返回一個引用永久不變、閉包永遠新鮮的函數- `useCallback`逼你二選一的那兩樣東西。</p><p class='list-item'>- **技巧是一個在 layout effect 裏更新的 ref**，加一個只 memoize 一次、調用時纔讀 ref 的包裝函數。- `useIsomorphicLayoutEffect`保證 SSR 安全。</p><p class='list-item'>- **渲染期間的值用**永遠不要在渲染期間調用- `useCallback`，事後觸發的處理函數用- `useEvent`。- `useEvent`的函數。</p><p class='list-item'>- **React 19.2+ 上，**且有 linter 保駕；跨組件、跨庫邊界傳遞的穩定處理函數則交給- `useEffectEvent`覆蓋 effect 內部的場景- `useEvent`。</p><p class='list-item'>- **先查庫裏有沒有現成的**——- `useEventListener`、- `useInterval`、- `useDebounceFn`等等都已內置過期閉包防護。</p><p>從 <code>@reactuses/core</code> 獲取它，退出依賴數組打地鼠遊戲。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

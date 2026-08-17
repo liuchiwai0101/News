@@ -45,8 +45,99 @@ font-size:12.5px;color:var(--muted);}
 <h1>从 Vue3 到 React 第 9 篇：自定义 Hook 对标 Composables</h1>
 <div class="meta"><span class="src">掘金</span><span>· 8月15日 周六</span>
 <span>· <a href="https://juejin.cn/post/7669221547005575214" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文為非中文內容，已略去翻譯步驟，未提供本地譯文，請<a href="https://juejin.cn/post/7669221547005575214" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://juejin.cn/post/7669221547005575214" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>面向 Vue3 開發者的 React 快速上手系列</h3><p>這是讓 Vue 開發者最有"親切感"的一篇。React 的**自定義 Hook** 和 Vue 的 **Composables** 是幾乎同一個概念——甚至連命名規範（<code>use</code> 前綴）都一樣！掌握它，你就掌握了 React 邏輯複用的精髓。</p><h3>一、它們本質是同一個東西</h3><p>一句話：**自定義 Hook 就是"把用到其他 Hook 的邏輯抽成一個  useXxx 函數"**，和你寫 Composable 的思路完全一致。</p><h3>二、第一個自定義 Hook：並列對比</h3><p>來寫一個"計數器"邏輯。</p><p class='list-item'>**Vue3 Composable：**</p><pre><code>// useCounter.js
+import { ref } from &#x27;vue&#x27;
+export function useCounter(initial = 0) {
+  const count = ref(initial)
+  const increment = (value++
+  const decrement = (value--
+  const reset = (value = initial
+  return { count, increment, decrement, reset }
+}</code></pre><p class='list-item'>**React 自定义 Hook：**</p><pre><code>// useCounter.js
+import { useState } from &#x27;react&#x27;
+export function useCounter(initial = 0) {
+  const [count, setCount] = useState(initial)
+  const increment = (setCount(c =&gt; c + 1)
+  const decrement = (setCount(c =&gt; c - 1)
+  const reset = (setCount(initial)
+  return { count, increment, decrement, reset }
+}</code></pre><p>使用起來也幾乎一樣：</p><pre><code>// React 组件里
+function Counter(const { count, increment, decrement, reset } = useCounter(10)
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{count}&lt;/span&gt;
+      &lt;button onClick={increment}&gt;+&lt;/button&gt;
+      &lt;button onClick={decrement}&gt;-&lt;/button&gt;
+      &lt;button onClick={reset}&gt;重置&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}</code></pre><p>看到沒？結構一模一樣。你寫 Composable 的所有直覺都能平移。</p><h3>三、自定義 Hook 的規則（&quot;Hook 規則&quot;）</h3><p>有兩條鐵律，違反會直接報錯（Vue Composable 沒這麼嚴格，需注意）：</p><p class='list-item'>- **只在顶层调用 Hook**：不能在- `if`、- `for`、嵌套函数里调用- `useState`/- `useEffect`等。</p><p class='list-item'>- **只在 React 函數里調用**：只能在組件或其他自定義 Hook 裏用。</p><pre><code>// ❌ 错误：条件里调用
+function Bad({ show }) {
+  if (show) {
+    const [x, setX] = useState(0)   // 报错！
+  }
+}
+// ✅ 正确：顶层调用，条件写在内部
+function Good({ show }) {
+  const [x, setX] = useState(0)
+  if (show) { /* 用 x */ }
+}</code></pre><p>原因回到第 1 篇：React 靠**調用順序**來對應每個 Hook 的內部存儲，條件調用會打亂順序。這也是爲什麼必須裝 <code>eslint-plugin-react-hooks</code>——它會自動幫你抓違規。</p><h3>Vue 的 Composable 因为</h3><p><code>setup</code>只運行一次，沒有這個順序約束，可以更隨意。這是兩者少數的實質差異之一。</p><h3>四、幾個實用的自定義 Hook 示例</h3><h3>1. `useToggle`（布尔开关）</h3><pre><code>import { useState, useCallback } from &#x27;react&#x27;
+export function useToggle(initial = false) {
+  const [value, setValue] = useState(initial)
+  const toggle = useCallback(() =&gt; setValue(v =&gt; !v), [])
+  return [value, toggle]
+}
+// 用法
+const [open, toggleOpen] = useToggle()</code></pre><h3>2. `useLocalStorage`（持久化状态，对标 VueUse 的 useStorage）</h3><pre><code>import { useState, useEffect } from &#x27;react&#x27;
+export function useLocalStorage(key, defaultValue) {
+  const [value, setValue] = useState(() =&gt; {
+    const saved = localStorage.getItem(key)
+    return saved ? JSON.parse(saved) : defaultValue
+  })
+  useEffect(() =&gt; {
+    localStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+  return [value, setValue]
+}
+// 用法：和 useState 一样，但会自动持久化
+const [theme, setTheme] = useLocalStorage(&#x27;theme&#x27;, &#x27;light&#x27;)</code></pre><h3>3. `useFetch`（数据请求）</h3><pre><code>import { useState, useEffect } from &#x27;react&#x27;
+export function useFetch(url) {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  useEffect(() =&gt; {
+    let cancelled = false
+    setLoading(true)
+    fetch(url)
+      .then(res =&gt; res.json())
+      .then(json =&gt; { if (!cancelled) setData(json) })
+      .catch(err =&gt; { if (!cancelled) setError(err) })
+      .finally(() =&gt; { if (!cancelled) setLoading(false) })
+    return () =&gt; { cancelled = true }
+  }, [url])
+  return { data, loading, error }
+}
+// 用法
+function UserList(const { data, loading, error } = useFetch(&#x27;/api/users&#x27;)
+  if (loading) return &lt;Spinner /&gt;
+  if (error) return &lt;ErrorTip /&gt;
+  return &lt;ul&gt;{data.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;
+}</code></pre><h3>4. `useWindowSize`（响应窗口尺寸）</h3><pre><code>import { useState, useEffect } from &#x27;react&#x27;
+export function useWindowSize(const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight })
+  useEffect(() =&gt; {
+    const handler = (setSize({ width: window.innerWidth, height: window.innerHeight })
+    window.addEventListener(&#x27;resize&#x27;, handler)
+    return () =&gt; window.removeEventListener(&#x27;resize&#x27;, handler)
+  }, [])
+  return size
+}</code></pre><h3>五、組合 Hook：Hook 裏調用 Hook</h3><p>自定義 Hook 可以調用其他 Hook（包括別的自定義 Hook），層層組合，和 Composable 組合思路一致：</p><pre><code>export function useUser(userId) {
+  const { data, loading } = useFetch(`/api/users/${userId}`)  // 复用 useFetch
+  const [isFollowing, toggleFollow] = useToggle(false)         // 复用 useToggle
+  return { user: data, loading, isFollowing, toggleFollow }
+}</code></pre><h3>六、开箱即用的 Hook 库：ReactUse / ahooks</h3><p>Vue 有 **VueUse**（200+ composables），React 也有对应的：</p><p class='list-item'>- **ahooks**：阿里出品，中文文檔友好，國內項目常用，涵蓋請求、防抖節流、DOM、生命週期等大量 Hook。</p><p class='list-item'>- **ReactUse**：直接對標 VueUse 設計，API 命名都刻意向 VueUse 靠攏，VueUse 用戶上手無縫。</p><p>有了它们，<code>useLocalStorage</code>、<code>useDebounce</code>、<code>useRequest</code> 这些常用逻辑不用自己写。就像你在 Vue 里直接 <code>import { useStorage } from '@vueuse/core'</code> 一样。</p><pre><code>// ahooks 示例
+import { useRequest, useLocalStorageState, useToggle } from &#x27;ahooks&#x27;
+const { data, loading } = useRequest(fetchUsers)</code></pre><h3>七、Vue 開發者的心智遷移總結</h3><h3>小結</h3><p class='list-item'>- 自定義 Hook ≈ Composable，連 `use`前綴命名都相同，是 React 邏輯複用的核心。</p><p class='list-item'>- 寫法直覺可從 Composable 直接平移：抽成 `useXxx`函數，內部用其他 Hook，返回狀態和方法。</p><p class='list-item'>- **兩條鐵律**：Hook 只在頂層調用、只在 React 函數里調用（裝 ESLint 插件保駕護航）。</p><p class='list-item'>- Hook 可組合、可嵌套調用其他 Hook。</p><p class='list-item'>- 現成生態：**ahooks / ReactUse**對標 VueUse，別重複造輪子。</p><p>下一篇讲**路由**——React Router 对标 Vue Router。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>
