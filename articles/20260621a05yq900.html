@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>AI 圈狂吹的 Agent Skills，5分钟学会！_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>AI 圈狂吹的 Agent Skills，5分钟学会！_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260621A05YQ900" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260621A05YQ900" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>你是小阿巴，正在用 AI 開發網站。</p><p>爲了讓 AI 生成的效果更好，你告訴 AI：</p><p class='list-item'>- 界面不要使用藍紫漸變色</p><p class='list-item'>- 不要生成一大堆沒用的文檔</p><p class='list-item'>- 你要遵循公司的代碼規範</p><p>阿巴阿巴，洋洋灑灑幾百字。</p><p>之後每次開發網站時，你都要寫這麼一段又臭又長的提示詞，太麻煩了！</p><p>於是聰明的你開始想辦法。</p><p>先把常用的提示詞保存到單獨的文件（比如 <code>prompts.md</code>），每次手動投餵給 AI。</p><p>然後創建了資源文件夾，把公司的代碼規範、設計素材都塞進去，告訴 AI 參考這些寫。</p><p>接着你還寫了一些腳本，讓 AI 生成代碼後自動執行格式化、運行測試、提交代碼到 Git。</p><p>最後我再寫個 <code>AGENTS.md</code> 文件，把所有規範和工作流程都寫進去，讓 AI 自動讀取。</p><p>你沾沾自喜：嘿嘿，俺這套工作流，堪稱完美！</p><p>但很快，你發現了問題，隨着規範越寫越多，文檔越來越臃腫，每次對話都要佔用很多 AI 上下文空間，浪費 tokens。</p><p>於是你找到號稱 “沒有人比他更不懂 AI” 的魚皮求助：阿巴阿巴，俺還能咋辦啊……</p><p>魚皮：不是有 麼？爲啥不直接用？</p><p>你一臉懵：啥玩意兒？</p><p>魚皮：這可是最近 AI 圈兒爆火的技術，下面我來帶你玩轉 Agent Skills，讓你知道它是什麼、怎麼用、有什麼魔力、怎麼自己開發。</p><p>點個收藏，我們開始~</p><p>⭐️ 推荐观看视频动画版，更通俗易懂：https://bilibili.com/video/BV1T7zzBQEaA</p><p>Agent Skills 是 Anthropic 推出的 一套開放標準，目的是讓 AI 能夠學習使用各種專業技能，而不用每次都重複輸入提示詞。</p><p>簡單來說，它就是給 AI 裝備的 **技能包**。技能包裏有精心設計的提示詞、代碼腳本、還有各種資源文件。</p><p>把 AI 想象成一個職場小白，給他裝上 <code>文檔處理技能</code>，它就立刻知道怎麼生成 PPT、處理 Excel 表格；裝上 <code>代碼規範技能</code>，它就知道怎麼按照公司標準寫代碼。</p><p>你撓撓頭：等等…… 這不就是俺在做的事嗎？把教 AI 做事的文檔和 AI 要用到的文件打包成文件夾？</p><p>魚皮：差不多，但 Anthropic 把它做成了一個通用標準，而且在實現原理上有一些新花樣……</p><p>你捶胸頓足：可惡啊，俺差點就改變世界了！這能有什麼新花樣？</p><p>魚皮：我先來帶你用一下 Agent Skills，再跟你說說其中的奧祕。</p><p>目前對 Agent Skills 支持最完善的工具是 Anthropic 官方的 Claude Code，我們就以此爲例，安裝並使用 Skills。</p><p>先打開 Claude Code 並輸入命令，添加官方技能市場：</p><pre><code>/plugin marketplace add anthropics/skills</code></pre><p>這就像是在你的 AI 助手裏開通了一個技能商店，接下來你就可以從商店中獲取技能了。</p><p>在 Claude Code 中輸入命令，安裝官方提供的技能包：</p><pre><code>/plugin install example-skills@anthropic-agent-skills</code></pre><p>這個 example-skills 包含了一堆官方示例技能，包括前端設計、網頁測試、動圖製作等等。</p><p>裝完之後，你就可以直接讓 AI 使用這些技能了。</p><p>比如你要做一個網站，以前沒裝技能的時候，AI 生成的代碼又是那個熟悉的藍紫漸變色，千篇一律的 AI 審美。</p><p>現在安裝了 frontend-design 這個 **教 AI 生成專業設計感網站** 的技能後，你輸入：“幫我開發個人作品集網站”。</p><p>AI 會主動問你：我發現你安裝了前端設計技能，需要用它來生成更具設計感的頁面嗎？</p><p>確認之後，AI 會利用技能生成代碼，告別藍紫漸變，生成獨特風格的精美頁面。</p><p>我們不用每次都給 AI 輸入一大堆相同的提示詞，裝一次技能就行了。</p><p>除了代碼相關的技能，官方還提供了文檔處理技能包。</p><p>同樣在 Claude Code 中輸入一行命令安裝：</p><pre><code>/plugin install document-skills@anthropic-agent-skills</code></pre><p>這個技能包裏有 PPT 製作、Word 文檔生成、Excel 數據分析、PDF 解析等技能。</p><p>接下來如果你讓 AI 做個 PPT，它會自動調用 PPT 製作技能，直接生成排版好的 PPT 文件，幫你節省幾個小時。</p><p>你好奇道：咦，爲什麼 Skills 能做到安裝即用？技能包裏面到底有啥？AI 又是怎麼知道該用哪個技能的？</p><p>魚皮：好問題。技能 其實就是一個包含 <code>SKILL.md</code> 技能說明文件的文件夾，還可以包含可執行腳本、資源和參考文檔。</p><pre><code>my-skill/
+├── SKILL.md          # 必需：指令和元数据
+├── scripts/          # 可选：可执行脚本
+├── references/       # 可选：参考文档
+└── assets/           # 可选：模板和资源</code></pre><p>由於每個技能的複雜度不同，結構也會存在區別。我們可以在本地目錄中找到已安裝的技能文件夾。</p><p>以官方的 PPT 製作技能爲例，它的結構是這樣的：</p><pre><code>skills/pptx/
+├── SKILL.md          # 技能说明书（必需）
+├── ooxml/            # OOXML 相关资源
+├── scripts/          # 处理脚本
+├── html2pptx.md      # HTML 转 PPT 说明
+├── ooxml.md          # OOXML 格式说明
+└── LICENSE.txt       # 许可证</code></pre><p>包含一個核心的技能說明文檔 <code>SKILL.md</code>，還有腳本、參考文檔和各種資源文件。</p><p>而 frontend-design 前端设计技能只有一个 <code>SKILL.md</code> 文件。</p><p><code>SKILL.md</code> 文件是每個技能的核心，它包含兩個關鍵部分。</p><p>第一部分是 **元數據**，用 YAML 格式寫在文件開頭：</p><pre><code>---
+name: frontend-design
+description: 生成具有專業設計感的前端代碼，避免千篇一律的 AI 審美
+---</code></pre><p>其中  <code>name</code> 是技能的名字。<code>description</code> 是技能的描述，告訴 AI 什麼時候應該使用這個技能。描述寫得越清晰，AI 就越容易在合適的時機調用它。</p><p>第二部分是 **指令內容**，就是一套經過精心設計的提示詞，指導 AI 具體怎麼做。</p><p>以 frontend-design 技能爲例，它的指令內容包括：</p><p class='list-item'>- 設計思考：在寫代碼前，先分析產品目的、用戶羣體、技術約束，然後選擇一個大膽的美學方向（極簡、復古未來、工業風、有機自然、奢華精緻等）</p><p class='list-item'>- 前端美學指南：包括字體選擇（避免 Arial、Inter 等爛大街字體，選擇有個性的組合）、配色主題（主色調配鮮明點綴色）、動效設計、空間構成、背景和視覺細節</p><p class='list-item'>- 避坑指南：明確禁止紫色漸變、系統字體、千篇一律的佈局等 AI 審美陷阱</p><p>你撓了撓頭：如果有多個 SKills，AI 怎麼知道該用哪個技能呢？如果把每個技能說明文檔都塞給 AI，不是很佔用上下文麼？</p><p>魚皮：這就要說到 **漸進式披露（Progressive Disclosure）** 這個核心機制了。</p><p>當你讓 AI 執行任務時，它會先掃描技能目錄，但不會把所有內容都加載到上下文中。而是隻讀取每個技能的元數據（名字和描述），發現描述和任務相關，就知道該用這個技能了。</p><p>然後才把完整的技能說明文檔讀進來，按照裏面的指令執行：</p><p>並根據需要加載技能包中的其他資源：</p><p class='list-item'>**用到哪個查哪個**，既精準匹配又節省上下文，這就是漸進式披露的精髓。</p><p>所以 Agent Skills 的本質就是 **把專業知識打包成一個文件夾，讓 AI 按需讀取並使用**。</p><p>你問：除了 Claude Code 之外，其他 AI 工具支持 Agent Skills 麼？俺平時用 Cursor 比較多……</p><p>魚皮：當然能！Agent Skills 已經成爲通用標準，Cursor、VS Code、Codex 等工具都支持。</p><p>Skills 的社區也非常活躍，你可以在 Claude Skills Hub 市場、開源的 Awesome Claude Skills 等地方找到很多現成的技能。</p><p>比如有個叫 UI UX Pro MAX 的技能特別火，專門用於提升 AI 的設計能力。</p><p>用法很簡單，首先按照 開源倉庫文檔 的指引，安裝官方提供的命令行工具：</p><pre><code>npm install -g uipro-cli</code></pre><p>然後進入到你的項目目錄下，根據使用的 AI 工具執行對應的命令。比如我這裏用 Cursor：</p><pre><code>uipro init --ai cursor</code></pre><p>它會自動把技能安裝到 Cursor 的配置目錄裏。</p><p>安裝完成後，可以看到它的文件結構：</p><p>接下來，當你讓 AI 開發一個網站時，可以使用斜槓命令手動觸發技能，或者讓 AI 自動識別技能。</p><h3>1）AI 會根據你的需求識別出產品類型和需要的頁面類型</h3><p>2）然後調用 <code>search.py</code> 搜索腳本，在 data 目錄裏進行多維度搜索，找到適合的配色、字體、佈局風格</p><p>3）綜合搜索結果，生成完整的設計方案（主色調、字體組合、間距規範等）</p><p>4）最後，再按照設計方案生成代碼</p><p>這樣一來，生成的界面既專業又有設計感。</p><p>AI 不需要把所有規則都背下來，而是用到哪個查哪個，這就是 Agent Skills 的精髓。</p><p>用了很多別人的技能後，你產生了一個大膽的想法：俺能不能把公司的週報格式封裝成一個技能？以後推薦給新來的同事，還能賣個幾塊錢，嘿嘿嘿~</p><p>魚皮笑道：有點兒東西，你打算怎麼做呢？</p><p>你會心一笑：當然是發揮程序員最擅長的事情 —— 複製粘貼！</p><p>俺先複製一個官方的技能包，修改目錄名稱爲自己的。</p><p>然後修改技能說明文檔 <code>SKILL.md</code> 的元數據、指令內容這些關鍵部分。</p><p>示例 <code>SKILL.md</code> 文件：</p><pre><code>---
+name: company-weekly-report
+description: 生成符合公司規範的項目週報，包含進度彙總、問題跟蹤和下週計劃
+---
+# 公司週報生成技能
+當用戶要求生成周報時，請按以下步驟執行：
+## 1. 收集信息
+- 詢問本週完成的主要工作
+- 詢問遇到的問題和解決方案
+- 詢問下週計劃
+## 2. 格式規範
+- 使用公司藍色主題
+- 標題使用微軟雅黑加粗
+- 每個模塊不超過 5 個要點
+## 3. 輸出格式
+- 默認輸出 Markdown
+- 如需 PPT，調用 pptx 技能</code></pre><p>最後，把公司的 Logo、PPT 模板、報告樣例放在子文件夾裏就行了。媽媽再也不用擔心我的週報了~</p><p>魚皮：不錯不錯，但其實有更簡單規範的方法。</p><p>在前面安裝的 example-skills 官方示例技能包裏，有一個叫 <code>Skill Creator</code> 的技能，專門用來幫你創建新技能。</p><h3>你只需要跟 AI 說：“幫我創建一個專門生成公司週報的技能”</h3><p>接下來 AI 會問你幾個問題，一步一步回答就好：</p><p class='list-item'>- 你希望週報包含哪些主要部分？</p><p class='list-item'>- 你希望週報以什麼格式輸出?</p><p class='list-item'>- 你通常會如何使用這個週報技能?</p><p class='list-item'>- 希望週報的語言風格是什麼?</p><p>很快，一個完整的技能包就生成了，你會看到一個 <code>.skill</code> 爲後綴的文件，本質上是一個 zip 壓縮包。</p><p>你可以把它解壓到你的個人技能目錄（<code>~/.claude/skills/</code>）下，你的所有項目都能用。</p><p>如果你想讓這個技能只在某個項目生效，可以把它放到項目的 <code>.claude/skills/</code> 目錄下，並且利用 Git 同步給項目組其他成員。</p><p>測試沒問題後，你還可以把它開源到 GitHub，或者上傳到 Claude Skills Hub 這樣的社區平臺，讓所有用戶都能用。</p><p>你開心極了：原來開發一個 Skills 這麼簡單！但是，這玩意兒跟之前火爆的 MCP 和斜槓命令有啥區別？</p><p>魚皮：好問題！</p><p class='list-item'>**MCP 就像給 AI 裝上了 “手和眼睛”**，讓 AI 能夠連接外部工具和數據源，比如搜索網頁、讀取代碼倉庫、查詢數據庫。適合需要獲取數據或操作外部系統的場景。</p><p class='list-item'>**而 Agent Skills 更像是給 AI 發了一本 “工作手冊”**，把專業知識和工作流程打包起來，教 AI 在特定領域該怎麼做。</p><p>至於斜槓命令，它就像是快捷鍵，是需要你手動輸入 <code>/command</code> 命令來觸發的固定操作；而 Skills 的特點是 AI 可以自動識別該用什麼技能，不需要你顯式調用。</p><p>對了，其實 MCP 和 Skills 是可以結合起來的。</p><p>舉個例子，如果你想讓 AI 幫你發週報：</p><p class='list-item'>- MCP 負責獲取數據：從任務管理數據庫拉取這周的任務列表</p><p class='list-item'>- Skills 負責加工數據：把獲取到的原始數據整理成老闆愛看的格式</p><p>一個提供食材，一個提供配方。</p><p>你看着技能文件夾的結構，突然怪叫一聲：等等，俺突然意識到一個問題…… 這不就是我們程序員玩爛的 “封裝、複用、模塊化、懶加載” 那一套嗎？</p><p>寫幾個代碼文件、打個包、發到網上，讓其他程序員下載下來用，不是一回事兒麼？</p><p>爲什麼 Agent Skills 能突然讓整個 AI 圈爲之瘋狂？</p><p>魚皮：好問題，從技術的角度來看，它並沒有發明什麼驚天動地的算法。</p><p>在我看來，它能火主要是 2 個原因。</p><p>第一，它是開放標準，封裝一次技能包後就能在各種 AI 工具裏複用，還能通過社區共享。</p><p>更重要的是，Skills 能立刻讓 AI 的工作更專業可靠，讓普通人 “無感” 地享受技術帶來的價值。以前想讓 AI 變聰明，你得學提示詞工程、配置各種工具鏈。現在只需要像裝 APP 一樣安裝技能包，AI 就立刻變專業了。一項技術的成功，不在於它有多複雜，而在於它能讓普通用戶不關注技術細節的情況下，感受到技術的價值。</p><p>你點點頭：學會了學廢了！降低門檻，纔是技術走向大衆的鑰匙。</p><p>魚皮：沒錯，Agent Skills 不僅僅是個技術概念，更是一種新的工作方式。你可以把它融入到自己的日常工作中，比如把重複的任務封裝成技能、把團隊的最佳實踐固化成技能，讓 AI 真正成爲你的得力助手。</p><h3>开源指路：https://github.com/liyupi/ai-guide</h3><p>那麼問題來了，你最想讓 AI 學會什麼技能呢？</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
