@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Prompt-Region Grounding：为什么把题目画进图片，多模态大模型就集体&quot;不会做题&quot;了 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Prompt-Region Grounding：为什么把题目画进图片，多模态大模型就集体&quot;不会做题&quot;了</h1>
+<div class="meta"><span class="src">cnblogs.com</span>
+<span>· <a href="https://www.cnblogs.com/liferecords/articles/22365024" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.cnblogs.com/liferecords/articles/22365024" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>一句話總結：把題目從文本挪進圖片，主流多模態大模型幾乎全軍覆沒（24 個組合全掉分，平均 17.8 分），而它們常常能正確"讀"出題目卻不照它作答——這篇論文用一套乾淨的控制實驗證明"讀視覺文本"和"把它當任務指令用"是兩種能力，並給了一個 region 級訓練法把這道鴻溝縮小，推理還不用 OCR。</p><h3>🤔 先問一個可能戳到你的問題</h3><p>你有沒有過這種經歷：讓大模型看一張圖——工單截圖、學生拍的試卷、一張報表——它明明把圖裏的文字一字不差"讀"出來了，答案卻跑偏到離譜。</p><p>你的第一反應大概是：OCR 不行，換個更強的視覺模型。換完，還是錯。再換，還是錯。</p><p>然後你開始懷疑人生：它字都認對了，題怎麼還是做不對？</p><p>這篇 2026 年 8 月掛在 arXiv 上的論文《When Prompts Become Pixels: Prompt-Region Grounding for Multimodal Reasoning》給的答案有點反直覺：**問題大概率不在"讀"，在"用"**。作者用一套相當乾淨的控制實驗證明，對多模態大模型（MLLM）來說，"認出圖片裏印着的問題"和"把這個問題當成指令去執行"——是兩種不同的能力，中間隔着一道被幾乎所有評測忽略的鴻溝。</p><p>做截圖問答、文檔智能、RAG over 掃描件、讓 agent 讀 UI 的人，這篇值得花十分鐘。</p><p>想自己動手試？</p><p class='list-item'>- 📄 论文：arXiv 2608.04726</p><p class='list-item'>- 📄 全文 HTML：arxiv.org/html/2608.04726v1</p><p class='list-item'>- 💻 代碼 / 📊 數據集：論文稱計劃釋放標註、腳本與通過合規審查的圖像，當前未見公開倉庫，留意作者主頁</p><h3>🎯 這篇論文到底想解決什麼問題？</h3><p>先說一個被大多數 MLLM 評測默認的前提：問題放文本里，圖片只當"證據"。</p><p>你回想一下自己跑過的多模態 benchmark——MATH-Vision、ChartQA、MathVista、MMMU——題目永遠是用文本發給模型的，圖片只負責提供圖表、公式、場景。也就是說，"視覺文字（visual text）"在這套設定裏永遠是**被抽取的對象**（一個標籤、一個數值、一段話），而不是**定義任務本身的指令**。</p><p>但現實世界不是這樣。真實場景裏，題目常常就印在圖片上：一張拍照的試卷、一封截圖郵件、一份掃描工單。這時候圖片裏的文字不是"證據"，是"指揮棒"——它決定模型該怎麼用剩下的視覺信息、要算出什麼。</p><p>問題來了：**當這道指揮棒從文本通道搬到圖像通道，模型還使得動它嗎？**</p><p>之前不是沒人發現這個現象。VIM、VoQA、VISTA-Bench 都報告過"把指令視覺化會讓模型變差"。但作者指出，這些觀測到的"變差"是個大雜燴——裏面混着畫布變大、圖片被 resize、渲染器出錯、問題內容丟失、以及"語義通道本身切換"五個效應。光看一個精度下降，你根本分不清模型到底是"沒讀對題目"還是"讀對了但沒用上"。</p><p>這就是這篇論文要切的第一刀：**把"讀"和"用"分開度量**。</p><p class='list-item'>*圖說：同一道題、同一張圖、同一個答案，唯一的變化是"問題"從文本（上）跑到了圖片像素裏（下）——這就是 VTS 干預，目的是讓"通道切換"成爲唯一擾動*</p><h3>🛠️ 它的思路是什麼？</h3><p>作者的思路分兩步：先用一個叫 **VTS（Visualized Task Semantics，視覺化任務語義）** 的干預**精準測出鴻溝**，再用 **prompt-region grounding** 這個訓練法**縮小鴻溝**。</p><p class='list-item'>**第一步：VTS——把"通道切換"孤立出來。**</p><p>給定一道 benchmark 題（問題 \(q\)、圖 \(x\)、答案 \(a\)），VTS 做的事很簡單：用一個確定性的渲染器把問題 \(q\) 畫進圖片上方的白板裏，然後把原來文本通道的問題換成一個跟題目無關的固定提示——"Help me solve the problem"（論文裏記作 \(q_{\min}\)）。源問題、視覺證據、答案三者原封不動地配對。</p><p>光這樣還不夠，作者還配了三個**控制組**來排除混淆——這一步是我覺得全文最漂亮的設計：</p><p class='list-item'>- **Canvas（空白畫板）**：問題還在文本里，圖片上方加一塊空白白板——測"畫布變大、圖片被 resize"單獨的影響</p><p class='list-item'>- **Duplicate（雙通道）**：問題同時出現在文本和圖片裏——測"問題內容有沒有丟"</p><p class='list-item'>- **Image-only（雙通道都無）**：兩個通道都把問題拿掉——測一個底線</p><p>結果非常乾淨：Canvas 偏離原始精度不超過 1.1 分，Duplicate 不超過 0.6 分，Image-only 直接崩塌。換句話說，**畫布、resize、內容丟失都解釋不了那道鴻溝，能解釋的只剩"語義通道本身切換"**。這下"讀≠用"才真正立住。</p><p class='list-item'>**第二步：prompt-region grounding——教模型"把圖片裏的問題當指令用"。**</p><p>知道了鴻溝在哪，怎麼補？作者的答案是兩個 region 級訓練目標，名字都挺嚇人，但原理可以用人話說清楚：</p><p class='list-item'>- **PVRD-SG（區域語義對齊）**：訓練時模型手裏有"問題區域的方框"（VTS 渲染器記錄的，或真實數據用 GLM-OCR 劃的）。它要求"圖片裏問題區域"的內部表示，必須接近"同一道題用純文本輸入時"的表示——而且文本側那個表示是- **凍結的、不跟着訓練變**。一句話：- **逼着圖片裏那塊區域的"語義指紋"長得像文本題的"語義指紋"**。</p><p class='list-item'>- **PRMLP（區域掩碼預測）**：把問題區域隨機擋住一部分，要求模型從擋過的殘圖裏還原出"乾淨問題截圖"的表示。注意它還原的是- **表示**，不是像素、也不是文字——- **逼着那塊區域在"部分看不清"時仍然穩定**。</p><p>這兩條損失和普通的監督學習損失加一起訓練，關鍵在於：**方框、乾淨截圖這些輔助信息只在訓練時用，推理時模型只收到一張圖 + 一句固定提示，直接作答，不需要 OCR、不需要定位框**。</p><p class='list-item'>*圖說：左邊的 Paired Replay 讓同一題以"文本版"和"圖片版"兩種視圖出現、共享答案；中間 PVRD-SG 把圖片問題區域連到凍結的文本表示；PRMLP 從遮蔽的問題區域重建乾淨截圖的表示；右邊 GSPO 是最後的強化學習精修。推理時這些輔助都不在*</p><p>爲什麼非要"區域級"，而不是整張圖對齊？因爲 VTS 合成圖裏有兩類信息——問題定義任務、背景圖提供證據。你要是拿整張圖的表示去對齊，它會被圖表、物體、示意圖帶偏，淹沒掉問題本身的語義。只從"問題那塊方框"裏讀表示，問的纔是一個乾淨的問題：**這塊印着指令的區域，表達的到底是不是同一道題？**</p><p>我覺得這個設計直覺很對——它做的事本質上是給模型裝一個"局部對齊探針"，而且消融實驗裏有個很硬的證據支持它：把對齊目標**故意錯配**到別的樣本上（deranged target），PVRD-SG 掉 2.6 分。這說明增益不是"隨便加個輔助 loss 就行"，而是真的在學"這塊區域 = 這道題"的映射。</p><p>訓練完還有一步 **GSPO**（Group Sequence Policy Optimization，一種強化學習算法）做精修——用"格式對不對 + 答案對不對"兩個可驗證的信號繼續優化。這塊不是本文主角，更像錦上添花。</p><h3>📈 效果到底怎麼樣？</h3><p>先看最扎心的那條發現。</p><p>作者在 6 個 MLLM（包括 Qwen3-VL 的 thinking 和 instruct 變體、InternVL3.5、DeepEyes）× 4 個 benchmark 上跑了 VTS，**24 個"模型×任務"組合，準確率全部下降，平均掉 17.8 分，最多的掉 28.0 分**。沒有一個是例外。</p><p class='list-item'>*圖說：每個模型的 VTS 條（右）都低於 Original 條（左），無一例外；作者刻意同時畫兩條，因爲有的模型"差距小"只是因爲兩邊都差*</p><p>而且有個反直覺的細節：**會"想"的模型反而栽得更狠**。Qwen3-VL-4B-Thinking 在 MATH-Vision 上原始精度 60.0，比 instruct 版的 51.6 強一截，但它把題目畫進圖後掉 27.4 分，instruct 版只掉 16.8。換句話說，思考能力越強，似乎越依賴"問題得在文本通道里"才能發力。</p><p>那"讀≠用"到底怎麼證明的？看這組診斷數字：base 模型能把視覺題目**精確轉錄** 87.6%（基本都認對了），但只**答對** 48.4%。更妙的是，把模型自己轉錄出來的文字再塞回文本通道，答案準確率還能再漲 7.7 分。**字都認對了，可這些字"作爲像素"時對答案的指揮力，遠不如"作爲 token"時**——這就是鴻溝落在"讀出來之後"的鐵證。</p><p>上了 prompt-region grounding 之後呢？在 Qwen3-VL-4B 上、**控制了訓練成本**的前提下：</p><p class='list-item'>- 四任務平均 VTS 準確率：58.0 → **66.3**（鴻溝從 11.2 縮到 4.0）</p><p class='list-item'>- 原始文本接口精度：69.1 → 70.3（沒掉，還略漲）</p><p class='list-item'>- 等成本的普通 SFT 只有 58.0——**單純多訓 next-token 解釋不了這個增益**</p><p>外推也站得住：在獨立構建的 VISTA-Bench 上 +4.1 分，在 1000 張訓練時沒見過的真實截圖/試卷/表單上 +7.9 分。</p><p>最後看一個最有"代入感"的案例——銀行對賬。從一筆 GH¢12,345 的餘額出發算現金賬未調整餘額，對照模型（Qwen3VL-8B-Thinking）把圖片裏的 23,000 誤讀成 2,300、把 4,321 誤讀成 4,123，一個識別錯誤經過幾步加減乘除，最終答案少了 GH¢20,898——恰好等於被誤讀的 20,700 加上漏掉的 198。</p><p class='list-item'>*圖說：一個"讀錯一個數"如何被多步計算放大成兩萬多的偏差；紅色是第一個識別錯誤及所有受它影響的後續數值——這是"視覺任務"裏最典型的失敗傳播*</p><p>這個案例我覺得比任何精度數字都更能說明問題：真實世界的視覺任務常常是"一長串計算"，一個字認錯，後面全跟着錯。這也是爲什麼"讀得對"在這類場景裏性命攸關。</p><h3>💡 爲什麼你要關心？</h3><p>落到你自己的工作上，這篇論文至少有三處值得停下來想想：</p><p class='list-item'>- **如果你做多模態評測**：你跑的分很可能系統性高估了模型處理真實視覺任務的能力——因爲你的題目都在文本通道里。把 VTS 這套"配對干預 + 三控制"搬到自家 benchmark 上跑一遍，你大概率會看到一個不太好看的數字。這是一種便宜又有說服力的"能力體檢"。</p><p class='list-item'>- **如果你做截圖問答 / 文檔智能 / agent 讀 UI**：那道 17.8 分的鴻溝就是你線上掉點的來源之一。這篇給的 region 級訓練法是一個可借鑑的方向——尤其如果你手裏能拿到"問題區域的框"（哪怕用現成 OCR 劃一下），PVRD-SG 的"區域表示對齊到文本表示"是個低成本可試的 loss。</p><p class='list-item'>- **如果你只是個 MLLM 使用者**：下次遇到"模型明明認對了字卻答錯"，別急着換模型——先想想，你是不是把"指令"也塞進圖片裏了。把關鍵指令單獨放到文本 prompt 裏，可能比換模型管用。</p><p>換個角度看，這其實也說明：**我們給多模態模型出的題，一直都在"作弊"**。把題目放在文本里，等於偷偷幫模型省掉了一種能力。一旦把這層保護罩拿掉，模型真實水平才露出來。</p><h3>🧊 理性看待</h3><p>該潑的冷水也得潑。</p><p>第一，這道鴻溝是**被縮小，不是被消除**。四任務殘差 gap 還有 4.0 分，ChartQA 6.8、MMMU 6.1——離"通道完全等價"還遠。把它當"已解決"會喫虧。</p><p>第二，論文的"等成本"對照是用 **FLOPs 估算**做的（把 PVRD-SG / PRMLP 多出來的 forward / target / backward pass 都算進去，把普通 SFT 卡在 5% 誤差內）。但 FLOPs 估算本身有任意性，PRMLP 每 2 步要多跑兩次視覺編碼——"等成本 SFT 步數更少"可能讓 SFT 處於不利位置。作者誠實地寫了"不主張更長 SFT 一定更差"，但讀者心裏要對這個 +8.4 分的絕對值打個折。</p><p>第三，真實世界那 1000 張測試圖的標註，和訓練用的 5 萬多張真實圖走的是**同一條標註管線**（GLM-OCR 提框 + GPT-5.4 標註 + Gemini 質檢）。標註內部自洽（學生抽查 97.4% 一致）不等於"和真實正確答案一致"——若管線對某類版式系統性誤標，訓練和測試會共享同一個偏差，+7.9 的外推強度因此要打折。</p><p>最後，作者自己也很坦誠：注意力圖和表示檢索只能**描述**模型學了什麼，沒法**證明**唯一內部機制。換句話說，"區域表示對齊到文本語義"是設計意圖，不是被坐實的機理——它和"區域級數據增強 + 一致性正則"的邊界，論文用錯配目標實驗擋了一部分，但沒完全分開。</p><p>所以一句話：**現象診斷幾乎無懈可擊，方法有效但要按作者的成本口徑理解，機制解釋留在描述層**。這種"誠實標註自己證據邊界"的姿態，反而是我相信它核心結論的一個重要原因。</p><h3>作者：lusca</h3><h3>版本：lusca-paper-blog v1.5.0</h3><p>出处：https://github.com/yjmm10/lusca-skill/tree/main/skills/lusca-paper-blog</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

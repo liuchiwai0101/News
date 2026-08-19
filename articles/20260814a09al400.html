@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>DeepSeek Harness 首发实测 + 入门教程，夯爆了！对不起梁神我错了_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>DeepSeek Harness 首发实测 + 入门教程，夯爆了！对不起梁神我错了_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260814A09AL400?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260814A09AL400?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>大家好，我是程序員魚皮。</p><p>昨天註定是載入史冊的魔幻一天，DeepSeek 同時放了兩個大招！</p><p>先是 DeepSeek V4 Pro 正式版上線，緊接着萬衆矚目的 DeepSeek Harness 開源。</p><p class='list-item'>**炸裂！炸裂！炸裂！**</p><p>DeepSeek Harness 開源的 GitHub 倉庫 上線不到 1 天，就衝到了 7 萬多 Star，AI 屆的頂流果然名不虛傳。</p><p>这下搞不好 Codex、Claude Code、Cursor 都要 **梁乐** 。。。</p><p>這篇文章我會從安裝開始，手把手帶你體驗 DeepSeek Harness 的核心玩法。</p><p>小白可懂，建議收藏~</p><h3>一、DeepSeek Harness 是什么？</h3><p>Harness 這個詞翻譯過來就是「駕馭」，如果把 AI 模型比作一匹馬，那 Harness 就是你駕馭 AI 模型這匹馬所需要的一切工程。</p><p>所謂 Harness 工程，就是研究怎麼讓 AI 模型這匹馬跑得更快、更穩，順利完成任務。</p><p>你給 AI 寫的項目規則文件、配置的各種工具、安排的任務拆分和執行順序、設計的測試檢查流程，這些統統都算 Harness。</p><h3>有一个很精妙的公式：**Agent = Model + Harness**</h3><p>模型負責思考和生成，Harness 負責把這些能力接入文件系統、終端、網頁、工具鏈，讓 AI 真正能在現實環境裏幹活。</p><p>之前 DeepSeek 只開源了模型這一半，Harness 一直沒動靜，這次終於補齊了。</p><p>你可以把 DeepSeek Harness 理解成一個 **可以高度定製的 AI 編程工具**，對標 Claude Code 和 Codex。</p><p>但它的野心比這些工具更大，不只是一個編程 Agent，而是一套可配置、可重組的 Agent 運行環境，官方口號是「一切皆插件」。</p><p>看到這裏，你已經超過了 50% 的同學。</p><p>接下來只需要 1 分鐘，你就能把它裝到自己電腦上。</p><h3>二、安裝</h3><p>安装 DeepSeek Harness 真的非常简单，进入到 DeepSeek Harness 官网 。</p><p>你會看到一行安裝命令：</p><p>在執行這行命令之前，首先要確保你的電腦已經安裝了 Node.js 環境，沒有的話去 Node 官網 下載安裝包，傻瓜式安裝就行。</p><p>有了環境後，複製這行命令，然後打開你電腦上的終端，輸入這行命令並執行：</p><pre><code>npx @deepseek-ai/dsh web</code></pre><p>稍等一會兒，你會看到終端輸出了一個網址，打開它就能進入到 DeepSeek Harness 的 Web 界面。</p><p>第一次使用時，需要填入 DeepSeek 的 API Key：</p><p>到 DeepSeek 開放平臺 創建一個 API Key，注意不要泄露，把得到的 Key 複製粘貼過來就行。</p><p>到這裏，DeepSeek Harness 就安裝成功了，是不是很簡單？</p><p>看到這裏，你已經超過了 60% 的同學，接下來我帶大家實戰體驗一下它的能力。</p><h3>三、Harness 实战</h3><p>進入 Web 界面後，選擇一個你想讓 AI 操作的項目文件夾，就可以正式開始幹活了。</p><p>可以在對話框中選擇模型、以及模型的推理等級，還能設置 Agent 對文件系統和終端的操作權限，按需調整就好。</p><p>默認使用的是「標準模式」，它具備了一個 AI 編程工具應有的全部能力，大多數情況下用這個就夠了，後面我會詳細介紹各種模式的區別。</p><p>你看，是不是跟 Codex 這種 AI 編程工具很像？</p><p>沒錯，你就把它當成國產版的 Codex 來用就好了，AI 編程、自動化辦公等任務，都能搞定。</p><p>下面我們跑幾個任務試試看。</p><h3>任務 1、分析代碼倉庫，繪製架構圖</h3><p>第一個任務，讓 DeepSeek Harness 分析它自己的源碼倉庫，繪製一張傻子都能看懂的架構圖。</p><p>DeepSeek Harness 的代碼倉庫還挺大的，裏面模塊也多，用來測試 AI 的代碼理解能力剛好合適。</p><p>給 AI 發送下列提示詞：</p><pre><code>分析當前項目的代碼倉庫結構，繪製一張清晰的架構圖。
+要求用 Mermaid 語法輸出，讓完全不懂代碼的人也能一眼看明白各模塊的關係。</code></pre><p>可以看到 AI 開始自動讀取文件、分析項目結構，執行速度非常快，而且每一步在做什麼都清晰地展示在界面上。</p><p>很快任務完成了，能夠看到 AI 輸出了 Mermaid 文本繪圖語法，不過 DeepSeek Harness 默認是不會把這塊渲染成圖形的。</p><p>我要把這段代碼複製到 Mermaid 渲染工具中，可以看到完整的架構圖，雖然效果中規中矩吧，但內容還是比較完整的。</p><p>你可以在下方看到任務消耗的 Tokens、當前的上下文佔用、以及整個對話的 Tokens 消耗信息。</p><p>你還可以進入上方的「軌跡」面板，清晰地查看到整個對話中每一次的對話和工具調用記錄。</p><p>這是 DeepSeek Harness 的特色，讓每一次運行都有跡可循。</p><h3>任務 2、開發一個知識講解網站</h3><p>第二個任務，讓它從零開發一個用交互式動畫講解知識的網站。</p><p>要講解的知識點是「注意力殘差」，跟我之前測評 Codex + DeepSeek V4 Pro 的時候用的是一模一樣的提示詞。</p><p>大概過了 20 分鐘，AI 完成了任務，這個速度確實不算快，主要的時間花在了 AI 的自檢上。</p><p>值得關注的是，本次任務的緩存命中率達到了 99%，也就是說絕大多數的費用都按緩存來計算，實際花費極低，這點很厲害啊！</p><p>看下效果，不錯，動畫還是很生動的：</p><p>而且點線之間的連接非常準確：</p><p>更讓我驚喜的是，跟之前 Claude Opus 5 開發的效果一樣，這次 DeepSeek 開發的版本也提供了總結和小測驗功能，讓整個知識講解更加全面了：</p><p>整體來看，相比於我之前用 DeepSeek V4 Pro + Codex 跑的效果要好多了！</p><p>之前的版本連線都對不齊，相信你們能明顯感受到區別。</p><p>單看這一個例子，我真有種感覺 DeepSeek V4 Pro 可以對標 Claude 了，看來 Harness 真的很重要。</p><h3>任務 3、開發一個 3D 遊戲</h3><p>第三個任務難度升級，讓它開發一個 3D 網頁小遊戲。</p><p>這次做的是千萬元以內最好的玩具「竹知了」，不過這次比之前測評的 2D 版本複雜多了，還要支持攝像頭識別手勢來控制竹知了旋轉。</p><p>可以看到 AI 在開發過程中，會自己檢查驗證程序是否正常：</p><p>這次跑了將近 40 分鐘，AI 完成了任務，緩存命中率竟然接近 100%！</p><p>我 chovy，真心強啊！</p><p>看下成品效果，還是不錯的吧，可以通過鼠標拖拽來旋轉角度：</p><p>按住竹籤來回移動鼠標就可以控制竹知了旋轉，注意看圖片中的影子，細節做的非常好！</p><p>而且還可以開啓攝像頭，通過搓手來控制竹知了旋轉，這個交互體驗非常有趣：</p><p>整體來說，功能都是正常的，程序沒有明顯的問題，細節做的也很到位，我的評價是 **頂級**。</p><p>相比之前用 DeepSeek V4 Pro + Codex 搓的 2D 版本強了太多了：</p><h3>任務 4、開發全棧 AI 應用</h3><p>最後一個任務，讓它開發一個內置 AI 大模型調用能力的全棧應用「AI 網頁 PPT 生成器」。</p><p>用戶粘貼一段長文案進去，後端調用 DeepSeek 大模型把文案拆解成多頁 PPT，前端渲染成可以全屏演示的網頁 PPT。</p><p>這次我特意在提示詞裏讓 AI 自己從我電腦上獲取 DeepSeek 的 API Key，看看它能不能自己搞定。</p><p>執行過程中，AI 可能會向你確認權限，比如要不要允許讀取某個文件、要不要執行某條命令，安全性這塊還是挺到位的。</p><p>大概半小時左右，AI 完成了任務，來看下效果。</p><p>這個界面風格還可以哈，也是有點兒科技感的，來粘貼一段要製作  PPT 的文章。</p><p>哦，這裏有驚喜！我們可以自己定義生成 PPT 的風格，還可以選擇是否開啓推理模式。</p><p>然後點擊生成 PPT。</p><p>生成過程中，是可以實時查看到生成進度和輸出信息的，這個交互感比之前的老版本好太多了。</p><p>而且生成速度很快，看起來效果不錯，點擊全屏查看。</p><p>哇，這次生成的 PPT 充滿了科技感，而且佈局也挺合理的，主次分明。</p><p>相比之前用 DeepSeek V4 Pro + Codex 做出來的版本好多了，佈局更加合理，配色也更優雅。</p><p>你還可以切換幾種主題配色，也都是比較經典的風格了。</p><p>看到這次做出來的版本，我覺得真的可以和 Claude Opus 5 媲美了，給到頂級。</p><h3>實測感受</h3><p>幾個任務跑下來，DeepSeek Harness 給我的感受是速度還行。優點是緩存命中率很高，而且執行過程非常清晰透明。你能看到 AI 每一步在做什麼、調用了哪些工具、讀了哪些文件，不像有些工具暗箱操作，辜負用戶的信任。</p><p>單從我這幾次測試來看，DeepSeek V4 Pro 配合自家 Harness 的 AI 編程能力確實可以和 Claude Opus 5 對標了，官方那個只差 0.1 的跑分誠不欺我。</p><p class='list-item'>**看來用 DeepSeek 模型，還是得用自家的 Harness 工具啊。**</p><p>再說下費用，大家猜猜這幾個任務跑下來花了多少錢？</p><p class='list-item'>**答案是不到 5 塊錢！**</p><p>因爲緩存命中率基本都在 99% 以上，實際花費極低。</p><p>不過要提醒大家的是，DeepSeek 已經宣佈 8 月 17 日起漲價，而且漲了好幾倍。</p><p>但即便是漲價之後，跟 Claude 比起來還是便宜很多的，而且緩存命中的價格依然非常低。</p><p>總的來說，自己的模型配自己的 Harness 工具，真的強。</p><p>我收回之前對樑子的失望，梁神受我一拜！</p><p>看到這裏，你已經超過了 70% 的同學。</p><p>接下來我們瞭解一下 DeepSeek Harness 的幾種運行模式，看看它還有什麼用法。</p><h3>四、4 種運行模式</h3><p>DeepSeek Harness 提供了四種運行模式，適配不同的使用場景。</p><p class='list-item'>**標準模式** 就是我們前面實戰一直在用的那個。它加載了完整的工具組合，包括文件編輯、Shell 命令、網頁搜索、子 Agent、Skills 技能等等，覆蓋了日常開發的所有需求。絕大多數情況下用它就好了。</p><p class='list-item'>**極簡模式** 只保留了 Bash 和文件編輯這兩件最基礎的工具，其他能力全部關掉。這個模式主要是官方拿來跑模型基準測試用的，在最小環境下考驗模型的純編程能力，普通用戶基本用不到。</p><p class='list-item'>**PTC 模式** 全稱是「程序化工具調用」。普通模式下 AI 是一步一步調用工具的，每步執行完才能決定下一步做什麼。但在 PTC 模式下，模型可以直接生成一段 TypeScript 代碼，把多步工具調用串聯起來一次性執行完。適合那種步驟很多但邏輯清晰的任務，比如批量重命名文件、跑一整套自動化流程，效率比一步步確認要高得多。</p><p class='list-item'>**創造模式** 適合想要開發插件、創造新工具或者定製模式預設的同學。它繼承了標準模式的全部能力，在此基礎上還讓 AI 可以檢查當前運行時有哪些插件在跑、在內存裏試驗新的插件組合、甚至自己創作出一個全新的模式預設。後面我們會用這個模式來開發自己的插件。</p><p>總結一下，這四種模式的本質區別就是「當前會話加載了哪些工具插件」。極簡模式只留兩件工具，標準模式疊滿全套能力，創造模式還能讓 AI 自己查看和改裝當前的插件配置。</p><p>看到這裏，你已經超過了 80% 的同學，但 DeepSeek Harness 真正讓我興奮的地方纔剛剛開始。</p><h3>五、插件</h3><p>接下來要聊 DeepSeek Harness 跟 Codex、Claude Code 這些工具最大的區別了，就是它的插件系統。</p><h3>一切皆插件</h3><p>DeepSeek Harness 中的一切皆插件。</p><p>模型、工具、技能、會話、沙箱、UI，甚至 Agent 的運行循環本身，都是插件，都可以拔掉換成別的。</p><p>也就是說，如果你對這個工具哪個地方不滿意，隨時可以自己替換或者安裝插件來擴展，不需要改框架源碼。</p><p>Codex 和 Claude Code 雖然也有一定的擴展能力，但遠沒有做到這種級別的開放，DeepSeek Harness 的定製化能力要強得多。</p><p>接下來我先帶大家使用社區插件，再帶大家開發屬於自己的插件。</p><h3>使用社區插件</h3><p>在 DeepSeek Harness 官網中，點擊「社區插件」，就可以看到所有 社區開發的插件 了。</p><p>其實就是 GitHub 上打了 <code>dsh-plugin</code> 這個主題標籤的項目：</p><p>不過這個頁面的插件又多又雜，我更建議直接去看 GitHub 上的 Awesome 倉庫，裏面有分類整理好的精選插件列表，每個插件都經過了驗證，目前已經收錄了 300 多個可安裝插件，上線一天就這麼多，生態起飛的速度確實誇張。</p><p>安裝一個社區插件也非常簡單，比如我看上了這個鯨魚娘皮膚美化插件：</p><p>我只需要進入 DeepSeek Harness 網頁中，隨便選一個工作目錄，然後把插件開源地址提供給 AI，讓它幫我裝就好了。</p><p>想省事的話，可以先把 Agent 的操作權限改爲全放開，這樣 AI 執行命令的時候就不用你一個個確認了。</p><pre><code>帮我安装插件 https://github.com/Small-tailqwq/dsh-deep-whale</code></pre><p>很快，AI 完成了安裝。我們按它說的，打開終端輸入命令，重新啓動一下 DeepSeek Harness 網頁：</p><pre><code>npx @deepseek-ai/dsh web</code></pre><p>刷新，怎麼樣？！</p><p>效果不錯吧，是不是使用 AI 的念頭更強了呢？</p><p>如果你不想要這個皮膚了，直接再跟 AI 說一句話，把插件卸載掉就好了：</p><pre><code>幫我取消掉這個插件，回到最開始的設置</code></pre><p>還有一些比較有意思的皮膚類插件，比如 dsh-deepcel 把界面做成了 Excel 表格的樣子，摸魚神器啊這不是？</p><p>還有 dsh-tianshu-tui 直接把 Web 界面換成了 TUI 終端風格：</p><p>最離譜的是 dsh-ads 這個插件，它給你的 Web 界面加上了 2005 年中文網站風格的側欄廣告、對話內信息流和角落彈窗，純粹的抽象藝術。。。</p><p>因爲 DeepSeek Harness 本質上就是個跑在瀏覽器裏的 Web 應用嘛，所以定製皮膚這件事非常簡單。</p><p>不過皮膚插件只是 DeepSeek Harness 生態的冰山一角，翻一翻插件精選列表你會發現，很多真正實用的插件其實都在往成熟的 AI 編程工具產品方向靠攏。</p><p>比如 DSH-better-sidebar 優化了側邊欄的交互體驗，dsh-at-file 讓你可以用 @ 符號快速引用文件。</p><p>我個人最看好的是 modlens 這個插件，它是 DeepSeek Harness 的第一個視覺插件，你把圖片粘貼進去，它會幫模型把圖片解析成結構化的 JSON 文字信息，包括 OCR 文本、頁面佈局、語義內容。</p><p>這個插件解決的正是我之前測評時吐槽最多的那個痛點。DeepSeek V4 Pro 是純文本模型，看不了圖，寫完頁面沒辦法自己截圖檢查效果對不對，前端佈局有沒有錯位它全都判斷不了，我上次還專門搭了一套 Playwright 腳本來替它做驗證。現在社區直接用一個插件把這個短板給補上了。</p><p>這些插件補齊了 DeepSeek Harness 在交互細節和能力上的不足，也側面說明了「一切皆插件」這個架構有多靈活，靠社區自己就能把產品體驗補上來，用戶也有了更多選擇。</p><h3>自己創造插件</h3><p>光裝別人的插件不過癮，其實自己開發一個插件也很容易，因爲可以直接讓 AI 幫你寫。</p><p>切換到「創造模式」，在這個模式下 AI 可以幫你檢查當前插件樹、試驗新插件、最終打包發佈。</p><p>比如我之前給 Codex 裝了一個桌寵插件，現在想搬到 DeepSeek Harness 上來。</p><p>直接在創造模式下跟 AI 提需求：</p><pre><code>幫我開發一個 DSH 桌寵插件，在 Web 界面右下角顯示一個小寵物。
+你需要直接把我本地的 Codex 目錄下的 Kun Like 桌寵素材移植過來，不用自己重新設計形象。
+它會根據當前 Agent 的工作狀態做出不同動作。
+當任務完成後，還會發出「你幹嘛~」的聲音
+音頻文件路徑在：/Users/yupi/Downloads/你幹嘛哎呦.mp3</code></pre><p>AI 開發好插件之後，會先找你人工審批，確認沒問題之後纔會正式安裝，安全性很有保障。</p><p>很快開發完成，打籃球的小雞就出現在屏幕上啦！</p><p>隨便跟 AI 對話一次，就能聽到「你幹嘛~哎喲」的聲音，可謂提神醒腦、如聽仙樂耳暫明~</p><p>除了桌寵之外，你還可以發揮想象力做各種有意思的插件，比如提醒你定時喝水的健康助手、實時展示模型賬戶餘額的懸浮窗、定製你自己的主題皮膚等等。</p><p>如果想把插件分享給其他人，只需要讓 AI 通過 GitHub MCP 插件，把代碼推送到 GitHub：</p><p>很快就開源完成了：</p><p>然後給倉庫打上 <code>dsh-plugin</code> 的 topic 標籤就行了：</p><p>AI 甚至幫我給 README 項目介紹文檔中添加了效果截圖，太貼心了吧！這下大家都可以一起來做小黑子了~</p><h3>开源指路：https://github.com/liyupi/dsh-kun-like-pet</h3><h3>最後嗶嗶</h3><p>恭喜你，DeepSeek Harness 才發佈了一天，你就已經掌握了 DeepSeek Harness 的基礎用法，至少超過了 90% 的同學！</p><p>時間原因，還有很多 DeepSeek Harness 的進階玩法我沒有展開，比如用命令行模式批量跑任務、接入和切換其他大模型、自定義 Agent 預設來適配不同的工作場景、甚至把它部署到服務器上讓整個團隊共享等等。</p><p>我也正在探索，這些內容我會在下一篇進階教程裏詳細講解，感興趣的朋友們可以先關注一下。</p><p>我非常看好這個項目，因爲「開源 + 一切皆插件」，讓 DeepSeek Harness 做到了極致的開放，它的可能性是無限的。</p><p class='list-item'>**也許用不了多久，我們每個人手裏的 AI 編程工具都長得不一樣，因爲每個人都可以根據自己的需求自由組裝，我覺得這是一件很酷的事情~**</p><p>OK 就分享到這裏，本文會收錄到我免費開源的 《AI 編程零基礎入門教程》，上千張圖、幾十萬字，帶你從 0 開始快速學會 AI 編程，做出自己的產品、跑通變現全流程，一次拿捏。</p><h3>开源指路：https://github.com/liyupi/ai-guide</h3><p>我是魚皮，持續分享 AI 編程乾貨。覺得有用的話記得點贊收藏和關注~</p><p>歡迎在評論區聊聊你使用 DeepSeek Harness 的感受，有哪些不錯的玩法？</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

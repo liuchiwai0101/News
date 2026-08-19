@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Codex入门指南：别再把它当聊天机器人了！（9条官方建议）_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Codex入门指南：别再把它当聊天机器人了！（9条官方建议）_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260806A057YQ00?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260806A057YQ00?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>大家好，我是晚楓。</p><p>我最近在OpenAI的官網看到一篇好文章，教給大家買了CodeX以後怎麼能用的更好。</p><p>另外，本週末在重慶，我也會和幾位朋友一起，在線下手把手帶大家用CodeX搭建一個自己的網站，並且最終上線！</p><p>歡迎大家點擊鏈接，報名參加➡️實操AI工作坊 | 重慶線下AI活動，教你搭建個人網站</p><p>以下是翻譯後的全文：</p><p>原文：https://learn.chatgpt.com/guides/best-practices</p><h3>適用對象：Codex 及各類編程智能體（coding agent）</h3><p>如果你剛接觸 Codex 或編程智能體，這份指南能幫你更快拿到更好的結果。它覆蓋了讓 Codex 在 CLI、IDE 擴展 和 ChatGPT 桌面端 上更高效的那些核心習慣——從提示詞與規劃，到驗證、MCP、技能（skills）和定時任務。</p><p>把 Codex 用好的關鍵，是別把它當成一次性助手，而是當成一個可以長期配置、持續培養的「隊友」。</p><p>一個有用的心智模型：先爲任務準備好正確的上下文，用 <code>AGENTS.md</code> 沉澱長期有效的指引，把 Codex 配置成貼合你工作流的樣子，通過 MCP 接入外部系統，把重複性的工作固化成技能，再把穩定的工作流自動化。</p><h3>強烈建議：上下文與提示詞</h3><p>即便你的提示詞不夠完美，Codex 本身已經強到能直接派上用場。你常常只需把難題丟給它、幾乎不做額外配置，就能拿到不錯的結果。清晰的 提示詞（prompting） 不是拿到價值的必要條件，但它確實能讓結果更可靠——尤其是在大型代碼庫或高風險任務裏。</p><p>如果你在一個龐大或複雜的倉庫裏工作，最大的提升點就是：給 Codex 提供「針對這個任務的正確上下文」，以及「你希望它做什麼」的清晰結構。</p><p>一個穩妥的提示詞默認應包含四部分：</p><p class='list-item'>- **上下文（Context）：**哪些文件、文件夾、文檔、示例或報錯與這個任務相關？你可以用- `@`提及特定文件作爲上下文。</p><p class='list-item'>- **約束（Constraints）：**Codex 應該遵循哪些標準、架構、安全要求和約定？</p><p class='list-item'>- **完成標準（Done when）：**任務完成前什麼必須爲真？比如測試通過、行爲改變、或某個 bug 不再復現。</p><p>這能幫助 Codex 保持範圍聚焦、減少假設，產出更易審查的工作成果。</p><p>根據任務難度選擇推理強度（reasoning level），並測試哪種設置最適合你的工作流。不同用戶、不同任務，最優設置各不相同。</p><p class='list-item'>- **Medium / High（中 / 高）：**用於更復雜的改動或調試</p><p class='list-item'>- **Extra High（超高）：**用於漫長、自主性強、重度推理的任務</p><p>想要更快地提供上下文，可以在 ChatGPT 桌面端裏用語音聽寫功能，直接說出你希望 Codex 做什麼，而不是打字。</p><h3>複雜任務先規劃</h3><p>如果任務很複雜、含糊不清，或者很難描述清楚，就讓 Codex 在動手寫代碼之前先規劃。</p><p>以下幾種方式都很好用：</p><p class='list-item'>**使用 Plan 模式：** 對大多數用戶來說，這是最簡單也最有效的方式。Plan 模式讓 Codex 先收集上下文、提出澄清問題，並在動手前形成更完善的計劃。用 `/plan` 或 `Shift`+`Tab` 切換。</p><p class='list-item'>**讓 Codex 反過來採訪你：** 如果你對想要的東西有一個模糊的概念，但說不清楚，就讓 Codex 先向你提問。告訴它去挑戰你的假設，在寫代碼之前把模糊的想法變成具體的方案。</p><p class='list-item'>**使用 PLANS.md 模板：** 對於更進階的工作流，你可以配置 Codex 在執行週期較長或多步驟的任務時，遵循一個 `PLANS.md` 或執行計劃模板。詳見 執行計劃指南。</p><h3>用 `AGENTS.md` 讓指引可複用</h3><p>一旦某種提示詞模式奏效，下一步就是別再手動重複它。這就是 AGENTS.md 的用武之地。</p><p>可以把 <code>AGENTS.md</code> 理解爲給智能體看的開放式 README。它會自動加載進上下文，也是沉澱「你和你團隊希望 Codex 在這個倉庫裏怎麼幹活」的最佳位置。</p><p>一份好的 <code>AGENTS.md</code> 应覆盖：</p><p>CLI 裏的 <code>/init</code> 斜槓命令，是在當前目錄快速生成一份 <code>AGENTS.md</code> 起手的命令。它是很好的起點，但你應當編輯生成的結果，使其貼合你團隊真實的構建、測試、審查和發佈代碼的流程。</p><p>你可以在不同層級創建 <code>AGENTS.md</code>：放在 <code>~/.codex</code> 的全局 <code>AGENTS.md</code> 用於個人默認配置，倉庫級文件用於共享標準，子目錄裏更具體的文件用於局部規則。如果存在離當前目錄更近的更具體文件，則以該文件的指引爲準。</p><p>保持實用。一份簡短而準確的 <code>AGENTS.md</code>，勝過塞滿模糊規則的長文件。先從基礎開始，只有在發現重複的失誤後，才追加新規則。</p><p>如果 <code>AGENTS.md</code> 開始變得過大，保持主文件精簡，把規劃、代碼審查、架構等任務相關的具體說明，用單獨的 markdown 文件來引用。</p><p>當 Codex 犯了兩次同樣的錯誤時，讓它做一次覆盤（retrospective），並更新 <code>AGENTS.md</code>。指引應始終基於真實痛點、保持實用。</p><h3>配置 Codex 以保持一致性</h3><p>配置是讓 Codex 在不同會話和不同界面上行爲更一致的主要手段之一。例如，你可以爲模型選擇、推理強度、沙箱模式、審批策略、配置文件和 MCP 設置定義默認值。</p><p class='list-item'>*圖片來源：Pexels*</p><p>一個不錯的起始模式是：</p><p class='list-item'>- 把个人默认值放在 `~/.codex/config.toml`（ChatGPT 桌面端中**Settings > Configuration > Open config.toml**）</p><p class='list-item'>- 把倉庫特定的行爲放在 `.codex/config.toml`</p><p class='list-item'>- 命令行覆蓋只用於一次性場景（如果你用 CLI 的話）</p><p><code>config.toml</code> 是你定義持久化偏好的地方，比如 MCP 服務器、多智能體設置和功能開關。特定配置文件的覆蓋項，存放在獨立的 <code>$CODEX_HOME/profile-name.config.toml</code> 文件裏。</p><p>Codex 自帶運行級沙箱（operating level sandboxing），有兩個關鍵開關可由你控制。審批模式（approval mode）決定 Codex 何時請求你的許可來運行命令；沙箱模式（sandbox mode）決定 Codex 能否在目錄中讀寫、以及智能體能訪問哪些文件。</p><p>如果你剛接觸編程智能體，請從默認權限起步。默認情況下保持審批和沙箱收緊，只有在需求明確後，才爲可信倉庫或特定工作流放寬權限。</p><p>注意，CLI、IDE 擴展和 ChatGPT 桌面端共享同一套配置層。更多內容見 示例配置 頁面。</p><p>儘早爲你的真實環境配置 Codex。很多「質量問題」其實是「配置問題」——比如工作目錄錯誤、缺少寫入權限、模型默認值不對，或缺少工具與連接器。</p><h3>用測試和審查提升可靠性</h3><p>不要止步於「讓 Codex 改個東西」。該讓它建測試時就建測試、跑相關的檢查、確認結果，並在你接受之前審查工作成果。</p><p>Codex 可以幫你跑完這一整套循環——但前提是它知道「好」長什麼樣。這個指引可以來自提示詞，也可以來自 <code>AGENTS.md</code>。</p><p class='list-item'>*圖片來源：Pexels*</p><p>它可以包括：</p><p>在 ChatGPT 桌面端裏可以打開 diff 面板，直接在本地 審查改動。點擊某一行即可給出反饋，該反饋會作爲上下文餵給 Codex 的下一輪。</p><p>這裏很有用的一個選項是斜槓命令 <code>/review</code>，它提供幾種審查代碼的方式：</p><p>如果你和團隊有一份 <code>code_review.md</code> 文件，並從 <code>AGENTS.md</code> 裏引用它，Codex 在審查時也能遵循這份指引。對於希望審查行爲跨倉庫、跨貢獻者保持一致的團隊，這是一個很強的模式。</p><p>Codex 不該只是生成代碼。在正確的指令下，它還能幫你 **測試它、檢查它、審查它**。</p><p>如果你使用 GitHub Cloud，可以配置 Codex 來爲你的 PR 做 代碼審查。在 OpenAI 內部，Codex 審查了 100% 的 PR。你可以開啓自動審查，或讓 Codex 在你 @Codex 時被動響應審查。</p><h3>用 MCP 接入外部上下文</h3><p>當 Codex 需要的上下文存在於倉庫之外時，就用 MCP。它讓 Codex 接入你已經在用的工具與系統，你就不用反覆把實時信息複製粘貼進提示詞。</p><p>模型上下文協議（Model Context Protocol，MCP） 是一個把 Codex 連接到外部工具和系統的開放標準。</p><p>在以下情況使用 MCP：</p><p class='list-item'>- 你希望 Codex 使用某個工具，而不是依賴粘貼的指令</p><p>Codex 同时支持 STDIO 和 Streamable HTTP 服务器，并支持 OAuth。</p><p>在 ChatGPT 桌面端，進入 **Settings > MCP servers** 即可查看自定義和推薦的服務器。很多時候，Codex 可以幫你安裝所需的服務器——你只需要開口問。你也可以在 CLI 裏用 <code>codex mcp add</code> 命令，通過名稱、URL 等細節添加你的自定義服務器。</p><p>只在工具能打通真實工作流時才添加。不要一開始就接入你使用的每一個工具。先從一兩個能明顯消除你經常做的人工循環的工具開始，再逐步擴展。</p><h3>把可重複的工作固化成技能</h3><p>一旦某個工作流變得可重複，就別再依賴長提示詞或反覆的來回拉扯。用一個 技能（skill） 把指令、上下文和支持邏輯打包進一份 <code>SKILL.md</code> 文件，讓 Codex 始終如一地應用。技能在 CLI、IDE 擴展和 ChatGPT 桌面端都通用。</p><p>讓每個技能只聚焦於一件事。從 2 到 3 個具體用例起步，定義清晰的輸入和輸出，並寫好描述——說清這個技能做什麼、何時使用它，包括用戶真正會說的那些觸發短語。</p><p>不要一開始就試圖覆蓋所有邊界情況。先從一個有代表性的任務做起，把它打磨好，再把這個工作流固化成技能並持續改進。只有當腳本或額外資源確實能提升可靠性時，才把它們包含進來。</p><p>一個好經驗：如果你一直在複用同一段提示詞，或一直在糾正同一個工作流，那它大概就該變成一個技能了。</p><p>技能在以下這類重複性工作裏尤其有用：</p><p><code>$skill-creator</code> 技能是搭建第一個技能版本的最佳起點。在迭代期間，先讓它保持本地。當準備好廣泛分享時，再把它打包成 插件（plugin）。技能描述是最重要的一部分之一——它應當說清技能做什麼、何時使用。</p><p>個人技能存放在 <code>$HOME/.agents/skills</code>，團隊共享技能可以簽入倉庫內的 <code>.agents/skills</code>。這對新成員 onboarding 尤其有幫助。</p><h3>用定時任務處理重複工作</h3><p>一旦某個工作流穩定了，你就可以讓 Codex 在後臺替你定時運行它。在 ChatGPT 桌面端，定時任務（scheduled tasks） 讓你爲週期性工作選擇項目、提示詞、節奏和執行環境。</p><p>從 **Scheduled** 頁面創建一個定時任務。選擇項目、提示詞、節奏，以及任務是在專用的 Git worktree 中運行還是在你的本地環境中運行。提示詞可以調用技能。瞭解更多關於 Git worktrees 的內容。</p><p>合適的候選任務包括：</p><p>一個有用的原則：技能定義「方法」，定時任務定義「節奏」。如果一個工作流還需要大量人工干預，就先把它變成技能。一旦它變得可預測，再把它排期就能省時間。</p><p>把定時任務用於反思和維護，而不只是執行。回顧最近的對話、總結反覆出現的痛點，並隨着時間持續改進提示詞、指令或工作流配置。</p><h3>管理長週期對話</h3><p>對話會隨時間累積上下文、決策和行動，因此管理好它們對質量影響很大。</p><p>ChatGPT 桌面端允許你置頂（pin）對話並創建 worktree。如果你用 CLI，這些 斜槓命令 特別有用：</p><p class='list-item'>- `/experimental`：切換實驗性功能，並寫入你的- `config.toml`</p><p class='list-item'>- `/fork`：在保留原始記錄的前提下，創建一個新對話</p><p class='list-item'>- `/compact`：當對話變長、你想要一份早期上下文的摘要版本時使用。Codex 也會自動壓縮對話</p><p class='list-item'>- `/agent`：當你在並行運行多個智能體、想在活動線程間切換時使用</p><p class='list-item'>- `/apps`：在 Codex 里直接使用 ChatGPT 应用</p><p>一個連貫的工作單元，對應一個對話。如果工作仍是同一問題的一部分，留在同一個對話裏往往更好，因爲它保留了推理軌跡。只有當工作真正分叉時，才 fork。</p><p>用 Codex 的 子智能體（subagent） 工作流，把邊界清晰的工作從主線程中卸載出去。讓主智能體聚焦核心問題，把探索、測試或分流類任務交給子智能體。</p><h3>常見錯誤</h3><p>初次使用 Codex 時，有幾個常見錯誤要避免：</p><p class='list-item'>- 把長期有效的規則堆進提示詞，而不是移入 `AGENTS.md`或技能</p><p class='list-item'>- 不告訴智能體如何最好地運行構建和測試命令，導致它看不到自己的工作成果</p><p class='list-item'>- 在還不瞭解工作流之前，就給 Codex 你電腦的完全權限</p><p class='list-item'>- 不使用 Git worktree，就在同一批文件上跑實時任務</p><p class='list-item'>- 把 Codex 當成需要一步步盯着的東西，而不是讓它和你的工作並行</p><p class='list-item'>- 整個項目只用一條對話，而不是「一個連貫結果對應一條對話」。這會讓上下文臃腫，長期結果變差</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

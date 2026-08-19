@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>12个Codex实战技巧：配置调优→会话分工→上下文防丢，一套流程吃透_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>12个Codex实战技巧：配置调优→会话分工→上下文防丢，一套流程吃透_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260811A0C1I700?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260811A0C1I700?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>哈嘍大家好，</p><p>我是阿星！</p><p>Codex 是一個需要主動配置和磨合的工具。默認配置離最佳體驗有距離，很多功能藏在菜單深處或需要手動創建配置文件。</p><p>以下技巧按「配置 → 會話 → 上下文 → 收尾」四個階段歸類，幫你把每一次對話都花在刀刃上。</p><p class='list-item'>**01 配置優化 · 把底座調好**</p><p class='list-item'>**开启 Luna Max 模型**</p><p>Codex 默認不會給你 Luna 模型的最強推理能力，需要手動開啓：**設置 → 配置 → 模型功能 → 開啓 Max**。</p><p>開啓後，同一個重構任務的處理思路差別很大——默認模式傾向於快速但是有一些問題我自己用的時候，luna Max 模式相對好些。總的來說讓 **Sol** 做規劃和架構判斷（推理成本高），把執行任務丟給 **Luna Max** 跑（快、適合重複性任務）</p><p class='list-item'>**02 會話管理 · 線程各司其職**</p><p class='list-item'>**三類線程分工**</p><p>把 Codex 對話分成三種角色，就會發現openAI真的做了很多來保護你的上下文。因爲**上下文是最稀缺的資源，所以除了主線它有很多別的可以繼續對話的渠道。**</p><p class='list-item'>- ㅤ - **主線程**— 落地：日常都用這條線，保持它的上下文乾淨是最重要的</p><p class='list-item'>- ㅤ - **Review 線程**— 比如用來打開當前未提交修改的 Review</p><p class='list-item'>- ㅤ - **Side Chat**— 邊想邊幹：適合用來討論時候避免污染上下文，用 /side 開啓，討論結果直接轉化爲主線程的執行指令。</p><p class='list-item'>**Fork 會話分叉**</p><p>這不是「新建聊天」，而是**從當前對話派生一條支線**——帶着已有的背景、約束和歷史判斷，去試另一種方案。很像 Git 分支的工作流。</p><p>其實new、fork、side之間的關係可以簡單看成這樣</p><p class='list-item'>**如果是在命令行裏，又是三種入口：**</p><p class='list-item'>**什麼時候該 Fork？** 驗證另一條路線、用完全不同的方法重做、主線程太長需要減負。如果只是臨時追問一句，沒必要 Fork；如果徹底換題目了，直接新建線程。</p><p>另外，Codex 任務執行久了容易卡死（尤其大任務多次壓縮後），Fork 可以完整復刻會話歷史並開啓新進程，避開卡死問題。</p><p class='list-item'>**Quick Chat 边等边想**</p><p>左上角新建任務旁邊的加號按鈕，點開就是 Quick Chat。設計意圖很明確：等 Codex 跑長任務時，思考不會停止——突然冒出的靈感、對當前方向的疑慮、想快速查個東西，直接在 Quick Chat 裏聊。</p><p>聊清楚了點右上角「添加任務」，討論結果一鍵進入當前任務。</p><p>而且 Quick Chat 的額度與 Codex 主額度分開——相當於多了一個免費思考空間。</p><p class='list-item'>**跨會話發消息協同**</p><p>ChatGPT 和 Codex 合併更新後的新功能：在當前會話裏讓 Codex 給其他會話發消息，不同任務間互相傳遞信息，不用手動複製粘貼。</p><p>適合多任務協作場景，這時候大白話和 Codex 說就行。</p><p>比如同時跑着3個窗總有相互交叉的時候。</p><p class='list-item'>**03 上下文傳承 · 跨會話不斷檔**</p><p class='list-item'>**HANDOFF.md 交接文档**</p><p>跨天推進複雜任務最大痛點：第二天開新會話，AI 完全失憶。HANDOFF.md 是最輕量的方案——每次結束長會話前，讓 AI 寫一份交接文檔。</p><p class='list-item'>**@ 引用跨對話上下文**</p><p>在對話輸入框打 @ + 關鍵詞，就能檢索和引用其他對話的上下文，支持跨項目。比如在A對話談論B對話的時候，就可以用這種方式實現。</p><p class='list-item'>**新舊任務上下文交接**</p><p>Codex 上下文空間只有 258k（其他工具基本 1M），頻繁壓縮後需要換窗口。利用跨會話消息功能，可以讓交接更順滑：</p><p>或者直接在新窗口 @ 舊窗口會話，讓它總結並繼續任務。核心上下文自動交接到新窗口，不用手動複製粘貼。</p><p class='list-item'>**配置 Subagent 分治機制**</p><p>在 ~/.codex/agents/ 目錄下創建 TOML 文件，爲不同類型任務創建專用 Agent，其他的你可以自己去配這個subagents裏的模型和其他配置</p><p class='list-item'>- ㅤ - **獨立上下文**— 審查代碼時不污染主對話，保持執行線程乾淨</p><p class='list-item'>- ㅤ - **按需分配模型**— 確定性任務用普通模型，創造性任務用高推理模型</p><p class='list-item'>- ㅤ - **循環流程**— 讓 Subagent 自己 review 自己修復</p><p class='list-item'>- ……</p><p>整個下來，Subagent 只處理父級委託的具體、有邊界的任務。</p><p>默認只讀調查，僅在明確授權時才改動文件。</p><p>被阻塞時停下來報告原因，而非猜測繼續。</p><p class='list-item'>**04 收尾閉環 · 把經驗沉澱下來**</p><p class='list-item'>**讓 AI 自動發現可封裝的 Skill**</p><p>不只是 Codex 專屬，所有 Agent 都能用。把下面這段話發給你的 Agent：</p><p>AI 會從你的實際使用中找出重複模式，推薦封裝方向。推薦試一下，會有驚喜。</p><p class='list-item'>**內置 Browser 的隱藏用法**</p><p>Codex 側邊內置的 那個Browser 瀏覽器，之前可以做各種測試，但它現在又被開發出很多畫布功能，玩法挺多的。</p><p>最大的好處是不用切畫面，全程在 Codex 界面裏完成。</p><p class='list-item'>**AI 幹活時你不知道幹嘛？打開 Browser 自己用就行。**</p><p>使用方式：右側面板選擇瀏覽器輸入即可。</p><p class='list-item'>*以上 12 個技巧涵蓋配置、會話、上下文、收尾四個維度。*</p><p class='list-item'>*花半小時搭好，之後的每一次對話都在受益。*</p><p>ok，我是阿星</p><h3>更多AI應用</h3><p>我們下期再見！</p><h3>ㅤ</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
