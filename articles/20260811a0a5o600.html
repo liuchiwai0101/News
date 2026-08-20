@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>揭示扩散语言模型扩展定律，人大高瓴团队与蚂蚁集团发布LLaDA MoE v2_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>揭示扩散语言模型扩展定律，人大高瓴团队与蚂蚁集团发布LLaDA MoE v2_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260811A0A5O600" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260811A0A5O600" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>本文介紹的工作由中國人民大學高瓴人工智能學院李崇軒、文繼榮教授團隊與螞蟻集團共同完成。朱峯琪是中國人民大學高瓴人工智能學院的博士生（螞蟻集團實習生），導師爲李崇軒副教授。</p><p>的快速發展，正成爲大語言模型領域備受關注的技術方向：憑藉雙向上下文建模與多詞元並行解碼的獨特優勢，這一新興範式已從前沿學術探索逐步成長爲大語言模型的重要技術路線之一，受到學術界與產業界的持續關注。隨着模型規模與訓練算力不斷增大，如何高效地擴大規模成爲亟待回答的問題 —— 最優超參數如何隨算力調整、有限算力在模型與數據間如何分配、稀疏專家架構如何隨規模演進，都需要給出科學的答案。</p><p>在自迴歸模型上，擴展定律已相當成熟，支撐了一代又一代大模型的訓練；然而，離散擴散語言模型採用掩碼去噪目標，監督信號僅落在被掩碼的位置，每個預測又都基於受損序列而非因果前綴，自迴歸的擴展經驗無法直接照搬。混合專家架構作爲大模型擴容的主流選擇，與擴散建模結合後的擴展規律仍缺乏系統刻畫，大規模擴散語言模型的訓練仍在很大程度上依賴經驗與試錯。</p><p>爲此，高瓴人工智能學院李崇軒、文繼榮團隊與螞蟻集團**首次系統刻畫了混合專家擴散語言模型的擴展定律，並據此從頭訓練了 30B-A3B 的新一代擴散語言模型 LLaDA MoE v2**。</p><p>該工作將擴展定律貫穿超參數配置、算力分配與架構設計，標誌着擴散語言模型從 “經驗驅動” 邁向 “定律指引” 的關鍵一步：LLaDA MoE v2 激活約 3B 參數，僅用同規模自迴歸模型 Qwen3 30B-A3B 約 65% 的預訓練詞元，即在知識、推理、代碼等多項基準上逼近 Qwen3 水準，且僅經有監督微調便在 8 項推理與代碼基準中的 7 項超越現有領先擴散模型，實現擴展效率與智能的雙重突破，標誌着擴散語言模型邁入 “定律指引、稀疏並行、高效擴展” 的規模化時代。</p><p class='list-item'>- 论文标题：LLADA MOE V2: SCALING MIXTURE-OF-EXPERTS DIFFUSION LANGUAGE MODELS</p><p class='list-item'>- 論文鏈接：</p><p>團隊預計近期將開源推理代碼以及 LLaDA MoE v2 模型權重。</p><p>在優化超參數方面，聯合團隊在 158M 至 3.6B 的模型規模與 至 FLOPs 的算力跨度上系統搜索批量大小與學習率，擬合出擴散語言模型專屬的超參數擴展定律：最優批量大小隨算力的增長比自迴歸模型更陡，最優學習率隨算力的衰減更快。在 FLOPs 算力下，自迴歸定律預測的最優批量大小約爲 102 萬詞元，而新定律給出 343 萬詞元 —— 這一差異源於掩碼去噪目標下，名義詞元僅在被掩碼時才貢獻監督信號，有效監督強度的下降改變了梯度噪聲水平與優化穩定性。該定律在 FLOPs 的外推驗證中與實測最優配置高度吻合，爲大規模訓練提供了可靠的超參數標尺。</p><p class='list-item'>*圖 1：LLaDA MoE v2 的超參數擴展定律：最優批量大小（左）與最優學習率（右）隨訓練算力的擴展曲線，紅色虛線爲本文擬合定律，藍色虛線爲自迴歸模型參考定律*</p><p>在算力分配方面，團隊通過 IsoFLOP 分析刻畫了固定算力下模型規模與訓練數據的最優權衡：最優模型側算力隨總算力以 0.475 次冪增長，最優訓練詞元數以 0.525 次冪增長，整體接近均衡並略微偏向數據一側。與已有稠密擴散模型的擴展定律相比，混合專家擴散模型的分配前沿是迄今最偏向數據側的，稀疏激活與擴散建模各自帶來的 “親數據” 傾向在其中疊加顯現，意味着邊際算力投向訓練詞元比投向模型側計算更爲划算。</p><p class='list-item'>*圖 2：LLaDA MoE v2 的算力分配擴展定律：固定算力下模型 - 數據分配的 IsoFLOP 曲線（左），以及最優模型側算力（中）與最優訓練詞元數（右）隨總算力的冪律前沿*</p><p>在架構設計方面，團隊沿激活比例、專家粒度與共享專家比例三個關鍵維度解析了混合專家架構的擴展規律：隨着規模擴大，更低激活比例、即更大的路由專家池愈發佔優；8 至 16 的中等專家粒度在各規模下均保持穩健；共享專家承載約三分之一激活容量（33.3%）在所有規模下恆爲最優，與自迴歸混合專家模型慣用的 25% 甚至不設共享專家的經驗形成鮮明對比，由此得到了擴散語言模型專屬的稀疏激活架構設計準則。</p><p class='list-item'>*圖 3：混合專家架構的擴展規律：激活比例（a）、專家粒度（b）與共享專家比例（c）在不同算力規模下的受控掃描，紅星標記各規模的最優配置*</p><p>在上述擴展定律的指引下，聯合團隊從頭訓練了 LLaDA MoE v2 30B-A3B 模型：總參數 30B、每詞元激活 3B 參數，採用 128 個細粒度路由專家，激活比例 9.09%、專家粒度 8、共享專家比例 33.3%，落在擴展定律給出的最優區間。模型經五階段預訓練**累計學習 23.5T 詞元**，全程消耗約 46 萬 NVIDIA B200 GPU 小時。</p><p>在 15 項基準測試中，**LLaDA MoE v2 取得擴散語言模型中的最高平均分 58.60**，較同規模擴散模型 SDAR Sci 高出 3.78 分，其中 HumanEval 與 BigCodeBench 分別領先 16.46 分與 7.98 分；與自迴歸模型 Qwen3 相比，模型在 OlympiadBench、HumanEval 等多項推理與代碼基準上的差距不足 3 分，而**預訓練詞元用量僅爲其約 65%**。</p><p class='list-item'>*圖 4：LLaDA MoE v2 基座模型與其他擴散語言模型和自迴歸模型在 15 項基準上的核心指標對比*</p><p>擴展定律的指導價值在算力效率上體現得尤爲直觀：與未受擴展定律指引的上一代 LLaDA-MoE 7B-A1B 相比，LLaDA MoE v2 在 MMLU、GSM8K 和 KorBench 上僅以約一半的訓練算力便實現超越，展現出 “定律指引” 將預訓練算力高效轉化爲下游性能的路徑。</p><p class='list-item'>*圖 5：擴展定律指引的 LLaDA MoE v2 在多項基準上以更少訓練算力達到並超越上一代 LLaDA-MoE*</p><p>在有監督微調方面，團隊使用 700 萬條指令數據進行訓練，所得模型即在 8 項數學推理與代碼生成基準中的 7 項上超越同規模擴散模型 SDAR Chat，並在 AIME 2024/2025、MBPP、LiveCodeBench 等基準上逼近經歷額外強化學習階段的 Qwen3，更在多語言代碼生成基準 MultiPL-E 上實現反超，表明擴展定律指引的基座模型經簡單微調即可釋放紮實的指令遵循與複雜推理能力。</p><p class='list-item'>*圖 6：LLaDA MoE v2 指令微調模型與 Qwen3 和 SDAR Chat 在推理與代碼基準上的核心指標對比*</p><p>LLaDA MoE v2 首次爲混合專家擴散語言模型建立了覆蓋超參數、算力分配與架構設計的系統性擴展定律，突破了非自迴歸模型規模化依賴經驗遷移的瓶頸。通過定律指引的稀疏架構與掩碼去噪訓練，模型以更少的預訓練詞元與更低的激活開銷逼近同規模領先自迴歸模型，爲擴散語言模型的規模化提供了 “定律指引”，爲進一步擴大模型規模、探索智能上限鋪平了道路。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
