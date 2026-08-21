@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>智谱唐杰：万亿参数是行业早期的探索_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>智谱唐杰：万亿参数是行业早期的探索_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260820A0DH8900?refer=cp_1009" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260820A0DH8900?refer=cp_1009" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p class='list-item'>**智東西（公衆號：zhidxcom）**** 編譯 | 茄子**** 編輯 | 李水青**</p><p>智東西8月19日報道，今天下午，智譜聯合創始人、首席科學家唐傑在X平臺發文，闡述了他對**的理解，並解釋智譜爲何****沒有**繼續**擴大GLM-5.3的參數規模，**而是將這一輪訓練重點放在**和強化學習**上。</p><h3>▲唐傑發文（圖源：X）</h3><p>唐傑認爲，討論模型規模不能只問參數量，還要同時考慮**訓練數據規模**、計算**資源投入位置，**以及模型最終由誰在什麼條件下**運行**。參數量、預訓練數據、單次前向計算深度和都可以擴展，並不存在一個始終最值得增加的指標。</p><p>他回顧稱，2020年的研究一度推動行業優先擴大參數量，GPT-3、Gopher和MT-NLG等模型均受到這一思路影響。2022年發佈的Chinchilla研究隨後提出，訓練數據與參數規模需要採用**更平衡的配置**。唐傑由此認爲，行業曾經集中追逐萬億參數模型，事後看是一段**集體走過、又集體折返的彎路**。</p><p>不過，**Chinchilla並非**Scaling Law的**終點**。隨着模型每天被調用數十億次，推理成本在模型整個生命週期中的佔比上升，**最優方案**開始向“規模更小、訓練時間更長”的模型移動。（MoE）的普及，又使總參數量和每次實際激活的參數量需要分開考慮。</p><p>唐傑稱，總參數量更多影響模型能夠容納多少知識，激活參數量和有效計算深度則影響模型可以完成多長的推理鏈。對於漏洞發現等任務，僅記住更多漏洞信息並不夠，模型還需要連續完成多步推理。</p><p>在GLM-5.3上，智譜沒有改變GLM-5.2的基礎模型、架構、總參數量和激活參數量，而是用一個月擴大長程任務環境和強化學習訓練。唐傑稱，由此獲得的性能提升並非小幅改進。</p><p>他將模型擴展比作調節多個旋鈕。這次智譜選擇了剩餘提升空間較大的**後訓練**，但這並不意味着參數規模、預訓練數據和單次前向計算已經不再重要。智譜後續仍可能繼續擴大中期訓練、預訓練及其他環節。</p><p>唐傑的發文引發網友對Scaling Law下一階段方向的討論。有網友追問，後訓練領域何時會出現類似Chinchilla的Scaling Law研究，以及GLM的強化學習曲線目前已經趨於平緩，還是仍有繼續增長的空間。</p><h3>▲網友對唐傑發文評論（圖源：X）</h3><p>另一位網友則以千問Qwen 3.8 27B及GLM-5.3爲例，認爲中小規模模型仍有提升空間，視覺能力和運行速度可能成爲GLM系列接下來的升級方向。</p><h3>▲網友對唐傑發文評論（圖源：X）</h3><p>還有一位網友則關注到如何提出問題。他認爲，值得關注的不只是問題的表面答案，而是其背後更深層的結構，“能夠提出好問題的人，比能夠給出答案的人更加少見”。</p><h3>▲網友對唐傑發文評論（圖源：X）</h3><p class='list-item'>**以下是唐傑發文全文編譯，智東西在不改變原意的基礎上進行了編輯。**</p><p class='list-item'>**關於Scaling Law的一些思考**</p><p>模型規模還在擴大，但擴展的不應只有參數量。</p><p>現在每次發佈模型，最後幾乎都會出現同一個問題：它有多少參數？</p><p>這個問題無法脫離其他條件單獨回答。參數量只有與另外三個問題放在一起纔有意義：擁有多少訓練數據、準備把計算資源用在哪裏，以及誰會在什麼條件下運行這個模型。</p><p>這個領域通過實踐付出了代價，才逐漸理解這一點。</p><p>Kaplan等人在2020年的研究中擬合出一項擴展規律，認爲參數規模的增長速度應該快於數據規模，兩者對應的擴展指數約爲0.73和0.27。隨後整個行業都遵循了這一方向，包括GPT-3、Gopher和MT-NLG。</p><p>Hoffmann等人在2022年重新對約400個模型進行實驗，發現計算量最優的配置更接近每個參數對應20個Token。在擁有充足計算資源的情況下，參數量和數據量應該以接近相同的速度增長，而不是不斷拉開差距。</p><p>早期擬閤中的誤差，會隨着計算量每提高一個數量級而繼續放大。因此，那一代規模最大的模型，也成爲計算資源分配最不合理的模型。</p><p>回過頭看，追逐萬億參數模型是整個行業一起走過、隨後又共同折返的一段彎路。</p><p class='list-item'>**但Chinchilla也不是終點。**</p><p>Chinchilla優化的是模型訓練階段的計算量，其假設是模型只訓練一次，隨後接受評估。現在，一個模型每天可能被調用數十億次，推理開始在模型全生命週期成本中佔據主要位置。</p><p>如果把推理成本也納入優化目標，最優方案就會向規模更小、訓練時間更長的模型移動。這是一種有意進行的“過度訓練”。Llama-2-7B和Gemma-2-9B採用的正是類似路線，兩款模型平均每個參數分別對應約290個和889個訓練Token。</p><p class='list-item'>**稀疏模型的出現再次改變了優化目標。**</p><p>在混合專家模型中，需要區分兩個指標：總參數量大致決定模型能夠容納多少知識，包括事實信息和長尾知識；實際激活的參數量和有效計算深度，則大致決定模型能夠完成多深入的思考，以及可以維持多少步因果推理而不發生崩潰。</p><p>因此，稠密模型中每個參數對應20個Token的比例不能直接套用到MoE模型上。</p><p>這個比例本身也不是一個固定數字。Roberts等人在2025年的研究發現，最優Token參數比與任務類型有關：記憶類任務更受益於增加參數量，推理類任務則更受益於增加訓練數據。</p><p>後續針對MoE的研究還發現，在Token參數比不變的情況下，繼續增加總參數量反而可能削弱推理能力；增加每次激活的專家數量，則能夠更穩定地改善推理表現。</p><p>這與我們正在構建的能力有關。</p><p>尋找一項安全漏洞不是信息檢索問題。它並不取決於模型記住了多少CVE漏洞記錄，而在於模型能否完成一條包含20個步驟的推理鏈，並在到達終點前始終保持思路連貫。</p><p>這種能力並不存在於總參數量本身。</p><p class='list-item'>**接下來談談GLM-5.3。**</p><p>總參數量在達到某個閾值前仍然重要，模型首先需要擁有足夠容量來容納對世界的認識。但超過這一閾值後，更多能力需要從其他方向獲得，包括提高每次前向計算的有效深度，尤其是擴大後訓練。</p><p>GLM-5.3是我們針對這一判斷進行的一次對照實驗。</p><p>GLM-5.3採用了與GLM-5.2相同的基礎模型、架構、總參數量和激活參數量。我們用一個月擴大長程任務環境及強化學習訓練，最終取得的提升並不是小幅改進。</p><p>Scaling不只有一個旋鈕。</p><p>這一次，我們選擇**調高後訓練**這個旋鈕，是因爲它仍然擁有最大的提升空間，而不是因爲其他方向已經完成。</p><p>基礎模型規模、預訓練數據以及每次前向計算投入的計算量，仍然都是可以繼續擴展的方向，我們也會重新回到這些方面。</p><p>這次實驗讓我們認識到，這些旋鈕不必同時轉動；下一步最值得調整的指標，通常也不是上一次最值得調整的指標。</p><p>我們並**沒有停止擴展**。下一次，可能會輪到中期訓練、預訓練，甚至投入更多。</p><h3>來源：X</h3></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

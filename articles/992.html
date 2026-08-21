@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>阿里发布 Qwen-UI-Agent，主打让模型真正“会用”每一块屏幕 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>阿里发布 Qwen-UI-Agent，主打让模型真正“会用”每一块屏幕</h1>
+<div class="meta"><span class="src">IT之家（RSS）</span><span>· 8月21日 周五</span>
+<span>· <a href="https://www.ithome.com/0/992/239.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.ithome.com/0/992/239.htm" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>IT之家 8 月 20 日消息，據千問大模型官方公衆號，阿里巴巴正式推出 **Qwen-UI-Agent**，一個以真實世界爲中心的 GUI 智能體基座模型，涵蓋移動端、電腦端、網頁端以及深度搜索（DeepSearch）環境。</p><p>據介紹，Qwen-UI-Agent 在 GUI 任務上全面對標乃至超越業界旗艦模型:</p><p class='list-item'>- **移动端:**MobileWorld- **82.1%，**分别领先 GPT-5.6 Sol、Claude Opus 4.8、Seed 2.1 Pro 12.0、14.6、8.9 个百分点；真机基准 MobileWorld-Real- **92.2%**，超越 Gemini 3.1 Pro、Claude Opus 4.8、GPT-5.6 Sol、Seed 2.1 Pro ；AndroidDaily 高达- **97.5%**，接近满分。</p><p class='list-item'>- **电脑端：**OSWorld-Verified- **79.5%**，超越 GPT-5.5、Gemini 3.1 Pro、Seed 2.1 Pro；OSWorld-v2 Partial 分数 40.0%，同时相比基线节省 58% 执行步数。</p><p class='list-item'>- 浏览器 & DeepSearch：WebArena - **73.6%，**位列所有对比模型第一；BrowseComp-ZH 75.0%。</p><p class='list-item'>- GUI Grounding：ScreenSpot-Pro - **81.5%，在其余 4 个 grounding 评测基准也全部刷新 SOTA。**</p><p class='list-item'>- 通用能力：通用和 Agentic 能力全面保持或超越訓練基座模型，並在這兩類任務上大幅領先 GUI 專用模型，從容應對真實世界的長尾需求。</p><p>Qwen-UI-Agent 搭建覆蓋** 100+ 臺真實手機、150+ 應用**的真機移動環境，用於任務構建、軌跡採集、模型訓練與評測，並自建 MobileWorld-Real 真機基準 (400+ 任務、100+ 應用)，打通“從模擬到真實”的最後一公里。</p><p>Prompt: 我今天約了朋友去天目裏喝咖啡，幫我在高德搜索查看詳細地址，打開大衆點找附近 1 公里內的咖啡館，找人氣最高的那家記下店名，再去小紅書總結前五條筆記，看看大家推薦這家店的哪款咖啡。</p><p>Prompt: 下週三我從北京回來，幫我看一下 12306 最早到杭州西的那班高鐵幾點到。然後查一下杭州西坐地鐵到阿里巴巴西溪園區要多久，算一下我幾點能到公司。最後在釘釘安排一個到達後整點的會議。主題寫 " 出差歸來項目同步 "，參會人選我和張三。開一個小時，設置提前 5 分鐘提醒。</p><p>Prompt: 在手機相冊中找到所有收據，將它們移動到遠程桌面上的 receipts 文件夾，按日期重命名，並在該文件夾中創建一個 Excel 文件彙總賬單。</p><p>Qwen-UI-Agent 將安全判斷貫穿任務執行全過程：**面對違法或高風險請求，它會不執行任何界面操作，直接拒絕並終止任務**；面對支付、數據刪除、隱私授權等敏感場景，則會**在關鍵步驟主動停手，向用戶說明情況**，待獲得明確確認後再繼續。危險請求不執行，敏感操作不擅自決定，讓模型既能執行，也懂得何時停手。</p><p>GUI 操作之外，模型還能直接執行命令行操作，並在單次決策中批量輸出多個動作。在電腦任務中，CLI 動作佔比近半，約 40% 動作以 batched actions 形式輸出，大幅縮短執行軌跡、拓展能力邊界、提升執行效率。比如跨網站調研產品、覈對價格，生成比價方案。</p><p>其支持在**超過 100 步**的超長軌跡上進行在線 RL 訓練，約 **10000 個併發環境**同時 rollout，配合模型自適應課程學習，持續攻克長程任務。</p><p>IT之家附上有關鏈接如下：</p><p>廣告聲明：文內含有的對外跳轉鏈接（包括不限於超鏈接、二維碼、口令等形式），用於傳遞更多信息，節省甄選時間，結果僅供參考，IT之家包含外鏈的文章均包含本聲明。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

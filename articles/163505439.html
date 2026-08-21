@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>Vue 状态管理选型：Pinia 完整实战，对比 Vuex，模块化与持久化 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>Vue 状态管理选型：Pinia 完整实战，对比 Vuex，模块化与持久化</h1>
+<div class="meta"><span class="src">CSDN</span><span>· 8月21日 周五</span>
+<span>· <a href="https://blog.csdn.net/chaosweet/article/details/163505439" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/chaosweet/article/details/163505439" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>Hi，我是</p><p>前端人類學！</p><p>在 Vue 應用中，狀態管理從“多組件共享數據”到“複雜業務邏輯協調”，常常是項目架構中最具挑戰性的一環。隨着 Vue3 的普及，Pinia已取代 Vuex 成爲官方推薦的狀態管理庫。</p><p>本文將從前端狀態管理的核心問題出發，通過完整的實戰案例，對比 Vuex 與 Pinia 的差異，並深入講解模塊化設計與數據持久化的最佳實踐。</p><p class='list-item'>**語法極簡**：在 Vuex 中定義一個計數器需要編寫 state、mutations、actions 等多個部分；而 Pinia 只需一個 `defineStore`，在 actions 中直接修改 `this.count` 即可。</p><p class='list-item'>**TypeScript 一等公民**：Pinia 在設計之初就充分考慮了對 TypeScript 的支持，幾乎所有 API 都能自動推導類型，大幅減少手動類型聲明的工作量。</p><p class='list-item'>**輕量且性能優秀**：在同樣執行 1000 次同步 action 的場景下，Pinia 的延遲約爲 5-8ms，而 Vuex 爲 8-12ms，提升約 30%。高頻觸發場景（1000次/秒）下，Pinia 的吞吐量更是優於 Vuex 約 40-50%。</p><p class='list-item'>- 項目爲 Vue2 且已深度使用 Vuex，遷移成本過高</p><p class='list-item'>- 依賴較複雜的 Vuex 中間件生態，如 `vuex-persistedstate`的特殊用法</p><p class='list-item'>- 對 Vuex 的嚴格單向數據流規範有強依賴</p><p>對於新項目，尤其是 Vue3 項目，Pinia 無疑是更優的選擇。</p><pre><code>pnpm add pinia
+# 或 npm install pinia</code></pre><p>在 <code>main.ts</code> 中注册 Pinia：</p><pre><code>import { createApp } from &#x27;vue&#x27;
+import { createPinia } from &#x27;pinia&#x27;
+import App from &#x27;./App.vue&#x27;
+const pinia = createPinia()
+const app = createApp(App)
+app.use(pinia)
+app.mount(&#x27;#app&#x27;)</code></pre><pre><code>// stores/counter.ts
+import { defineStore } from &#x27;pinia&#x27;
+export const useCounterStore = defineStore(&#x27;counter&#x27;, {
+  state: () =&gt; ({
+    count: 0,
+    name: &#x27;计数器&#x27;
+  }),
+  getters: {
+    // 自动推导返回类型
+    doubleCount: (state) =&gt; state.count * 2,
+    // 使用 this 访问其他 getter
+    formattedCount(): string {
+      return `${this.name}: ${this.count}`
+    }
+  },
+  actions: {
+    increment() {
+      this.count++
+    },
+    incrementBy(amount: number) {
+      this.count += amount
+    },
+    // 异步 action 直接返回 Promise
+    async fetchInitialCount() {
+      const res = await api.get(&#x27;/count&#x27;)
+      this.count = res.data
+    }
+  }
+})</code></pre><pre><code>&lt;script setup lang=&quot;ts&quot;&gt;
+import { storeToRefs } from &#x27;pinia&#x27;
+import { useCounterStore } from &#x27;@/stores/counter&#x27;
+const counterStore = useCounterStore()
+// ✅ 使用 storeToRefs 解构 state 和 getters，保持响应性
+const { count, doubleCount, formattedCount } = storeToRefs(counterStore)
+// ❌ 直接解构会丢失响应性
+// const { count, doubleCount } = counterStore
+// ✅ actions 可以直接解构
+const { increment, incrementBy } = counterStore
+&lt;/script&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;p&gt;Count: {{ count }}&lt;/p&gt;
+    &lt;p&gt;Double: {{ doubleCount }}&lt;/p&gt;
+    &lt;p&gt;{{ formattedCount }}&lt;/p&gt;
+    &lt;button @click=&quot;increment()&quot;&gt;+1&lt;/button&gt;
+    &lt;button @click=&quot;incrementBy(5)&quot;&gt;+5&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre><p>Pinia 同時支持 Composition API 風格的 Store，更靈活且與 Vue3 生態融合更好：</p><pre><code>// stores/user.ts
+import { ref, computed } from &#x27;vue&#x27;
+import { defineStore } from &#x27;pinia&#x27;
+export const useUserStore = defineStore(&#x27;user&#x27;, () =&gt; {
+  // state
+  const userInfo = ref&lt;UserInfo | null&gt;(null)
+  const token = ref(&#x27;&#x27;)
+  // getters
+  const isLoggedIn = computed(() =&gt; !!token.value)
+  const userName = computed(() =&gt; userInfo.value?.username || &#x27;游客&#x27;)
+  // actions
+  function setToken(newToken: string) {
+    token.value = newToken
+  }
+  async function login(credentials: LoginParams) {
+    const res = await api.login(credentials)
+    token.value = res.token
+    userInfo.value = res.user
+  }
+  function logout() {
+    token.value = &#x27;&#x27;
+    userInfo.value = null
+  }
+  return { userInfo, token, isLoggedIn, userName, setToken, login, logout }
+})</code></pre><p>隨着應用規模增長，將狀態按業務領域拆分是保持代碼可維護性的關鍵。Pinia 天然支持模塊化——每個 <code>defineStore</code> 定義的就是一個獨立的模塊。</p><pre><code>stores/
+├── index.ts              # Pinia 实例导出
+├── modules/
+│   ├── user.ts           # 用户模块
+│   ├── cart.ts           # 购物车模块
+│   ├── app.ts            # 应用全局配置
+│   └── permission.ts     # 权限模块
+└── types/
+    └── index.ts          # 类型定义</code></pre><p>不同 Store 之間可以相互引用，只需在 action 中調用其他 Store 的實例：</p><pre><code>// stores/modules/cart.ts
+import { defineStore } from &#x27;pinia&#x27;
+import { useUserStore } from &#x27;./user&#x27;
+export const useCartStore = defineStore(&#x27;cart&#x27;, {
+  state: () =&gt; ({
+    items: [] as CartItem[]
+  }),
+  actions: {
+    async checkout() {
+      const userStore = useUserStore()
+      if (!userStore.isLoggedIn) {
+        throw new Error(&#x27;请先登录&#x27;)
+      }
+      // 执行下单逻辑...
+    }
+  }
+})</code></pre><p>在 <code>stores/index.ts</code> 中统一导出所有模块：</p><pre><code>// stores/index.ts
+import { createPinia } from &#x27;pinia&#x27;
+const pinia = createPinia()
+export default pinia
+export * from &#x27;./modules/user&#x27;
+export * from &#x27;./modules/cart&#x27;
+export * from &#x27;./modules/app&#x27;</code></pre><p>頁面刷新後狀態重置是單頁應用最常見的問題之一。Pinia 本身不提供持久化能力，但可通過插件輕鬆實現。最成熟方案是 <code>pinia-plugin-persistedstate</code>，它受到 <code>vuex-persistedstate</code> 啓發，API 簡潔且功能完備。</p><pre><code>pnpm add pinia-plugin-persistedstate</code></pre><p>在 <code>main.ts</code> 中注册：</p><pre><code>import { createPinia } from &#x27;pinia&#x27;
+import piniaPluginPersistedstate from &#x27;pinia-plugin-persistedstate&#x27;
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)</code></pre><p>在需要持久化的 Store 中添加 <code>persist</code> 選項：</p><pre><code>// stores/user.ts
+export const useUserStore = defineStore(&#x27;user&#x27;, {
+  state: () =&gt; ({
+    token: &#x27;&#x27;,
+    userInfo: null
+  }),
+  actions: { /* ... */ },
+  persist: {
+    key: &#x27;user-storage&#x27;,      // 存储 key，默认使用 store id
+    storage: localStorage,    // 默认 localStorage
+    pick: [&#x27;token&#x27;, &#x27;userInfo&#x27;] // 仅持久化指定字段
+  }
+})</code></pre><pre><code>// 使用 sessionStorage，且排除敏感字段
+persist: {
+  storage: sessionStorage,
+  omit: [&#x27;tempData&#x27;],   // 排除不需要持久化的字段
+}
+// 在 Setup Store 中使用
+export const useCounterStore = defineStore(
+  &#x27;counter&#x27;,
+  () =&gt; {
+    const count = ref(0)
+    return { count }
+  },
+  {
+    persist: true   // 简单启用全部持久化
+  }
+)</code></pre><p class='list-item'>- `@erlihs/pinia-plugin-storage`：支持 localStorage、sessionStorage、cookies、indexedDB 多適配器，並具備跨標籤頁實時同步、防抖、命名空間等高級特性</p><p class='list-item'>- `pinia-plugin-persist-uni`：专为 uni-app 设计的持久化方案，采用 uniAppStorage 存储</p><p class='list-item'>- Pinia 基於 Vue3 的 Proxy 響應式系統，在深度嵌套對象和大規模狀態變更場景下，性能顯著優於 Vuex（約 20-50%）</p><p class='list-item'>- 單個 Store 的 state 不宜過大，否則會影響依賴追蹤效率</p><p class='list-item'>- 高頻觸發場景下，Pinia 的吞吐量比 Vuex 高約 40-50%</p><p>Pinia 憑藉簡潔的語法、優秀的 TypeScript 支持和靈活的設計，已成爲 Vue 生態中狀態管理的事實標準。從 Vuex 到 Pinia 的遷移不僅是技術升級，更是開發體驗和工程效率的躍升。在實際項目中，結合模塊化設計與數據持久化方案，Pinia 能夠勝任從中小型應用到大型複雜系統的所有場景。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

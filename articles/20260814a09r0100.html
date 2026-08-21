@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>为什么信息喂得越多，AI越笨？_腾讯新闻 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>为什么信息喂得越多，AI越笨？_腾讯新闻</h1>
+<div class="meta"><span class="src">new.qq.com</span>
+<span>· <a href="https://new.qq.com/rain/a/20260814A09R0100" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://new.qq.com/rain/a/20260814A09R0100" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><h3>該圖片使用了AI生成技術</h3><p>从“写好Prompt”到“管理AI的注意力”，个人用户该如何理解Context Engineering，编译自 Anthropic《Effective context engineering for AI agents》｜2025年9月29日，头图来自：AI生成</p><p>很多人應該都有過類似的經歷：第一次用AI處理複雜任務時，效果往往很好。你把要求說清楚，給它幾份資料，它很快就能抓住重點。但隨着對話越來越長，事情開始變得奇怪。前面明明強調過的要求，它後面忘了；已經否掉的方案，它隔了幾十輪又重新提出來；你爲了避免它犯錯，又繼續補背景、加規則、塞案例，最後Prompt越來越長，聊天窗口越來越滿，AI卻沒有因此變得更可靠。</p><p>更讓人困惑的是，資料明明就在對話裏。它不是“沒看過”，而是像一個桌面堆滿文件、連續工作了十幾個小時的人：東西都在眼前，卻越來越難準確找到此刻真正需要的那一頁。</p><p>過去遇到這種情況，我們最容易得出的結論是：Prompt寫得還不夠好。於是繼續研究提示詞，增加角色設定、步驟要求、注意事項和示例。最近重看了Anthropic應用AI團隊在《Effective context engineering for AI agents》中提出的判斷，有了新的理解：當AI從一次性問答走向能夠連續搜索、讀文件、調用工具、執行幾十分鐘甚至數小時任務的Agent之後，問題已經不只是“你該怎麼跟AI說話”，而是“在每一步，它究竟應該看到什麼”。</p><p>這就是Context Engineering——。對普通用戶來說，這聽起來像一個偏開發者的概念，但它其實解釋了大量日常使用AI時最令人抓狂的問題，也給出了一個很實用的方向：想讓AI長期穩定地幫你做事，未必需要給它更多信息，反而要學會控制它在每一個時刻看到的信息。</p><p class='list-item'>**一、你以爲自己在寫Prompt，其實是在給AI佈置“工作臺”**</p><p>Anthropic首先把Prompt和Context區分開來。Prompt Engineering關心的是如何寫和組織指令；Context Engineering管理的範圍更大，它指的是模型在一次推理時能夠看到的全部Token，包括系統指令、工具說明、、外部檢索數據、歷史消息，以及Agent此前幾輪執行產生的中間結果。</p><p>如果只是讓AI改一封郵件，兩者的差別並不明顯：你提出要求，模型生成答案，任務結束。但如果你讓AI幫你完成一份行業研究，它可能先搜索資料，再讀幾篇論文，再比較公司數據，然後根據你的反饋修改框架。每走一步，新的搜索結果、舊的對話、臨時判斷都會繼續進入上下文。到這時，真正影響結果的已經不是最開始那一句Prompt，而是模型此刻“工作臺”上究竟擺着哪些東西。</p><p>Anthropic把Context Engineering視爲Prompt Engineering的自然延伸，並用一個問題概括它的核心：“什麼樣的上下文配置，最可能產生我們想要的模型行爲？”這句話對個人用戶很有用。以後AI答偏時，不妨先別急着繼續補一句“請認真一點”，而是檢查：現在這個對話裏是不是已經混進太多舊任務、無關資料和相互衝突的要求？</p><p>換句話說，Prompt是你給AI的一張任務單；Context則是任務單、參考資料、歷史記錄、工具和中間結果共同組成的整個工作環境。AI能不能把事做好，越來越取決於後者。</p><p class='list-item'>**二、最反直覺的一點：能裝得更多，不代表能用得更好**</p><p>今天的大模型不斷宣傳更長的上下文窗口，這很容易讓人形成一種直覺：既然能裝幾十萬甚至更多Token，那就把所有可能相關的資料都放進去，寧可多給，也不要漏給。</p><p>Anthropic恰恰提醒人們不要這樣理解上下文窗口。它引用了“context rot（）”這一現象：隨着上下文中的Token越來越多，模型準確召回其中信息的能力會下降。不同模型退化程度不同，但這種現象具有普遍性。信息並沒有從窗口裏消失，真正下降的是模型可靠調用這些信息的能力。</p><p>Anthropic把模型可用的注意力形容爲一種“attention budget（）”。每加入一條信息，都在佔用這份有限預算。因此真正應該問的不是“這條資料有沒有一點關係”，而是“它的重要程度是否值得佔用模型的注意力”。</p><p>這和個人使用AI時的體驗非常接近。比如你要讓AI修改一篇3000字文章，最有效的上下文通常是原稿、明確的修改目標、少量風格參考和必須覈驗的事實來源。如果你同時把過去十篇稿件、幾十輪聊天、各種臨時想法和大量邊緣案例全部塞進去，信息量雖然增加了，真正決定這一次修改質量的信號卻可能被稀釋。</p><p>Anthropic進一步解釋，這種退化通常不是突然發生的。模型不會在某一個Token之後立刻失效，它仍然可能保持流暢、完整、甚至非常自信的表達，但事實召回和長距離推理精度已經在悄悄下降。這也是長對話最危險的地方：你看到的語言質量沒有明顯下降，卻很容易誤以爲它仍然牢牢掌握了前面的一切。</p><p class='list-item'>**三、真正有效的原則不是“越短越好”，而是“”**</p><p>既然上下文是一種有限資源，是不是意味着Prompt和資料越短越好？Anthropic同樣否定了這種簡單答案。它給出的原則是：找到能夠最大化目標結果概率的、最小的一組高信號Token。</p><p>這裏最容易誤解的是“最小”。Anthropic專門強調，minimal does not necessarily mean short——最小並不一定意味着短。複雜任務當然需要足夠的背景、約束和資料，真正需要刪除的是那些沒有顯著增加任務成功率、卻持續消耗注意力的東西。</p><p>對普通用戶來說，可以把它理解成“最小充分”：少一條就可能影響判斷，多十條卻不會讓答案更好。比如讓AI做一次公司研究，與其一次性丟給它50篇報道，不如先給它研究目標、公司名稱、需要回答的關鍵問題和幾份最核心材料，再讓它根據任務需要繼續搜索。</p><p>這也解釋了爲什麼很多所謂“萬能Prompt”最終會變得越來越笨重。爲了覆蓋所有可能情況，人們不斷添加規則、例外、示例和禁止事項，最後得到一份幾千字甚至上萬字的指令。Anthropic建議的方向正好相反：先從最小版本開始，用當前最強的模型跑真實任務，觀察它到底在哪裏失敗，再針對真實失敗增加清晰的指令和例子。</p><p>這套方法的價值在於，每一條新增規則都有現實原因，而不是爲了獲得一種“寫得越詳細越安全”的心理安慰。對於個人用戶也是一樣：不要一開始就試圖寫出一份完美Prompt，先讓AI做，再根據它真正犯過的錯迭代。</p><p class='list-item'>**四、少給規則，多給“典型例子”**</p><p>Anthropic仍然非常推薦few-shot，也就是給模型示例。但它反對把大量邊緣案例像“洗衣清單”一樣堆進Prompt。原因很直接：案例太多會喫掉上下文、稀釋真正重要的行爲模式，也可能讓模型困在表面差異裏。</p><p>更好的方式是挑少量、多樣而典型的標準案例。Anthropic有一句很形象的話：對於LLM而言，例子就是“一圖勝千言”的那張圖。一個真正好的樣例，可以同時告訴AI文章結構、語氣、判斷標準、信息密度以及什麼叫“合格”，這些東西往往比寫十條抽象規則更有效。</p><p>如果你經常用AI寫作，這一點尤其明顯。與其告訴它“不要AI味、不要小短句、要像成熟商業編輯、邏輯自然、語言有節奏”，不如同時給它一篇真正符合你標準的文章，再明確指出你要它學習的是段落組織、信息密度和敘述節奏，而不是照抄內容。對模型而言，這種高質量範例往往比繼續增加形容詞更有用。</p><p>但這裏同樣需要剋制。參考文章不是越多越好。你真正需要的是能夠清楚表達目標風格的少數代表作。</p><p class='list-item'>**五、別把整個資料庫塞給AI，讓它需要時自己去找**</p><p>Anthropic在文章裏提出的另一個重要變化，是“just-in-time context（即時上下文）”。過去很多AI系統喜歡在任務開始前就把可能相關的資料檢索出來，一次性塞進模型；隨着Agent能力提高，Anthropic越來越傾向於讓模型保留輕量引用，在真正需要的時候再動態加載。</p><p>Claude Code就是他們給出的典型案例。面對大型代碼庫，它不會先把所有文件全部放進上下文，而是通過文件路徑、查詢和head、tail等命令逐步查看真正需要的部分。Anthropic認爲，這種方式其實更像人的認知習慣：我們不會背下整個硬盤、郵箱或書架，而是依賴文件夾、書籤和搜索，需要時再取回信息。</p><p>這一點對個人用戶非常實用。如果你讓AI幫你做長期研究，與其把幾十份PDF全部塞進一個對話，更好的方式往往是先給它任務框架和資料目錄，讓它先判斷需要哪些信息，再逐步讀取。做文章也是如此：先讓它理解選題和問題，再針對每一部分補對應的原始研究、訪談或數據，而不是一開始把所有資料堆滿窗口。</p><p>Anthropic把這種過程稱爲progressive disclosure——。Agent一層層探索，每一次得到的信息都決定下一步去哪裏找。工作記憶裏只留下當下最需要的內容，其餘信息放在外部，需要時再調回來。</p><p>這意味着，未來真正好用的Agent不一定是“什麼都記得”的Agent，更可能是“知道什麼時候該去哪裏找”的Agent。</p><p class='list-item'>**六、對話越來越長時，最有效的動作可能是：重新開一個**</p><p>這是普通用戶最容易立刻應用的一點。很多人已經習慣在同一個ChatGPT或Claude窗口裏連續工作幾天甚至幾周，因爲擔心新對話會“失去上下文”。但Anthropic的文章實際上給出了另一種思路：當上下文越來越臃腫時，保留關鍵狀態、壓縮歷史，然後進入一個乾淨的新窗口，往往比拖着全部歷史繼續走更可靠。</p><p>Anthropic把這種方法稱爲Compaction。它會把接近窗口極限的對話壓縮成高保真摘要，保留架構決策、未解決問題和關鍵實現細節，刪除重複工具輸出等已經失去價值的信息，然後用這份摘要重新開始。</p><p>個人用戶完全可以手動做同樣的事。比如一篇文章已經和AI來回修改了30輪，後面越來越混亂，可以讓它先整理一份“當前版本工作摘要”：文章目標是什麼、已經確認哪些事實、哪些觀點已經刪除、目前還剩哪些問題、寫作風格有什麼硬性要求。然後把這份摘要和最新稿件帶到一個新對話裏繼續。</p><p>關鍵不是把舊對話完整搬過去，而是把真正影響下一步工作的狀態搬過去。這就是上下文工程最核心的思想：保留信息，不等於保留所有原始記錄。</p><p class='list-item'>**七、長任務要讓AI學會“寫筆記”，而不是永遠靠聊天記錄記憶**</p><p>除了压缩，Anthropic还提出Structured note-taking，也就是结构化笔记或Agentic Memory。</p><p>Agent會把重要狀態寫到上下文窗口之外，例如維護一個To-do List或NOTES.md，需要時再讀取。</p><p>Anthropic用Claude玩《寶可夢》的實驗說明這種方法：Agent能夠跨越數千個遊戲步驟記錄目標、訓練進度、探索地圖和戰鬥策略；上下文重置之後，再讀取自己的筆記繼續行動。這裏真正重要的不是AI會不會玩遊戲，而是它展示了一種長期任務的工作方式——持續任務不必依賴一個永遠不清空的聊天窗口，關鍵狀態完全可以外置。</p><p>對普通用戶來說，這意味着如果你長期用AI做一個項目，可以主動建立一份“項目記憶”。裏面只放長期有效的信息：目標、已經完成的事項、重要決策、關鍵人物、固定寫作標準、不能改變的事實，以及下一步計劃。每次開始新的對話，把真正需要的部分重新帶回來。</p><p>這比指望AI從幾百輪歷史消息中自動找回所有重要信息，更可控，也更可靠。</p><p class='list-item'>**八、個人真正需要學的，不是Prompt技巧，而是“注意力管理”**</p><p>把Anthropic整篇文章拉回到個人使用場景，它其實提供了一套非常樸素的方法論：把AI的上下文當成工作記憶，而不是硬盤。</p><p>你不需要讓它時時刻刻看到所有東西。真正重要的是，在當前這一步，讓它看到最有價值的信息。寫文章時，只放當前稿件、核心原始材料和明確標準；做研究時，讓它先建立問題，再按需查資料；長對話開始混亂時，及時總結、壓縮、換窗口；長期項目把重要狀態寫進外部筆記，而不是無限依賴歷史聊天；需要模仿風格時，給少量真正好的典型案例，而不是幾十篇參考。</p><p>這套思路看起來沒有“一個Prompt讓AI能力翻倍”那麼吸引人，但它可能更接近AI真正穩定工作的方式。Anthropic在結論中再次強調，Context Engineering的核心，是在每一步謹慎選擇進入模型有限注意力預算的信息，並尋找能夠最大化目標結果概率的最小高信號Token集合。</p><p>對於個人用戶而言，這也意味着AI使用能力正在發生一次變化。過去，我們比的是誰更會“問”；接下來，更重要的可能是誰更會“組織信息”。</p><p>一個真正熟練的AI用戶，不一定擁有最長的Prompt，也不一定把最多資料交給模型。他更像一個好的編輯、研究員或者項目經理：知道目標是什麼，知道當前需要哪些信息，知道哪些材料應該暫時放在一邊，知道什麼時候該總結，什麼時候該重新開始，也知道什麼時候應該讓AI自己去尋找答案。</p><p>所以，Anthropic這篇文章真正值得普通人記住的，不是Context Engineering這個新名詞，而是它背後的一個簡單判斷：AI的注意力也是有限的。用好Agent，不是不斷把世界塞進它的腦子，而是在每一個當下，只讓它看到最值得看到的那部分世界。</p><p>給個人用戶的一份簡化使用原則：</p><p>• 複雜任務開始前，先明確目標、交付物和硬約束，不要一上來堆資料。</p><p>• 參考材料優先選擇少量高質量、直接相關的內容；能按需調用的資料，不必全部預加載。</p><p>• AI開始重複、遺忘或前後矛盾時，優先考慮上下文是否已經過載，而不是繼續疊加Prompt。</p><p>• 長對話定期生成“項目狀態摘要”，必要時帶着摘要和最新材料開啓新對話。</p><p>• 長期項目維護一份外部項目記憶：關鍵事實、已做決定、未完成事項、固定標準。</p><p>• 給示例時追求典型和多樣，不追求數量；把邊緣案例留給測試，而不是全部塞進運行時Prompt。</p><p>• 始終問自己：這一條信息真的會提高當前任務做對的概率嗎？如果不會，就不要佔用上下文。</p><p>原文與編譯說明：</p><p>原文：Anthropic, “Effective context engineering for AI agents”</p><h3>發佈時間：2025年9月29日</h3><p>作者：Anthropic Applied AI团队 Prithvi Rajasekaran、Ethan Dixon、Carly Ryan、Jeremy Hadfield 等</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
