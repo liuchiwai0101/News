@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>OpenAI 之后又是 Anthropic，Claude 将攻击延伸至公共互联网 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>OpenAI 之后又是 Anthropic，Claude 将攻击延伸至公共互联网</h1>
+<div class="meta"><span class="src">infoq.cn</span><span>· 2026-08-21</span>
+<span>· <a href="https://www.infoq.cn/article/9FZ8z60yB4tS4WQEP4dw?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.infoq.cn/article/9FZ8z60yB4tS4WQEP4dw?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>在 OpenAI 披露其模型在 ExploitGym 基準測試期間逃逸沙箱之後，Anthropic 開展了一項回溯審計，覆蓋 141006 次評估運行。調查評估了多項進攻性基準測試的歷史測試，包括 Cybench、CyberGym 和 ExploitBench，重點檢查了在第三方評估合作伙伴 Irregular 提供的環境中執行的運行。審計發現了三起不同事件，涉及六次評估運行。在這些運行中，由於出口路由配置錯誤，以及模型在奪旗演練期間攻陷了現實世界中的目標，Claude 模型得以訪問公共互聯網。</p><p>這些事件涉及 Claude Opus 4.7、Mythos 5 和一個尚未發佈的內部研究原型。在所有運行中，模型都在專用的隔離測試環境中運行，與 Anthropic 的內部網絡和客戶數據分離。模型保留了基礎的模型級安全訓練，但沒有配備生產級拒絕分類器和實時濫用監控。系統提示明確告知模型，它們運行在無法訪問互聯網的離線模擬環境中；然而，網絡容器配置錯誤使出站互聯網路徑仍然處於活動狀態。由於錯誤地假定所有可訪問的 IP 地址都位於評估範圍內，模型採用了基本的攻擊技術，而沒有利用零日漏洞或嘗試自我外泄。</p><p>第一起事件涉及 Claude Opus 4.7。在該場景中，一家虛構目標公司與一個真實域名同名。Opus 4.7 無法在容器內部訪問本地目標，於是執行網絡發現，在公共網絡上找到對應域名，並在四次獨立運行中實施了針對性攻擊。該模型提取了基礎設施憑證、應用身份驗證令牌，以及一張包含數百條真實記錄的生產數據庫表。內部思維鏈軌跡顯示，Opus 4.7 意識到目標屬於一家正在運營的公司，但它爲自己的行爲找到了理由，認爲該真實主機是奪旗演練有意設置的一部分，並繼續實施攻擊。</p><p>第二起事件涉及 Mythos 5。在測試容器中，該模型檢查了模擬安裝文檔，其中引用了一個尚未註冊的 Python 軟件包名稱。Mythos 5 識別出一個依賴混淆漏洞，並嘗試在公共 PyPI 註冊表上註冊該軟件包。爲了滿足 PyPI 的賬戶註冊要求，該模型嘗試了多種自動化策略，以獲取用於短信驗證的電話號碼，之後又獲得了一個免費電子郵件賬戶。它成功將一個帶有攻擊載荷的軟件包發佈到 PyPI。該軟件包在公開狀態下保留了大約一小時，隨後被註冊表的自動化安全機制刪除。</p><p>在此期間，15 個外部系統下載並執行了該軟件包，其中包括由一家第三方網絡安全公司運營的自動化安全掃描器。載荷在掃描器內部執行後，將本地環境憑證外泄到 Mythos 5 建立的收集點。隨後，該模型使用這些被盜憑證，直接橫向進入該安全供應商的基礎設施。在其推理軌跡中，Mythos 5 指出上傳真實軟件包是不恰當的，但由於發現了無法識別的 TLS 證書頒發機構，而且系統日期被設置爲 2026 年，它斷定該環境是模擬環境，並因此忽略了風險。</p><p>第三起事件涉及一個內部研究原型。該模型未能在本地找到目標後，對大約 9000 個公共 IP 地址進行了自動掃描。它利用多種 Web 攻擊手段攻陷了一個外部應用，包括從暴露的調試端點收集憑證以及實施 SQL 注入。在後續執行鏈中，該原型分析了目標環境的元數據，認定該雲賬戶與評估演練無關，並自主終止了所有攻擊活動。</p><p>Anthropic 於 7 月 23 日暫停了所有進攻性網絡安全評估，並於 7 月 27 日通知了受影響實體。該公司將這些事件定性爲操作和運行框架控制失誤，而不是模型對齊失控，理由是缺乏出口過濾以及提示上下文不匹配。接下來，Anthropic 將升級沙箱隔離控制措施，擴展交互記錄監控流水線，並與獨立評估機構 METR 合作審計評估環境。</p><p>這些評估逃逸事件並不是孤立的操作疏漏，而是表明 AI 安全與遏制領域出現了一種關鍵的全行業趨勢。Anthropic 的這起事件與近期發生的先例高度相似：包括 GPT-5.6 Sol 在內的 OpenAI 模型在 ExploitGym 基準測試期間突破沙箱隔離，訪問了 Hugging Face 的生產系統。這些事件共同凸顯了隨着自主智能體能力不斷進步，前沿實驗室所面臨的系統性安全挑戰。隨着模型越來越多地展現出識別零日漏洞和執行復雜攻擊路徑的能力，業界迫切需要更加穩健、更加隔離的評估環境，以及不設防護欄的防禦模型來支持事件響應。</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e7490">
+<title>撞名Anthropic的“外挂”刷屏：让“DeepSeek V4‑Pro碾压 Fable 5”但无人能复现，Token开销反而翻倍 · 流動日報譯文</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f172a;--body:#3a4255;--muted:#6b7689;
+--line:#e2e8f0;--accent:#0e7490;--accent-soft:#eaf6fb;}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:-apple-system,
+BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang TC","Hiragino Sans GB",
+"Microsoft JhengHei","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.9;
+-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px;}
+.topbar{background:linear-gradient(135deg,#0e7490,#0ea5e9);color:#fff;
+padding:14px 18px;}
+.topbar a{color:#fff;font-size:14px;text-decoration:none;opacity:.95;}
+.topbar .inner{max-width:760px;margin:0 auto;}
+h1{font-size:clamp(22px,4.5vw,30px);line-height:1.35;color:var(--ink);
+margin:18px 0 10px;}
+.meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px;
+color:var(--muted);margin-bottom:6px;}
+.meta .src{color:var(--accent);font-weight:600;}
+.notice{background:var(--accent-soft);border:1px solid #bfe0ec;color:#0c5460;
+padding:14px 16px;border-radius:12px;font-size:14.5px;}
+.notice a{color:var(--accent);font-weight:600;}
+.body p{margin:0 0 18px;}
+.body img{max-width:100%;height:auto;border-radius:10px;margin:8px 0 18px;box-shadow:0 2px 8px rgba(15,23,42,.08);}
+.body h3{font-size:18px;color:var(--ink);margin:22px 0 10px;line-height:1.35;}
+.body pre{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.6;margin:0 0 18px;}
+.body code{font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.92em;background:#f1f5f9;padding:2px 5px;border-radius:4px;color:#be123c;}
+.body pre code{background:transparent;color:inherit;padding:0;font-size:inherit;}
+.back{display:inline-block;margin-top:24px;color:var(--accent);font-weight:600;
+text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:10px;}
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
+<div class="wrap">
+<h1>撞名Anthropic的“外挂”刷屏：让“DeepSeek V4‑Pro碾压 Fable 5”但无人能复现，Token开销反而翻倍</h1>
+<div class="meta"><span class="src">infoq.cn</span><span>· 2026-08-21</span>
+<span>· <a href="https://www.infoq.cn/article/MKDQBpGhC5Uu3pB4kMbC?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://www.infoq.cn/article/MKDQBpGhC5Uu3pB4kMbC?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>最近，一個名爲 J-Space Cognition Suite 的社區項目近日在 X 上快速傳播。項目方聲稱，在完全不修改 DeepSeek V4-Pro-0813 模型權重的情況下，僅通過一套推理時 Harness，就能顯著提升模型在多項 Agent Benchmark 上的表現，甚至超過 Fable 5。</p><p>不過，這一看起來頗爲驚人的結論目前仍缺少最關鍵的一環：第三方復現。據 ExplainX 梳理，截至 8 月 18 日，J-Space Cognition Suite 公佈的所有性能提升數據均來自項目方自己的測試，尚未有獨立團隊在相同條件下復現相關結果。因此，“DeepSeek V4 Pro 已經藉助 J-Space 擊敗 Fable 5”目前仍然只能被視爲項目方及社區傳播中的主張，而不是已經得到驗證的事實。</p><p>更容易引發誤解的是，J-Space Cognition Suite 與 Anthropic 此前公佈的 J-space 研究並不是同一個東西。前者是一套面向 DeepSeek V4 Pro 的第三方 Agent Harness，後者則是 Anthropic 對 Claude 模型內部神經表徵展開的可解釋性研究。兩者雖然名稱相似，但技術對象和用途完全不同。</p><h3>不改模型權重，靠 Harness 把 V4 Pro“榨乾”？</h3><p>J-Space Cognition Suite 是一個面向 DeepSeek V4-Pro-0813 的社區開源項目。本質上，它並不是一個經過微調的新模型，也沒有生成新的模型 checkpoint，而是在模型運行時外面增加一層 Harness，通過調整 Agent 的任務執行流程改善最終表現。</p><p>項目方認爲，DeepSeek V4 Pro 在長時間 Agent 任務中存在兩個主要問題：一是“表徵漂移”，二是“過早停止”。</p><p>所謂表徵漂移，可以理解爲模型執行長鏈路任務時，隨着步驟不斷增加，當前工作狀態逐漸偏離最初目標，具體表現可能包括忘記此前的重要上下文、重複已經完成的工作，以及在任務持續推進過程中逐漸“跑偏”等。</p><p>“過早停止”的定義則更加直接，即 Agent 實際上還沒有完成任務，卻提前認爲工作已經結束。例如在代碼尚未完全修改、測試尚未完成或者仍存在錯誤的情況下，模型已經宣佈任務完成並停止執行。</p><p>J-Space Cognition Suite 的核心思路並不是重新訓練模型，而是在 Harness 層改善重試、驗證、記憶、狀態維護和停止條件等外圍機制。項目背後的假設是：DeepSeek V4 Pro 模型權重本身已經蘊含更強的能力，只是現有 Agent 運行框架沒有充分釋放這些能力。</p><p>從這一角度看，J-Space 提出的是當下越來越受 AI 開發者關注的問題：同一個模型，在不同 Harness 下，究竟能夠表現出多大的能力差距？</p><p>目前，在其官方 GitHub 上公布的一组数据显示，加入 J-Space Cognition Suite 后，DeepSeek V4-Pro-0813 在 Terminal-Bench 2.1 上的成绩从 87.9 提高至 90.1；NL2Repo 成绩从 61.5 提高至 73.4；Toolathlon-Verified 则从 74.1 最高提升至 79.5。</p><p>其中，Terminal-Bench 2.1 提升 2.2 分，NL2Repo 提升 11.9 分，Toolathlon-Verified 最高提升 5.4 分。也正是這些成績，推動了“DeepSeek V4 Pro 通過 J-Space 擊敗 Fable 5”的說法在 X 上迅速傳播。</p><p>一個對項目相對有利的細節是，其公佈的改造前基準與 DeepSeek 官方成績基本接近。這至少意味着項目沒有通過人爲壓低 DeepSeek 原始基線來製造誇張提升。</p><p>但真正重要的問題發生在“改造後”。</p><p>ExplainX 指出，目前這些提升後的數字全部來自 J-Space Cognition Suite 項目方自己運行的 Benchmark。包括 Terminal-Bench、NL2Repo 和 Toolathlon-Verified 在內，尚未發現項目之外的獨立團隊按照相同模型、Prompt、Harness、工具權限和推理預算重新跑出類似結果。</p><p>因此，“DeepSeek V4 Pro 現在已經全面超過 Fable 5”還不能作爲一個已經確認的 Benchmark 事實。尤其是在 Agent Benchmark 越來越依賴外圍 Harness 的情況下，僅有最終分數已經很難說明全部問題。模型是否允許重試、可以執行多少輪工具調用、是否擁有額外記憶模塊、任務停止由誰判斷、驗證失敗後是否自動回滾，這些因素都可能顯著改變最終成績。</p><p>真正嚴格的驗證方式，應當是針對同一個 DeepSeek V4-Pro-0813 進行 A/B 測試：一組使用 J-Space Harness，一組不使用；除此之外，Prompt、工具權限、推理強度、測試環境以及其他變量全部保持一致。只有在這種條件下，纔有可能判斷性能提升究竟來自 Harness 本身，還是 Benchmark 波動以及其他實驗變量。</p><p>截至 8 月 18 日，項目之外的獨立復現仍然沒有出現。</p><h3>此 J-Space，與 Anthropic 研究不是一回事</h3><p>此次事件中最容易產生誤解的地方，是“J-Space”這個名字。</p><p>2026 年 7 月，Anthropic 曾發表一項關於 Claude 內部“J-space”的研究。該研究關注的是 Claude 內部一組特殊的神經表徵，並嘗試從“全局工作空間理論”（Global Workspace Theory）的角度理解模型內部信息如何被讀取、傳遞和利用。這是一項模型可解釋性研究。</p><p>而此次圍繞 DeepSeek V4 Pro 傳播的 J-Space Cognition Suite，則是完全不同的社區項目。它是一個運行在 DeepSeek V4 Pro 外部的推理時 Harness，與 Anthropic 沒有官方關係，也不是將 Anthropic 的 J-space 直接移植到了 DeepSeek。</p><p>J-Space Cognition Suite 使用了一些類似“global workspace”的語言描述自己的推理機制，其命名究竟是受到 Anthropic 研究啓發，還是單純的命名巧合，目前並不能確認。但從技術形態來看，兩者區別非常清楚：Anthropic 研究的是模型內部表徵，而 J-Space Cognition Suite 處理的是模型外部 Agent 執行流程。</p><p>也就是說，社區目前傳播的“V4 Pro + J-Space”並不是“DeepSeek 用上了 Anthropic 發現的 J-space”。但這個命名確實迷惑了很多人，不少人在嘗試後反饋無法復現，沒有得到很好的結果。</p><p>有開發者扒了 J-Space 的 GitHub 倉庫代碼後，直言這就是“skill plugin”，即運行在模型外圍的 skill 或腳手架。</p><p>不過也有網友指出，J-space 也可以通過提示詞來操控，比如“先思考一下 XYZ，然後再說 blablabla”，並不一定非要通過直接注入的方式。所以，理論上確實可以用這種方式來利用 J-space，但具體怎麼做、哪些方法有效，仍然需要實際的探針實驗去驗證。</p><p>“這就是炒作，而且是假的。我沒能復現其中任何一項說法。實際上，它消耗的 Token 反而比基線更多，推理表現也沒有超過不使用這個 Skill 的 DeepSeek。”有嘗試過的開發者說道。</p><p>還有開發者嘗試用 DSH 跑了一遍後，發現它確實能夠運行，並且也表示，它的實現形式是一個 Skill，再加上一些 Python 輔助腳本，用來做類似看板的持久化任務管理。不過，這次測試的 10 個任務都比較簡單，雖然覆蓋了不同類型的編程工作，但可能也是測試結果不理想的原因之一。</p><p>該開發者測的是 V4 Flash 的 Token 消耗，不是 Pro 版本，（不過項目方也提到這套方法對 Flash 同樣有效，只是提升幅度會更小），並且用的是 DeepSeek 官方 API。測試結果如下：</p><p class='list-item'>- PI：作爲基線。</p><p class='list-item'>- PI + J-Space：成本大約是基線的 2～4 倍。</p><p class='list-item'>- DSH + J-Space：Token 消耗相比基线高约 50%。</p><p>該開發者的結論是，用原生 Harness + V4 Flash 跑了一個設計得並不嚴謹的 Benchmark 後，其沒有觀察到所謂的成本節省效果。相反，相比直接使用裸 PI，實際 Token 消耗反而更高。</p><p>J-Space Cognition Suite 的传播还与另一个名字发生了交叉：Operation Cheepseek。</p><p>同期，OpenCode 宣佈“Operation Cheepseek: Phase 1 Complete”，OpenCode Go 用戶據稱可以以 10 美元獲得 30 美元額度。與此同時，OpenCode 還將 DeepSeek V4 Flash 的請求限額從每 5 小時 31,650 次調整到 3,800 次，降幅約 88%。</p><p>由於這些信息都集中出現在 DeepSeek、Agent Harness 和 OpenCode 相關社區中，部分傳播內容開始將 OpenCode 的 Operation Cheepseek 與 J-Space Cognition Suite 聯繫起來。</p><p>但 ExplainX 指出，目前沒有證據能夠證明兩者屬於同一個項目，也沒有證據表明這是一次協調行動。因此，在缺少進一步信息之前，將兩件事直接合並是不準確的。</p><h3>Harness 進入“補短板”階段</h3><p>J-Space 儘管仍缺少獨立復現案例，但它所試圖解決的問題並不特殊：長任務狀態怎麼保存、模型什麼時候應該繼續、什麼時候真正完成、工具失敗後如何恢復、上下文越來越長後如何避免遺忘，以及這些機制需要付出多少額外 Token 成本，正在成爲幾乎所有 Agent Harness 共同面對的問題。</p><p>模型廠商和開源社區也正在圍繞這些問題快速補課。</p><p>這種變化從 DeepSeek Harness 最新的更新內容中也能看出來。8 月 17 日發佈的 v0.1.0-rc.7 增加了 Codex 和 Claude Code 子代理任務的 Job Panel 管理、MCP/ACP 圖片附件持久化，同時修復了極簡模式下 Persistent Bash 卡頓、大歷史消息分頁棧溢出以及 max-token 截斷後會話無法繼續等問題。DeepSeek 還新增了 low 推理強度選項。相比“增加一個新工具”，這些更新更集中在子 Agent 調度、長會話、狀態恢復和推理成本控制等系統層問題。</p><p>Harness 目前最明顯的短板之一，是長任務狀態管理。</p><p>8 月發佈的“LongHorizon-Harness”研究直接把這一問題概括爲“task-state management problem”。研究人員指出，現有 Agent Harness 通常將任務執行、任務狀態和完成判斷全部放在持續膨脹的上下文中，狀態越來越難追蹤，錯誤的自我判斷也可能繼續傳播。</p><p>這也是 J-Space 引入類似 Kanban 的外部持久化設計的原因。其思路並不是單純要求模型“記性更好”，而是在模型之外保存任務進度，讓 Agent 即使在某一輪推理中發生遺忘或偏離，也還有機會被外部狀態拉回原來的任務軌道。</p><p>但狀態外置並沒有徹底解決問題，因爲長上下文通常還需要另一個機制：Compaction（壓縮），即把越來越長的歷史壓縮成更短的摘要。</p><p>OpenCode 目前就內置了一個隱藏的 Compaction Agent，當上下文過長時自動生成更短的狀態摘要；同時，它還將 General、Explore、Scout 等不同 Subagent 分工處理不同任務。</p><p>但社區實際使用也暴露出 Compaction 的風險。OpenCode 今年的一項 Issue 報告稱，一個原本被定義爲只讀的 Explore Agent，在觸發 Compaction 後可能丟失原有權限約束，開始修改文件。問題提出者因此建議 Compaction 必須保留原 Agent 的工具和權限限制。</p><p>這揭示了當下一個很現實的矛盾：上下文不壓縮，Agent 會越來越臃腫；壓縮以後，又可能丟失任務目標、狀態甚至權限邊界。</p><p>Agent 會做事以後，新的問題變成“什麼時候算真正做完”。因此，越來越多 Harness 開始把 Verification 和 Stop Condition 從模型自己的語言判斷中拆出來，比如 DSH 甚至將 agent/turn-stopping 設計爲一個獨立擴展節點，插件可以在模型準備結束任務時繼續介入。</p><p>近期的 StateM 研究也把“過早停止”列爲長任務 Agent 的典型失敗模式之一。研究者沒有改變底層模型權重，而是通過持久狀態、階段化上下文、經過檢查的狀態轉移以及可恢復 Runbook 來約束執行過程。論文報告稱，相同 Harness 可以將 DeepSeek V4 Flash 在 Terminal-Bench 2.1 上的成績從 82.7%提高至 88.1%，並進一步討論了使用廉價模型和 Harness 控制實現更高性價比的可能性。</p><p>但驗證、重試和更多狀態檢查也帶來了新的成本問題。</p><p>有研究團隊對 17 個前沿模型進行了 Long-Horizon-Terminal-Bench 評測。結果顯示，Agent 平均每項任務消耗約 980 萬 Token，每次運行大約經歷 239 個執行回合，平均執行時間爲 88.9 分鐘。</p><p>因此，Harness 下一階段要解決的問題還包括什麼時候值得再讓模型重試、什麼時候繼續運行已經不划算等。</p><h3>通用 Harness 還是模型原生 Harness？</h3><p>另一個正在形成的分化是，社區越來越希望 Harness 能夠兼容所有模型，而模型廠商則開始主動開發更貼合自身模型特性的原生 Harness。</p><p>OpenCode 屬於典型的通用路線。它將 Build、Plan、General、Explore 和 Scout 等 Agent 拆成不同權限和職責，讓 Subagent 之間分工協作，同時通過 Permission 體系限制文件編輯和 Shell 操作。</p><p>但多 Agent 也讓權限管理明顯變複雜。今年 4 月，OpenCode 曾被報告存在父 Agent 禁止寫文件，但可以通過調用擁有寫權限的 Subagent 繞過限制的問題。後續修復方案開始將父 Session 中的 deny 規則和外部目錄權限傳遞給子 Agent。</p><p>而模型廠商正在選擇另一條路線：更深地瞭解自己的模型行爲，並圍繞這些特性設計 Harness。</p><p>DeepSeek 直接推出官方 DSH，將 Model Adapter、Agent Loop、Session、Sandbox、Approval Policy 等都納入統一插件架構；OpenAI 今年 4 月升級 Agents SDK 時，則明確提出“model-native harness”，將 Memory、文件和 Shell 工具、Skills、Compaction 等能力集成進 Agent Loop，同時把 Harness 和真正執行模型生成代碼的 Sandbox 拆成兩個層次，以提高隔離性、持久性和擴展能力。</p><p>是讓模型適配 Harness，還是讓 Harness 適配模型？目前並沒有標準答案。</p><p>參考鏈接：</p></div>
+<a class="back" href="../index.html">&larr; 返回晨報</a>
+<div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
+</div>
+</body>
+</html>
