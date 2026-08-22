@@ -1,0 +1,86 @@
+[
+  {
+    "name": "D1-2_frame",
+    "triangles": 2474,
+    "volume_mm3": 5602.5,
+    "extents_mm": [
+      20.8,
+      37.3,
+      10.95
+    ],
+    "watertight": true,
+    "file": "stl/D1-2_frame.stl"
+  },
+  {
+    "name": "F2_joint_body",
+    "triangles": 506,
+    "volume_mm3": 502.09,
+    "extents_mm": [
+      12.0,
+      19.4,
+      3.2
+    ],
+    "watertight": true,
+    "file": "stl/F2_joint_body.stl"
+  },
+  {
+    "name": "F5_outer_plate",
+    "triangles": 822,
+    "volume_mm3": 524.33,
+    "extents_mm": [
+      12.0,
+      17.8,
+      7.2
+    ],
+    "watertight": true,
+    "file": "stl/F5_outer_plate.stl"
+  },
+  {
+    "name": "F6_inner_plate",
+    "triangles": 818,
+    "volume_mm3": 424.27,
+    "extents_mm": [
+      12.0,
+      17.8,
+      4.2
+    ],
+    "watertight": true,
+    "file": "stl/F6_inner_plate.stl"
+  },
+  {
+    "name": "F4_ball_joint",
+    "triangles": 5480,
+    "volume_mm3": 448.93,
+    "extents_mm": [
+      8.2,
+      8.0,
+      15.68
+    ],
+    "watertight": true,
+    "file": "stl/F4_ball_joint.stl"
+  },
+  {
+    "name": "print_plate",
+    "triangles": 10100,
+    "volume_mm3": 7502.12,
+    "extents_mm": [
+      89.0,
+      37.3,
+      15.68
+    ],
+    "watertight": true,
+    "file": "stl/print_plate.stl"
+  },
+  {
+    "name": "assembly_preview",
+    "triangles": 9574,
+    "volume_mm3": 7344.79,
+    "extents_mm": [
+      20.8,
+      42.5,
+      22.28
+    ],
+    "watertight": true,
+    "file": "stl/assembly_preview.stl"
+  }
+]
