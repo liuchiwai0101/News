@@ -43,10 +43,147 @@ font-size:12.5px;color:var(--muted);}
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
 <h1>React + TypeScript 实战：从 Color Picker 到 API 模块化的分层哲学</h1>
-<div class="meta"><span class="src">CSDN</span><span>· 8月21日 周五</span>
+<div class="meta"><span class="src">CSDN</span><span>· 8月24日 周一</span>
 <span>· <a href="https://blog.csdn.net/2403_88631208/article/details/163393795" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
-
-<div class="body"><div class="notice">原文頁面無法擷取全文，請<a href="https://blog.csdn.net/2403_88631208/article/details/163393795" target="_blank" rel="noopener noreferrer">點此查看原文 ↗</a>。</div></div>
+<div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/2403_88631208/article/details/163393795" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
+<div class="body"><p>很多人問我：TypeScript 究竟能給 React 項目帶來什麼？看完這個調色板與成員表格的實戰拆解，你會發現——</p><p>類型不是束縛，而是讓代碼自己會說話的說明書。</p><h3>開局一張圖：爲什麼 TypeScript 是大型項目的剛需</h3><p>那句“ts 適合大型項目開發，代碼量大，成員多”雖然簡短，但點出了核心痛點。在多人協作、組件複用頻繁的場景裏，靠人腦記憶 props 名稱和類型遲早會出事。TypeScript 最大的價值不是多寫幾個類型註解，而是**建立起一套“數據模型先行”的開發紀律**。</p><p>下面我們以一個包含「調色板」和「成員列表」的 Demo 爲例，把零散的代碼筆記串成一套可落地的架構思路。</p><h3>一、先把數據模型“拎”出來：model 層</h3><p>你一定見過這樣的場景：一個 <code>User</code> 對象的結構散落在十幾個文件裏，後端改了字段，前端要全局搜索逐個替換。把數據模型集中管理，問題就迎刃而解。</p><h3>#### 顏色模型：Color</h3><pre><code>// model/color.ts
+export interface Color {
+  red: number;
+  green: number;
+  blue: number;
+}</code></pre><p>這個接口看似簡單，卻承擔着“顏色數據契約”的角色。無論在 <code>ColorBrowser</code> 還是 <code>ColorPicker</code> 中，只要引用 <code>Color</code>，就能保證大家對顏色的理解完全一致——RGB 三個通道，值都是 number，範圍 0~255（邏輯上我們還要約束）。</p><h3>#### 成员模型：MemberEntity</h3><pre><code>// model/member.ts
+export interface MemberEntity {
+  id: number;
+  login: string;
+  avatar_url: string;
+}</code></pre><p><code>MemberEntity</code> 直接對應 GitHub 風格的用戶數據。**把實體定義獨立成文件，前端就有了自己的“數據字典”** ，接口聯調時看一眼 model 目錄就知道數據結構長什麼樣。</p><p>小貼士：</p><p><code>type</code>和<code>interface</code>在這裏都能用，但 interface 更具擴展性，也更符合面向對象建模的習慣。</p><h3>二、接口請求也模塊化：api 層</h3><p>有了模型，我們自然希望獲取數據的方法也能“開箱即用”，並且返回類型與模型嚴格匹配。這就是 <code>api</code> 目錄的意義。</p><pre><code>// api/memberApi.ts
+import { type MemberEntity } from &quot;../model/member&quot;;
+export const getMembersCollection = (): Promise&lt;MemberEntity[]&gt; =&gt; {
+  return new Promise((resolve) =&gt; {
+    setTimeout(() =&gt; {
+      resolve([
+        {
+          id: 1457912,
+          login: &quot;brauliodiez&quot;,
+          avatar_url: &quot;https://avatars.githubusercontent.com/u/1457912?v=3&quot;
+        },
+        {
+          id: 4374977,
+          login: &quot;Nasdan&quot;,
+          avatar_url: &quot;https://avatars.githubusercontent.com/u/4374977?v=3&quot;
+        }
+      ])
+    }, 500)
+  })
+}</code></pre><p>這裏有幾個亮點值得記住：</p><p class='list-item'>- **返回類型明確標註爲**，調用方用- `Promise<MemberEntity[]>`- `await`拿到的直接就是- `MemberEntity[]`，智能提示一步到位。</p><p class='list-item'>- 通過 `setTimeout`模擬異步請求，**所有異步行爲都封裝在 Promise 中**，與真實`fetch`或`axios`調用可以無縫切換。</p><p class='list-item'>- 獨立的 `api`目錄讓接口方法集中管理，後期更換數據源只需修改這一處。</p><h3>三、狀態提升與組件拆分：ColorPicker 實戰</h3><h3>#### App.tsx：狀態的“中央廚房”</h3><pre><code>import { useState } from &#x27;react&#x27;
+import { type Color } from &#x27;./model/color&#x27;;
+function App() {
+  const [color, setColor] = useState&lt;Color&gt;({
+    red: 20,
+    green: 240,
+    blue: 180
+  });
+  return (
+    &lt;&gt;
+      &lt;ColorBrowser color={color} /&gt;
+      &lt;ColorPicker color={color} onColorUpdated={setColor} /&gt;
+    &lt;/&gt;
+  )
+}</code></pre><p>這裏直接 ** useState<Color>**  顯式指定了泛型，賦予</p><p><code>color</code> 明確的類型。<code>setColor</code> 作爲更新函數傳給 <code>ColorPicker</code>，形成了典型的**狀態提升**——子組件通過回調改變父組件狀態，自己只負責展示和交互。</p><h3>#### ColorPicker：如何“精確更新”對象屬性</h3><pre><code>interface Props {
+  color: Color;
+  onColorUpdated: (color: Color) =&gt; void;
+}
+const ColorPicker: React.FC&lt;Props&gt; = (props) =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;input
+        type=&quot;range&quot;
+        min=&quot;0&quot;
+        max=&quot;255&quot;
+        value={props.color.red}
+        onChange={event =&gt; props.onColorUpdated({
+          ...props.color,
+          red: +event.target.value,
+        })}
+      /&gt;
+      {props.color.red}
+      {/* green、blue 同理 */}
+    &lt;/div&gt;
+  )
+}</code></pre><p>注意 <code>onChange</code> 中的两个细节：</p><p class='list-item'>- **不可变更新**：- `{ ...props.color, red: 新值 }`创建一个新的- `Color`对象，符合 React 的 immutable 原则。</p><p class='list-item'>- `+event.target.value`快速轉數字- `event.target.value`是字符串，前面加一個- `+`就能轉成 number。這是非常實用的取巧寫法，比- `parseInt`更簡潔。</p><p>金句：寫 TypeScript 組件時，Props 接口就是你給隊友看的使用說明書——傳什麼，怎麼傳，一目瞭然。</p><p>#### ColorBrowser：純展示，類型即文檔</p><pre><code>interface Props {
+  color: Color
+}
+const ColorBrowser: React.FC&lt;Props&gt; = (props) =&gt; {
+  const divStyle: React.CSSProperties = {
+    width: &quot;11rem&quot;,
+    height: &quot;7rem&quot;,
+    backgroundColor: `rgb(${props.color.red},${props.color.green},${props.color.blue})`
+  }
+  return &lt;div style={divStyle} /&gt;
+}</code></pre><p><code>React.CSSProperties</code> 也是一個隱形的類型保障，如果你不小心把 <code>width</code> 寫成了 <code>wdith</code>，編譯階段就會報錯。這讓我想起一句話：**類型系統就像一位不知疲倦的 Code Review 同事，24小時在線。**</p><h3>四、異步數據與列表渲染：MemberTable</h3><pre><code>const MemberTable: React.FC = () =&gt; {
+  const [memberCollection, setMemberCollection] = React.useState&lt;MemberEntity[]&gt;([])
+  React.useEffect(() =&gt; {
+    (async () =&gt; {
+      const members = await getMembersCollection();
+      setMemberCollection(members);
+    })()
+  }, [])
+  return (
+    &lt;table&gt;
+      &lt;thead&gt;...&lt;/thead&gt;
+      &lt;tbody&gt;
+        {memberCollection.map((member) =&gt; (
+          &lt;MemberRow key={member.id} member={member} /&gt;
+        ))}
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  )
+}</code></pre><p>這裏有幾個關鍵知識點：</p><p class='list-item'>-</p><h3>&lt;code&gt;useState&lt;MemberEntity[]&gt;&lt;/code&gt;</h3><p class='list-item'>-</p><p class='list-item'>**類型安全地 map 渲染**：`memberCollection`已經是`MemberEntity[]`，所以 map 回調中的`member`會自動推斷爲`MemberEntity`，無需額外標註。</p><p>#### 为什么 <code>useEffect</code> 不能直接是 <code>async</code> 函数？</p><p>如果讓你憑直覺寫，你大概率會這樣：</p><pre><code>// ❌ 错误写法
+React.useEffect(async () =&gt; {
+  const members = await getMembersCollection();
+  setMemberCollection(members);
+}, []);</code></pre><p>但 React 會給你一個警告，或者至少讓你心裏沒底——**因爲  useEffect 的回調函數期望返回一個清理函數（或 undefined），而 async 函數永遠返回一個 Promise**。React 拿到一個</p><p><code>Promise</code> 根本不知道怎麼處理，既不會幫你 <code>await</code>，也沒法把它當作清理函數去執行。說白了就是 **類型不匹配**：你給我個 Promise，我要的是函數，咱倆聊不到一塊兒去。</p><p>#### IIFE 如何巧妙地繞過限制？</p><p>解決辦法就是：**外層保持普通函數（返回 void），內部再“寄生”一個異步函數讓它立即跑起來**。</p><pre><code>React.useEffect(() =&gt; {
+  // 1. 外层是一个普通箭头函数，返回 undefined → React 满意
+  (async () =&gt; {
+    // 2. 这是一个异步 IIFE，立刻执行
+    const members = await getMembersCollection();
+    setMemberCollection(members);
+  })(); // 3. 注意末尾的 ()，定义完就调用
+}, []);</code></pre><p>這裏 <code>(async () => { ... })</code> 定義了一個異步函數表達式，而後面的 <code>()</code> 當場調用了它，所以稱爲**立即執行的異步函數表達式（IIFE）** 。 這樣一來：</p><p class='list-item'>- React 只看外層的普通函數，它啥也沒返回，完全符合規範；</p><p class='list-item'>- 異步數據請求在 IIFE 裏照常運行，拿到結果後通過 `setState`更新視圖；</p><p class='list-item'>- 整個流程異步不阻塞渲染，組件可以先用空數組渲染，數據回來後再更新。</p><p>#### 這個寫法還有什麼門道？</p><p class='list-item'>- `[]`空依賴數組- `useEffect`只在組件- **掛載時**執行一次，相當於- `componentDidMount`。非常適合做首屏數據請求。</p><p class='list-item'>- **錯誤處理**：實際項目中 IIFE 裏最好加- `try/catch`，否則請求一旦失敗，錯誤會吞沒在 Promise 裏。改進寫法：</p><pre><code>useEffect(() =&gt; {
+  (async () =&gt; {
+    try {
+      const members = await getMembersCollection();
+      setMemberCollection(members);
+    } catch (err) {
+      console.error(&#x27;获取成员列表失败&#x27;, err);
+    }
+  })();
+}, []);</code></pre><p class='list-item'>- **清理函數**：如果請求在組件卸載前還沒完成，理想情況下應該取消它（例如用 AbortController）。這個示例簡單，所以沒處理，但你需要知道——- **依賴外部的異步操作，永遠要考慮“組件沒了但數據還在路上”的情況**。</p><p>#### 有沒有更“優雅”的替代方案？</p><p>IIFE 在 React 17/18 中依然很常用，但現在你偶爾也會看到這種寫法：</p><pre><code>const fetchData = async () =&gt; {
+  const members = await getMembersCollection();
+  setMemberCollection(members);
+};
+useEffect(() =&gt; {
+  fetchData();
+}, []);</code></pre><p>本質是一樣的：把異步邏輯提到 <code>useEffect</code> 外面定義，內部直接調用。有些人覺得這樣更清晰，不過要注意 <code>fetchData</code> 在依賴變化時是否需要加進依賴數組。而 IIFE 的好處是**把邏輯緊密包裹在 effect 內部，一眼就能看出它在幹嘛**，無副作用往外泄露變量。</p><h3>#### 小坑提醒：MemberRow 的隱式 any</h3><p><code>MemberRow</code> 没有定义 Props 类型：</p><pre><code>const MemberRow = (props) =&gt; { ... }</code></pre><p>在嚴格的 TS 配置下這會報錯（參數隱式 any）。更好的做法是：</p><pre><code>interface MemberRowProps {
+  member: MemberEntity;
+}
+const MemberRow: React.FC&lt;MemberRowProps&gt; = ({ member }) =&gt; (
+  &lt;tr&gt;
+    &lt;td&gt;&lt;img src={member.avatar_url} style={{ maxWidth: &#x27;10rem&#x27; }} /&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;span&gt;{member.id}&lt;/span&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;span&gt;{member.login}&lt;/span&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+)</code></pre><p>如此一來，任何使用了 <code>MemberRow</code> 的地方都會受到類型約束，徹底消滅“傳錯屬性名”的隱患。</p><h3>五、架構小結：model 與 api 的分層哲學</h3><p>回顧整個項目目錄：</p><pre><code>src/
+├── model/
+│   ├── color.ts
+│   └── member.ts
+├── api/
+│   └── memberApi.ts
+├── components/
+│   ├── ColorBrowser.tsx
+│   ├── ColorPicker.tsx
+│   └── MemberTable.tsx
+└── App.tsx</code></pre><p class='list-item'>**model 層定義“長什麼樣”，api 層定義“從哪來”，組件層只負責“怎麼展示與交互”** 。這種分層讓前端項目擁有了類似後端的可維護性，新同事接手時，先看 model，再看 api，最後看組件，路徑清晰。</p><p>金句：架構的本質不是讓代碼能跑，而是讓你的意圖能被其他開發者（包括三個月後的自己）瞬間理解。</p><h3>寫在最後</h3><p>從一個小小的 Color Picker 到模擬數據請求的成員表格，我們看到 TypeScript 在 React 項目中不是“多寫幾個類型”那麼簡單。它倒逼我們提前思考數據結構、規範接口格式，最終通過 model 和 api 的分層，把零散的邏輯編織成一張強壯的安全網。</p><p>如果你還在猶豫是否在團隊中推行 TypeScript，不妨從今天這組代碼開始嘗試——把 model 和 api 先抽出來，讓類型幫你寫文檔。很快你會發現，**曾經那些深夜排查的 “undefined” 錯誤，不過是少寫了一個接口定義罷了**。</p></div>
 <a class="back" href="../index.html">&larr; 返回晨報</a>
 <div class="foot">本頁由 AI HOT 晨報自動擷取與轉錄（繁體中文），僅供參考，版權與最終解釋權歸原媒體所有。</div>
 </div>

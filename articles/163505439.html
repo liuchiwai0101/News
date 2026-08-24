@@ -43,7 +43,7 @@ font-size:12.5px;color:var(--muted);}
 <div class="topbar"><div class="inner"><a href="../index.html">&larr; 返回晨報</a></div></div>
 <div class="wrap">
 <h1>Vue 状态管理选型：Pinia 完整实战，对比 Vuex，模块化与持久化</h1>
-<div class="meta"><span class="src">CSDN</span><span>· 8月21日 周五</span>
+<div class="meta"><span class="src">CSDN</span><span>· 8月24日 周一</span>
 <span>· <a href="https://blog.csdn.net/chaosweet/article/details/163505439" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></span></div>
 <div class="notice">本文為原文轉錄（繁體中文，簡體已自動轉繁），版權歸原媒體所有；內容機器翻譯自第三方媒體，僅供參考，以<a href="https://blog.csdn.net/chaosweet/article/details/163505439" target="_blank" rel="noopener noreferrer">原文</a>為準。</div>
 <div class="body"><p>Hi，我是</p><p>前端人類學！</p><p>在 Vue 應用中，狀態管理從“多組件共享數據”到“複雜業務邏輯協調”，常常是項目架構中最具挑戰性的一環。隨着 Vue3 的普及，Pinia已取代 Vuex 成爲官方推薦的狀態管理庫。</p><p>本文將從前端狀態管理的核心問題出發，通過完整的實戰案例，對比 Vuex 與 Pinia 的差異，並深入講解模塊化設計與數據持久化的最佳實踐。</p><p class='list-item'>**語法極簡**：在 Vuex 中定義一個計數器需要編寫 state、mutations、actions 等多個部分；而 Pinia 只需一個 `defineStore`，在 actions 中直接修改 `this.count` 即可。</p><p class='list-item'>**TypeScript 一等公民**：Pinia 在設計之初就充分考慮了對 TypeScript 的支持，幾乎所有 API 都能自動推導類型，大幅減少手動類型聲明的工作量。</p><p class='list-item'>**輕量且性能優秀**：在同樣執行 1000 次同步 action 的場景下，Pinia 的延遲約爲 5-8ms，而 Vuex 爲 8-12ms，提升約 30%。高頻觸發場景（1000次/秒）下，Pinia 的吞吐量更是優於 Vuex 約 40-50%。</p><p class='list-item'>- 項目爲 Vue2 且已深度使用 Vuex，遷移成本過高</p><p class='list-item'>- 依賴較複雜的 Vuex 中間件生態，如 `vuex-persistedstate`的特殊用法</p><p class='list-item'>- 對 Vuex 的嚴格單向數據流規範有強依賴</p><p>對於新項目，尤其是 Vue3 項目，Pinia 無疑是更優的選擇。</p><pre><code>pnpm add pinia
