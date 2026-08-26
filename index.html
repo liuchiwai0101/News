@@ -337,11 +337,11 @@
     .stat.total .num { font-size:14px; }
 
     /* NAV: 单行横向滑动，不换行，避免遮挡锚点 */
-    .nav-inner {
+    .nav-inner, .nav-inner-old {
       flex-wrap:nowrap; overflow-x:auto; gap:7px; padding-bottom:3px;
       -webkit-overflow-scrolling:touch; scrollbar-width:none;
     }
-    .nav-inner::-webkit-scrollbar { display:none; }
+    .nav-inner::-webkit-scrollbar, .nav-inner-old::-webkit-scrollbar { display:none; }
     .nav-link { flex:0 0 auto; font-size:13px; padding:6px 12px; white-space:nowrap; }
 
     /* SECTIONS */
@@ -491,6 +491,12 @@ function detectCat(title) {
   return 'generic';
 }
 
+function countVisibleCards(root) {
+  let n = 0;
+  root.querySelectorAll('.card').forEach(function(c){ if (c.style.display !== 'none') n++; });
+  return n;
+}
+
 const content = document.getElementById('content');
 
 // Build a single card — restores the original cover image (with NEW/date badges),
@@ -516,12 +522,12 @@ function makeCard(item, idx, ri, isExt, featured) {
       + '<span class="idx">#' + idx + '</span>'
       + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
   } else {
-    coverInner = '<span class="cover-ico">' + ICONS[ri] + '</span>'
+    coverInner = '<span class="cover-ico">' + (ICONS[ri] || ICONS[0]) + '</span>'
       + '<span class="idx">#' + idx + '</span>'
       + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
   }
   card.innerHTML =
-    '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner + '</div>'
+    '<div class="cover" style="background:var(--g' + (ri != null ? ri : 0) + ');">' + coverInner + '</div>'
     + '<div class="body">'
     +   '<h3>' + (item.translated ? '<span class="tr-mark">譯</span>' : '') + item.title + '</h3>'
     + '</div>';
@@ -582,9 +588,12 @@ tabs.forEach(function(t, ti){
   a.type = 'button';
   a.className = 'nav-link' + (ti === 0 ? ' on' : '');
   a.setAttribute('data-cat', t.key);
-  const cnt = (t.key === '__all__') ? DATA.flat.length
-    : (DATA.sections.filter(function(s){ return s.label === t.key; })[0] || {items:[]}).items.length;
-  a.innerHTML = t.label + ' <span class="nav-count">' + cnt + '</span>';
+  const sec = (t.key === '__all__') ? null
+    : (DATA.sections.filter(function(s){ return s.label === t.key; })[0] || null);
+  const cnt = (t.key === '__all__') ? DATA.flat.length : ((sec && sec.items) ? sec.items.length : 0);
+  const ri = sec && sec.ci != null ? sec.ci : null;
+  const dot = (ri != null) ? '<span class="dot dot-' + ri + '"></span>' : '';
+  a.innerHTML = dot + t.label + ' <span class="nav-count">' + cnt + '</span>';
   navInner.appendChild(a);
 });
 
@@ -661,17 +670,19 @@ navInner.addEventListener('click', function(e){
   // ---- group navigation (same UX as the latest board) ----
   if (navOld) {
     navOld.innerHTML = '';
-    const mkLink = function(label, key, cnt, on){
+    const mkLink = function(label, key, cnt, on, ri){
       const a = document.createElement('button');
       a.type = 'button';
       a.className = 'nav-link' + (on ? ' on' : '');
       a.setAttribute('data-cat', key);
-      a.innerHTML = label + ' <span class="nav-count">' + cnt + '</span>';
+      const dot = (ri != null && ri !== '') ? '<span class="dot dot-' + ri + '"></span>' : '';
+      a.innerHTML = dot + label + ' <span class="nav-count">' + cnt + '</span>';
       return a;
     };
-    navOld.appendChild(mkLink('全部', '__all__', DATA.old.length, true));
+    navOld.appendChild(mkLink('全部', '__all__', DATA.old.length, true, null));
     boards.forEach(function(b){
-      navOld.appendChild(mkLink(b, b, groups[b].length, false));
+      const ri = (groups[b][0] && groups[b][0].ci != null) ? groups[b][0].ci : 0;
+      navOld.appendChild(mkLink(b, b, groups[b].length, false, ri));
     });
     navOld.addEventListener('click', function(e){
       const btn = e.target.closest('.nav-link');
@@ -772,9 +783,9 @@ function applySearch() {
         panel.style.display = '';
         totalMatchInView += panel.querySelectorAll('.card').length;
       } else {
-        const vis = panel.querySelectorAll('.card:not([style*="display: none"])');
-        panel.style.display = vis.length > 0 ? '' : 'none';
-        totalMatchInView += vis.length;
+        const visN = countVisibleCards(panel);
+        panel.style.display = visN > 0 ? '' : 'none';
+        totalMatchInView += visN;
       }
     });
   } else {
@@ -790,9 +801,9 @@ function applySearch() {
               sub.style.display = '';
               totalMatchInView += sub.querySelectorAll('.card').length;
             } else {
-              const vis = sub.querySelectorAll('.card:not([style*="display: none"])');
-              sub.style.display = vis.length > 0 ? '' : 'none';
-              totalMatchInView += vis.length;
+              const visN = countVisibleCards(sub);
+              sub.style.display = visN > 0 ? '' : 'none';
+              totalMatchInView += visN;
             }
           });
         }
@@ -804,9 +815,9 @@ function applySearch() {
           p.style.display = '';
           totalMatchInView += p.querySelectorAll('.card').length;
         } else {
-          const vis = p.querySelectorAll('.card:not([style*="display: none"])');
-          p.style.display = vis.length > 0 ? '' : 'none';
-          totalMatchInView += vis.length;
+          const visN = countVisibleCards(p);
+          p.style.display = visN > 0 ? '' : 'none';
+          totalMatchInView += visN;
         }
       }
     });
