@@ -4,6 +4,7 @@
 - 線上頁：**https://liuchiwai0101.github.io/News/**（大寫 `News`）。`/news/` 會 404（GitHub Pages 區分大小寫；倉庫已改名 `News`）。
 - 本倉是 GitHub Pages **產出**（`index.html` / `articles.js` / `articles/` / `nml-daily.html`）。構建腳本在本機 `.workbuddy/tmp/build_dashboard.py`，**不在此 repo**。改前端必須改模板，否則隔日 08:00 rebuild 會蓋掉。
 - 不要重掃全站、不要加額外功能／測試檔／chat-history。前端已知小 bug（應改模板）：JS 重建 nav 時漏色點；搜尋空結果不要用 `[style*="display: none"]`；手機 CSS 要包含 `.nav-inner-old`。在線 Worker 仍是佔位，已有 herenow 回退，不必再加一層。
+- **預覽**：只在瀏覽器打開頁面即可。不要截圖、不要產出 walkthrough 圖片／影片。
 
 ## 自動化
 - 單一每日任務：**automation-1784089722231**「AI HOT 日报 + 限時情报王 整合 · 每日 7:00 更新發佈」。
