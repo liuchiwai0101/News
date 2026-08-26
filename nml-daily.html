@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>流動日報 · 限時情報 更新</title>
 <style>
   :root{ --bg:#f5f7fb; --card:#fff; --ink:#0f172a; --body:#3a4255; --muted:#6b7689;
@@ -106,11 +105,10 @@
   var el=document.getElementById('online-count');
   var badge=document.getElementById('online-badge');
   var usingWorker=false;
-  var workerReady = WORKER.indexOf('<') < 0 && WORKER.indexOf('your-subdomain') < 0;
   function sid(){ var k='hnSid'; var v=sessionStorage.getItem(k); if(!v){ v=(crypto.randomUUID?crypto.randomUUID():String(Math.random())); sessionStorage.setItem(k,v);} return v; }
   function hbWorker(){ try{ fetch(WORKER+'/heartbeat',{method:'POST',cache:'no-store'}); }catch(e){} }
   function hbHerenow(){ try{ fetch(HERENOW+'/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:sid(),page:page,referrer:document.referrer||'direct'})}); }catch(e){} }
-  function updWorker(){ if(!workerReady){ updHerenow(); return; } fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); usingWorker=true; }).catch(function(){ updHerenow(); }); }
+  function updWorker(){ fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); usingWorker=true; }).catch(function(){ updHerenow(); }); }
   function updHerenow(){ fetch(HERENOW+'/count?page='+encodeURIComponent(page)).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(n<1)n=1; if(el)el.textContent=n; if(badge)badge.style.display='inline-flex'; }).catch(function(){ if(badge)badge.style.display='none'; }); }
   function beat(){ if(usingWorker){ hbWorker(); } else { hbHerenow(); } }
   beat(); updWorker(); setInterval(beat,60000); setInterval(updWorker,30000);

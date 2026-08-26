@@ -491,11 +491,6 @@ function detectCat(title) {
   return 'generic';
 }
 
-function esc(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
 function countVisibleCards(root) {
   let n = 0;
   root.querySelectorAll('.card').forEach(function(c){ if (c.style.display !== 'none') n++; });
@@ -514,7 +509,7 @@ function makeCard(item, idx, ri, isExt, featured) {
   if (item.isNew) {
     capHtml = '<span class="cover-new">NEW</span>';
   } else if (item.img && item.imgKind === 'openverse' && item.imgCreator) {
-    capHtml = '<span class="cover-cap">图：' + esc(item.imgCreator) + (item.imgLicense ? ' · ' + esc(item.imgLicense) : '') + '</span>';
+    capHtml = '<span class="cover-cap">图：' + item.imgCreator + (item.imgLicense ? ' · ' + item.imgLicense : '') + '</span>';
   } else if (item.img && (item.imgKind === 'og' || item.imgKind === 'content')) {
     capHtml = '<span class="cover-cap">原题图</span>';
   }
@@ -522,23 +517,22 @@ function makeCard(item, idx, ri, isExt, featured) {
   const frontCap = item.frontend ? '<span class="cover-front">前端</span>' : '';
   let coverInner;
   if (item.img) {
-    coverInner = '<img class="cover-img" src="' + esc(item.img) + '" alt="" loading="lazy" onerror="this.remove()">'
+    coverInner = '<img class="cover-img" src="' + item.img + '" alt="" loading="lazy" onerror="this.remove()">'
       + '<div class="cover-overlay"></div>'
       + '<span class="idx">#' + idx + '</span>'
-      + '<span class="cover-date">' + esc(cardDate) + '</span>' + capHtml + suppCap + frontCap;
+      + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
   } else {
     coverInner = '<span class="cover-ico">' + (ICONS[ri] || ICONS[0]) + '</span>'
       + '<span class="idx">#' + idx + '</span>'
-      + '<span class="cover-date">' + esc(cardDate) + '</span>' + capHtml + suppCap + frontCap;
+      + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
   }
   card.innerHTML =
     '<div class="cover" style="background:var(--g' + (ri != null ? ri : 0) + ');">' + coverInner + '</div>'
     + '<div class="body">'
-    +   '<h3>' + (item.translated ? '<span class="tr-mark">譯</span>' : '') + esc(item.title) + '</h3>'
+    +   '<h3>' + (item.translated ? '<span class="tr-mark">譯</span>' : '') + item.title + '</h3>'
     + '</div>';
   card.dataset.aid = item.articleId || "";
   card.dataset.sname = item.sourceName || "";
-  card.dataset.surl = item.sourceUrl || "";
   card.dataset.summary = item.summary || "";
   card.dataset.keypoints = JSON.stringify(item.keypoints || []);
   if (item.origTitle) card.dataset.orig = item.origTitle;
@@ -556,18 +550,18 @@ function makeDealCard(item, idx, ri) {
   const cat = detectCat(item.title);
   const iconSvg = CATEGORY_ICONS[cat] || CATEGORY_ICONS.generic;
   const coverInner = '<span class="cover-icon">' + iconSvg + '</span>'
-    + (imgUrl ? '<img class="cover-img" src="' + esc(imgUrl) + '" alt="" loading="lazy" onerror="this.style.display=&quot;none&quot;">' : '');
+    + (imgUrl ? '<img class="cover-img" src="' + imgUrl + '" alt="" loading="lazy" onerror="this.style.display=&quot;none&quot;">' : '');
   card.innerHTML =
     '<div class="cover" style="background:var(--g' + ri + ');">' + coverInner
     + '<span class="cover-deal">優惠</span>'
     + '<span class="idx">#' + idx + '</span>'
     + '</div>'
     + '<div class="body">'
-    +   '<h3>' + esc(item.title) + '</h3>'
+    +   '<h3>' + item.title + '</h3>'
     +   '<div class="deal-price">'
-    +     (price ? '<span class="dp-cur">' + esc(price) + '</span>' : '')
-    +     (orig ? '<span class="dp-orig">' + esc(orig) + '</span>' : '')
-    +     (off ? '<span class="dp-off">' + esc(off) + '</span>' : '')
+    +     (price ? '<span class="dp-cur">' + price + '</span>' : '')
+    +     (orig ? '<span class="dp-orig">' + orig + '</span>' : '')
+    +     (off ? '<span class="dp-off">' + off + '</span>' : '')
     +   '</div>'
     +   '<div class="deal-src">Price.com.hk 網購</div>'
     + '</div>';
@@ -895,9 +889,9 @@ function openReader(card) {
     let priceHtml = '';
     if (price) {
       priceHtml = '<div class="reader-deal">'
-        + '<span class="rd-cur">' + esc(price) + '</span>'
-        + (orig ? '<span class="rd-orig">' + esc(orig) + '</span>' : '')
-        + (off ? '<span class="rd-off">' + esc(off) + '</span>' : '')
+        + '<span class="rd-cur">' + price + '</span>'
+        + (orig ? '<span class="rd-orig">' + orig + '</span>' : '')
+        + (off ? '<span class="rd-off">' + off + '</span>' : '')
         + '</div>';
     }
     const dimg = card.dataset.dimg || '';
@@ -905,13 +899,13 @@ function openReader(card) {
     const dicon = CATEGORY_ICONS[dcat] || CATEGORY_ICONS.generic;
     let imgHtml;
     if (dimg) {
-      imgHtml = '<div class="reader-deal-img"><img src="' + esc(dimg) + '" alt="" loading="lazy" onerror="dealImgFallback(this,\'' + esc(dcat) + '\')"></div>';
+      imgHtml = '<div class="reader-deal-img"><img src="' + dimg + '" alt="" loading="lazy" onerror="dealImgFallback(this,\'' + dcat + '\')"></div>';
     } else {
       imgHtml = '<div class="reader-deal-img reader-deal-icon">' + dicon + '</div>';
     }
     const sum = card.dataset.summary || '';
-    const sumHtml = sum ? '<div class="reader-summary"><span class="rs-label">優惠詳情</span><p class="rs-lead">' + esc(sum) + '</p></div>' : '';
-    const linkHtml = url ? '<a class="reader-deal-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">前往 Price.com.hk 查看優惠 →</a>' : '';
+    const sumHtml = sum ? '<div class="reader-summary"><span class="rs-label">優惠詳情</span><p class="rs-lead">' + sum + '</p></div>' : '';
+    const linkHtml = url ? '<a class="reader-deal-link" href="' + url + '" target="_blank" rel="noopener noreferrer">前往 Price.com.hk 查看優惠 →</a>' : '';
     readerScroll.innerHTML = imgHtml + priceHtml + sumHtml + linkHtml;
     reader.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -919,6 +913,7 @@ function openReader(card) {
     return;
   }
   const id = card.dataset.aid;
+  if (!id) return;
   const h3 = card.querySelector('h3');
   readerTitle.textContent = (h3 ? h3.textContent : '') || DATA.reportHuman;
   readerSrc.textContent = card.dataset.sname ? ('來源：' + card.dataset.sname) : '';
@@ -928,21 +923,17 @@ function openReader(card) {
   let sumHtml = '';
   if (sum || kp.length) {
     let inner = '';
-    if (sum) inner += '<p class="rs-lead">' + esc(sum) + '</p>';
+    if (sum) inner += '<p class="rs-lead">' + sum + '</p>';
     if (kp.length) {
       inner += '<ul class="rs-list">' + kp.map(function(k){
-        return '<li>' + esc(k) + '</li>';
+        return '<li>' + k + '</li>';
       }).join('') + '</ul>';
     }
     sumHtml = '<div class="reader-summary"><span class="rs-label">重點整理</span>' + inner + '</div>';
   }
-  const body = (id && window.ARTICLES && window.ARTICLES[id]) || '';
-  const srcUrl = card.dataset.surl || '';
-  const srcLink = srcUrl
-    ? '<p class="notice" style="margin-top:18px"><a href="' + esc(srcUrl) + '" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>'
-    : '';
+  const body = (window.ARTICLES && window.ARTICLES[id]) || '';
   readerScroll.innerHTML = sumHtml + (body ||
-    '<p class="notice">原文非中文，未提供本地譯文。</p>') + srcLink;
+    '<p class="notice">原文非中文，未提供本地譯文。</p>');
   reader.hidden = false;
   document.body.style.overflow = 'hidden';
   readerScroll.scrollTop = 0;
@@ -982,11 +973,10 @@ document.getElementById('foot').innerHTML =
   var el=document.getElementById('online-count');
   var badge=document.getElementById('online-badge');
   var usingWorker=false;
-  var workerReady = WORKER.indexOf('<') < 0 && WORKER.indexOf('your-subdomain') < 0;
   function sid(){ var k='hnSid'; var v=sessionStorage.getItem(k); if(!v){ v=(crypto.randomUUID?crypto.randomUUID():String(Math.random())); sessionStorage.setItem(k,v); } return v; }
   function hbWorker(){ try{ fetch(WORKER+'/heartbeat',{method:'POST',cache:'no-store'}); }catch(e){} }
   function hbHerenow(){ try{ fetch(HERENOW+'/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:sid(),page:page,referrer:document.referrer||'direct'})}); }catch(e){} }
-  function updWorker(){ if(!workerReady){ updHerenow(); return; } fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); usingWorker=true; }).catch(function(){ updHerenow(); }); }
+  function updWorker(){ fetch(WORKER+'/online',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(el)el.textContent=n; if(badge)badge.style.display=(n>0?'inline-flex':'none'); usingWorker=true; }).catch(function(){ updHerenow(); }); }
   function updHerenow(){ fetch(HERENOW+'/count?page='+encodeURIComponent(page)).then(function(r){return r.json();}).then(function(d){ var n=(d.count||0); if(n<1)n=1; if(el)el.textContent=n; if(badge)badge.style.display='inline-flex'; }).catch(function(){ if(badge)badge.style.display='none'; }); }
   function beat(){ if(usingWorker){ hbWorker(); } else { hbHerenow(); } }
   beat(); updWorker(); setInterval(beat,60000); setInterval(updWorker,30000);
