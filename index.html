@@ -188,6 +188,7 @@
   .panel-head .bar { width:5px; height:20px; border-radius:3px; flex:0 0 auto; }
   .panel-head h3 { margin:0; font-size:19px; font-weight:800; color:var(--ink); }
   .panel-head .cnt { color:var(--muted); font-size:13px; font-weight:600; }
+  .nml-sub { color:var(--muted); font-size:12.5px; margin:-6px 0 12px 15px; }
 
   /* COVER — generated visual band (stands in for a thumbnail) */
   .card .cover { position:relative; height:96px; background:var(--g0);
@@ -439,10 +440,11 @@ const totalStat = document.createElement('div');
 totalStat.className = 'stat total';
 totalStat.innerHTML = '<span class="num">' + DATA.flat.length + '</span><span class="lab">条 · 今日精选</span>';
 statsEl.appendChild(totalStat);
-if (NML && NML.newCount != null) {
+if (NML) {
   const nmlStat = document.createElement('div');
   nmlStat.className = 'stat';
-  nmlStat.innerHTML = '<span class="num">' + NML.newCount + '</span><span class="lab">条 · 限時情報新增</span>';
+  nmlStat.innerHTML = '<span class="num">' + NML.newCount + '</span>'
+    + '<span class="lab">新增 · 顯示 ' + NML.shown + ' / 全站 ' + NML.total + '</span>';
   statsEl.appendChild(nmlStat);
 }
 
@@ -619,12 +621,18 @@ function buildPanel(sec, si){
   head.className = 'panel-head';
   let cntHtml = sec.items.length + ' 条';
   if (sec.kind === 'external' && NML) {
-    cntHtml += ' · 全站 ' + NML.total + ' · 新增 ' + NML.newCount;
+    cntHtml = '顯示 ' + NML.shown + ' · 全站 ' + NML.total + ' · 新增 ' + NML.newCount;
   }
   head.innerHTML = '<span class="bar" style="background:var(--c' + ri + ')"></span>'
     + '<h3>' + sec.label + '</h3>'
     + '<span class="cnt">' + cntHtml + '</span>';
   panel.appendChild(head);
+  if (sec.kind === 'external') {
+    const nmlSub = document.createElement('div');
+    nmlSub.className = 'nml-sub';
+    nmlSub.textContent = '監測分類：限時情報王 ＋ 限時免費情報';
+    panel.appendChild(nmlSub);
+  }
   const grid = document.createElement('div');
   grid.className = 'grid wall';
   let secIdx = 0;
