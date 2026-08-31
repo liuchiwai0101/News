@@ -5,12 +5,12 @@
 - 本倉是 GitHub Pages **產出**（`index.html` / `articles.js` / `articles/`）。`nml-daily.html` 只做轉址到 `/#nml`，不再單獨報表。構建腳本在本機 `.workbuddy/tmp/build_dashboard.py`，**不在此 repo**。改前端必須改模板，否則隔日 08:00 rebuild 會蓋掉。
 - **`build_nml_report.py` 已廢棄**：不要再跑、不要再產青綠獨立頁。其僅有的獨特 bits 已抄進 `build_dashboard.py`（見下方「抄入 bits」）。`run_daily.cmd` / `run_daily.py` 刪掉對它的呼叫。
 - 不要重掃全站、不要加額外功能／測試檔／chat-history。前端已知小 bug（應改**Windows 模板**，Pages 上的 PR #2 不夠）：JS 重建 nav 時漏色點；搜尋空結果不要用 `[style*="display: none"]`；手機 CSS 要包含 `.nav-inner-old`。在線 Worker 仍是佔位，已有 herenow 回退，不必再加一層。
-- **排程尚未採用最新改動（查於 2026-08-26）**：實際發佈者是本機 Windows 工作排程器 `AIReviewDailySite`（每日 08:00 → `C:\Users\vincentliu\Documents\Website\scripts\run_daily.cmd`），不是 Cursor Cloud automation。今日 08:04 產出 `3a7f3e7` 仍無 `countVisibleCards`／`const NML`，且仍呼叫 `build_nml_report.py`。明天 08:00 會蓋掉 PR #2/#3，除非 Windows 模板已抄入 bits 並刪掉 `build_nml_report.py`。
+- **排程無法更新網站（查於 2026-08-31）**：GitHub Pages 只建 `main`。Windows `AIReviewDailySite` 最後一次直推 main 是 **2026-08-26 08:04**（`3a7f3e7`）。之後改由 Cursor agent `bc-01a045b3`（source=mobile）開 **draft PR**（#4 用戶手動合併 → 線上 08-28；**#5 08-29 仍 OPEN 未合併**）。agent 08-29 後 IDLE，08-30/08-31 沒跑。所以線上停在 08-28。**要上線必須把日更 PR merge 進 main**（開 PR 不會發佈）。不要再開一個永遠不合併的日更 PR 當「已更新」。
 - **預覽**：只在瀏覽器打開頁面即可。不要截圖、不要產出 walkthrough 圖片／影片。
 
 ## 自動化
-- **現行實際發佈**（2026-08-24 起）：Windows Task Scheduler **`AIReviewDailySite`**，每日 **08:00** 跑 `C:\Users\vincentliu\Documents\Website\scripts\run_daily.cmd`（工作目錄 `Documents\Website`）。近日「每日整合」commit 皆約 08:04 +0800、作者 `liuchiwai0101`（如 `3a7f3e7` 2026-08-26、`1f6e45f` 2026-08-25）。
-- 舊 Cursor 任務名 **automation-1784089722231**「AI HOT 日报 + 限時情报王 整合 · 每日 7:00 更新發佈」仍見於歷史筆記；該數字 **不是 UUID**，Cloud `get-automation` 無法查。此環境 `list-cloud-agents(sources=["automations"])` = **0**，找不到對應 cloud-agent 日更場次。已合併原「限時情报王監測 (1784099008467, 每2h)」與「AI HOT 晨報」。
+- **現行發佈路徑（2026-08-28 起）**：Cursor 日更 agent 開 PR → **必須 merge 到 `main`** 才會觸發 `pages-build-deployment`。#4 已合併（用戶 `liuchiwai0101`）；#5（08-29）未合併導致網站停更。Windows `AIReviewDailySite`（`Documents\Website\scripts\run_daily.cmd`，08:00）自 08-26 後不再直推 main。
+- 舊 Cursor 任務名 **automation-1784089722231** 不是 UUID；`list-cloud-agents(sources=["automations"])` = 0。
   流程：fetch_daily → scrape_nml → build_dashboard(1) → 中文/前端補充 → build_dashboard(2) → pin 置頂 → cp→ghpages→git push → WeChat。**不要再跑 `build_nml_report.py`**（已 drop；bits 抄入 `build_dashboard.py`；`nml-daily.html` 由 dashboard 寫成 `/#nml` 轉址）。
 - 發佈目標：GitHub Pages 倉庫在 `ghpages/`（remote 含 x-access-token，勿外洩）。固定網址 **https://liuchiwai0101.github.io/News/**（勿用小寫 `/news/`）。
 - **git push 至 ghpages 必須先禁 GCM**：`ghpages` 倉庫若帶 `credential.helper=manager`（Git Credential Manager），非互動 shell 下 push 會卡死（read/ls-remote 正常，write/push 懸停數十分鐘）。**修正**：`git -C ghpages config --local credential.helper ""`（token 已內嵌 URL，毋須 GCM）。禁用後 push 秒完成（如 `af39846..98323bd`）。另：`protocol.version=0` + `http.version=HTTP/1.1` 可繞過偶發的 `expected flush after ref listing` v2 協商錯誤（read 慢但不影響 write）。
