@@ -5,11 +5,11 @@
 - 本倉是 GitHub Pages **產出**（`index.html` / `articles.js` / `articles/`）。`nml-daily.html` 只做轉址到 `/#nml`，不再單獨報表。構建腳本在本機 `.workbuddy/tmp/build_dashboard.py`，**不在此 repo**。改前端必須改模板，否則隔日 08:00 rebuild 會蓋掉。
 - **`build_nml_report.py` 已廢棄**：不要再跑、不要再產青綠獨立頁。其僅有的獨特 bits 已抄進 `build_dashboard.py`（見下方「抄入 bits」）。`run_daily.cmd` / `run_daily.py` 刪掉對它的呼叫。
 - 不要重掃全站、不要加額外功能／測試檔／chat-history。前端已知小 bug（應改**Windows 模板**，Pages 上的 PR #2 不夠）：JS 重建 nav 時漏色點；搜尋空結果不要用 `[style*="display: none"]`；手機 CSS 要包含 `.nav-inner-old`。在線 Worker 仍是佔位，已有 herenow 回退，不必再加一層。
-- **排程無法更新網站（查於 2026-08-31）**：GitHub Pages 只建 `main`。Windows `AIReviewDailySite` 最後一次直推 main 是 **2026-08-26 08:04**（`3a7f3e7`）。之後改由 Cursor agent `bc-01a045b3`（source=mobile）開 **draft PR**（#4 用戶手動合併 → 線上 08-28；**#5 08-29 仍 OPEN 未合併**）。agent 08-29 後 IDLE，08-30/08-31 沒跑。所以線上停在 08-28。**要上線必須把日更 PR merge 進 main**（開 PR 不會發佈）。不要再開一個永遠不合併的日更 PR 當「已更新」。
+- **排程（2026-09-01）**：Windows `AIReviewDailySite` 自 08-26 後不再直推 main；Cursor 日更 agent `bc-01a045b3` IDLE、開 PR 不 merge 就不發佈。**真正會更新網站的是 GitHub Actions** `.github/workflows/daily.yml`（每日 00:15 UTC = 北京 08:15，`workflow_dispatch` 可手動），跑 `scripts/rebuild_daily.py` 後 **直接 commit push `main`** → Pages。不要再開只停在 PR 的日更。
 - **預覽**：只在瀏覽器打開頁面即可。不要截圖、不要產出 walkthrough 圖片／影片。
 
 ## 自動化
-- **現行發佈路徑（2026-08-28 起）**：Cursor 日更 agent 開 PR → **必須 merge 到 `main`** 才會觸發 `pages-build-deployment`。#4 已合併（用戶 `liuchiwai0101`）；#5（08-29）未合併導致網站停更。Windows `AIReviewDailySite`（`Documents\Website\scripts\run_daily.cmd`，08:00）自 08-26 後不再直推 main。
+- **現行發佈路徑**：GitHub Actions `Daily dashboard`（cron 00:15 UTC / 北京 08:15，或 Actions 頁手動 Run）→ `scripts/rebuild_daily.py` → push `main` → `pages-build-deployment`。Windows `AIReviewDailySite` 與 Cursor 日更 PR **不再依賴**。
 - 舊 Cursor 任務名 **automation-1784089722231** 不是 UUID；`list-cloud-agents(sources=["automations"])` = 0。
   流程：fetch_daily → scrape_nml → build_dashboard(1) → 中文/前端補充 → build_dashboard(2) → pin 置頂 → cp→ghpages→git push → WeChat。**不要再跑 `build_nml_report.py`**（已 drop；bits 抄入 `build_dashboard.py`；`nml-daily.html` 由 dashboard 寫成 `/#nml` 轉址）。
 - 發佈目標：GitHub Pages 倉庫在 `ghpages/`（remote 含 x-access-token，勿外洩）。固定網址 **https://liuchiwai0101.github.io/News/**（勿用小寫 `/news/`）。

@@ -1,0 +1,38 @@
+name: Daily dashboard
+
+on:
+  schedule:
+    # 08:15 Beijing (00:15 UTC) — after AI HOT 08:00
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-dashboard
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rebuild index.html
+        run: python scripts/rebuild_daily.py
+      - name: Commit and push to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No content changes"
+            exit 0
+          fi
+          git commit -m "每日整合：限時情报王 + AI HOT $(TZ=Asia/Shanghai date +%Y-%m-%d)"
+          git push origin HEAD:main
