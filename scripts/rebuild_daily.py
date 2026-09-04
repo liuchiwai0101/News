@@ -8,10 +8,12 @@ from __future__ import annotations
 
 import json
 import re
+import time
 import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
-from html import unescape
+from html import escape, unescape
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -53,22 +55,201 @@ ARTICLE_TPL = """<!DOCTYPE html>
 <body>
 <p><a href="../">← 返回日報</a></p>
 <h1>{title}</h1>
-<p>{summary}</p>
+{body}
 <p><a href="{url}" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
 </body>
 </html>
 """
+VOID_TAGS = {"br", "img", "hr"}
+SKIP_TAGS = {"script", "style", "noscript", "iframe", "svg", "form", "button", "nav", "aside"}
+KEEP_TAGS = {
+    "p", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "pre", "code",
+    "strong", "em", "b", "i", "br", "img", "a",
+}
+DROP_CLASS = ("featured-posts", "related-posts", "sharedaddy", "jp-relatedposts", "cs-custom-content")
+STUB_MARKERS = ("無法擷取全文", "未提供本地譯文", "已略去翻譯步驟")
+MIN_BODY_CHARS = 80
 
 
-def fetch(url: str) -> str:
+def fetch(url: str, timeout: int = 45) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "zh-TW,zh;q=0.9"})
-    with urllib.request.urlopen(req, timeout=45) as r:
+    with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read().decode("utf-8", "replace")
 
 
 def strip_tags(s: str) -> str:
     s = re.sub(r"<[^>]+>", " ", s)
     return re.sub(r"\s+", " ", unescape(s)).strip()
+
+
+def inner_html_by_class(html: str, class_token: str) -> str:
+    rx = re.compile(
+        r"<([a-zA-Z0-9]+)([^>]*\bclass=(['\"])[^'\"]*\b"
+        + re.escape(class_token)
+        + r"\b[^'\"]*\3[^>]*)>",
+        re.I,
+    )
+    m = rx.search(html)
+    if not m:
+        return ""
+    tag = m.group(1).lower()
+    start = m.end()
+    depth = 1
+    i = start
+    open_rx = re.compile(rf"<{tag}\b", re.I)
+    close_rx = re.compile(rf"</{tag}\s*>", re.I)
+    while i < len(html) and depth:
+        om = open_rx.search(html, i)
+        cm = close_rx.search(html, i)
+        if not cm:
+            return html[start:]
+        opos = om.start() if om else 10**12
+        cpos = cm.start()
+        if opos < cpos:
+            depth += 1
+            i = om.end()
+        else:
+            depth -= 1
+            if depth == 0:
+                return html[start:cpos]
+            i = cm.end()
+    return html[start:]
+
+
+class BodyCleaner(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+        self.skip = 0
+        self.stack: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        tag = tag.lower()
+        ad = dict(attrs)
+        cls = ad.get("class", "")
+        if self.skip:
+            if tag not in VOID_TAGS:
+                self.skip += 1
+            return
+        if tag in SKIP_TAGS or any(tok in cls for tok in DROP_CLASS):
+            if tag not in VOID_TAGS:
+                self.skip += 1
+            return
+        mapped = "h3" if tag == "h2" else tag
+        if mapped not in KEEP_TAGS and mapped != "h3":
+            return
+        if mapped == "img":
+            src = ad.get("data-lazy-src") or ad.get("data-src") or ad.get("src") or ""
+            if not src.startswith("http"):
+                return
+            alt = escape(ad.get("alt") or "", quote=True)
+            self.parts.append(f'<img src="{escape(src, True)}" alt="{alt}">')
+            return
+        if mapped == "br":
+            self.parts.append("<br>")
+            return
+        if mapped == "a":
+            href = ad.get("href") or ""
+            if href.startswith("//"):
+                href = "https:" + href
+            if not href.startswith("http"):
+                return
+            self.parts.append(
+                f'<a href="{escape(href, True)}" target="_blank" rel="noopener noreferrer">'
+            )
+            self.stack.append("a")
+            return
+        self.parts.append(f"<{mapped}>")
+        self.stack.append(mapped)
+
+    def handle_endtag(self, tag):
+        tag = tag.lower()
+        if self.skip:
+            if tag not in VOID_TAGS:
+                self.skip = max(0, self.skip - 1)
+            return
+        mapped = "h3" if tag == "h2" else tag
+        if self.stack and self.stack[-1] == mapped:
+            self.stack.pop()
+            self.parts.append(f"</{mapped}>")
+
+    def handle_data(self, data):
+        if self.skip or not data:
+            return
+        self.parts.append(escape(data))
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+
+    def result(self) -> str:
+        html = "".join(self.parts)
+        html = re.sub(r"<p>\s*</p>", "", html)
+        html = re.sub(r">\s+<", "><", html)
+        return html.strip()
+
+
+def sanitize_body(raw: str) -> str:
+    c = BodyCleaner()
+    try:
+        c.feed(raw)
+        c.close()
+    except Exception:
+        return ""
+    return c.result()
+
+
+def normalize_territory(text: str) -> str:
+    if not text:
+        return text
+    for src in ("中國台灣", "中国台湾", "中國香港", "中国香港", "中國澳門", "中国澳门"):
+        key = "TW" if src.endswith(("灣", "湾")) else ("HK" if src.endswith("港") else "MO")
+        text = text.replace(src, f"\x00{key}\x00")
+    text = text.replace("臺灣", "\x00TW\x00").replace("台灣", "\x00TW\x00").replace("台湾", "\x00TW\x00")
+    text = text.replace("香港", "\x00HK\x00")
+    text = text.replace("澳門", "\x00MO\x00").replace("澳门", "\x00MO\x00")
+    return text.replace("\x00TW\x00", "中國台灣").replace("\x00HK\x00", "中國香港").replace("\x00MO\x00", "中國澳門")
+
+
+def extract_source_html(page: str, url: str) -> str:
+    host = urllib.parse.urlparse(url).netloc.lower()
+    if "newmobilelife.com" in host:
+        inner = inner_html_by_class(page, "entry-content")
+        cut = re.search(r'<div[^>]*class="[^"]*related-posts', inner)
+        if cut:
+            inner = inner[: cut.start()]
+        return inner
+    if "aihot.virxact.com" in host:
+        return inner_html_by_class(page, "m-detail-html") or inner_html_by_class(page, "dt-article")
+    return inner_html_by_class(page, "entry-content") or inner_html_by_class(page, "post-content")
+
+
+def can_extract(url: str) -> bool:
+    host = urllib.parse.urlparse(url).netloc.lower()
+    return "newmobilelife.com" in host or "aihot.virxact.com" in host
+
+
+def is_stub(body: str) -> bool:
+    if not body:
+        return True
+    return any(s in body for s in STUB_MARKERS)
+
+
+def source_notice(source_name: str) -> str:
+    name = (source_name or "第三方媒體").replace("<", "")
+    return f'<div class="notice">內容機器翻譯自第三方媒體（{name}），僅供參考，以原文為準。</div>'
+
+
+def fetch_article_body(url: str, source_name: str) -> str:
+    try:
+        page = fetch(url, timeout=20)
+    except Exception as e:
+        print("article fetch fail", url, e)
+        return ""
+    raw = sanitize_body(extract_source_html(page, url))
+    raw = normalize_territory(raw)
+    if len(strip_tags(raw)) < MIN_BODY_CHARS:
+        return ""
+    return source_notice(source_name) + raw
 
 
 def zh_date(d: date) -> str:
@@ -183,16 +364,12 @@ def notice_html(url: str) -> str:
     )
 
 
-def write_article(item: dict) -> None:
+def write_article(item: dict, body_html: str) -> None:
     p = ROOT / "articles" / f"{item['articleId']}.html"
-    if p.exists():
-        return
+    title = item["title"].replace("<", "")
+    body = body_html or f"<p>{escape(item.get('summary') or item.get('embedded') or '')}</p>"
     p.write_text(
-        ARTICLE_TPL.format(
-            title=item["title"].replace("<", ""),
-            summary=item.get("summary") or item.get("embedded") or "",
-            url=item["sourceUrl"],
-        ),
+        ARTICLE_TPL.format(title=title, body=body, url=item["sourceUrl"]),
         encoding="utf-8",
     )
 
@@ -309,11 +486,38 @@ def main() -> None:
     aj = aj_path.read_text(encoding="utf-8")
     am = re.search(r"window\.ARTICLES = (\{.*\});\s*$", aj, re.S)
     articles = json.loads(am.group(1)) if am else {}
-    for it in flat:
+    ok = fail = skip = kept = 0
+    seen_aids: set[str] = set()
+    fill_items = []
+    for it in list(flat) + list(old):
         if it.get("kind") == "deals":
             continue
-        write_article(it)
-        articles.setdefault(it["articleId"], notice_html(it["sourceUrl"]))
+        aid = it.get("articleId")
+        if not aid or aid in seen_aids:
+            continue
+        seen_aids.add(aid)
+        fill_items.append(it)
+    for it in fill_items:
+        aid = it["articleId"]
+        cur = articles.get(aid, "")
+        filled_now = False
+        if not is_stub(cur):
+            skip += 1
+        elif can_extract(it["sourceUrl"]):
+            body = fetch_article_body(it["sourceUrl"], it.get("sourceName") or "")
+            time.sleep(0.12)
+            if body:
+                articles[aid] = body
+                ok += 1
+                filled_now = True
+            else:
+                articles.setdefault(aid, notice_html(it["sourceUrl"]))
+                fail += 1
+        else:
+            articles.setdefault(aid, notice_html(it["sourceUrl"]))
+            kept += 1
+        if it in flat or filled_now:
+            write_article(it, articles.get(aid, ""))
     aj_path.write_text(
         "window.ARTICLES = " + json.dumps(articles, ensure_ascii=False, separators=(",", ":")) + ";\n",
         encoding="utf-8",
@@ -322,6 +526,7 @@ def main() -> None:
     print(nml_js)
     print("AIHOT", iso, aihot_n, {k: len(v) for k, v in aihot.items() if v})
     print("flat", len(flat), "old", len(old), "added", added)
+    print("bodies filled", ok, "fail", fail, "already", skip, "notice", kept)
 
 
 if __name__ == "__main__":
