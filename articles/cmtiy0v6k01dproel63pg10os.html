@@ -8,7 +8,27 @@
 <body>
 <p><a href="../">← 返回日報</a></p>
 <h1>Google DeepMind 为 Gemini 推出 agentic 视频理解功能</h1>
-<p>Google DeepMind 为 Gemini 3.7 Flash、3.6 Flash 和 3.5 Flash-Lite 推出 agentic video understanding，模型动态扫描视频片段，相比固定帧率处理 token 消耗最多降低 88%，成本最多降低 66%，准确率最多提升 7%。</p>
+<div class="notice">內容機器翻譯自第三方媒體（Google DeepMind：Blog（RSS）），僅供參考，以原文為準。</div><p>我们全新的智能体视频分析功能可将 token 消耗最高降低 88%，成本最高降低 66%，并将质量提升最高 7%。</p><p>Rohan Doshi</p><p>Mario Lučić</p><p>Google DeepMind 研究总监</p><p>Google 刚刚为 Gemini 3.7 Flash、3.6 Flash 和 3.5 Flash-Lite 推出了智能体视频理解功能。该功能允许模型动态扫描视频片段，在提升准确性的同时，将 token 使用量最高降低 88%，成本最高降低 66%。您今天就可以开始使用——只需在 Google AI Studio 或 Gemini Enterprise Agent Platform 中将 API 配置设置为“agentic”即可。</p><p>今天，我们将在最新的模型中推出智能体视频理解功能：Gemini 3.7 Flash、3.6 Flash 和 3.5 Flash-Lite。这项新能力在提升准确性的同时，大幅降低了视频分析的 token 使用量和成本。与智能体视觉（将代码执行与 Gemini 模型的原生图像理解相结合）类似，智能体视频理解利用 Gemini 的原生视频工具来提升性能，并为视频处理解锁新能力，例如亚秒级时刻检索、更准确的异常检测、精确计数等。</p><p>该功能今天即可通过 Google AI Studio 和 Gemini Enterprise Agent Platform 中的 Gemini API 用于视频上传和 YouTube 视频。</p><h3>基准测试</h3><p>与当前的“静态”处理（模型以固定的每秒帧数摄入视频，默认 1 FPS，可通过 API 调整）不同，智能体视频理解将模型的核心推理能力与原生视频工具相结合，动态搜索、扫描和检查跨视觉帧、音频和转录文本的目标视频片段。在标准视频分析基准测试中，采用智能体视频理解的 Gemini 模型将分析成本最高降低 66%，token 消耗最高降低 88%，同时将准确性提升最高 7%。</p><p>这些效率提升在长视频（从 10 分钟的操作指南到 90 分钟的讲座和多小时录制内容）上尤为显著，因为静态处理迫使开发者在高昂的 token 成本与可能丢失关键细节的技术之间做出选择。</p><p>激活智能体视频理解功能后，Gemini 3.7 Flash 的 token 消耗最高可降低 88%，准确率最高可提升 7%。</p><p>虽然这三款受支持的模型均能获得上述提升，但具备智能体理解能力的 Gemini 3.7 Flash 在整体上提供了最佳质量，同时也是质量与成本效率的最佳组合，使其在视频理解的测试模型中处于准确率与成本的最优前沿（pareto frontier）。</p><p>使用智能体视频理解功能，使 Gemini 3.7 Flash 在视频分析中处于准确率与成本的最优前沿。</p><h3>工作原理</h3><p>不同于以固定帧率摄取媒体流的静态处理方式，智能体视频理解让 Gemini 能够以主动的、目标导向的角色来决定看什么、以什么速度看、以及通过哪种模态（帧、音频或转录文本）来看，只获取所需的时刻和信号。虽然开发者以前可以手动完成这项工作，但借助智能体视频理解，Gemini 可以通过智能体循环来完成，调用内部工具加载视频文件的相关部分，从而大幅降低开发开销。</p><h3>能力与应用场景</h3><p>智能体视频理解改变了开发者在各种高要求应用中处理长视频内容的方式。</p><ul><li>亚秒级时刻检索：精准定位在 1 FPS 下容易被遗漏的瞬间状态变化和紧凑的剪辑边界，使精确的自动化视频编辑成为可能。</li><li>长视频中的“大海捞针”式搜索：在不消耗数百万 token 的情况下，回答跨越数小时视频的复杂查询。</li><li>异常检测：以更高 FPS 对感兴趣的时间窗口进行重采样，以检查快速运动和细微的视觉伪影。</li><li>动作与物体计数：准确追踪随时间重复出现的肢体动作和不同物体。</li></ul><p>高 token 效率的长视频分析</p><p>看看 Gemini 3.7 Flash 在长视频理解基准 LongVideoBench 上，启用和不启用智能体视频理解时的表现差异。请注意 token 消耗的大幅减少和准确率的提升。</p><p>通过动态 FPS 实现精准的快速动作分析</p><p>借助智能体视频理解能力，3.7 Flash 能够按需以不同帧率扫描并回看视频，从而准确计数快速动作。</p><p>高 token 效率的“大海捞针”式搜索</p><p>利用智能体视频理解，Gemini 3.7 能够基于视频内容准确回答复杂问题，同时与静态分析相比，消耗的 token 数量显著降低。</p><h3>实际应用效果</h3><p>我们的许多早期合作伙伴在测试智能体视频理解时都看到了强劲的性能表现。以下是他们的评价：</p><h3>快速上手</h3><p>智能体视频理解可通过 Google AI Studio 和 Gemini Enterprise Agent Platform 中的 Gemini API 使用，将陆续在 Gemini 3.7 Flash、3.6 Flash 和 3.5 Flash-Lite 上推出。它采用标准 Gemini API token 定价，不收取额外功能费用。</p><p>要启用该功能，只需在 API 配置中将处理方式设置为“agentic”即可。阅读我们的开发者指南，深入了解该功能及如何开始使用。</p><pre><code>from google import genai
+
+client = genai.Client()
+
+interaction = client.interactions.create(
+    model=&quot;gemini-3.7-flash&quot;,
+    input=[
+        {
+            &quot;type&quot;: &quot;video&quot;,
+            &quot;uri&quot;: &quot;https://youtu.be/7Z5Vy9JBANs&quot;,
+            &quot;processing&quot;: &quot;agentic&quot;
+        },
+        {
+            &quot;type&quot;: &quot;text&quot;,
+            &quot;text&quot;: &quot;What are the 3 most important announcements in this keynote?&quot;,
+        },
+    ],
+)
+
+print(interaction.output_text)
+</code></pre><p>我们还将把智能体视频理解在效率和质量的提升带给 Google 产品中数十亿的用户。该功能将很快在 Gemini 应用中面向所有用户推出，覆盖 Flash 和 Flash-Lite 模型。在接下来的几个月里，智能体视频理解还将为视频观看页面上的 YouTube“Ask YouTube”功能提供支持，利用 Gemini 提供基于视频画面的更高质量答案。</p><p>感谢以下人员对本工作的贡献：Sergi Caelles、Filip Pavetić、Ahmet Iscen、Suhas Yogin 以及 Agentic Vision 团队。</p><h3>在您的收件箱中获取来自 Google 的最新资讯</h3>
 <p><a href="https://aihot.virxact.com/items/cmtiy0v6k01dproel63pg10os" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
 </body>
 </html>
