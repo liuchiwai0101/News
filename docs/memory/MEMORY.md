@@ -2,14 +2,14 @@
 
 ## 下次先讀（省 token）
 - 線上頁：**https://liuchiwai0101.github.io/News/**（大寫 `News`）。`/news/` 會 404（GitHub Pages 區分大小寫；倉庫已改名 `News`）。
-- 本倉是 GitHub Pages **產出**（`index.html` / `articles.js` / `articles/`）。`nml-daily.html` 只做轉址到 `/#nml`，不再單獨報表。構建腳本在本機 `.workbuddy/tmp/build_dashboard.py`，**不在此 repo**。改前端必須改模板，否則隔日 08:00 rebuild 會蓋掉。
+- 本倉是 GitHub Pages **產出**（`index.html` / `articles.js` / `articles/`）。`nml-daily.html` 只做轉址到 `/#nml`，不再單獨報表。構建腳本在本機 `.workbuddy/tmp/build_dashboard.py`，**不在此 repo**。改前端必須改模板，否則隔日 07:00 / 13:00 rebuild 會蓋掉。
 - **`build_nml_report.py` 已廢棄**：不要再跑、不要再產青綠獨立頁。其僅有的獨特 bits 已抄進 `build_dashboard.py`（見下方「抄入 bits」）。`run_daily.cmd` / `run_daily.py` 刪掉對它的呼叫。
 - 不要重掃全站、不要加額外功能／測試檔／chat-history。前端已知小 bug（應改**Windows 模板**，Pages 上的 PR #2 不夠）：JS 重建 nav 時漏色點；搜尋空結果不要用 `[style*="display: none"]`；手機 CSS 要包含 `.nav-inner-old`。在線 Worker 仍是佔位，已有 herenow 回退，不必再加一層。
-- **排程（2026-09-01）**：Windows `AIReviewDailySite` 自 08-26 後不再直推 main；Cursor 日更 agent `bc-01a045b3` IDLE、開 PR 不 merge 就不發佈。**真正會更新網站的是 GitHub Actions** `.github/workflows/daily.yml`（每日 00:15 UTC = 北京 08:15，`workflow_dispatch` 可手動），跑 `scripts/rebuild_daily.py` 後 **直接 commit push `main`** → Pages。不要再開只停在 PR 的日更。
+- **排程（2026-09-04）**：Windows `AIReviewDailySite` 自 08-26 後不再直推 main；Cursor 日更 agent `bc-01a045b3` IDLE、開 PR 不 merge 就不發佈。**真正會更新網站的是 GitHub Actions** `.github/workflows/daily.yml`（每日兩次：北京 07:00 = 23:00 UTC、北京 13:00 = 05:00 UTC，`workflow_dispatch` 可手動），跑 `scripts/rebuild_daily.py` 後 **直接 commit push `main`** → Pages。不要再開只停在 PR 的日更。GitHub 公開倉 cron 常會晚幾小時。
 - **預覽**：只在瀏覽器打開頁面即可。不要截圖、不要產出 walkthrough 圖片／影片。
 
 ## 自動化
-- **現行發佈路徑**：GitHub Actions `Daily dashboard`（cron 00:15 UTC / 北京 08:15，或 Actions 頁手動 Run）→ `scripts/rebuild_daily.py` → push `main` → `pages-build-deployment`。Windows `AIReviewDailySite` 與 Cursor 日更 PR **不再依賴**。
+- **現行發佈路徑**：GitHub Actions `Daily dashboard`（cron 北京 07:00 與 13:00，或 Actions 頁手動 Run）→ `scripts/rebuild_daily.py` → push `main` → `pages-build-deployment`。Windows `AIReviewDailySite` 與 Cursor 日更 PR **不再依賴**。
 - 舊 Cursor 任務名 **automation-1784089722231** 不是 UUID；`list-cloud-agents(sources=["automations"])` = 0。
   流程：fetch_daily → scrape_nml → build_dashboard(1) → 中文/前端補充 → build_dashboard(2) → pin 置頂 → cp→ghpages→git push → WeChat。**不要再跑 `build_nml_report.py`**（已 drop；bits 抄入 `build_dashboard.py`；`nml-daily.html` 由 dashboard 寫成 `/#nml` 轉址）。
 - 發佈目標：GitHub Pages 倉庫在 `ghpages/`（remote 含 x-access-token，勿外洩）。固定網址 **https://liuchiwai0101.github.io/News/**（勿用小寫 `/news/`）。

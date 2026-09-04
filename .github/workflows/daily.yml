@@ -2,8 +2,9 @@ name: Daily dashboard
 
 on:
   schedule:
-    # 08:15 Beijing (00:15 UTC) — after AI HOT 08:00
-    - cron: "15 0 * * *"
+    # Beijing time (UTC+8). GitHub cron is UTC; public-repo runs can lag by hours.
+    - cron: "0 23 * * *" # 07:00 Beijing
+    - cron: "0 5 * * *"  # 13:00 Beijing
   workflow_dispatch:
 
 permissions:
