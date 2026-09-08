@@ -20,7 +20,7 @@ from pathlib import Path
 
 try:
     from opencc import OpenCC
-    _CC = OpenCC("s2t")
+    _CC = OpenCC("s2hk")
 except Exception:
     _CC = None
 
@@ -121,6 +121,14 @@ SOURCE_ALIAS = {
     "rthk": "香港電台",
     "rthk.hk": "香港電台",
     "香港電台": "香港電台",
+    "香港電台新聞網": "香港電台",
+    "881903.com": "商業電台",
+    "香港經濟日報hket": "香港經濟日報",
+    "hket.com": "香港經濟日報",
+    "hket": "香港經濟日報",
+    "明報新聞網": "明報",
+    "明報ourlifestyle": "明報",
+    "上報upmedia": "上報",
     "dw": "德國之聲",
     "德國之聲": "德國之聲",
     "sina": "新浪",
@@ -183,7 +191,7 @@ def to_hant(text: str) -> str:
     if _CC is None:
         return text
     try:
-        return _CC.convert(text)
+        return _CC.convert(text).replace("羣", "群")
     except Exception:
         return text
 
@@ -198,7 +206,7 @@ def zh_source(name: str) -> str:
     raw = (name or "").strip()
     if not raw:
         return "綜合新聞"
-    key = _src_key(raw)
+    key = _src_key(to_hant(raw))
     if key in SOURCE_ALIAS:
         return SOURCE_ALIAS[key]
     host = key.split("/")[0]
@@ -221,6 +229,8 @@ def hantify_item(it: dict) -> dict:
     for k in ("title", "summary", "embedded"):
         if it.get(k):
             it[k] = to_hant(it[k])
+    if it.get("title"):
+        it["title"] = clean_headline(it["title"])
     if it.get("sourceName"):
         it["sourceName"] = zh_source(it["sourceName"])
     if it.get("board"):
@@ -246,6 +256,23 @@ def clean_headline(title: str) -> str:
         title,
     )
     title = re.sub(r"\s*[-–—]\s*\d+\s*小時前\s*$", "", title)
+    title = re.sub(
+        r"\s*[-–—]\s*(?:Yahoo\s*新聞|Yahoo新聞|UDN|聯合新聞網|Storm\.mg|風傳媒|BBC(?:\s*中文)?)\s*$",
+        "",
+        title,
+        flags=re.I,
+    )
+    title = re.sub(
+        r"\s*[-–—]\s*[\w.-]+\.(?:com|net|mg|org|hk|tw)(?:\.\w+)?\s*$",
+        "",
+        title,
+        flags=re.I,
+    )
+    title = re.sub(
+        r"\s*[-–—]\s*[\w.·\u4e00-\u9fff]{1,24}(?:新聞網|電台新聞網)\s*$",
+        "",
+        title,
+    )
     return title.strip("｜|/- ")
 
 
@@ -253,6 +280,16 @@ def summary_score(text: str) -> int:
     if not text or "查看更多" in text:
         return -1
     return text.count("。") * 80 + text.count("，") * 8 + min(len(text), 280)
+
+
+def is_dump_summary(text: str) -> bool:
+    if not text or summary_score(text) < 20:
+        return True
+    if re.search(r"Storm\.mg|Yahoo新聞|\bUDN\b|\|\s*(政治|國際|全球|焦點)|查看更多", text):
+        return True
+    if re.search(r"https?://|\w+\.(?:com|net|mg|org)\b", text, re.I):
+        return True
+    return False
 
 
 def inner_html_by_class(html: str, class_token: str) -> str:
@@ -614,7 +651,7 @@ def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
             related = [{"title": title_clean, "url": link, "source": source}]
         sources = list(dict.fromkeys([source] + [r["source"] for r in related if r.get("source")]))
         summary = to_hant(re.sub(r"\s+", " ", strip_tags(desc_html))[:280])
-        if "查看更多頭條" in summary or summary_score(summary) < 20:
+        if is_dump_summary(summary):
             summary = ""
         out.append(
             {
@@ -682,7 +719,7 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
                     if r.get("url") not in have:
                         c["related"].append(r)
                         have.add(r.get("url"))
-                if it.get("summary") and summary_score(it["summary"]) > summary_score(c.get("summary") or ""):
+                if it.get("summary") and not is_dump_summary(it["summary"]) and summary_score(it["summary"]) > summary_score(c.get("summary") or ""):
                     c["summary"] = it["summary"]
                 placed = True
                 break
@@ -734,6 +771,8 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
         if len(sources) > 4:
             src_label += f" 等{len(sources)}家"
         summary = (c.get("summary") or "").strip()
+        if is_dump_summary(summary):
+            summary = ""
         if not summary:
             summary = "、".join(sources[:6]) + " 均有報道。"
         kps = []
