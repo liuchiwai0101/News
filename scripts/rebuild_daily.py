@@ -6,6 +6,7 @@ Windows Task Scheduler or an unmerged Cursor PR.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import time
@@ -559,9 +560,10 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             continue
         dt = c["dt"] or datetime.now(TZ)
         d = dt.date()
-        aid = "wire-" + slug_from_url(url)
-        if aid in used_ids or aid == "wire-item":
-            aid = ("wire-" + slug_from_url(c["title"]) + "-" + dt.strftime("%H%M"))[:80]
+        digest = hashlib.sha1((c["title"] or url).encode("utf-8")).hexdigest()[:12]
+        aid = "wire-" + digest
+        if aid in used_ids:
+            aid = "wire-" + hashlib.sha1((c["title"] + dt.strftime("%H%M")).encode("utf-8")).hexdigest()[:12]
         used_ids.add(aid)
         src_label = " · ".join(sources[:4]) if sources else WIRE_LABEL
         if len(sources) > 4:
@@ -569,6 +571,11 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
         summary = (c.get("summary") or "").strip()
         if not summary:
             summary = "、".join(sources[:6]) + " 均有報道。"
+        kps = []
+        for r in related:
+            s = (r.get("source") or "").strip()
+            if s and s not in kps:
+                kps.append(s)
         item = {
             "title": c["title"],
             "summary": summary[:280],
@@ -588,7 +595,7 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             "articleId": aid,
             "articleUrl": f"articles/{aid}.html",
             "embedded": summary[:280],
-            "keypoints": [f"{r.get('source')}" for r in related if r.get("source")][:8],
+            "keypoints": kps[:8],
             "related": related,
         }
         bodies[aid] = wire_body_html(item)
@@ -677,10 +684,10 @@ def main() -> None:
     keep.update(it["sourceUrl"] for it in deals["items"])
     keep.update(it["sourceUrl"] for it in wire_items)
 
-    old = list(data.get("old") or [])
+    old = [it for it in (data.get("old") or []) if it.get("kind") != "wire"]
     old_urls = {it.get("sourceUrl") for it in old}
     for sec in data["sections"]:
-        if sec.get("kind") == "deals":
+        if sec.get("kind") in ("deals", "wire"):
             continue
         for it in sec.get("items") or []:
             u = it.get("sourceUrl")
