@@ -154,6 +154,14 @@ ARTICLE_TPL = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
 </head>
 <body>
 <p><a href="../">← 返回日報</a></p>
@@ -168,6 +176,7 @@ SKIP_TAGS = {"script", "style", "noscript", "iframe", "svg", "form", "button", "
 KEEP_TAGS = {
     "p", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "pre", "code",
     "strong", "em", "b", "i", "br", "img", "a",
+    "table", "thead", "tbody", "tfoot", "tr", "th", "td", "caption",
 }
 DROP_CLASS = ("featured-posts", "related-posts", "sharedaddy", "jp-relatedposts", "cs-custom-content")
 STUB_MARKERS = ("無法擷取全文", "未提供本地譯文", "已略去翻譯步驟")
@@ -589,6 +598,16 @@ class BodyCleaner(HTMLParser):
                 f'<a href="{escape(href, True)}" target="_blank" rel="noopener noreferrer">'
             )
             self.stack.append("a")
+            return
+        if mapped in {"th", "td"}:
+            bits = []
+            for key in ("colspan", "rowspan"):
+                val = ad.get(key)
+                if val and val.isdigit():
+                    bits.append(f'{key}="{val}"')
+            attr = (" " + " ".join(bits)) if bits else ""
+            self.parts.append(f"<{mapped}{attr}>")
+            self.stack.append(mapped)
             return
         self.parts.append(f"<{mapped}>")
         self.stack.append(mapped)
