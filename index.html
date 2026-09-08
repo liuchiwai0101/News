@@ -274,6 +274,8 @@
   .reader-scroll h3:first-child { margin-top:0; }
   .reader-scroll p { margin:0 0 14px; font-size:16px; line-height:1.85; color:var(--body); }
   .reader-scroll img { max-width:100%; height:auto; border-radius:10px; margin:8px 0 16px; box-shadow:0 2px 8px rgba(15,23,42,.08); }
+  .reader-hero { margin:0 0 16px; }
+  .reader-hero img { width:100%; max-height:min(52vh,420px); object-fit:cover; border-radius:12px; margin:0; }
   .reader-scroll pre { background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:10px;
     overflow-x:auto; font-size:13.5px; line-height:1.6; margin:0 0 16px; }
   .reader-scroll code { font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
@@ -551,6 +553,7 @@ function makeCard(item, idx, ri, isExt, featured) {
   card.dataset.aid = item.articleId || "";
   card.dataset.sname = item.sourceName || "";
   card.dataset.summary = item.summary || "";
+  card.dataset.img = item.img || "";
   card.dataset.keypoints = JSON.stringify(item.keypoints || []);
   if (item.origTitle) card.dataset.orig = item.origTitle;
   return card;
@@ -974,7 +977,10 @@ function openReader(card) {
     sumHtml = '<div class="reader-summary"><span class="rs-label">重點整理</span>' + inner + '</div>';
   }
   const body = (window.ARTICLES && window.ARTICLES[id]) || '';
-  readerScroll.innerHTML = sumHtml + (body ||
+  const cover = card.dataset.img || '';
+  const hero = (cover && body.indexOf(cover) < 0)
+    ? '<p class="reader-hero"><img src="' + cover + '" alt=""></p>' : '';
+  readerScroll.innerHTML = hero + sumHtml + (body ||
     '<p class="notice">原文非中文，未提供本地譯文。</p>');
   reader.hidden = false;
   document.body.style.overflow = 'hidden';

@@ -172,12 +172,225 @@ KEEP_TAGS = {
 DROP_CLASS = ("featured-posts", "related-posts", "sharedaddy", "jp-relatedposts", "cs-custom-content")
 STUB_MARKERS = ("無法擷取全文", "未提供本地譯文", "已略去翻譯步驟")
 MIN_BODY_CHARS = 80
+SKIP_IMG_HOST = re.compile(
+    r"news\.google\.com|gstatic\.com/gnews|google_news|doubleclick|googlesyndication",
+    re.I,
+)
+SKIP_IMG_URL = re.compile(
+    r"(?:favicon|1x1|pixel|spacer|sprite|tracking|/logo[-_/]|\.svg(?:\?|$))",
+    re.I,
+)
+OG_IMAGE_RX = [
+    re.compile(
+        r'<meta[^>]+property=["\']og:image(?::secure_url|:url)?["\'][^>]+content=["\']([^"\']+)',
+        re.I,
+    ),
+    re.compile(
+        r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image(?::secure_url|:url)?["\']',
+        re.I,
+    ),
+    re.compile(
+        r'<meta[^>]+name=["\']twitter:image(?::src)?["\'][^>]+content=["\']([^"\']+)',
+        re.I,
+    ),
+    re.compile(r'<link[^>]+rel=["\']image_src["\'][^>]+href=["\']([^"\']+)', re.I),
+]
+OPENVERSE_TERMS = [
+    (re.compile(r"地震|地質災害|海嘯"), "earthquake"),
+    (re.compile(r"火山"), "volcano eruption"),
+    (re.compile(r"王室|哈里|查理斯|英王"), "british royal family"),
+    (re.compile(r"伊朗|霍爾木茲|油價|石油"), "oil tanker gulf"),
+    (re.compile(r"台積電|GPU|芯片|晶片|半導體"), "semiconductor chip factory"),
+    (re.compile(r"網球|美網"), "tennis match"),
+    (re.compile(r"飛機|機場|墜機"), "airplane airport"),
+    (re.compile(r"金價|黃金"), "gold bars"),
+    (re.compile(r"特朗普|白宮"), "white house"),
+    (re.compile(r"烏克蘭|俄羅斯|普亭"), "ukraine war"),
+    (re.compile(r"天文台|天氣|暴雨|颱風"), "storm clouds hong kong"),
+    (re.compile(r"警察|車禍|交通"), "city traffic night"),
+]
+_IMG_CACHE: dict[str, str] = {}
+_OV_USED: set[str] = set()
 
 
 def fetch(url: str, timeout: int = 45) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "zh-TW,zh;q=0.9"})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": UA,
+            "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+            "Accept-Encoding": "identity",
+        },
+    )
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read().decode("utf-8", "replace")
+
+
+def fetch_prefix(url: str, timeout: int = 8, nbytes: int = 1_800_000) -> str:
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": UA,
+            "Accept": "text/html,application/xhtml+xml",
+            "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+            "Accept-Encoding": "identity",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read(nbytes).decode("utf-8", "replace")
+
+
+def abs_img_url(src: str, base: str = "") -> str:
+    src = unescape((src or "").strip())
+    if src.startswith("//"):
+        src = "https:" + src
+    if base:
+        src = urllib.parse.urljoin(base, src)
+    return src
+
+
+def upgrade_wp_img(url: str) -> str:
+    return re.sub(r"-\d{2,4}x\d{2,4}(?=\.(?:jpe?g|png|webp|gif))", "", url or "", flags=re.I)
+
+
+def is_google_news(url: str) -> bool:
+    host = urllib.parse.urlparse(url or "").netloc.lower()
+    return "news.google." in host
+
+
+def is_article_url(url: str) -> bool:
+    if not (url or "").startswith("http") or is_google_news(url):
+        return False
+    path = urllib.parse.urlparse(url).path.rstrip("/")
+    if not path or path.lower() in {"/chinese", "/zh", "/zhongwen"}:
+        return False
+    return True
+
+
+def looks_like_photo(url: str) -> bool:
+    if not (url or "").startswith("http"):
+        return False
+    if SKIP_IMG_HOST.search(url) or SKIP_IMG_URL.search(url):
+        return False
+    return True
+
+
+def parse_og_image(html: str, base: str) -> str:
+    for rx in OG_IMAGE_RX:
+        m = rx.search(html or "")
+        if not m:
+            continue
+        img = abs_img_url(m.group(1), base)
+        if looks_like_photo(img):
+            return img
+    return ""
+
+
+def first_img_in_html(html: str, base: str = "") -> str:
+    for src in re.findall(r"<img[^>]+(?:src|data-src|data-lazy-src)=['\"]([^'\"]+)", html or "", re.I):
+        img = abs_img_url(src, base)
+        if looks_like_photo(img):
+            return upgrade_wp_img(img)
+    return ""
+
+
+def rss_image(block: str) -> str:
+    for rx in (
+        r'<media:content[^>]+url=["\']([^"\']+)',
+        r'<media:thumbnail[^>]+url=["\']([^"\']+)',
+        r'<enclosure[^>]+url=["\']([^"\']+)["\'][^>]*type=["\']image',
+        r'<enclosure[^>]+type=["\']image[^>]+url=["\']([^"\']+)',
+        r'<img[^>]+src=["\'](https?://[^"\']+)',
+    ):
+        m = re.search(rx, block or "", re.I)
+        if m:
+            img = abs_img_url(m.group(1))
+            if looks_like_photo(img):
+                return img
+    return ""
+
+
+def fetch_og_image(url: str) -> str:
+    if not is_article_url(url):
+        return ""
+    if url in _IMG_CACHE:
+        return _IMG_CACHE[url]
+    img = ""
+    try:
+        html = fetch_prefix(url)
+        img = parse_og_image(html, url) or first_img_in_html(html, url)
+    except Exception as e:
+        print("og fail", url[:80], e)
+        img = ""
+    if not looks_like_photo(img):
+        img = ""
+    _IMG_CACHE[url] = img
+    return img
+
+
+def openverse_query(title: str) -> str:
+    t = title or ""
+    for rx, q in OPENVERSE_TERMS:
+        if rx.search(t):
+            return q
+    return "world news photograph"
+
+
+def fetch_openverse(title: str) -> tuple[str, str, str]:
+    q = openverse_query(title)
+    page = (abs(hash(title)) % 4) + 1
+    api = (
+        "https://api.openverse.org/v1/images/"
+        f"?q={urllib.parse.quote(q)}&license_type=commercial&page_size=8&page={page}"
+    )
+    try:
+        raw = fetch_prefix(api, timeout=10, nbytes=400_000)
+        data = json.loads(raw)
+    except Exception as e:
+        print("openverse fail", q, e)
+        return "", "", ""
+    for hit in data.get("results") or []:
+        url = hit.get("url") or hit.get("thumbnail") or ""
+        if not looks_like_photo(url) or url in _OV_USED:
+            continue
+        _OV_USED.add(url)
+        creator = (hit.get("creator") or "")[:40]
+        lic = (hit.get("license") or "").upper()
+        return url, creator, lic
+    return "", "", ""
+
+
+def fill_item_photo(item: dict, extra_urls: list[str] | None = None) -> None:
+    if item.get("img") and looks_like_photo(item["img"]):
+        item["img"] = upgrade_wp_img(item["img"])
+        item["imgKind"] = item.get("imgKind") or "og"
+        return
+    urls: list[str] = []
+    for u in extra_urls or []:
+        if u:
+            urls.append(u)
+    su = item.get("sourceUrl") or ""
+    if su:
+        urls.append(su)
+    seen: set[str] = set()
+    for u in urls:
+        if u in seen or not is_article_url(u):
+            continue
+        seen.add(u)
+        img = fetch_og_image(u)
+        time.sleep(0.08)
+        if img:
+            item["img"] = img
+            item["imgKind"] = "og"
+            item["imgSource"] = u
+            return
+    img, creator, lic = fetch_openverse(item.get("title") or "")
+    if img:
+        item["img"] = img
+        item["imgKind"] = "openverse"
+        item["imgCreator"] = creator
+        item["imgLicense"] = lic
+        item["imgSource"] = "https://openverse.org"
 
 
 def strip_tags(s: str) -> str:
@@ -350,6 +563,7 @@ class BodyCleaner(HTMLParser):
             return
         if mapped == "img":
             src = ad.get("data-lazy-src") or ad.get("data-src") or ad.get("src") or ""
+            src = abs_img_url(src)
             if not src.startswith("http"):
                 return
             alt = escape(ad.get("alt") or "", quote=True)
@@ -457,6 +671,9 @@ def fetch_article_body(url: str, source_name: str) -> str:
         return ""
     raw = sanitize_body(extract_source_html(page, url))
     raw = normalize_territory(to_hant(raw))
+    og = parse_og_image(page, url) or first_img_in_html(page, url)
+    if og and og not in raw:
+        raw = f'<p><img src="{escape(og, True)}" alt=""></p>' + raw
     if len(strip_tags(raw)) < MIN_BODY_CHARS:
         return ""
     return source_notice(zh_source(source_name)) + raw
@@ -498,17 +715,18 @@ def parse_aihot(html: str, iso: str) -> dict[str, list[dict]]:
             source_url = ("https://aihot.virxact.com" + href) if href.startswith("/") else href
             aid = slug_from_url(source_url)
             show = AIHOT_SHOW.get(lab, to_hant(lab))
+            img = rss_image(block) or first_img_in_html(block, "https://aihot.virxact.com")
             out[lab].append(
                 {
                     "title": title,
                     "summary": summary,
                     "sourceName": source_name,
                     "sourceUrl": source_url,
-                    "img": "",
-                    "imgKind": "",
+                    "img": img,
+                    "imgKind": "og" if img else "",
                     "imgCreator": "",
                     "imgLicense": "",
-                    "imgSource": "",
+                    "imgSource": source_url if img else "",
                     "ci": CI[lab],
                     "kind": "aihot",
                     "isoDate": iso,
@@ -533,6 +751,7 @@ def parse_nml(html: str, today: date) -> list[dict]:
             r'<noscript>\s*<img[^>]+src="(https://[^"]+)"', block
         )
         img = img_m.group(1) if img_m else ""
+        img = upgrade_wp_img(img)
         ex = re.search(r'cs-entry__excerpt[^>]*>(.*?)</div>', block, re.S)
         summary = to_hant(strip_tags(ex.group(1))[:280] if ex else "")
         dm = re.search(r"/(\d{4})/(\d{2})/(\d{2})/", url)
@@ -653,6 +872,7 @@ def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
         summary = to_hant(re.sub(r"\s+", " ", strip_tags(desc_html))[:280])
         if is_dump_summary(summary):
             summary = ""
+        img = rss_image(block) or rss_image(desc_html)
         out.append(
             {
                 "title": title_clean,
@@ -662,6 +882,7 @@ def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
                 "dt": dt,
                 "related": related,
                 "sources": sources,
+                "img": img,
             }
         )
     return out
@@ -670,6 +891,9 @@ def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
 def wire_body_html(item: dict) -> str:
     names = item.get("sourceName") or WIRE_LABEL
     parts = [source_notice(names)]
+    img = item.get("img") or ""
+    if img:
+        parts.append(f'<p><img src="{escape(img, True)}" alt=""></p>')
     summary = item.get("summary") or ""
     if summary:
         parts.append(f"<p>{escape(summary)}</p>")
@@ -721,6 +945,8 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
                         have.add(r.get("url"))
                 if it.get("summary") and not is_dump_summary(it["summary"]) and summary_score(it["summary"]) > summary_score(c.get("summary") or ""):
                     c["summary"] = it["summary"]
+                if it.get("img") and not c.get("img"):
+                    c["img"] = it["img"]
                 placed = True
                 break
         if not placed:
@@ -732,6 +958,7 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
                     "related": list(it["related"]),
                     "summary": it.get("summary") or "",
                     "dt": it.get("dt"),
+                    "img": it.get("img") or "",
                 }
             )
     cut = datetime.now(TZ) - timedelta(hours=WIRE_HOURS)
@@ -780,16 +1007,18 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             s = (r.get("source") or "").strip()
             if s and s not in kps:
                 kps.append(s)
+        extra = [r.get("url") or "" for r in related]
+        extra.extend(m.get("url") or "" for m in c.get("members") or [])
         item = {
             "title": clean_headline(to_hant(c["title"])),
             "summary": to_hant(summary[:280]),
             "sourceName": src_label,
             "sourceUrl": url,
-            "img": "",
-            "imgKind": "",
+            "img": c.get("img") or "",
+            "imgKind": "og" if c.get("img") else "",
             "imgCreator": "",
             "imgLicense": "",
-            "imgSource": "",
+            "imgSource": url if c.get("img") else "",
             "date": zh_date(d),
             "isoDate": d.isoformat(),
             "ci": CI[WIRE_LABEL],
@@ -802,6 +1031,7 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             "keypoints": kps[:8],
             "related": related,
         }
+        fill_item_photo(item, extra)
         bodies[aid] = wire_body_html(item)
         item.pop("related", None)
         items.append(item)
@@ -850,6 +1080,9 @@ def main() -> None:
     aihot_n = sum(len(v) for v in aihot.values())
     if aihot_n == 0:
         raise SystemExit(f"AI HOT {iso} parsed 0 articles")
+    for items in aihot.values():
+        for it in items:
+            fill_item_photo(it)
 
     nml_items: list[dict] = []
     for url in NML_LISTS:
@@ -986,6 +1219,10 @@ def main() -> None:
         cur = articles.get(aid, "")
         filled_now = False
         if not is_stub(cur):
+            cover = it.get("img") or ""
+            if cover and "<img" not in cur:
+                cur = f'<p><img src="{escape(cover, True)}" alt=""></p>' + cur
+                articles[aid] = cur
             skip += 1
         elif can_extract(it["sourceUrl"]):
             body = fetch_article_body(it["sourceUrl"], it.get("sourceName") or "")
@@ -1009,6 +1246,9 @@ def main() -> None:
 
     print(nml_js)
     print("AIHOT", iso, aihot_n, {k: len(v) for k, v in aihot.items() if v})
+    print("photos nml", sum(1 for it in nml40 if it.get("img")),
+          "wire", sum(1 for it in wire_items if it.get("img")),
+          "aihot", sum(1 for v in aihot.values() for it in v if it.get("img")))
     print("flat", len(flat), "old", len(old), "added", added, "wire", len(wire_items))
     print("bodies filled", ok, "fail", fail, "already", skip, "notice", kept)
 
