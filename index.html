@@ -184,9 +184,6 @@
   .card.wall .ct-date { font-size:11px; color:var(--muted); margin-left:auto; white-space:nowrap; }
   .card.wall .ct-src { font-size:11px; color:var(--muted); font-weight:600; line-height:1.35;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-  .card.wall .kp-mini { margin:0 0 8px; padding:0 0 0 16px; color:var(--body); font-size:12.5px; line-height:1.45; }
-  .card.wall .kp-mini li { margin:0 0 4px; }
-  .card.wall .kp-mini li:last-child { margin-bottom:0; }
   .card.wall.deal .body { padding:11px 12px 12px; }
 
   /* TAB PANELS — each section grouped under its own heading */
@@ -547,17 +544,10 @@ function makeCard(item, idx, ri, isExt, featured) {
       + '<span class="idx">#' + idx + '</span>'
       + '<span class="cover-date">' + cardDate + '</span>' + capHtml + suppCap + frontCap;
   }
-  const realKp = (item.keypoints || []).filter(function(k){
-    return k && (String(k).length > 18 || /[。！？]/.test(k));
-  }).slice(0, 2);
-  const kpHtml = realKp.length
-    ? '<ul class="kp-mini">' + realKp.map(function(k){ return '<li>' + k + '</li>'; }).join('') + '</ul>'
-    : '';
   card.innerHTML =
     '<div class="cover" style="background:var(--g' + (ri != null ? ri : 0) + ');">' + coverInner + '</div>'
     + '<div class="body">'
     +   '<h3>' + (item.translated ? '<span class="tr-mark">譯</span>' : '') + item.title + '</h3>'
-    +   kpHtml
     +   (item.kind === 'wire' && item.sourceName ? '<div class="meta"><span class="ct-src">' + item.sourceName + '</span></div>' : '')
     + '</div>';
   card.dataset.aid = item.articleId || "";
@@ -656,7 +646,7 @@ function buildPanel(sec, si){
   if (sec.kind === 'wire') {
     const wireSub = document.createElement('div');
     wireSub.className = 'nml-sub';
-    wireSub.textContent = '各大新聞平台當日要聞，相同事件已合併，並附原文重點';
+    wireSub.textContent = '各大新聞平台當日要聞，相同事件已合併為一則';
     panel.appendChild(wireSub);
   }
   const grid = document.createElement('div');
