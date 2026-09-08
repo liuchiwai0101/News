@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b266b">
 <meta name="build" content="20260826080354">
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260826080354">
-<title>AI HOT 日报 · 2026-08-28</title>
+<title>AI HOT 日報 · 2026-09-08</title>
 <style>
   :root {
     --bg:#eef1f6;
@@ -397,14 +397,14 @@
   <div class="hero-meta">
     <span class="sub" id="hero-sub"></span>
     <div class="stats" id="hero-stats"></div>
-    <span class="online-badge" id="online-badge" title="实时在线人数">
+    <span class="online-badge" id="online-badge" title="實時在線人數">
       <span class="dot"></span>實時在線 <span id="online-count">—</span> 人
     </span>
   </div>
 </header>
 
 <div id="view-current">
-<nav class="nav"><div class="nav-inner"><a class="nav-link" href="#sec-0"><span class="dot dot-5"></span>限時情報王<span class="nav-count">40</span></a><a class="nav-link" href="#sec-1"><span class="dot dot-0"></span>模型发布/更新<span class="nav-count">1</span></a><a class="nav-link" href="#sec-2"><span class="dot dot-1"></span>产品发布/更新<span class="nav-count">5</span></a><a class="nav-link" href="#sec-3"><span class="dot dot-2"></span>行业动态<span class="nav-count">2</span></a><a class="nav-link" href="#sec-4"><span class="dot dot-3"></span>论文研究<span class="nav-count">1</span></a><a class="nav-link" href="#sec-5"><span class="dot dot-4"></span>技巧与观点<span class="nav-count">5</span></a><a class="nav-link" href="#sec-6"><span class="dot dot-6"></span>熱門優惠<span class="nav-count">20</span></a></div></nav>
+<nav class="nav"><div class="nav-inner"><a class="nav-link" href="#sec-0"><span class="dot dot-5"></span>限時情報王<span class="nav-count">40</span></a><a class="nav-link" href="#sec-1"><span class="dot dot-0"></span>模型發布/更新<span class="nav-count">1</span></a><a class="nav-link" href="#sec-2"><span class="dot dot-1"></span>產品發布/更新<span class="nav-count">5</span></a><a class="nav-link" href="#sec-3"><span class="dot dot-2"></span>行業動態<span class="nav-count">2</span></a><a class="nav-link" href="#sec-4"><span class="dot dot-3"></span>論文研究<span class="nav-count">1</span></a><a class="nav-link" href="#sec-5"><span class="dot dot-4"></span>技巧與觀點<span class="nav-count">5</span></a><a class="nav-link" href="#sec-6"><span class="dot dot-6"></span>熱門優惠<span class="nav-count">20</span></a></div></nav>
 
 <main class="wrap" id="content"></main>
 </div>
@@ -442,7 +442,7 @@ document.getElementById('hero-sub').textContent = '收录区间：' + DATA.windo
 const statsEl = document.getElementById('hero-stats');
 const totalStat = document.createElement('div');
 totalStat.className = 'stat total';
-totalStat.innerHTML = '<span class="num">' + DATA.flat.length + '</span><span class="lab">条 · 今日精选</span>';
+totalStat.innerHTML = '<span class="num">' + DATA.flat.length + '</span><span class="lab">則 · 今日精選</span>';
 statsEl.appendChild(totalStat);
 if (NML) {
   const nmlStat = document.createElement('div');
@@ -525,9 +525,9 @@ function makeCard(item, idx, ri, isExt, featured) {
   if (item.isNew) {
     capHtml = '<span class="cover-new">NEW</span>';
   } else if (item.img && item.imgKind === 'openverse' && item.imgCreator) {
-    capHtml = '<span class="cover-cap">图：' + item.imgCreator + (item.imgLicense ? ' · ' + item.imgLicense : '') + '</span>';
+    capHtml = '<span class="cover-cap">圖：' + item.imgCreator + (item.imgLicense ? ' · ' + item.imgLicense : '') + '</span>';
   } else if (item.img && (item.imgKind === 'og' || item.imgKind === 'content')) {
-    capHtml = '<span class="cover-cap">原题图</span>';
+    capHtml = '<span class="cover-cap">原題圖</span>';
   }
   const suppCap = item.supplement ? '<span class="cover-supp">補充</span>' : '';
   const frontCap = item.frontend ? '<span class="cover-front">前端</span>' : '';
@@ -626,7 +626,7 @@ function buildPanel(sec, si){
   panel.setAttribute('data-cat', sec.label);
   const head = document.createElement('div');
   head.className = 'panel-head';
-  let cntHtml = sec.items.length + ' 条';
+  let cntHtml = sec.items.length + ' 則';
   if (sec.kind === 'external' && NML) {
     cntHtml = '顯示 ' + NML.shown + ' · 全站 ' + NML.total + ' · 新增 ' + NML.newCount;
   }
@@ -726,7 +726,7 @@ navInner.addEventListener('click', function(e){
   }
   const head = document.createElement('div');
   head.className = 'group-divider';
-  head.innerHTML = '<span>舊聞 Old News · 超過 5 天（' + DATA.old.length + ' 条）</span>';
+  head.innerHTML = '<span>舊聞 Old News · 超過 5 天（' + DATA.old.length + ' 則）</span>';
   c.appendChild(head);
   boards.forEach(function(b){
     const items = groups[b];
@@ -738,7 +738,7 @@ navInner.addEventListener('click', function(e){
     ph.className = 'panel-head';
     ph.innerHTML = '<span class="bar" style="background:var(--c' + ri + ')"></span>'
       + '<h3>' + b + '</h3>'
-      + '<span class="cnt">' + items.length + ' 条</span>';
+      + '<span class="cnt">' + items.length + ' 則</span>';
     panel.appendChild(ph);
     const grid = document.createElement('div');
     grid.className = 'grid wall';
@@ -1001,16 +1001,16 @@ function layoutMasonry(){ /* no-op for compact wall */ }
 
 // Footer
 document.getElementById('foot').innerHTML =
-  '<div>本期共 <b>' + DATA.flat.length + '</b> 条 · 数据源：<b>' + DATA.source + '</b>'
+  '<div>本期共 <b>' + DATA.flat.length + '</b> 則 · 資料來源：<b>' + DATA.source + '</b>'
   + '（<a href="' + DATA.canonical + '" target="_blank" rel="noopener noreferrer">' + DATA.canonical + '</a>）</div>'
   + '<div style="margin-top:6px"><b>本站更新：</b>' + DATA.updatedHuman + '</div>'
-  + '<div style="margin-top:6px">配图优先采用各报道原文题图（OG 图，版权归原媒体所有）；原文无图时回退至 <a href="https://openverse.org" target="_blank" rel="noopener noreferrer">Openverse</a>（CC 开放授权）主题示意图。</div>'
+  + '<div style="margin-top:6px">配圖優先採用各報道原文題圖（OG 圖，版權歸原媒體所有）；原文無圖時回退至 <a href="https://openverse.org" target="_blank" rel="noopener noreferrer">Openverse</a>（CC 開放授權）主題示意圖。</div>'
   + '<div style="margin-top:6px">「限時情報王」聚合自 <a href="https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/" target="_blank" rel="noopener noreferrer">NewMobileLife 限時情報王 / 限時免費情報</a>'
   + (NML ? '（全站 ' + NML.total + ' 篇，本頁 ' + NML.shown + ' 篇，新增 ' + NML.newCount + '）' : '')
-  + '，版权与原文均归原媒体所有。</div>'
-  + '<div style="margin-top:6px">「今日要聞」綜合 BBC 中文、RTHK、Yahoo、德國之聲、新浪及 Google 新聞等平台當日頭條，相同事件合併為一則，版权与原文均归原媒体所有。</div>';
+  + '，版權與原文均歸原媒體所有。</div>'
+  + '<div style="margin-top:6px">「今日要聞」綜合 BBC 中文、RTHK、Yahoo、德國之聲、新浪及 Google 新聞等平台當日頭條，相同事件合併為一則，版權與原文均歸原媒體所有。</div>';
 
-// 在線人數（优先自建 Cloudflare Worker 按 IP 統計；未部署時回退 herenow 連線數）
+// 在線人數（優先自建 Cloudflare Worker 按 IP 統計；未部署時回退 herenow 連線數）
 (function(){
   var WORKER='https://news-online-ip.<your-subdomain>.workers.dev';
   var HERENOW='https://herenow-anhz7w.fly.dev';

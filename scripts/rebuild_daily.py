@@ -18,6 +18,12 @@ from html import escape, unescape
 from html.parser import HTMLParser
 from pathlib import Path
 
+try:
+    from opencc import OpenCC
+    _CC = OpenCC("s2t")
+except Exception:
+    _CC = None
+
 ROOT = Path(__file__).resolve().parent.parent
 UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -32,6 +38,13 @@ AIHOT_LABELS = [
     "论文研究",
     "技巧与观点",
 ]
+AIHOT_SHOW = {
+    "模型发布/更新": "模型發布/更新",
+    "产品发布/更新": "產品發布/更新",
+    "行业动态": "行業動態",
+    "论文研究": "論文研究",
+    "技巧与观点": "技巧與觀點",
+}
 CI = {
     "模型发布/更新": 0,
     "产品发布/更新": 1,
@@ -63,6 +76,70 @@ WIRE_FEEDS = [
     ("德國之聲", "https://rss.dw.com/rdf/rss-chi-all"),
     ("新浪國際", "https://rss.sina.com.cn/news/world/focus15.xml"),
 ]
+SOURCE_ALIAS = {
+    "bbc": "BBC 中文",
+    "bbc中文": "BBC 中文",
+    "hk01.com": "香港01",
+    "hk01": "香港01",
+    "香港01": "香港01",
+    "news.mingpao.com": "明報",
+    "mingpao.com": "明報",
+    "mingpao": "明報",
+    "明報": "明報",
+    "udn": "聯合新聞網",
+    "udn.com": "聯合新聞網",
+    "聯合新聞網": "聯合新聞網",
+    "yahoo": "Yahoo 新聞",
+    "yahoo新聞": "Yahoo 新聞",
+    "yahoo財經": "Yahoo 財經",
+    "yahoo股市": "Yahoo 股市",
+    "yahoo運動": "Yahoo 運動",
+    "hk.news.yahoo.com": "Yahoo 新聞",
+    "tw.news.yahoo.com": "Yahoo 新聞",
+    "on.cc東網": "東網",
+    "on.cc": "東網",
+    "東網": "東網",
+    "storm.mg": "風傳媒",
+    "風傳媒": "風傳媒",
+    "rfi": "法廣",
+    "hko.gov.hk": "香港天文台",
+    "linetoday": "LINE TODAY",
+    "etnet經濟通": "經濟通",
+    "rti.org.tw": "中央廣播電台",
+    "news.cnyes.com": "鉅亨網",
+    "cnyes.com": "鉅亨網",
+    "singtaousa": "星島",
+    "news.ltn.com.tw": "自由時報",
+    "ltn.com.tw": "自由時報",
+    "自由時報": "自由時報",
+    "pchomeonline新聞": "PChome 新聞",
+    "now新聞": "Now 新聞",
+    "中央社cna": "中央社",
+    "cna": "中央社",
+    "cna.com.tw": "中央社",
+    "thedecoder:ainews(rss)": "The Decoder",
+    "rthk": "香港電台",
+    "rthk.hk": "香港電台",
+    "香港電台": "香港電台",
+    "dw": "德國之聲",
+    "德國之聲": "德國之聲",
+    "sina": "新浪",
+    "sina.com.cn": "新浪",
+    "news.sina.com.cn": "新浪",
+    "hket.com": "信報",
+    "am730.com.hk": "am730",
+    "stheadline.com": "星島頭條",
+    "ettoday.net": "ETtoday",
+    "chinatimes.com": "中國時報",
+    "setn.com": "三立新聞",
+    "tvbs.com.tw": "TVBS",
+    "theinitium.com": "端傳媒",
+    "inmediahk.net": "獨立媒體",
+    "news.gov.hk": "香港政府新聞網",
+    "zaobao.com": "聯合早報",
+    "thenewslens.com": "關鍵評論網",
+    "upmedia.mg": "上報",
+}
 ARTICLE_TPL = """<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -98,6 +175,84 @@ def fetch(url: str, timeout: int = 45) -> str:
 def strip_tags(s: str) -> str:
     s = re.sub(r"<[^>]+>", " ", s)
     return re.sub(r"\s+", " ", unescape(s)).strip()
+
+
+def to_hant(text: str) -> str:
+    if not text:
+        return text
+    if _CC is None:
+        return text
+    try:
+        return _CC.convert(text)
+    except Exception:
+        return text
+
+
+def _src_key(name: str) -> str:
+    s = (name or "").strip().lower()
+    s = re.sub(r"^www\.", "", s)
+    return s.replace("：", ":").replace("（", "(").replace("）", ")").replace(" ", "")
+
+
+def zh_source(name: str) -> str:
+    raw = (name or "").strip()
+    if not raw:
+        return "綜合新聞"
+    key = _src_key(raw)
+    if key in SOURCE_ALIAS:
+        return SOURCE_ALIAS[key]
+    host = key.split("/")[0]
+    if host in SOURCE_ALIAS:
+        return SOURCE_ALIAS[host]
+    for alias_key, alias_val in SOURCE_ALIAS.items():
+        if "." in alias_key and alias_key in key:
+            return alias_val
+    return to_hant(raw)
+
+
+def show_label(label: str) -> str:
+    lab = (label or "").strip()
+    return AIHOT_SHOW.get(lab, to_hant(lab) or "其他")
+
+
+def hantify_item(it: dict) -> dict:
+    if not it:
+        return it
+    for k in ("title", "summary", "embedded"):
+        if it.get(k):
+            it[k] = to_hant(it[k])
+    if it.get("sourceName"):
+        it["sourceName"] = zh_source(it["sourceName"])
+    if it.get("board"):
+        it["board"] = show_label(it["board"])
+    if it.get("_sec_label"):
+        it["_sec_label"] = show_label(it["_sec_label"])
+    kps = it.get("keypoints")
+    if isinstance(kps, list):
+        it["keypoints"] = [to_hant(x) if isinstance(x, str) else x for x in kps]
+    return it
+
+
+def is_mostly_chinese(text: str) -> bool:
+    cjk = sum(1 for ch in text or "" if "\u4e00" <= ch <= "\u9fff")
+    return cjk >= 6
+
+
+def clean_headline(title: str) -> str:
+    title = (title or "").strip()
+    title = re.sub(
+        r"\s*[|｜]\s*(政治|國際焦點|全球|社會萬象|評論|港澳|財經|娛樂|體育|生活|焦點).*$",
+        "",
+        title,
+    )
+    title = re.sub(r"\s*[-–—]\s*\d+\s*小時前\s*$", "", title)
+    return title.strip("｜|/- ")
+
+
+def summary_score(text: str) -> int:
+    if not text or "查看更多" in text:
+        return -1
+    return text.count("。") * 80 + text.count("，") * 8 + min(len(text), 280)
 
 
 def inner_html_by_class(html: str, class_token: str) -> str:
@@ -264,10 +419,10 @@ def fetch_article_body(url: str, source_name: str) -> str:
         print("article fetch fail", url, e)
         return ""
     raw = sanitize_body(extract_source_html(page, url))
-    raw = normalize_territory(raw)
+    raw = normalize_territory(to_hant(raw))
     if len(strip_tags(raw)) < MIN_BODY_CHARS:
         return ""
-    return source_notice(source_name) + raw
+    return source_notice(zh_source(source_name)) + raw
 
 
 def zh_date(d: date) -> str:
@@ -275,7 +430,7 @@ def zh_date(d: date) -> str:
 
 
 def zh_long(d: date, hm: str) -> str:
-    return f"{d.year}年{d.month}月{d.day}日 周{WEEK[d.weekday()]} {hm}（北京时间）"
+    return f"{d.year}年{d.month}月{d.day}日 周{WEEK[d.weekday()]} {hm}（北京時間）"
 
 
 def slug_from_url(url: str) -> str:
@@ -298,13 +453,14 @@ def parse_aihot(html: str, iso: str) -> dict[str, list[dict]]:
             tm = re.search(r'daily-article-title[^>]*>\s*<a href="([^"]+)">(.*?)</a>', block, re.S)
             if not tm:
                 continue
-            href, title = tm.group(1), strip_tags(tm.group(2))
+            href, title = tm.group(1), to_hant(strip_tags(tm.group(2)))
             src_bits = re.findall(r"<span[^>]*>(.*?)</span>", block, re.S)
-            source_name = strip_tags(src_bits[-1]) if src_bits else "AIHOT"
+            source_name = zh_source(strip_tags(src_bits[-1]) if src_bits else "AIHOT")
             sm = re.search(r'daily-article-summary[^>]*>(.*?)</p>', block, re.S)
-            summary = strip_tags(sm.group(1))[:400] if sm else ""
+            summary = to_hant(strip_tags(sm.group(1))[:400] if sm else "")
             source_url = ("https://aihot.virxact.com" + href) if href.startswith("/") else href
             aid = slug_from_url(source_url)
+            show = AIHOT_SHOW.get(lab, to_hant(lab))
             out[lab].append(
                 {
                     "title": title,
@@ -319,7 +475,7 @@ def parse_aihot(html: str, iso: str) -> dict[str, list[dict]]:
                     "ci": CI[lab],
                     "kind": "aihot",
                     "isoDate": iso,
-                    "_sec_label": lab,
+                    "_sec_label": show,
                     "date": zh_date(d),
                     "articleId": aid,
                     "articleUrl": f"articles/{aid}.html",
@@ -335,13 +491,13 @@ def parse_nml(html: str, today: date) -> list[dict]:
         tm = re.search(r'<h2 class="cs-entry__title">\s*<a href="([^"]+)">([^<]+)</a>', block)
         if not tm:
             continue
-        url, title = tm.group(1), unescape(tm.group(2)).strip()
+        url, title = tm.group(1), to_hant(unescape(tm.group(2)).strip())
         img_m = re.search(r'data-lazy-src="(https://[^"]+)"', block) or re.search(
             r'<noscript>\s*<img[^>]+src="(https://[^"]+)"', block
         )
         img = img_m.group(1) if img_m else ""
         ex = re.search(r'cs-entry__excerpt[^>]*>(.*?)</div>', block, re.S)
-        summary = strip_tags(ex.group(1))[:280] if ex else ""
+        summary = to_hant(strip_tags(ex.group(1))[:280] if ex else "")
         dm = re.search(r"/(\d{4})/(\d{2})/(\d{2})/", url)
         if dm:
             iso = f"{dm.group(1)}-{dm.group(2)}-{dm.group(3)}"
@@ -412,13 +568,15 @@ def headlines_similar(a: str, b: str) -> bool:
 def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
     out = []
     for block in re.findall(r"<item\b[^>]*>(.*?)</item>", xml, re.S | re.I):
-        title = _rss_text(block, "title")
-        if not title or WIRE_SKIP_TITLE.search(title):
+        title = to_hant(_rss_text(block, "title"))
+        if not title or WIRE_SKIP_TITLE.search(title) or not is_mostly_chinese(title):
             continue
         src_m = re.search(r"<source[^>]*>(.*?)</source>", block, re.S | re.I)
         source = unescape(re.sub(r"<!\[CDATA\[(.*?)\]\]>", r"\1", src_m.group(1)).strip()) if src_m else default_source
-        source = source or default_source
-        title_clean = re.sub(r"\s*[-–—]\s*" + re.escape(source) + r"\s*$", "", title).strip() or title
+        source = zh_source(source or default_source)
+        title_clean = clean_headline(re.sub(r"\s*[-–—]\s*" + re.escape(source) + r"\s*$", "", title).strip() or title)
+        if not is_mostly_chinese(title_clean):
+            continue
         link = _rss_text(block, "link")
         desc = _rss_text(block, "description")
         pd = _rss_text(block, "pubDate") or _rss_text(block, "dc:date")
@@ -442,18 +600,21 @@ def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
         ):
             if "查看更多" in ht:
                 continue
+            rel_title = clean_headline(to_hant(unescape(ht).strip()))
+            if not is_mostly_chinese(rel_title):
+                continue
             related.append(
                 {
-                    "title": unescape(ht).strip(),
+                    "title": rel_title,
                     "url": href,
-                    "source": unescape(font).strip(),
+                    "source": zh_source(unescape(font).strip()),
                 }
             )
         if not related:
             related = [{"title": title_clean, "url": link, "source": source}]
         sources = list(dict.fromkeys([source] + [r["source"] for r in related if r.get("source")]))
-        summary = re.sub(r"\s+", " ", strip_tags(desc_html))[:280]
-        if "查看更多頭條" in summary:
+        summary = to_hant(re.sub(r"\s+", " ", strip_tags(desc_html))[:280])
+        if "查看更多頭條" in summary or summary_score(summary) < 20:
             summary = ""
         out.append(
             {
@@ -521,7 +682,7 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
                     if r.get("url") not in have:
                         c["related"].append(r)
                         have.add(r.get("url"))
-                if it.get("summary") and len(it["summary"]) > len(c.get("summary") or ""):
+                if it.get("summary") and summary_score(it["summary"]) > summary_score(c.get("summary") or ""):
                     c["summary"] = it["summary"]
                 placed = True
                 break
@@ -543,7 +704,7 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
         c["dt"] = max(dts) if dts else None
         if c["dt"] and c["dt"] < cut:
             continue
-        if WIRE_SKIP_TITLE.search(c["title"] or ""):
+        if WIRE_SKIP_TITLE.search(c["title"] or "") or not is_mostly_chinese(c["title"] or ""):
             continue
         fresh.append(c)
     fresh.sort(key=lambda c: (-len(c["sources"]), -(c["dt"].timestamp() if c["dt"] else 0)))
@@ -552,8 +713,12 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
     bodies: dict[str, str] = {}
     used_ids: set[str] = set()
     for c in chosen:
-        sources = [s for s in c["sources"] if s][:8]
+        sources = [zh_source(s) for s in c["sources"] if s][:8]
+        sources = list(dict.fromkeys(sources))
         related = c["related"][:10]
+        for r in related:
+            r["title"] = clean_headline(to_hant(r.get("title") or ""))
+            r["source"] = zh_source(r.get("source") or "")
         primary = next((r for r in related if (r.get("url") or "").startswith("http")), {})
         url = primary.get("url") or (c["members"][0].get("url") if c["members"] else "")
         if not url:
@@ -577,8 +742,8 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             if s and s not in kps:
                 kps.append(s)
         item = {
-            "title": c["title"],
-            "summary": summary[:280],
+            "title": clean_headline(to_hant(c["title"])),
+            "summary": to_hant(summary[:280]),
             "sourceName": src_label,
             "sourceUrl": url,
             "img": "",
@@ -677,6 +842,9 @@ def main() -> None:
         print("wire fail", e)
 
     deals = next(s for s in data["sections"] if s.get("kind") == "deals")
+    deals["label"] = to_hant(deals.get("label") or "熱門優惠")
+    for it in deals.get("items") or []:
+        hantify_item(it)
 
     keep = {it["sourceUrl"] for it in nml40}
     for items in aihot.values():
@@ -684,7 +852,7 @@ def main() -> None:
     keep.update(it["sourceUrl"] for it in deals["items"])
     keep.update(it["sourceUrl"] for it in wire_items)
 
-    old = [it for it in (data.get("old") or []) if it.get("kind") != "wire"]
+    old = [hantify_item(it) for it in (data.get("old") or []) if it.get("kind") != "wire"]
     old_urls = {it.get("sourceUrl") for it in old}
     for sec in data["sections"]:
         if sec.get("kind") in ("deals", "wire"):
@@ -698,8 +866,9 @@ def main() -> None:
                 "imgCreator", "imgLicense", "imgSource", "date", "isoDate",
                 "articleId", "articleUrl", "ci", "kind",
             )}
-            rec["board"] = sec.get("label") or it.get("_sec_label") or "其他"
+            rec["board"] = show_label(sec.get("label") or it.get("_sec_label") or "其他")
             rec["keypoints"] = it.get("keypoints") or []
+            hantify_item(rec)
             old.insert(0, rec)
             old_urls.add(u)
 
@@ -708,7 +877,14 @@ def main() -> None:
         sections.append({"label": WIRE_LABEL, "items": wire_items, "kind": "wire", "ci": CI[WIRE_LABEL]})
     for lab in AIHOT_LABELS:
         if aihot[lab]:
-            sections.append({"label": lab, "items": aihot[lab], "kind": "aihot", "ci": CI[lab]})
+            sections.append(
+                {
+                    "label": AIHOT_SHOW.get(lab, to_hant(lab)),
+                    "items": aihot[lab],
+                    "kind": "aihot",
+                    "ci": CI[lab],
+                }
+            )
     sections.append(deals)
 
     flat = []
@@ -722,7 +898,7 @@ def main() -> None:
     data["reportHuman"] = f"{today.year}年{today.month}月{today.day}日 周{WEEK[today.weekday()]}"
     data["windowHuman"] = (
         f"{yday.month}月{yday.day}日 周{WEEK[yday.weekday()]} 08:00 — "
-        f"{today.month}月{today.day}日 周{WEEK[today.weekday()]} 08:00（北京时间）"
+        f"{today.month}月{today.day}日 周{WEEK[today.weekday()]} 08:00（北京時間）"
     )
     data["generatedHuman"] = zh_long(today, "08:00")
     data["updatedHuman"] = zh_long(today, datetime.now(TZ).strftime("%H:%M"))
@@ -738,12 +914,14 @@ def main() -> None:
     )
     html2 = html[: m.start()] + "const DATA = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n" + html[m.end() :]
     html2 = re.sub(r"const NML = [^;]+;", nml_js, html2, count=1)
+    html2 = re.sub(r"<title>[^<]*</title>", f"<title>AI HOT 日報 · {iso}</title>", html2, count=1)
     html_path.write_text(html2, encoding="utf-8")
 
     aj_path = ROOT / "articles.js"
     aj = aj_path.read_text(encoding="utf-8")
     am = re.search(r"window\.ARTICLES = (\{.*\});\s*$", aj, re.S)
     articles = json.loads(am.group(1)) if am else {}
+    articles = {aid: to_hant(body) if isinstance(body, str) else body for aid, body in articles.items()}
     ok = fail = skip = kept = 0
     seen_aids: set[str] = set()
     fill_items = []

@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Install Python deps
+        run: pip install opencc-python-reimplemented
       - name: Rebuild index.html
         run: python scripts/rebuild_daily.py
       - name: Commit and push to main
@@ -35,5 +37,5 @@ jobs:
             echo "No content changes"
             exit 0
           fi
-          git commit -m "每日整合：限時情报王 + AI HOT $(TZ=Asia/Shanghai date +%Y-%m-%d)"
+          git commit -m "每日整合：限時情報王 + AI HOT $(TZ=Asia/Shanghai date +%Y-%m-%d)"
           git push origin HEAD:main
