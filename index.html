@@ -18,7 +18,7 @@
     --accent:#2f44c4;       /* deeper indigo for links/badge (AA contrast) */
     --accent-soft:#eef2fb;
     --c0:#2f44c4; --c1:#0e8f6e; --c2:#c2410c; --c3:#7c3aed; --c4:#be123c; --c5:#0e7490;
-    --c6:#d97706;
+    --c6:#d97706; --c7:#4f46e5;
     --g0:linear-gradient(135deg,#3b4fd1,#2f44c4);
     --g1:linear-gradient(135deg,#10a37f,#0b7a5d);
     --g2:linear-gradient(135deg,#ea580c,#c2410c);
@@ -26,6 +26,7 @@
     --g4:linear-gradient(135deg,#f43f5e,#be123c);
     --g5:linear-gradient(135deg,#0ea5e9,#0e7490);
     --g6:linear-gradient(135deg,#f59e0b,#d97706);
+    --g7:linear-gradient(135deg,#6366f1,#4f46e5);
     --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.06);
   }
   * { box-sizing:border-box; }
@@ -89,7 +90,8 @@
   .nav-link:hover { background:#e6ecfb; transform:translateY(-1px); }
   .dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
   .dot-0{background:var(--c0);} .dot-1{background:var(--c1);} .dot-2{background:var(--c2);}
-  .dot-3{background:var(--c3);} .dot-4{background:var(--c4);} .dot-5{background:var(--c5);} .dot-6{background:var(--c6);}
+  .dot-3{background:var(--c3);} .dot-4{background:var(--c4);} .dot-5{background:var(--c5);}
+  .dot-6{background:var(--c6);} .dot-7{background:var(--c7);}
   .nav-count { background:#fff; color:var(--muted); border-radius:999px; padding:0 8px; font-size:12px; font-weight:700; }
 
   /* TABS — Old News switch, lives inline on the right of the hero (no extra row) */
@@ -180,6 +182,8 @@
   .card.wall .ct-idx { font-size:11px; color:var(--muted); font-weight:700; }
   .card.wall .ct-new { font-size:10px; font-weight:800; color:#fff; background:#dc2626; padding:1px 7px; border-radius:999px; letter-spacing:.04em; }
   .card.wall .ct-date { font-size:11px; color:var(--muted); margin-left:auto; white-space:nowrap; }
+  .card.wall .ct-src { font-size:11px; color:var(--muted); font-weight:600; line-height:1.35;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .card.wall.deal .body { padding:11px 12px 12px; }
 
   /* TAB PANELS — each section grouped under its own heading */
@@ -455,7 +459,9 @@ const ICONS = [
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>',
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5M9 13h7M9 17h7M9 9h3"/></svg>',
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.3 1 2.5h6c0-1.2.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10.5 5h3M11 18h2"/></svg>'
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10.5 5h3M11 18h2"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V6a2 2 0 0 1 2-2h11v16H6a2 2 0 0 0-2 2z"/><path d="M18 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"/><path d="M8 8h6M8 12h6M8 16h4"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V6a2 2 0 0 1 2-2h11v16H6a2 2 0 0 0-2 2z"/><path d="M18 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"/><path d="M8 8h6M8 12h6M8 16h4"/></svg>'
 ];
 
 // Category icons for 熱門優惠 cards — shown when no verified product photo is
@@ -540,6 +546,7 @@ function makeCard(item, idx, ri, isExt, featured) {
     '<div class="cover" style="background:var(--g' + (ri != null ? ri : 0) + ');">' + coverInner + '</div>'
     + '<div class="body">'
     +   '<h3>' + (item.translated ? '<span class="tr-mark">譯</span>' : '') + item.title + '</h3>'
+    +   (item.kind === 'wire' && item.sourceName ? '<div class="meta"><span class="ct-src">' + item.sourceName + '</span></div>' : '')
     + '</div>';
   card.dataset.aid = item.articleId || "";
   card.dataset.sname = item.sourceName || "";
@@ -632,6 +639,12 @@ function buildPanel(sec, si){
     nmlSub.className = 'nml-sub';
     nmlSub.textContent = '監測分類：限時情報王 ＋ 限時免費情報';
     panel.appendChild(nmlSub);
+  }
+  if (sec.kind === 'wire') {
+    const wireSub = document.createElement('div');
+    wireSub.className = 'nml-sub';
+    wireSub.textContent = '各大新聞平台當日要聞，相同事件已合併為一則';
+    panel.appendChild(wireSub);
   }
   const grid = document.createElement('div');
   grid.className = 'grid wall';
@@ -994,7 +1007,8 @@ document.getElementById('foot').innerHTML =
   + '<div style="margin-top:6px">配图优先采用各报道原文题图（OG 图，版权归原媒体所有）；原文无图时回退至 <a href="https://openverse.org" target="_blank" rel="noopener noreferrer">Openverse</a>（CC 开放授权）主题示意图。</div>'
   + '<div style="margin-top:6px">「限時情報王」聚合自 <a href="https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/" target="_blank" rel="noopener noreferrer">NewMobileLife 限時情報王 / 限時免費情報</a>'
   + (NML ? '（全站 ' + NML.total + ' 篇，本頁 ' + NML.shown + ' 篇，新增 ' + NML.newCount + '）' : '')
-  + '，版权与原文均归原媒体所有。</div>';
+  + '，版权与原文均归原媒体所有。</div>'
+  + '<div style="margin-top:6px">「今日要聞」綜合 BBC 中文、RTHK、Yahoo、德國之聲、新浪及 Google 新聞等平台當日頭條，相同事件合併為一則，版权与原文均归原媒体所有。</div>';
 
 // 在線人數（优先自建 Cloudflare Worker 按 IP 統計；未部署時回退 herenow 連線數）
 (function(){

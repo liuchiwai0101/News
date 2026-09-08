@@ -12,6 +12,7 @@ import time
 import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from html import escape, unescape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -38,12 +39,28 @@ CI = {
     "技巧与观点": 4,
     "限時情報王": 5,
     "熱門優惠": 6,
+    "今日要聞": 7,
 }
 NML_LISTS = [
     "https://www.newmobilelife.com/category/featured/",
     "https://www.newmobilelife.com/category/featured/page/2/",
     "https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/",
     "https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/page/2/",
+]
+WIRE_LABEL = "今日要聞"
+WIRE_MAX = 24
+WIRE_HOURS = 36
+WIRE_SKIP_TITLE = re.compile(r"招聘啟事|誠聘以下|廣告主|sponsored", re.I)
+WIRE_FEEDS = [
+    ("Google 新聞 香港", "https://news.google.com/rss?hl=zh-Hant&gl=HK&ceid=HK:zh-Hant"),
+    ("Google 新聞 台灣", "https://news.google.com/rss?hl=zh-TW&gl=TW&ceid=TW:zh-Hant"),
+    ("Google 新聞 國際", "https://news.google.com/rss/headlines/section/topic/WORLD?hl=zh-Hant&gl=HK&ceid=HK:zh-Hant"),
+    ("BBC 中文", "https://feeds.bbci.co.uk/zhongwen/trad/rss.xml"),
+    ("RTHK 本地", "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml"),
+    ("RTHK 國際", "https://rthk.hk/rthk/news/rss/c_expressnews_cinternational.xml"),
+    ("Yahoo 新聞", "https://hk.news.yahoo.com/rss"),
+    ("德國之聲", "https://rss.dw.com/rdf/rss-chi-all"),
+    ("新浪國際", "https://rss.sina.com.cn/news/world/focus15.xml"),
 ]
 ARTICLE_TPL = """<!DOCTYPE html>
 <html lang="zh-Hant">
@@ -356,6 +373,230 @@ def parse_nml(html: str, today: date) -> list[dict]:
     return items
 
 
+def _rss_text(block: str, name: str) -> str:
+    m = re.search(rf"<{name}(?:\s[^>]*)?>(.*?)</{name}>", block, re.S | re.I)
+    if not m:
+        return ""
+    s = m.group(1).strip()
+    cm = re.match(r"<!\[CDATA\[(.*)\]\]>$", s, re.S)
+    return unescape(cm.group(1) if cm else s).strip()
+
+
+def _norm_headline(title: str) -> str:
+    title = re.sub(r"\s*[-–—|｜]\s*[^|-–—｜]{1,20}$", "", title)
+    title = re.sub(r"[「」『』《》【】()（）\[\]\s\-—:：,，.。!！?？、·]+", "", title)
+    return title.lower()
+
+
+def _headline_grams(title: str) -> set[str]:
+    s = _norm_headline(title)
+    if len(s) < 2:
+        return set(s)
+    return {s[i : i + 2] for i in range(len(s) - 1)}
+
+
+def headlines_similar(a: str, b: str) -> bool:
+    ga, gb = _headline_grams(a), _headline_grams(b)
+    if not ga or not gb:
+        return False
+    inter = len(ga & gb)
+    if inter >= 4 and inter / len(ga | gb) >= 0.38:
+        return True
+    sa, sb = _norm_headline(a), _norm_headline(b)
+    if len(sa) >= 8 and len(sb) >= 8 and (sa[:8] in sb or sb[:8] in sa):
+        return True
+    return False
+
+
+def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
+    out = []
+    for block in re.findall(r"<item\b[^>]*>(.*?)</item>", xml, re.S | re.I):
+        title = _rss_text(block, "title")
+        if not title or WIRE_SKIP_TITLE.search(title):
+            continue
+        src_m = re.search(r"<source[^>]*>(.*?)</source>", block, re.S | re.I)
+        source = unescape(re.sub(r"<!\[CDATA\[(.*?)\]\]>", r"\1", src_m.group(1)).strip()) if src_m else default_source
+        source = source or default_source
+        title_clean = re.sub(r"\s*[-–—]\s*" + re.escape(source) + r"\s*$", "", title).strip() or title
+        link = _rss_text(block, "link")
+        desc = _rss_text(block, "description")
+        pd = _rss_text(block, "pubDate") or _rss_text(block, "dc:date")
+        dt = None
+        if pd:
+            try:
+                raw_dt = parsedate_to_datetime(pd)
+                if raw_dt.tzinfo is None:
+                    raw_dt = raw_dt.replace(tzinfo=TZ)
+                dt = raw_dt.astimezone(TZ)
+            except Exception:
+                try:
+                    dt = datetime.fromisoformat(pd.replace("Z", "+00:00")).astimezone(TZ)
+                except Exception:
+                    dt = None
+        desc_html = unescape(desc)
+        related = []
+        for href, ht, font in re.findall(
+            r'<a href="([^"]+)"[^>]*>([^<]+)</a>\s*(?:&nbsp;|\xa0|\s)*<font[^>]*>([^<]+)</font>',
+            desc_html,
+        ):
+            if "查看更多" in ht:
+                continue
+            related.append(
+                {
+                    "title": unescape(ht).strip(),
+                    "url": href,
+                    "source": unescape(font).strip(),
+                }
+            )
+        if not related:
+            related = [{"title": title_clean, "url": link, "source": source}]
+        sources = list(dict.fromkeys([source] + [r["source"] for r in related if r.get("source")]))
+        summary = re.sub(r"\s+", " ", strip_tags(desc_html))[:280]
+        if "查看更多頭條" in summary:
+            summary = ""
+        out.append(
+            {
+                "title": title_clean,
+                "source": source,
+                "url": link,
+                "summary": summary,
+                "dt": dt,
+                "related": related,
+                "sources": sources,
+            }
+        )
+    return out
+
+
+def wire_body_html(item: dict) -> str:
+    names = item.get("sourceName") or WIRE_LABEL
+    parts = [source_notice(names)]
+    summary = item.get("summary") or ""
+    if summary:
+        parts.append(f"<p>{escape(summary)}</p>")
+    related = item.get("related") or []
+    if related:
+        parts.append("<h3>各方報道</h3><ul>")
+        seen = set()
+        for r in related:
+            url = r.get("url") or ""
+            src = r.get("source") or ""
+            key = url or (src + r.get("title", ""))
+            if not src or key in seen:
+                continue
+            seen.add(key)
+            href = escape(url, True) if url.startswith("http") else ""
+            label = escape(src)
+            tit = escape(r.get("title") or "")
+            if href:
+                parts.append(f'<li><a href="{href}" target="_blank" rel="noopener noreferrer">{label}</a>：{tit}</li>')
+            else:
+                parts.append(f"<li>{label}：{tit}</li>")
+        parts.append("</ul>")
+    return "".join(parts)
+
+
+def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
+    raw: list[dict] = []
+    for name, url in WIRE_FEEDS:
+        try:
+            xml = fetch(url, timeout=20)
+            items = parse_rss_feed(xml, name)
+            print("wire", name, len(items))
+            raw.extend(items)
+        except Exception as e:
+            print("wire fetch fail", name, e)
+    clusters: list[dict] = []
+    for it in raw:
+        placed = False
+        for c in clusters:
+            if headlines_similar(it["title"], c["title"]):
+                c["members"].append(it)
+                for s in it["sources"]:
+                    if s and s not in c["sources"]:
+                        c["sources"].append(s)
+                have = {x.get("url") for x in c["related"]}
+                for r in it["related"]:
+                    if r.get("url") not in have:
+                        c["related"].append(r)
+                        have.add(r.get("url"))
+                if it.get("summary") and len(it["summary"]) > len(c.get("summary") or ""):
+                    c["summary"] = it["summary"]
+                placed = True
+                break
+        if not placed:
+            clusters.append(
+                {
+                    "title": it["title"],
+                    "members": [it],
+                    "sources": list(it["sources"]),
+                    "related": list(it["related"]),
+                    "summary": it.get("summary") or "",
+                    "dt": it.get("dt"),
+                }
+            )
+    cut = datetime.now(TZ) - timedelta(hours=WIRE_HOURS)
+    fresh = []
+    for c in clusters:
+        dts = [m["dt"] for m in c["members"] if m.get("dt")]
+        c["dt"] = max(dts) if dts else None
+        if c["dt"] and c["dt"] < cut:
+            continue
+        if WIRE_SKIP_TITLE.search(c["title"] or ""):
+            continue
+        fresh.append(c)
+    fresh.sort(key=lambda c: (-len(c["sources"]), -(c["dt"].timestamp() if c["dt"] else 0)))
+    chosen = fresh[:WIRE_MAX]
+    items = []
+    bodies: dict[str, str] = {}
+    used_ids: set[str] = set()
+    for c in chosen:
+        sources = [s for s in c["sources"] if s][:8]
+        related = c["related"][:10]
+        primary = next((r for r in related if (r.get("url") or "").startswith("http")), {})
+        url = primary.get("url") or (c["members"][0].get("url") if c["members"] else "")
+        if not url:
+            continue
+        dt = c["dt"] or datetime.now(TZ)
+        d = dt.date()
+        aid = "wire-" + slug_from_url(url)
+        if aid in used_ids or aid == "wire-item":
+            aid = ("wire-" + slug_from_url(c["title"]) + "-" + dt.strftime("%H%M"))[:80]
+        used_ids.add(aid)
+        src_label = " · ".join(sources[:4]) if sources else WIRE_LABEL
+        if len(sources) > 4:
+            src_label += f" 等{len(sources)}家"
+        summary = (c.get("summary") or "").strip()
+        if not summary:
+            summary = "、".join(sources[:6]) + " 均有報道。"
+        item = {
+            "title": c["title"],
+            "summary": summary[:280],
+            "sourceName": src_label,
+            "sourceUrl": url,
+            "img": "",
+            "imgKind": "",
+            "imgCreator": "",
+            "imgLicense": "",
+            "imgSource": "",
+            "date": zh_date(d),
+            "isoDate": d.isoformat(),
+            "ci": CI[WIRE_LABEL],
+            "kind": "wire",
+            "isNew": d == today,
+            "_sec_label": WIRE_LABEL,
+            "articleId": aid,
+            "articleUrl": f"articles/{aid}.html",
+            "embedded": summary[:280],
+            "keypoints": [f"{r.get('source')}" for r in related if r.get("source")][:8],
+            "related": related,
+        }
+        bodies[aid] = wire_body_html(item)
+        item.pop("related", None)
+        items.append(item)
+    return items, bodies
+
+
 def notice_html(url: str) -> str:
     safe = url.replace('"', "&quot;")
     return (
@@ -421,12 +662,20 @@ def main() -> None:
     new_count = sum(1 for it in nml40 if it["isNew"])
     added = sum(1 for it in nml40 if it["sourceUrl"] not in prev_nml_urls)
 
+    wire_items: list[dict] = []
+    wire_bodies: dict[str, str] = {}
+    try:
+        wire_items, wire_bodies = build_wire_items(today)
+    except Exception as e:
+        print("wire fail", e)
+
     deals = next(s for s in data["sections"] if s.get("kind") == "deals")
 
     keep = {it["sourceUrl"] for it in nml40}
     for items in aihot.values():
         keep.update(it["sourceUrl"] for it in items)
     keep.update(it["sourceUrl"] for it in deals["items"])
+    keep.update(it["sourceUrl"] for it in wire_items)
 
     old = list(data.get("old") or [])
     old_urls = {it.get("sourceUrl") for it in old}
@@ -448,6 +697,8 @@ def main() -> None:
             old_urls.add(u)
 
     sections = [{"label": "限時情報王", "items": nml40, "kind": "external", "ci": 5}]
+    if wire_items:
+        sections.append({"label": WIRE_LABEL, "items": wire_items, "kind": "wire", "ci": CI[WIRE_LABEL]})
     for lab in AIHOT_LABELS:
         if aihot[lab]:
             sections.append({"label": lab, "items": aihot[lab], "kind": "aihot", "ci": CI[lab]})
@@ -499,6 +750,15 @@ def main() -> None:
         fill_items.append(it)
     for it in fill_items:
         aid = it["articleId"]
+        if it.get("kind") == "wire":
+            body = wire_bodies.get(aid)
+            if body:
+                articles[aid] = body
+                if it in flat:
+                    write_article(it, body)
+            elif aid not in articles:
+                articles[aid] = notice_html(it["sourceUrl"])
+            continue
         cur = articles.get(aid, "")
         filled_now = False
         if not is_stub(cur):
@@ -525,7 +785,7 @@ def main() -> None:
 
     print(nml_js)
     print("AIHOT", iso, aihot_n, {k: len(v) for k, v in aihot.items() if v})
-    print("flat", len(flat), "old", len(old), "added", added)
+    print("flat", len(flat), "old", len(old), "added", added, "wire", len(wire_items))
     print("bodies filled", ok, "fail", fail, "already", skip, "notice", kept)
 
 
