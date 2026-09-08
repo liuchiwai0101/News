@@ -758,6 +758,10 @@ def make_keypoints(*texts: str) -> list[str]:
         s = re.sub(r"\s+", " ", s).strip("　 \n")
         if not s or PARA_JUNK.search(s):
             continue
+        if "均有報道" in s or re.search(r"\.(com|net|tw|hk)\b", s, re.I):
+            continue
+        if s.count("、") >= 3 and "。" not in s:
+            continue
         if _cjk_count(s) < 12 or len(s) < 16:
             continue
         if len(s) > 92:
@@ -814,9 +818,15 @@ def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
         if kps:
             item["keypoints"] = kps
         return
-    kps = make_keypoints(item.get("summary") or "")
+    cur = item.get("summary") or ""
+    if is_dump_summary(cur) or "均有報道" in cur:
+        item["keypoints"] = []
+        return
+    kps = make_keypoints(cur)
     if kps:
         item["keypoints"] = kps
+    elif item.get("keypoints") and all(len(k) < 24 and "。" not in k for k in item["keypoints"]):
+        item["keypoints"] = []
 
 
 def can_extract(url: str) -> bool:
@@ -993,6 +1003,17 @@ def headlines_similar(a: str, b: str) -> bool:
     return False
 
 
+def headlines_related(a: str, b: str) -> bool:
+    if headlines_similar(a, b):
+        return True
+    sa, sb = _norm_headline(a), _norm_headline(b)
+    if len(sa) < 6 or len(sb) < 6:
+        return False
+    grams_a = {sa[i : i + 4] for i in range(len(sa) - 3)}
+    grams_b = {sb[i : i + 4] for i in range(len(sb) - 3)}
+    return len(grams_a & grams_b) >= 3
+
+
 def parse_rss_feed(xml: str, default_source: str) -> list[dict]:
     out = []
     for block in re.findall(r"<item\b[^>]*>(.*?)</item>", xml, re.S | re.I):
@@ -1150,8 +1171,31 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             continue
         fresh.append(c)
     fresh.sort(key=lambda c: (-len(c["sources"]), -(c["dt"].timestamp() if c["dt"] else 0)))
-    chosen = fresh[:WIRE_MAX]
+    with_art = [
+        c
+        for c in fresh
+        if any(is_article_url(m.get("url") or "") for m in c["members"])
+        or any(is_article_url(r.get("url") or "") for r in c["related"])
+    ]
+    chosen: list[dict] = []
+    seen_c: set[int] = set()
+
+    def _take(pool: list[dict], limit: int) -> None:
+        for c in pool:
+            k = id(c)
+            if k in seen_c:
+                continue
+            seen_c.add(k)
+            chosen.append(c)
+            if len(chosen) >= limit:
+                return
+
+    _take(fresh, 16)
+    _take(with_art, WIRE_MAX)
+    _take(fresh, WIRE_MAX)
+    chosen = chosen[:WIRE_MAX]
     donors = [it for it in raw if it.get("img") or is_article_url(it.get("url") or "")]
+    copy_donors = [it for it in raw if is_article_url(it.get("url") or "")]
     for c in chosen:
         if looks_like_photo(c.get("img") or ""):
             continue
@@ -1210,6 +1254,11 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
                 kps.append(s)
         extra = [r.get("url") or "" for r in related]
         extra.extend(m.get("url") or "" for m in c.get("members") or [])
+        extra.extend(
+            it.get("url") or ""
+            for it in copy_donors
+            if headlines_related(c["title"], it["title"])
+        )
         item = {
             "title": clean_headline(to_hant(c["title"])),
             "summary": to_hant(summary[:280]),
