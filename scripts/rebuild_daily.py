@@ -62,7 +62,7 @@ NML_LISTS = [
     "https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/page/2/",
 ]
 WIRE_LABEL = "今日要聞"
-WIRE_MAX = 24
+WIRE_MAX = 36
 WIRE_HOURS = 36
 WIRE_SKIP_TITLE = re.compile(r"招聘啟事|誠聘以下|廣告主|sponsored", re.I)
 WIRE_FEEDS = [
@@ -211,6 +211,7 @@ OPENVERSE_TERMS = [
     (re.compile(r"醫院|工程"), "hospital building"),
 ]
 _IMG_CACHE: dict[str, str] = {}
+_PAGE_CACHE: dict[str, dict] = {}
 _OV_USED: set[str] = set()
 
 
@@ -312,21 +313,7 @@ def rss_image(block: str) -> str:
 
 
 def fetch_og_image(url: str) -> str:
-    if not is_article_url(url):
-        return ""
-    if url in _IMG_CACHE:
-        return _IMG_CACHE[url]
-    img = ""
-    try:
-        html = fetch_prefix(url)
-        img = parse_og_image(html, url) or first_img_in_html(html, url)
-    except Exception as e:
-        print("og fail", url[:80], e)
-        img = ""
-    if not looks_like_photo(img):
-        img = ""
-    _IMG_CACHE[url] = img
-    return img
+    return fetch_article_bits(url).get("img") or ""
 
 
 def openverse_query(title: str) -> str:
@@ -667,6 +654,171 @@ def extract_source_html(page: str, url: str) -> str:
     return inner_html_by_class(page, "entry-content") or inner_html_by_class(page, "post-content")
 
 
+PARA_JUNK = re.compile(
+    r"跳過此內容|其他人也在看|你可能也想看|延伸閱讀|熱門點擊|點擊收看|"
+    r"登入\s*首頁|首頁\s*新聞|觀看\s*分類|圖像來源|Getty Images|"
+    r"^編輯[：:︰]|^記者[：:]",
+    re.I,
+)
+
+
+def _cjk_count(text: str) -> int:
+    return sum(1 for ch in text or "" if "\u4e00" <= ch <= "\u9fff")
+
+
+def is_good_para(text: str) -> bool:
+    t = (text or "").strip()
+    if not t or PARA_JUNK.search(t):
+        return False
+    return _cjk_count(t) >= 18 and len(t) >= 22
+
+
+def paras_from_chunk(chunk: str) -> list[str]:
+    parts = re.split(r"</p>|<br\s*/?>\s*<br\s*/?>|\n{2,}", chunk or "", flags=re.I)
+    out: list[str] = []
+    for p in parts:
+        t = to_hant(re.sub(r"\s+", " ", strip_tags(p)))
+        if is_good_para(t):
+            out.append(t)
+    return out
+
+
+def _ld_walk(obj) -> list[dict]:
+    found: list[dict] = []
+    stack = [obj]
+    while stack:
+        x = stack.pop()
+        if isinstance(x, dict):
+            found.append(x)
+            stack.extend(x.values())
+        elif isinstance(x, list):
+            stack.extend(x)
+    return found
+
+
+def extract_paragraphs(html: str, url: str) -> list[str]:
+    host = urllib.parse.urlparse(url).netloc.lower()
+    inner = ""
+    if "rthk.hk" in host:
+        inner = inner_html_by_class(html, "itemFullText") or inner_html_by_class(html, "itemBody")
+    elif "yahoo." in host:
+        inner = inner_html_by_class(html, "caas-body")
+    elif "newmobilelife.com" in host or "aihot.virxact.com" in host:
+        inner = extract_source_html(html, url)
+    paras = paras_from_chunk(inner) if inner else []
+    if len(paras) < 2:
+        for blob in re.findall(r"<script[^>]*ld\+json[^>]*>(.*?)</script>", html or "", re.S | re.I):
+            try:
+                obj = json.loads(blob)
+            except Exception:
+                continue
+            for node in _ld_walk(obj):
+                body = node.get("articleBody") or ""
+                desc = node.get("description") or ""
+                if isinstance(body, str) and _cjk_count(body) >= 24:
+                    paras = paras_from_chunk(body) or [to_hant(re.sub(r"\s+", " ", body))]
+                    break
+                if isinstance(desc, str) and is_good_para(desc):
+                    paras = [to_hant(re.sub(r"\s+", " ", desc))]
+            if len(paras) >= 2:
+                break
+    if len(paras) < 2:
+        m = re.search(
+            r'<meta[^>]+property=["\']og:description["\'][^>]+content=["\']([^"\']+)',
+            html or "",
+            re.I,
+        ) or re.search(
+            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:description["\']',
+            html or "",
+            re.I,
+        )
+        if m:
+            desc = to_hant(unescape(m.group(1)))
+            if is_good_para(desc):
+                paras = [desc]
+    if len(paras) < 2:
+        extras = []
+        for p in re.findall(r"<p\b[^>]*>(.*?)</p>", html or "", re.S | re.I):
+            t = to_hant(re.sub(r"\s+", " ", strip_tags(p)))
+            if is_good_para(t):
+                extras.append(t)
+            if len(extras) >= 8:
+                break
+        if len(extras) > len(paras):
+            paras = extras
+    return paras[:8]
+
+
+def make_keypoints(*texts: str) -> list[str]:
+    blob = "\n".join(t for t in texts if t)
+    sents = re.split(r"(?<=[。！？])\s*", blob)
+    out: list[str] = []
+    seen: set[str] = set()
+    for s in sents:
+        s = re.sub(r"\s+", " ", s).strip("　 \n")
+        if not s or PARA_JUNK.search(s):
+            continue
+        if _cjk_count(s) < 12 or len(s) < 16:
+            continue
+        if len(s) > 92:
+            s = s[:90] + "…"
+        key = s[:22]
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(to_hant(s))
+        if len(out) >= 6:
+            break
+    return out
+
+
+def fetch_article_bits(url: str) -> dict:
+    if not is_article_url(url):
+        return {"img": "", "paras": []}
+    if url in _PAGE_CACHE:
+        return _PAGE_CACHE[url]
+    bits: dict = {"img": "", "paras": []}
+    try:
+        html = fetch_prefix(url, timeout=10, nbytes=2_000_000)
+        img = parse_og_image(html, url) or first_img_in_html(html, url)
+        bits["img"] = img if looks_like_photo(img) else ""
+        bits["paras"] = extract_paragraphs(html, url)
+    except Exception as e:
+        print("article bits fail", url[:80], e)
+    _PAGE_CACHE[url] = bits
+    _IMG_CACHE[url] = bits["img"]
+    return bits
+
+
+def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
+    urls: list[str] = []
+    for u in list(extra_urls or []) + [item.get("sourceUrl") or ""]:
+        if u and is_article_url(u) and u not in urls:
+            urls.append(u)
+    paras: list[str] = []
+    for u in urls:
+        bits = fetch_article_bits(u)
+        time.sleep(0.06)
+        if bits.get("paras"):
+            paras = bits["paras"]
+            break
+    if paras:
+        item["_paras"] = paras[:8]
+        lead = paras[0]
+        if len(paras) > 1:
+            lead = paras[0] + paras[1]
+        cur = item.get("summary") or ""
+        if not cur or is_dump_summary(cur) or "均有報道" in cur:
+            item["summary"] = to_hant(lead[:420])
+        kps = make_keypoints(*paras)
+        if kps:
+            item["keypoints"] = kps
+        return
+    kps = make_keypoints(item.get("summary") or "")
+    if kps:
+        item["keypoints"] = kps
+
+
 def can_extract(url: str) -> bool:
     host = urllib.parse.urlparse(url).netloc.lower()
     return "newmobilelife.com" in host or "aihot.virxact.com" in host
@@ -914,9 +1066,15 @@ def wire_body_html(item: dict) -> str:
     img = item.get("img") or ""
     if img:
         parts.append(f'<p><img src="{escape(img, True)}" alt=""></p>')
-    summary = item.get("summary") or ""
-    if summary:
-        parts.append(f"<p>{escape(summary)}</p>")
+    paras = item.get("_paras") or []
+    if paras:
+        parts.append("<h3>重點內容</h3>")
+        for p in paras[:6]:
+            parts.append(f"<p>{escape(p)}</p>")
+    else:
+        summary = item.get("summary") or ""
+        if summary:
+            parts.append(f"<p>{escape(summary)}</p>")
     related = item.get("related") or []
     if related:
         parts.append("<h3>各方報道</h3><ul>")
@@ -1075,8 +1233,10 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
             "related": related,
         }
         fill_item_photo(item, extra)
+        fill_item_copy(item, extra)
         bodies[aid] = wire_body_html(item)
         item.pop("related", None)
+        item.pop("_paras", None)
         items.append(item)
     return items, bodies
 
@@ -1126,6 +1286,7 @@ def main() -> None:
     for items in aihot.values():
         for it in items:
             fill_item_photo(it)
+            fill_item_copy(it, [it.get("sourceUrl") or ""])
 
     nml_items: list[dict] = []
     for url in NML_LISTS:
@@ -1146,6 +1307,8 @@ def main() -> None:
         raise SystemExit("NML parsed 0 articles")
     for it in nml40:
         it["isNew"] = it["isoDate"] == iso
+        if not it.get("keypoints"):
+            it["keypoints"] = make_keypoints(it.get("summary") or "")
     new_count = sum(1 for it in nml40 if it["isNew"])
     added = sum(1 for it in nml40 if it["sourceUrl"] not in prev_nml_urls)
 
@@ -1292,6 +1455,8 @@ def main() -> None:
     print("photos nml", sum(1 for it in nml40 if it.get("img")),
           "wire", sum(1 for it in wire_items if it.get("img")),
           "aihot", sum(1 for v in aihot.values() for it in v if it.get("img")))
+    print("keypoints wire", sum(1 for it in wire_items if (it.get("keypoints") or [""])[0:1] and len((it.get("keypoints") or [""])[0]) > 18),
+          "/", len(wire_items))
     print("flat", len(flat), "old", len(old), "added", added, "wire", len(wire_items))
     print("bodies filled", ok, "fail", fail, "already", skip, "notice", kept)
 
