@@ -205,9 +205,10 @@ OPENVERSE_TERMS = [
     (re.compile(r"飛機|機場|墜機"), "airplane airport"),
     (re.compile(r"金價|黃金"), "gold bars"),
     (re.compile(r"特朗普|白宮"), "white house"),
-    (re.compile(r"烏克蘭|俄羅斯|普亭"), "ukraine war"),
-    (re.compile(r"天文台|天氣|暴雨|颱風"), "storm clouds hong kong"),
-    (re.compile(r"警察|車禍|交通"), "city traffic night"),
+    (re.compile(r"烏克蘭|俄羅斯|普亭|基輔"), "ukraine war"),
+    (re.compile(r"天文台|天氣|暴雨|颱風|纖月|木星"), "night sky stars"),
+    (re.compile(r"警察|車禍|交通|私家車|駕駛"), "city traffic night"),
+    (re.compile(r"醫院|工程"), "hospital building"),
 ]
 _IMG_CACHE: dict[str, str] = {}
 _OV_USED: set[str] = set()
@@ -337,26 +338,45 @@ def openverse_query(title: str) -> str:
 
 
 def fetch_openverse(title: str) -> tuple[str, str, str]:
-    q = openverse_query(title)
-    page = (abs(hash(title)) % 4) + 1
-    api = (
-        "https://api.openverse.org/v1/images/"
-        f"?q={urllib.parse.quote(q)}&license_type=commercial&page_size=8&page={page}"
-    )
-    try:
-        raw = fetch_prefix(api, timeout=10, nbytes=400_000)
-        data = json.loads(raw)
-    except Exception as e:
-        print("openverse fail", q, e)
-        return "", "", ""
-    for hit in data.get("results") or []:
-        url = hit.get("url") or hit.get("thumbnail") or ""
-        if not looks_like_photo(url) or url in _OV_USED:
+    queries = [openverse_query(title), "hong kong city", "world news"]
+    seen_q: set[str] = set()
+    for q in queries:
+        if q in seen_q:
             continue
-        _OV_USED.add(url)
-        creator = (hit.get("creator") or "")[:40]
-        lic = (hit.get("license") or "").upper()
-        return url, creator, lic
+        seen_q.add(q)
+        data = None
+        last_err: Exception | None = None
+        for _ in range(2):
+            try:
+                api = (
+                    "https://api.openverse.org/v1/images/"
+                    f"?q={urllib.parse.quote(q)}&license_type=commercial&page_size=8"
+                )
+                req = urllib.request.Request(
+                    api,
+                    headers={"User-Agent": UA, "Accept": "application/json"},
+                )
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    raw = r.read(400_000).decode("utf-8", "replace")
+                if not raw.lstrip().startswith("{"):
+                    time.sleep(0.35)
+                    continue
+                data = json.loads(raw)
+                break
+            except Exception as e:
+                last_err = e
+                time.sleep(0.35)
+        if data is None:
+            print("openverse fail", q, last_err)
+            continue
+        for hit in data.get("results") or []:
+            url = hit.get("url") or hit.get("thumbnail") or ""
+            if not looks_like_photo(url) or url in _OV_USED:
+                continue
+            _OV_USED.add(url)
+            creator = (hit.get("creator") or "")[:40]
+            lic = (hit.get("license") or "").upper()
+            return url, creator, lic
     return "", "", ""
 
 
@@ -973,6 +993,29 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
         fresh.append(c)
     fresh.sort(key=lambda c: (-len(c["sources"]), -(c["dt"].timestamp() if c["dt"] else 0)))
     chosen = fresh[:WIRE_MAX]
+    donors = [it for it in raw if it.get("img") or is_article_url(it.get("url") or "")]
+    for c in chosen:
+        if looks_like_photo(c.get("img") or ""):
+            continue
+        for it in donors:
+            if not headlines_similar(c["title"], it["title"]):
+                continue
+            if looks_like_photo(it.get("img") or ""):
+                c["img"] = it["img"]
+                break
+            img = fetch_og_image(it.get("url") or "")
+            time.sleep(0.08)
+            if img:
+                c["img"] = img
+                if it.get("url") and it["url"] not in {r.get("url") for r in c["related"]}:
+                    c["related"].append(
+                        {
+                            "title": it.get("title") or c["title"],
+                            "url": it["url"],
+                            "source": it.get("source") or "",
+                        }
+                    )
+                break
     items = []
     bodies: dict[str, str] = {}
     used_ids: set[str] = set()
