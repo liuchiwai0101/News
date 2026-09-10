@@ -153,7 +153,7 @@ ARTICLE_TPL = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{title}</title>
+<title>__TITLE__</title>
 <style>
 img,video,figure,table{max-width:100%;}
 img,video{height:auto;}
@@ -165,9 +165,9 @@ pre{max-width:100%;overflow-x:auto;}
 </head>
 <body>
 <p><a href="../">← 返回日報</a></p>
-<h1>{title}</h1>
-{body}
-<p><a href="{url}" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<h1>__TITLE__</h1>
+__BODY__
+<p><a href="__URL__" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
 </body>
 </html>
 """
@@ -1321,8 +1321,11 @@ def write_article(item: dict, body_html: str) -> None:
     p = ROOT / "articles" / f"{item['articleId']}.html"
     title = item["title"].replace("<", "")
     body = body_html or f"<p>{escape(item.get('summary') or item.get('embedded') or '')}</p>"
+    # Do not use str.format: article CSS and body text both contain `{...}`.
     p.write_text(
-        ARTICLE_TPL.format(title=title, body=body, url=item["sourceUrl"]),
+        ARTICLE_TPL.replace("__TITLE__", title)
+        .replace("__BODY__", body)
+        .replace("__URL__", item["sourceUrl"]),
         encoding="utf-8",
     )
 
