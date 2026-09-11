@@ -894,7 +894,80 @@ def slug_from_url(url: str) -> str:
     return (part or "item")[:80]
 
 
-def parse_aihot(html: str, iso: str) -> dict[str, list[dict]]:
+def _aihot_card(
+    lab: str,
+    iso: str,
+    d: date,
+    title: str,
+    summary: str,
+    source_name: str,
+    source_url: str,
+    aid: str,
+    img: str,
+) -> dict:
+    show = AIHOT_SHOW.get(lab, to_hant(lab))
+    return {
+        "title": title,
+        "summary": summary,
+        "sourceName": source_name,
+        "sourceUrl": source_url,
+        "img": img,
+        "imgKind": "og" if img else "",
+        "imgCreator": "",
+        "imgLicense": "",
+        "imgSource": source_url if img else "",
+        "ci": CI[lab],
+        "kind": "aihot",
+        "isoDate": iso,
+        "_sec_label": show,
+        "date": zh_date(d),
+        "articleId": aid,
+        "articleUrl": f"articles/{aid}.html",
+        "embedded": summary,
+    }
+
+
+def parse_aihot_report_stories(html: str, iso: str) -> dict[str, list[dict]]:
+    """Current AI HOT daily markup (report-story cards)."""
+    out: dict[str, list[dict]] = {k: [] for k in AIHOT_LABELS}
+    d = date.fromisoformat(iso)
+    for block in re.findall(
+        r'<article class="report-story"[^>]*>(.*?)</article>', html or "", re.S
+    ):
+        lab_m = re.search(r'class="report-story-meta"[^>]*>\s*<span>([^<]+)</span>', block)
+        tm = re.search(
+            r'class="report-story-title"[^>]*>\s*<a href="([^"]+)">(.*?)</a>',
+            block,
+            re.S,
+        )
+        if not lab_m or not tm:
+            continue
+        lab = lab_m.group(1).strip()
+        if lab not in out:
+            continue
+        href, title = tm.group(1), to_hant(strip_tags(tm.group(2)))
+        item_url = ("https://aihot.virxact.com" + href) if href.startswith("/") else href
+        orig = re.search(
+            r'class="report-story-sources"[^>]*>\s*<a href="(https?://[^"]+)"',
+            block,
+        )
+        source_url = orig.group(1) if orig else item_url
+        src_m = re.search(r'class="report-source-name"[^>]*>([^<]+)', block)
+        source_name = zh_source(src_m.group(1) if src_m else "AIHOT")
+        sm = re.search(r'class="report-story-summary"[^>]*>(.*?)</p>', block, re.S)
+        summary = to_hant(strip_tags(sm.group(1))[:400] if sm else "")
+        aid_m = re.search(r"/items/([^/?#]+)", href)
+        aid = slug_from_url(aid_m.group(1) if aid_m else item_url)
+        img = rss_image(block) or first_img_in_html(block, "https://aihot.virxact.com")
+        if img.startswith("data:"):
+            img = ""
+        out[lab].append(
+            _aihot_card(lab, iso, d, title, summary, source_name, source_url, aid, img)
+        )
+    return out
+
+
+def parse_aihot_legacy(html: str, iso: str) -> dict[str, list[dict]]:
     out: dict[str, list[dict]] = {k: [] for k in AIHOT_LABELS}
     d = date.fromisoformat(iso)
     for p in re.split(r'<section class="daily-section', html)[1:]:
@@ -915,29 +988,32 @@ def parse_aihot(html: str, iso: str) -> dict[str, list[dict]]:
             summary = to_hant(strip_tags(sm.group(1))[:400] if sm else "")
             source_url = ("https://aihot.virxact.com" + href) if href.startswith("/") else href
             aid = slug_from_url(source_url)
-            show = AIHOT_SHOW.get(lab, to_hant(lab))
             img = rss_image(block) or first_img_in_html(block, "https://aihot.virxact.com")
             out[lab].append(
-                {
-                    "title": title,
-                    "summary": summary,
-                    "sourceName": source_name,
-                    "sourceUrl": source_url,
-                    "img": img,
-                    "imgKind": "og" if img else "",
-                    "imgCreator": "",
-                    "imgLicense": "",
-                    "imgSource": source_url if img else "",
-                    "ci": CI[lab],
-                    "kind": "aihot",
-                    "isoDate": iso,
-                    "_sec_label": show,
-                    "date": zh_date(d),
-                    "articleId": aid,
-                    "articleUrl": f"articles/{aid}.html",
-                    "embedded": summary,
-                }
+                _aihot_card(lab, iso, d, title, summary, source_name, source_url, aid, img)
             )
+    return out
+
+
+def parse_aihot(html: str, iso: str) -> dict[str, list[dict]]:
+    stories = parse_aihot_report_stories(html, iso)
+    if sum(len(v) for v in stories.values()):
+        return stories
+    return parse_aihot_legacy(html, iso)
+
+
+def aihot_from_existing(data: dict) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {k: [] for k in AIHOT_LABELS}
+    aliases = {}
+    for k, v in AIHOT_SHOW.items():
+        aliases[k] = k
+        aliases[v] = k
+    for sec in data.get("sections") or []:
+        if sec.get("kind") != "aihot":
+            continue
+        lab = aliases.get(sec.get("label") or "")
+        if lab:
+            out[lab] = list(sec.get("items") or [])
     return out
 
 
@@ -1349,15 +1425,22 @@ def main() -> None:
         for it in sec.get("items", [])
     }
 
-    aihot_html = fetch(f"https://aihot.virxact.com/daily/{iso}")
-    aihot = parse_aihot(aihot_html, iso)
+    try:
+        aihot_html = fetch(f"https://aihot.virxact.com/daily/{iso}")
+        aihot = parse_aihot(aihot_html, iso)
+    except Exception as e:
+        print("aihot fetch fail", e)
+        aihot = {k: [] for k in AIHOT_LABELS}
     aihot_n = sum(len(v) for v in aihot.values())
     if aihot_n == 0:
-        raise SystemExit(f"AI HOT {iso} parsed 0 articles")
-    for items in aihot.values():
-        for it in items:
-            fill_item_photo(it)
-            fill_item_copy(it, [it.get("sourceUrl") or ""])
+        print(f"AI HOT {iso} parsed 0 articles, keeping previous AI HOT cards")
+        aihot = aihot_from_existing(data)
+        aihot_n = sum(len(v) for v in aihot.values())
+    else:
+        for items in aihot.values():
+            for it in items:
+                fill_item_photo(it)
+                fill_item_copy(it, [it.get("sourceUrl") or ""])
 
     nml_items: list[dict] = []
     for url in NML_LISTS:
