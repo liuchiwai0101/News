@@ -669,7 +669,19 @@ def extract_source_html(page: str, url: str) -> str:
             inner = inner[: cut.start()]
         return inner
     if "aihot.virxact.com" in host:
-        return inner_html_by_class(page, "m-detail-html") or inner_html_by_class(page, "dt-article")
+        inner = inner_html_by_class(page, "m-detail-html") or inner_html_by_class(page, "dt-article")
+        if inner and re.search(r"仅提供摘要|僅提供摘要", inner):
+            lead = inner_html_by_class(page, "m-detail-summary-text") or inner_html_by_class(
+                page, "dt-summary-text"
+            )
+            reason = inner_html_by_class(page, "m-detail-reason-text")
+            bits = []
+            if lead:
+                bits.append(f"<p>{lead}</p>")
+            if reason:
+                bits.append(f"<p>{reason}</p>")
+            return "".join(bits)
+        return inner
     return inner_html_by_class(page, "entry-content") or inner_html_by_class(page, "post-content")
 
 
@@ -880,6 +892,58 @@ def fetch_article_body(url: str, source_name: str) -> str:
     return source_notice(zh_source(source_name)) + raw
 
 
+def aihot_item_url(item: dict) -> str:
+    if item.get("itemUrl"):
+        return item["itemUrl"]
+    aid = item.get("articleId") or ""
+    if aid:
+        return f"https://aihot.virxact.com/items/{aid}"
+    return ""
+
+
+def fetch_aihot_item_body(item: dict) -> str:
+    """Build reader HTML from the AI HOT item page (导读 / 推荐理由 / 译文正文)."""
+    item_url = aihot_item_url(item)
+    page = ""
+    if item_url:
+        try:
+            page = fetch(item_url, timeout=20)
+        except Exception as e:
+            print("aihot item fail", item_url, e)
+    chunks: list[str] = []
+    lead = inner_html_by_class(page, "m-detail-summary-text") or inner_html_by_class(
+        page, "dt-summary-text"
+    )
+    if lead and strip_tags(lead).strip():
+        chunks.append("<h3>AI 導讀</h3>" + sanitize_body(f"<p>{lead}</p>"))
+    reason = inner_html_by_class(page, "m-detail-reason-text")
+    if reason and strip_tags(reason).strip():
+        chunks.append("<h3>推薦理由</h3>" + sanitize_body(f"<p>{reason}</p>"))
+    article = inner_html_by_class(page, "m-detail-html")
+    if article and not re.search(r"仅提供摘要|僅提供摘要", article):
+        raw = sanitize_body(article)
+        if len(strip_tags(raw)) >= MIN_BODY_CHARS:
+            chunks.append("<h3>正文</h3>" + raw)
+    html = normalize_territory(to_hant("".join(chunks)))
+    if len(strip_tags(html)) < 40:
+        sum_ = (item.get("summary") or item.get("embedded") or "").strip()
+        if sum_:
+            html = f"<h3>重點內容</h3><p>{escape(to_hant(sum_))}</p>"
+        else:
+            return ""
+    orig = item.get("sourceUrl") or item_url
+    notice = source_notice(zh_source(item.get("sourceName") or "AIHOT"))
+    cover = item.get("img") or parse_og_image(page, item_url)
+    hero = f'<p><img src="{escape(cover, True)}" alt=""></p>' if cover else ""
+    link = (
+        f'<p><a href="{escape(orig, True)}" target="_blank" rel="noopener noreferrer">'
+        f"查看原文 ↗</a></p>"
+        if orig
+        else ""
+    )
+    return notice + hero + html + link
+
+
 def zh_date(d: date) -> str:
     return f"{d.month}月{d.day}日 周{WEEK[d.weekday()]}"
 
@@ -904,6 +968,7 @@ def _aihot_card(
     source_url: str,
     aid: str,
     img: str,
+    item_url: str = "",
 ) -> dict:
     show = AIHOT_SHOW.get(lab, to_hant(lab))
     return {
@@ -911,6 +976,7 @@ def _aihot_card(
         "summary": summary,
         "sourceName": source_name,
         "sourceUrl": source_url,
+        "itemUrl": item_url,
         "img": img,
         "imgKind": "og" if img else "",
         "imgCreator": "",
@@ -962,7 +1028,9 @@ def parse_aihot_report_stories(html: str, iso: str) -> dict[str, list[dict]]:
         if img.startswith("data:"):
             img = ""
         out[lab].append(
-            _aihot_card(lab, iso, d, title, summary, source_name, source_url, aid, img)
+            _aihot_card(
+                lab, iso, d, title, summary, source_name, source_url, aid, img, item_url
+            )
         )
     return out
 
@@ -990,7 +1058,7 @@ def parse_aihot_legacy(html: str, iso: str) -> dict[str, list[dict]]:
             aid = slug_from_url(source_url)
             img = rss_image(block) or first_img_in_html(block, "https://aihot.virxact.com")
             out[lab].append(
-                _aihot_card(lab, iso, d, title, summary, source_name, source_url, aid, img)
+                _aihot_card(lab, iso, d, title, summary, source_name, source_url, aid, img, source_url)
             )
     return out
 
@@ -1440,7 +1508,7 @@ def main() -> None:
         for items in aihot.values():
             for it in items:
                 fill_item_photo(it)
-                fill_item_copy(it, [it.get("sourceUrl") or ""])
+                fill_item_copy(it, [aihot_item_url(it), it.get("sourceUrl") or ""])
 
     nml_items: list[dict] = []
     for url in NML_LISTS:
@@ -1584,6 +1652,22 @@ def main() -> None:
                 cur = f'<p><img src="{escape(cover, True)}" alt=""></p>' + cur
                 articles[aid] = cur
             skip += 1
+        elif it.get("kind") == "aihot":
+            live = bool(it.get("itemUrl")) or (aid or "").startswith("cmt")
+            if not live:
+                if not cur:
+                    articles.setdefault(aid, notice_html(it.get("sourceUrl") or ""))
+                    kept += 1
+            else:
+                body = fetch_aihot_item_body(it)
+                time.sleep(0.12)
+                if body:
+                    articles[aid] = body
+                    ok += 1
+                    filled_now = True
+                else:
+                    articles.setdefault(aid, notice_html(it.get("sourceUrl") or aihot_item_url(it)))
+                    fail += 1
         elif can_extract(it["sourceUrl"]):
             body = fetch_article_body(it["sourceUrl"], it.get("sourceName") or "")
             time.sleep(0.12)
