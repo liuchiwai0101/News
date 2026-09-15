@@ -2,10 +2,10 @@ name: Daily dashboard
 
 on:
   schedule:
-    # Beijing time (UTC+8), every 2 hours from 07:00 through 21:00, plus 22:00.
-    # GitHub cron is UTC; public-repo runs can lag by hours.
-    # 07,09,11,13,15,17,19,21,22 Beijing → 23,01,03,05,07,09,11,13,14 UTC
-    - cron: "0 1,3,5,7,9,11,13,14,23 * * *"
+    # Extract news all day. GitHub public-repo cron at minute 0 skipped most of
+    # the old 2-hour slots (gaps of 5–7h). Hourly at :17 still lands about every
+    # 1–2 hours even when GitHub drops a tick.
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: daily-dashboard
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   rebuild:
