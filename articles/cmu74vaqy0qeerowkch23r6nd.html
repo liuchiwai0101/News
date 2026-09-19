@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qwen 發佈 Qwen3.8-LiveTranslate 實時同傳模型，LAAL 降至 2.3 秒</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Qwen 發佈 Qwen3.8-LiveTranslate 實時同傳模型，LAAL 降至 2.3 秒</h1>
+<div class="notice">內容機器翻譯自第三方媒體（通義千問），僅供參考，以原文為準。</div><p><img src="https://img.alicdn.com/imgextra/i4/O1CN01OXv3EM1FN8t9W4P79_!!6000000000474-2-tps-80-80.png" alt=""></p><h3>AI 導讀</h3><p>Qwen 發佈 Qwen3.8-LiveTranslate，採用 Interleave 架構與 Hybrid-MoE Thinker–Talker 設計重構實時同聲傳譯，平均滯後（LAAL）從上一代的 2.8 秒降至 2.3 秒。</p><h3>推薦理由</h3><p>官方給出了架構設計、LAAL 從 2.8 秒到 2.3 秒的數字和多語言評測結果，讀者可以據此評估其實時翻譯能力的實際變化。</p><h3>正文</h3><p><a href="https://help.aliyun.com/en/model-studio/qwen3-5-livetranslate-flash-realtime" target="_blank" rel="noopener noreferrer">API</a><a href="https://omni.qwen.ai/live-translate" target="_blank" rel="noopener noreferrer">Demo</a></p><p>同聲傳譯不僅關乎翻譯速度——它還必須聽得清楚、譯得準確。Qwen3.8-LiveTranslate 以 Interleave 架構重構實時同聲傳譯，全面提升忠實度、流暢度與簡潔度，同時平均延遲（LAAL）從 2.8 秒降至 2.3 秒。</p><p>我們希望同聲傳譯不僅傳遞語言，也傳遞對話背後的人與語境。在支持 60 種語言的基礎上，Qwen3.8-LiveTranslate 新增三項能力，將同聲傳譯帶入更廣泛的真實場景：實時説話人分離，為每一句話提供清晰的歸屬，並實現更穩定的聲音克隆；在同一個雙語屏幕上同步輸出原文與譯文；以及長上下文消歧，結合前文理解當下，讓姓名和術語更加精準。</p><h3>核心亮點<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#key-highlights" target="_blank" rel="noopener noreferrer">#</a></h3><ul><li><p><strong>Interleave 架構：音頻與文本交織融合，質量更高、延遲更低。</strong>這一代將同聲傳譯重構為單一的音頻-文本交織流；已經聽到的音頻和已經產出的譯文都可以被緩存並複用，因此翻譯質量較上一代顯著提升，同時平均延遲（LAAL）從上一代的 2.8 秒降至 2.3 秒。</p></li><li><p><strong>實時説話人分離：內容歸屬更清晰，聲音克隆更穩定。</strong>當多人輪流發言時，模型能夠區分不同的説話人以及各自所説的內容，並幫助翻譯後的語音更準確、更穩定地保留每位説話人的音色。</p></li><li><p><strong>原文與譯文同步。</strong>同傳過程中的雙語對齊既支持即時理解，也支持原文核對，為字幕顯示、內容整理和檢索等後續功能奠定基礎——擁有更廣闊的應用空間。</p></li><li><p><strong>長上下文消歧：跨輪次關聯歷史，翻譯更精準。</strong>通過藉助前文和歷史上下文，模型緩解了複雜場景中專有名詞、指代等的歧義，保持表達一致。</p></li></ul><h3>模型架構<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#model-architecture" target="_blank" rel="noopener noreferrer">#</a></h3><p>Qwen3.8-LiveTranslate 採用基於 Hybrid-MoE 的 Thinker–Talker 雙模塊設計，通過交錯方式連接流式理解、文本輸出和語音生成。其中，Thinker 將視頻、音頻、源文本和譯文編排為單一因果序列——按時間順序交錯並以端到端方式生成——使理解和翻譯在同一序列內完成；Talker 隨後將譯文與源音頻結合，把譯文合成為保留原説話人音色的語音。</p><h3>性能<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#performance" target="_blank" rel="noopener noreferrer">#</a></h3><h3>多説話人長音頻<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#multi-speaker-long-audio" target="_blank" rel="noopener noreferrer">#</a></h3><p>在<a href="https://github.com/QwenLM/Omnilingua-Bench" target="_blank" rel="noopener noreferrer">Omnilingua-MSpeaker</a>這一覆蓋 14 個語言方向的多説話人長音頻評測集上，Qwen3.8-LiveTranslate 在四個維度上均優於當今主流的實時同傳系統：翻譯忠實度、流暢度、簡潔度，以及説話人分離錯誤率（DER）。</p><h3>多語言性能<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#multilingual-performance" target="_blank" rel="noopener noreferrer">#</a></h3><p>我們在公開的 FLEURS 音頻測試集上評估了 70 個語言方向的實時同傳性能。Qwen3.8-LiveTranslate 在四個維度上均領先於上一代及當前主流的實時同傳系統：翻譯質量、平均延遲、語音識別準確率和語音合成質量。</p><h3>🎬 實際效果演示<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#-see-it-in-action" target="_blank" rel="noopener noreferrer">#</a></h3><p>以下演示使用了<em>《西遊記》</em>中的兩段對話以及一組同音詞示例，展示了説話人歸屬與聲音克隆、同步雙語輸出，以及上下文和視覺信息如何幫助翻譯消歧。</p><a href="https://qwen.ai/blog?id=qwen3.8-livetranslate" target="_blank" rel="noopener noreferrer">視頻 · 前往原文觀看</a><a href="https://qwen.ai/blog?id=qwen3.8-livetranslate" target="_blank" rel="noopener noreferrer">視頻 · 前往原文觀看</a><a href="https://qwen.ai/blog?id=qwen3.8-livetranslate" target="_blank" rel="noopener noreferrer">視頻 · 前往原文觀看</a><h3>支持的語言<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#supported-languages" target="_blank" rel="noopener noreferrer">#</a></h3><table><thead><tr><th>類別</th><th>支持的語言</th></tr></thead><tbody><tr><td>輸入音頻與輸出文本</td><td><b>60 種語言</b><br>南非荷蘭語、阿拉伯語、阿斯圖里亞斯語、阿塞拜疆語、白俄羅斯語、孟加拉語、波斯尼亞語、保加利亞語、粵語、加泰羅尼亞語、宿務語、中文、克羅地亞語、捷克語、丹麥語、荷蘭語、英語、愛沙尼亞語、菲律賓語、芬蘭語、法語、加利西亞語、古吉拉特語、德語、希臘語、希伯來語、印地語、匈牙利語、冰島語、印度尼西亞語、意大利語、日語、爪哇語、卡納達語、哈薩克語、韓語、吉爾吉斯語、拉脱維亞語、馬其頓語、馬來語、馬拉雅拉姆語、馬拉地語、挪威語、波斯語、波蘭語、葡萄牙語、旁遮普語、羅馬尼亞語、俄語、斯洛伐克語、斯洛文尼亞語、西班牙語、斯瓦希里語、瑞典語、塔吉克語、泰語、土耳其語、烏克蘭語、烏爾都語、越南語</td></tr><tr><td>輸出音頻</td><td><b>29 種語言</b><br>中文、英語、德語、意大利語、葡萄牙語、西班牙語、日語、韓語、法語、俄語、泰語、印度尼西亞語、阿拉伯語、越南語、土耳其語、芬蘭語、波蘭語、印地語、荷蘭語、捷克語、烏爾都語、菲律賓語、瑞典語、丹麥語、希伯來語、冰島語、馬來語、挪威語、波斯語</td></tr></tbody></table><h3>通過 DashScope API 使用 Qwen3.8-LiveTranslate<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#using-qwen38-livetranslate-via-dashscope-api" target="_blank" rel="noopener noreferrer">#</a></h3><p>下面是一個完整的實時同傳客户端示例：它採集麥克風音頻，將其流式傳輸到服務器，並接收和播放回傳的譯文。這一代新增的<strong>説話人分離</strong>和<strong>源語言與譯文同步輸出</strong>能力均可通過會話配置啓用；服務器會在返回譯文的同時返回説話人標識和源語言文本，無需再單獨調用 ASR 接口。</p><pre><code>import os
+import time
+import base64
+import asyncio
+import json
+import websockets
+import pyaudio
+import queue
+import threading
+import traceback
+class LiveTranslateClient:
+    &quot;&quot;&quot;Client for the DashScope live-translation service: captures mic audio, sends it to the server, and plays back the translated speech.&quot;&quot;&quot;
+    def __init__(self, api_key: str, workspace_id: str, target_language: str = &quot;en&quot;, *, audio_enabled: bool = True):
+        if not api_key:
+            raise ValueError(&quot;API key cannot be empty.&quot;)
+        if not workspace_id:
+            raise ValueError(&quot;Workspace ID cannot be empty.&quot;)
+        self.api_key = api_key
+        self.workspace_id = workspace_id
+        self.target_language = target_language
+        self.audio_enabled = audio_enabled
+        self.ws = None
+        # URL for the China (Beijing) region; replace {workspace_id} with your Model Studio workspace ID. URLs differ by region.
+        self.api_url = (
+            f&quot;wss://{workspace_id}.cn-beijing.maas.aliyuncs.com&quot;
+            &quot;/api-ws/v1/realtime?model=qwen3.8-livetranslate-flash-realtime&quot;
+        )
+        # Audio input parameters (microphone capture)
+        self.input_rate = 16000
+        self.input_chunk = 1600
+        self.input_format = pyaudio.paInt16
+        self.input_channels = 1
+        # Audio output parameters (local playback)
+        self.output_rate = 24000
+        self.output_chunk = 2400
+        self.output_format = pyaudio.paInt16
+        self.output_channels = 1
+        # Runtime state and playback resources
+        self.is_connected = False
+        self.audio_player_thread = None
+        self.audio_playback_queue = queue.Queue()
+        self.pyaudio_instance = pyaudio.PyAudio()
+        # Set once the server returns session.finished, so close() can wait for a clean shutdown.
+        self.session_finished_event = asyncio.Event()
+    async def connect(self):
+        &quot;&quot;&quot;Open a WebSocket connection to the translation service.&quot;&quot;&quot;
+        headers = {&quot;Authorization&quot;: f&quot;Bearer {self.api_key}&quot;}
+        try:
+            self.ws = await websockets.connect(self.api_url, additional_headers=headers)
+            self.is_connected = True
+            print(f&quot;Successfully connected to server: {self.api_url}&quot;)
+            await self.configure_session()
+        except Exception as e:
+            print(f&quot;Connection failed: {e}&quot;)
+            self.is_connected = False
+            raise
+    async def configure_session(self):
+        &quot;&quot;&quot;Configure the translation session: target language, audio formats, and optional features.&quot;&quot;&quot;
+        config = {
+            &quot;event_id&quot;: f&quot;event_{int(time.time() * 1000)}&quot;,
+            &quot;type&quot;: &quot;session.update&quot;,
+            &quot;session&quot;: {
+                # `output_modalities` decides what the server returns:
+                #   [&quot;text&quot;, &quot;audio&quot;] — both translated text and synthesized speech (recommended)
+                #   [&quot;text&quot;]          — translated text only
+                &quot;output_modalities&quot;: [&quot;text&quot;, &quot;audio&quot;] if self.audio_enabled else [&quot;text&quot;],
+                &quot;input_audio_format&quot;: &quot;pcm&quot;,
+                &quot;output_audio_format&quot;: &quot;pcm&quot;,
+                # `input_audio_transcription`: enable source-language ASR.
+                # Setting `model` to &#x27;qwen3-asr-flash-realtime&#x27; also streams back the source transcript.
+                # &quot;input_audio_transcription&quot;: {
+                #     &quot;model&quot;: &quot;qwen3-asr-flash-realtime&quot;,
+                #     &quot;language&quot;: &quot;zh&quot;  # source language; defaults to &#x27;en&#x27;
+                # },
+                &quot;translation&quot;: {
+                    &quot;language&quot;: self.target_language,
+                    # `corpus`: register hotwords to boost accuracy on proper nouns and domain-specific terms.
+                    # &quot;corpus&quot;: {
+                    #     &quot;phrases&quot;: {
+                    #         &quot;人工智能&quot;: &quot;Artificial Intelligence&quot;,
+                    #         &quot;機器學習&quot;: &quot;Machine Learning&quot;
+                    #     }
+                    # }
+                }
+            }
+        }
+        print(f&quot;Sending session config: {json.dumps(config, indent=2, ensure_ascii=False)}&quot;)
+        await self.ws.send(json.dumps(config))
+    async def send_audio_chunk(self, audio_data: bytes):
+        &quot;&quot;&quot;Base64-encode an audio chunk and send it to the server.&quot;&quot;&quot;
+        if not self.is_connected:
+            return
+        event = {
+            &quot;event_id&quot;: f&quot;event_{int(time.time() * 1000)}&quot;,
+            &quot;type&quot;: &quot;input_audio_buffer.append&quot;,
+            &quot;audio&quot;: base64.b64encode(audio_data).decode()
+        }
+        await self.ws.send(json.dumps(event))
+    async def send_image_frame(self, image_bytes: bytes, *, event_id: str | None = None):
+        &quot;&quot;&quot;Send an image frame to the server as visual context for translation.&quot;&quot;&quot;
+        if not self.is_connected:
+            return
+        if not image_bytes:
+            raise ValueError(&quot;image_bytes cannot be empty&quot;)
+        image_b64 = base64.b64encode(image_bytes).decode()
+        event = {
+            &quot;event_id&quot;: event_id or f&quot;event_{int(time.time() * 1000)}&quot;,
+            &quot;type&quot;: &quot;input_image_buffer.append&quot;,
+            &quot;image&quot;: image_b64,
+        }
+        await self.ws.send(json.dumps(event))
+    def _audio_player_task(self):
+        &quot;&quot;&quot;Background thread task: drain PCM chunks from the playback queue and write them to the speaker output stream.&quot;&quot;&quot;
+        stream = self.pyaudio_instance.open(
+            format=self.output_format,
+            channels=self.output_channels,
+            rate=self.output_rate,
+            output=True,
+            frames_per_buffer=self.output_chunk,
+        )
+        try:
+            while self.is_connected or not self.audio_playback_queue.empty():
+                try:
+                    audio_chunk = self.audio_playback_queue.get(timeout=0.1)
+                    if audio_chunk is None:  # sentinel: stop the playback loop
+                        break
+                    stream.write(audio_chunk)
+                    self.audio_playback_queue.task_done()
+                except queue.Empty:
+                    continue
+        finally:
+            stream.stop_stream()
+            stream.close()
+    def start_audio_player(self):
+        &quot;&quot;&quot;Spin up the background audio playback thread (no-op when audio output is disabled).&quot;&quot;&quot;
+        if not self.audio_enabled:
+            return
+        if self.audio_player_thread is None or not self.audio_player_thread.is_alive():
+            self.audio_player_thread = threading.Thread(target=self._audio_player_task, daemon=True)
+            self.audio_player_thread.start()
+    async def handle_server_messages(self, on_text_received):
+        &quot;&quot;&quot;Continuously receive and dispatch event messages pushed by the server.&quot;&quot;&quot;
+        try:
+            async for message in self.ws:
+                event = json.loads(message)
+                event_type = event.get(&quot;type&quot;)
+                if event_type == &quot;response.audio.delta&quot; and self.audio_enabled:
+                    audio_b64 = event.get(&quot;delta&quot;, &quot;&quot;)
+                    if audio_b64:
+                        audio_data = base64.b64decode(audio_b64)
+                        self.audio_playback_queue.put(audio_data)
+                elif event_type == &quot;response.done&quot;:
+                    print(&quot;\n[INFO] Response complete.&quot;)
+                    usage = event.get(&quot;response&quot;, {}).get(&quot;usage&quot;, {})
+                    if usage:
+                        print(f&quot;[INFO] Token usage: {json.dumps(usage, indent=2, ensure_ascii=False)}&quot;)
+                # Receive source-language ASR results (requires input_audio_transcription.model to be enabled)
+                # elif event_type == &quot;conversation.item.input_audio_transcription.delta&quot;:
+                #     delta = event.get(&quot;delta&quot;, &quot;&quot;)  # incremental transcript
+                #     print(f&quot;[Recognizing] {delta}&quot;, end=&quot;&quot;, flush=True)
+                # elif event_type == &quot;conversation.item.input_audio_transcription.completed&quot;:
+                #     transcript = event.get(&quot;transcript&quot;, &quot;&quot;)  # final transcript for an utterance
+                #     print(f&quot;[Source] {transcript}&quot;)
+                # In voice + text mode, the incremental translation text arrives alongside synthesized audio
+                elif event_type == &quot;response.audio_transcript.delta&quot;:
+                    on_text_received(event.get(&quot;delta&quot;, &quot;&quot;))
+                # In text-only mode, the incremental translation arrives via response.text.delta
+                elif event_type == &quot;response.text.delta&quot;:
+                    on_text_received(event.get(&quot;delta&quot;, &quot;&quot;))
+                # The server acknowledges session.finish and completes the shutdown handshake
+                elif event_type == &quot;session.finished&quot;:
+                    print(&quot;\n[INFO] Session finished.&quot;)
+                    self.session_finished_event.set()
+        except websockets.exceptions.ConnectionClosed as e:
+            print(f&quot;[WARNING] Connection closed: {e}&quot;)
+            self.is_connected = False
+        except Exception as e:
+            print(f&quot;[ERROR] Unknown error during message handling: {e}&quot;)
+            traceback.print_exc()
+            self.is_connected = False
+    async def start_microphone_streaming(self):
+        &quot;&quot;&quot;Continuously capture microphone audio and stream it to the server in real time.&quot;&quot;&quot;
+        stream = self.pyaudio_instance.open(
+            format=self.input_format,
+            channels=self.input_channels,
+            rate=self.input_rate,
+            input=True,
+            frames_per_buffer=self.input_chunk
+        )
+        print(&quot;Microphone started, please begin speaking...&quot;)
+        try:
+            while self.is_connected:
+                audio_chunk = await asyncio.get_event_loop().run_in_executor(
+                    None, stream.read, self.input_chunk
+                )
+                await self.send_audio_chunk(audio_chunk)
+        finally:
+            stream.stop_stream()
+            stream.close()
+    async def close(self):
+        &quot;&quot;&quot;Gracefully close the WebSocket connection and release audio resources.&quot;&quot;&quot;
+        # Ask the server to finish the session, then wait for its session.finished acknowledgement.
+        if self.is_connected and self.ws:
+            finish_event = {
+                &quot;event_id&quot;: f&quot;event_{int(time.time() * 1000)}&quot;,
+                &quot;type&quot;: &quot;session.finish&quot;,
+            }
+            await self.ws.send(json.dumps(finish_event))
+            print(&quot;Sent session.finish, waiting for the server to finish processing...&quot;)
+            try:
+                await asyncio.wait_for(self.session_finished_event.wait(), timeout=15)
+                print(&quot;Server finished processing.&quot;)
+            except asyncio.TimeoutError:
+                print(&quot;Timed out waiting for session.finished.&quot;)
+        self.is_connected = False
+        if self.ws:
+            await self.ws.close()
+            print(&quot;WebSocket connection closed.&quot;)
+        if self.audio_player_thread:
+            self.audio_playback_queue.put(None)  # signal the playback thread to exit
+            self.audio_player_thread.join(timeout=1)
+            print(&quot;Audio playback thread stopped.&quot;)
+        self.pyaudio_instance.terminate()
+        print(&quot;PyAudio instance released.&quot;)
+def print_banner():
+    print(&quot;=&quot; * 60)
+    print(&quot;  Powered by Qwen qwen3.8-livetranslate-flash-realtime&quot;)
+    print(&quot;=&quot; * 60 + &quot;\n&quot;)
+def get_user_config():
+    &quot;&quot;&quot;Collect runtime parameters from the user via CLI: output mode and target language.&quot;&quot;&quot;
+    print(&quot;Select mode:&quot;)
+    print(&quot;1. Voice + Text [default] | 2. Text only&quot;)
+    mode_choice = input(&quot;Enter option (press Enter for Voice + Text): &quot;).strip()
+    audio_enabled = (mode_choice != &quot;2&quot;)
+    if audio_enabled:
+        lang_map = {
+            &quot;1&quot;: &quot;en&quot;, &quot;2&quot;: &quot;zh&quot;, &quot;3&quot;: &quot;ru&quot;, &quot;4&quot;: &quot;fr&quot;, &quot;5&quot;: &quot;de&quot;, &quot;6&quot;: &quot;pt&quot;,
+            &quot;7&quot;: &quot;es&quot;, &quot;8&quot;: &quot;it&quot;, &quot;9&quot;: &quot;ko&quot;, &quot;10&quot;: &quot;ja&quot;, &quot;11&quot;: &quot;yue&quot;
+        }
+        print(&quot;Select target translation language (Voice + Text mode):&quot;)
+        print(&quot;1. English | 2. Chinese | 3. Russian | 4. French | 5. German | 6. Portuguese | 7. Spanish | 8. Italian | 9. Korean | 10. Japanese | 11. Cantonese&quot;)
+    else:
+        lang_map = {
+            &quot;1&quot;: &quot;en&quot;, &quot;2&quot;: &quot;zh&quot;, &quot;3&quot;: &quot;ru&quot;, &quot;4&quot;: &quot;fr&quot;, &quot;5&quot;: &quot;de&quot;, &quot;6&quot;: &quot;pt&quot;, &quot;7&quot;: &quot;es&quot;, &quot;8&quot;: &quot;it&quot;,
+            &quot;9&quot;: &quot;id&quot;, &quot;10&quot;: &quot;ko&quot;, &quot;11&quot;: &quot;ja&quot;, &quot;12&quot;: &quot;vi&quot;, &quot;13&quot;: &quot;th&quot;, &quot;14&quot;: &quot;ar&quot;,
+            &quot;15&quot;: &quot;yue&quot;, &quot;16&quot;: &quot;hi&quot;, &quot;17&quot;: &quot;el&quot;, &quot;18&quot;: &quot;tr&quot;
+        }
+        print(&quot;Select target translation language (Text only mode):&quot;)
+        print(&quot;1. English | 2. Chinese | 3. Russian | 4. French | 5. German | 6. Portuguese | 7. Spanish | 8. Italian | 9. Indonesian | 10. Korean | 11. Japanese | 12. Vietnamese | 13. Thai | 14. Arabic | 15. Cantonese | 16. Hindi | 17. Greek | 18. Turkish&quot;)
+    choice = input(&quot;Enter option (default is the first one): &quot;).strip()
+    target_language = lang_map.get(choice, next(iter(lang_map.values())))
+    return target_language, audio_enabled
+async def main():
+    &quot;&quot;&quot;Program entry point: connect, configure the session, and drive the live-translation loop.&quot;&quot;&quot;
+    print_banner()
+    api_key = os.environ.get(&quot;DASHSCOPE_API_KEY&quot;)
+    if not api_key:
+        print(&quot;[ERROR] Please set the environment variable DASHSCOPE_API_KEY&quot;)
+        print(&quot;  Example: export DASHSCOPE_API_KEY=&#x27;your_api_key_here&#x27;&quot;)
+        return
+    workspace_id = os.environ.get(&quot;DASHSCOPE_WORKSPACE_ID&quot;)
+    if not workspace_id:
+        print(&quot;[ERROR] Please set the environment variable DASHSCOPE_WORKSPACE_ID (your Model Studio workspace ID)&quot;)
+        print(&quot;  Example: export DASHSCOPE_WORKSPACE_ID=&#x27;your_workspace_id_here&#x27;&quot;)
+        return
+    target_language, audio_enabled = get_user_config()
+    print(&quot;\nConfiguration complete:&quot;)
+    print(f&quot;  - Target language: {target_language}&quot;)
+    if not audio_enabled:
+        print(&quot;  - Output mode: Text only&quot;)
+    client = LiveTranslateClient(api_key=api_key, workspace_id=workspace_id, target_language=target_language, audio_enabled=audio_enabled)
+    # Callback fired as translated text arrives — stream it to stdout, character by character
+    def on_translation_text(text):
+        print(text, end=&quot;&quot;, flush=True)
+    try:
+        print(&quot;Connecting to the translation service...&quot;)
+        await client.connect()
+        # Launch the audio playback thread (only does real work when audio output is enabled)
+        client.start_audio_player()
+        print(&quot;\n&quot; + &quot;-&quot; * 60)
+        print(&quot;Connected! Please speak into the microphone.&quot;)
+        print(&quot;The program will translate your speech in real time and play the results. Press Ctrl+C to exit.&quot;)
+        print(&quot;-&quot; * 60 + &quot;\n&quot;)
+        # Run two coroutines concurrently: server-message handling + microphone audio upload
+        message_handler = asyncio.create_task(client.handle_server_messages(on_translation_text))
+        tasks = [message_handler]
+        # Microphone capture is the translation input source — required regardless of output mode
+        microphone_streamer = asyncio.create_task(client.start_microphone_streaming())
+        tasks.append(microphone_streamer)
+        await asyncio.gather(*tasks)
+    except KeyboardInterrupt:
+        print(&quot;\n\nUser interrupted, exiting...&quot;)
+    except Exception as e:
+        print(f&quot;\nFatal error occurred: {e}&quot;)
+    finally:
+        print(&quot;\nCleaning up resources...&quot;)
+        await client.close()
+        print(&quot;Program exited.&quot;)
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())
+</code></pre><h3>未來方向<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#future-directions" target="_blank" rel="noopener noreferrer">#</a></h3><p>同聲傳譯遠未到達它的終點。在“聽得更完整、傳得更忠實、用得更廣泛”的指引下，我們正朝着以下方向努力：</p><ul><li><strong>逼近同聲傳譯的延遲極限</strong>：持續壓縮端到端延遲，把“聽到”與“譯出”之間的間隔推向極限。</li><li><strong>跨會話的長期記憶</strong>：將記憶跨會話帶入同一項目、同一群人的下一次對話中，越用越好用。</li><li><strong>覆蓋更多語言</strong>：持續將覆蓋範圍擴展到更多長尾語言和地區方言，讓實時傳譯能夠服務世界上的每一個人。</li></ul><h3>引用<a href="https://qwen.ai/blog?id=qwen3.8-livetranslate#citation" target="_blank" rel="noopener noreferrer">#</a></h3><p>如果你覺得 Qwen3.8-LiveTranslate 有幫助，歡迎引用以下文章：</p><pre><code>@misc{qwen38livetranslateblog,
+    title = {Qwen3.8-LiveTranslate: Names the speaker. Carries the meaning.},
+    url = {https://qwen.ai/blog?id=qwen3.8-livetranslate},
+    author = {Qwen Team},
+    month = {September},
+    year = {2026}
+}
+</code></pre><p><a href="https://qwen.ai/blog?id=qwen3.8-livetranslate" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://qwen.ai/blog?id=qwen3.8-livetranslate" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
