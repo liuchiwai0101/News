@@ -87,7 +87,14 @@
     color:var(--ink); background:#f3f6fc; border:1px solid var(--line);
     padding:7px 13px; border-radius:999px; transition:.15s;
   }
-  .nav-link:hover { background:#e6ecfb; transform:translateY(-1px); }
+  .nav-link:hover { background:#e6ecfb; }
+  .nav-link.on {
+    background:#1b266b; color:#fff; border-color:#1b266b;
+  }
+  .nav-link.on:hover { background:#24308a; }
+  .nav-link.on .nav-count {
+    background:rgba(255,255,255,.18); color:#fff;
+  }
   .dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
   .dot-0{background:var(--c0);} .dot-1{background:var(--c1);} .dot-2{background:var(--c2);}
   .dot-3{background:var(--c3);} .dot-4{background:var(--c4);} .dot-5{background:var(--c5);}
@@ -336,41 +343,76 @@
   @media (max-width:640px) {
     body { font-size:16px; }   /* 16px 避免 iOS 输入框聚焦时自动缩放，中文更易读 */
 
-    /* HERO */
-    .hero { padding-top:20px; padding-bottom:16px; }
-    .hero-top { margin-bottom:3px; }
-    .hero .kicker { font-size:11px; letter-spacing:.18em; }
-    .hero-inner { gap:10px; }
-    .hero h1 { font-size:clamp(20px,5.5vw,28px); }
-    .hero .sub { font-size:12px; }
-    .hero-meta { margin-top:8px; gap:6px 12px; }
-    .tabs { gap:5px; }
-    .tab { padding:6px 11px; font-size:12px; }
-    .search-box { height:29px; padding:0 8px 0 9px; }
-    .search-input { font-size:14px; width:65px; }
-    .search-input:focus { width:110px; }
+    /* HERO: single toolbar row — short date + tabs + icon search */
+    .hero {
+      padding-top:max(6px, env(safe-area-inset-top));
+      padding-bottom:6px;
+      padding-right:max(10px, env(safe-area-inset-right));
+      padding-left:max(10px, env(safe-area-inset-left));
+    }
+    .hero-top { display:none; }
+    .hero-inner {
+      flex-wrap:nowrap; gap:6px; align-items:center;
+    }
+    .hero h1 {
+      font-size:0; line-height:28px; letter-spacing:0;
+      white-space:nowrap; overflow:hidden;
+      min-width:0; flex:1 1 auto;
+    }
+    .hero h1[data-short]::after {
+      content:attr(data-short);
+      font-size:15px; font-weight:800; letter-spacing:.1px; line-height:28px;
+      white-space:nowrap;
+    }
+    .hero .sub, #hero-sub, .hero-meta .stats { display:none; }
+    .hero-meta { margin:0; }
+    .tabs { gap:4px; margin-left:0; flex:0 0 auto; flex-wrap:nowrap; }
+    .tab { padding:4px 8px; font-size:12px; height:28px; }
+    .tab .tcount { padding:0 5px; font-size:10.5px; }
+    .search-box { height:28px; width:28px; padding:0; justify-content:center; position:relative; }
+    .search-ico { margin-right:0; width:14px; height:14px; }
+    .search-input {
+      position:absolute; inset:0; width:100%; height:100%;
+      font-size:16px; min-width:0; opacity:0; padding:0; cursor:pointer;
+    }
+    .search-box:focus-within {
+      width:auto; padding:0 8px 0 9px; justify-content:flex-start;
+    }
+    .search-box:focus-within .search-ico { margin-right:6px; }
+    .search-box:focus-within .search-input {
+      position:static; width:96px; height:100%; opacity:1; cursor:text;
+    }
 
-    /* STATS: 紧凑 pill，横向换行，几乎不占纵向高度 */
-    .stats { gap:7px; }
-    .stat { padding:4px 11px; font-size:12.5px; }
-    .stat .num { font-size:13.5px; }
-    .stat.total .num { font-size:14px; }
-
-    /* NAV: 单行横向滑动，不换行，避免遮挡锚点 */
+    /* NAV / grouping: thin sticky chip strip, selected chip filled */
+    .nav {
+      padding:5px max(10px, env(safe-area-inset-right)) 5px max(10px, env(safe-area-inset-left));
+    }
     .nav-inner, .nav-inner-old {
-      flex-wrap:nowrap; overflow-x:auto; gap:7px; padding-bottom:3px;
+      flex-wrap:nowrap; overflow-x:auto; gap:5px; padding-bottom:1px;
       -webkit-overflow-scrolling:touch; scrollbar-width:none;
     }
     .nav-inner::-webkit-scrollbar, .nav-inner-old::-webkit-scrollbar { display:none; }
-    .nav-link { flex:0 0 auto; font-size:13px; padding:6px 12px; white-space:nowrap; }
+    .nav-link {
+      flex:0 0 auto; font-size:12px; padding:4px 9px; white-space:nowrap; gap:4px;
+    }
+    .nav-count { font-size:10.5px; padding:0 5px; }
+    .nav-link .dot { width:6px; height:6px; }
 
-    /* SECTIONS */
-    .wrap { padding-top:22px; }
-    .section { margin-bottom:26px; scroll-margin-top:56px; }
-    .group-divider { margin:4px 0 18px; }
-    .section-head { gap:9px; margin-bottom:15px; padding-bottom:8px; }
-    .section-head h2 { font-size:19px; }
-    .section-head .bar { height:21px; }
+    /* SECTIONS: less chrome above the first card */
+    .wrap { padding-top:10px; padding-bottom:6px; }
+    .section { margin-bottom:16px; scroll-margin-top:40px; }
+    .tab-panel { margin-bottom:14px; }
+    .group-divider { margin:2px 0 10px; }
+    .section-head { gap:8px; margin-bottom:8px; padding-bottom:5px; }
+    .section-head h2 { font-size:16px; }
+    .section-head .bar { height:16px; }
+    .panel-head { gap:7px; margin:0 0 8px; }
+    .panel-head h3 { font-size:15px; }
+    .panel-head .cnt { font-size:12px; }
+    .nml-sub { display:none; }
+    /* grouping chip already names the filter — skip repeating the heading */
+    #content > .tab-panel:not([data-cat="__all__"]) .panel-head,
+    #content-old > .tab-panel:not([data-cat="__all__"]) .panel-head { display:none; }
 
     /* CARDS (wall): 窄屏保持 2 列緊湊, 超窄 1 列 */
     .card.wall h3 { font-size:14.5px; }
@@ -382,8 +424,10 @@
 
   /* 超窄屏（≤380px）进一步收紧 */
   @media (max-width:380px) {
-    .hero { padding-top:22px; }
-    .hero h1 { font-size:22px; }
+    .hero h1[data-short]::after { font-size:14px; }
+    .tab { padding:4px 7px; font-size:11.5px; }
+    .tab[data-view="old"] .tcount { display:none; }
+    .nav-link { padding:4px 8px; font-size:11.5px; }
     .card .idx { font-size:12.5px; padding:3px 9px; }
     .card h3 { font-size:16px; }
   }
@@ -398,7 +442,7 @@
     <span class="kicker">AI HOT 晨報</span>
   </div>
   <div class="hero-inner">
-    <h1 id="hero-date">AI 日報</h1>
+    <h1 id="hero-date" data-short="AI 日報">AI 日報</h1>
     <div class="tabs" id="tabs">
       <button class="tab on" data-view="current" type="button">最新 <span class="tcount" id="tab-cur">0</span></button>
       <button class="tab" data-view="old" type="button">舊聞 <span class="tcount" id="tab-old">0</span></button>
@@ -452,6 +496,7 @@ const LINK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 
 // Hero (date only — kicker already names the report, avoids duplicated "日报")
 document.getElementById('hero-date').textContent = DATA.reportHuman;
+document.getElementById('hero-date').setAttribute('data-short', DATA.cardDate || DATA.reportHuman);
 document.getElementById('hero-sub').textContent = '收录区间：' + DATA.windowHuman;
 
 const statsEl = document.getElementById('hero-stats');
