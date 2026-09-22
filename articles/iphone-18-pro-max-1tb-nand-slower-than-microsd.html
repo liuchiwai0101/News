@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>高負載下 iPhone 18 Pro Max 1TB 版　NAND 寫入速度比入門 microSD 更慢</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>高負載下 iPhone 18 Pro Max 1TB 版　NAND 寫入速度比入門 microSD 更慢</h1>
+<div class="notice">內容機器翻譯自第三方媒體（NewMobileLife 流動日報），僅供參考，以原文為準。</div><p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/09/iphone18promax.webp" alt=""></p><p>Bilibili 頻道 <a href="https://www.bilibili.com/video/BV1Yteq6EESv/?buvid=XUCE34BCA7B30620AE103D64F253BA17C01D1" target="_blank" rel="noopener noreferrer">HOMOLAB </a>對 1TB 版本的 iPhone 18 Pro Max 進行實測儲存基準測試，結果顯示在持續重載、且儲存空間接近填滿的情況下，其快閃記憶體寫入速度會大幅下降，甚至比多款入門 microSD 卡更慢。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/09/iphone18promax-compare-1024x558.webp" alt="iphone18promax compare"><h3>QLC 與 TLC 儲存差異</h3><p>現時大部分手機採用 TLC（triple-level cell）快閃記憶體，每個記憶體單元儲存 3 bit 資料；在 3D NAND 引入後，TLC 在速度、容量與耐久度之間取得良好平衡。1TB 的 iPhone 18 Pro Max 則改用 QLC（quad-level cell）儲存，每個單元塞入 4 bit 資料，可在同一塊晶片上換取更大容量，但每個單元需分辨更多狀態，通常令 QLC 比 TLC 更慢且耐久度較低。</p><p>HOMOLAB 以 512GB、採用 TLC 的 iPhone 18 Pro 直接對比，加權 4K 讀取測試中兩者接近：QLC 版本得 46,045，TLC 版本得 51,282。在混合讀寫工作負載下差距擴大，低佇列深度時 TLC 型號領先約 38%（11,285 對 8,168），在更重載、要求更高的情況下差距收窄至約 12%（35,992 對 32,219）。</p><h3>三層緩衝與寫入速度變化</h3><p>與多數現代手機一樣，iPhone 18 Pro Max 使用一小塊快速 SLC（single-level cell）緩存吸收突發數據，在緩存仍有空間時速度可超過 3,000 MB/s。緩存耗盡後，手機會回落至一層模擬 TLC 行為的次級緩衝，速度仍比原生 QLC 快，平均 578 MB/s，但波動明顯。只有當次級緩衝同樣耗盡，手機才會直接寫入原生 QLC 儲存，HOMOLAB 測得持續寫入速度平均跌至 79.4 MB/s，最低更只有 25.6 MB/s，比不少入門 microSD 卡更差。</p><p>隨着儲存空間填滿，情況進一步惡化。當容量使用率達 60%，可用空間減少令快速緩存可用範圍縮小，SLC 緩存由空機時約 250GB 急跌至僅 58GB。模擬 TLC 的次級緩衝亦放慢，平均 396 MB/s，相較空機時的 578 MB/s明顯下降；原生 QLC 直寫階段平均進一步跌至 45 MB/s，最低只有 1.1 MB/s，遠遠落後其他旗艦手機同類高負載下使用的 TLC UFS 4.0 儲存。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/09/result2.webp" alt="result2"><img src="https://www.newmobilelife.com/wp-content/uploads/2026/09/result1.webp" alt="result1"><h3>售價與實際使用影響</h3><p>在定價方面，1TB 版本的儲存加價幅度屬業內最高之一，但其使用的儲存類型通常被視為比低容量配置所用的儲存更次一等。</p><p>對於日常大部分操作，例如傳訊息、瀏覽網頁及隨手拍照，用户未必會察覺差異，因為緩存足以應付典型突發寫入。但當涉及持續重載寫入，例如長時間錄製 4K 或 ProRes 影片、大量檔案傳輸或備份還原，問題便會真正浮現，而這些正是購買大容量版本的用户最可能遇到的使用場景。</p>
+<p><a href="https://www.newmobilelife.com/2026/09/22/iphone-18-pro-max-1tb-nand-slower-than-microsd/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
