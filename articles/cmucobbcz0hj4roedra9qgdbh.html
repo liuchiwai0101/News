@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenRouter 推出 Batch API，批量推理可享半價</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>OpenRouter 推出 Batch API，批量推理可享半價</h1>
+<div class="notice">內容機器翻譯自第三方媒體（OpenRouter），僅供參考，以原文為準。</div><p><img src="https://openrouter.ai/blog/images/batch-api.png" alt=""></p><h3>AI 導讀</h3><p>OpenRouter 發佈 Batch API，異步批量請求由供應商在 24 小時窗口內完成，通常按正常 per-token 價格的 50% 或更低收費，目前已支持 70 多個模型。</p><h3>推薦理由</h3><p>公告給出折扣幅度、70+ 模型覆蓋和 beta 期 230k+ 批次的實測完成時間，還提示了提交時段對速度的影響。</p><h3>正文</h3><p>對於大批量的工作或無需立即完成的請求，你現在可以使用新的 <a href="https://openrouter.ai/docs/batch-quickstart" target="_blank" rel="noopener noreferrer">batch API</a>。提交批次時，提供商可以在 24 小時窗口內自行選擇完成請求的時間，作為交換，他們通常收取正常每 token 價格的 50%（有時更低）。</p><p>它目前已在 <a href="https://openrouter.ai/models?variant=batch" target="_blank" rel="noopener noreferrer">超過 70 個模型</a>上可用。請在 <a href="https://openrouter.ai/docs/batch-quickstart" target="_blank" rel="noopener noreferrer">Batch API 文檔</a>中瞭解如何使用它。</p><p>在實踐中，我們觀察到你很少需要等待接近 24 小時。在我們為期兩週的 beta 期間完成的 230k+ 個批次中，中位數在 7 分鐘內完成，90% 在一小時內完成。</p><p>Batch 是一種異步 API，適用於你可以接受高度可變響應時間的工作負載，例如為語料庫打標籤、回填嵌入向量、為評測集打分、彙總積壓的工單，或在夜間對幾千行數據運行相同的提示詞。</p><h3>Batch API 的工作原理</h3><p>調用 <code>api/v1/batches</code>，傳入你的請求列表，並指定要使用的端點形態。Chat completions、responses、messages 和 embeddings 均受支持。例如：</p><pre><code>curl https://openrouter.ai/api/v1/batches \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;Authorization: Bearer $OPENROUTER_API_KEY&quot; \
+  -d &#x27;{
+  &quot;endpoint&quot;: &quot;/v1/chat/completions&quot;,
+  &quot;model&quot;: &quot;google/gemini-3.8-flash&quot;,
+  &quot;requests&quot;: [
+    { &quot;custom_id&quot;: &quot;ticket-0001&quot;, &quot;body&quot;: { &quot;messages&quot;: [{ &quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Summarize this ticket in one sentence.&quot; }] } },
+    { &quot;custom_id&quot;: &quot;ticket-0002&quot;, &quot;body&quot;: { &quot;messages&quot;: [{ &quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Summarize this ticket in one sentence.&quot; }] } }
+  ]
+}&#x27;</code></pre><p>發出請求後，開始輪詢 <code>GET /api/v1/batches/:id</code>，直到狀態為 <code>completed</code>、<code>failed</code>、<code>expired</code> 或 <code>cancelled</code>。已完成的批次會在同一響應中內聯返回其結果。</p><h3>大多數批次幾分鐘內即可完成</h3><p>我們查看了兩週測試期內完成的批次，並測量了從接受到返回結果的時間。中位數為 7 分鐘，第 90 百分位為 1.0 小時，第 99 百分位為 10.3 小時。我們還發現，提交的時間點比發送的請求數量影響更大。</p><p>在太平洋時間凌晨 5 點到中午之間提交的批次，明顯比其他時段更慢。最慢的十分之一需要 2 到 4.5 小時。在其他任何時段提交，第 90 百分位都會降到 1.1 小時以下，而在太平洋時間下午 6 點之後則低於 50 分鐘。</p><p>單個請求的批次根據時段不同，完成時間為 5 到 11 分鐘，而包含 1,000 個或更多請求的批次完成時間為 12 到 21 分鐘。大批次處理確實需要更長時間。在太平洋時間午夜到中午之間提交的、請求數超過 100 的批次中，最慢的十分之一耗時長達 6.8 小時。</p><h3>批次支持哪些功能</h3><ul><li>請求形態：你已發送給 OpenRouter 的任何文本請求體形態都將得到支持，包括 chat completions、responses、messages 和 embeddings。</li><li>路由：每個批次在單一提供商上執行。默認情況下，在應用你的提供商允許列表、數據政策和 BYOK 設置之後，我們會為該模型選擇最便宜的批次端點。</li><li>BYOK：配置了<a href="https://openrouter.ai/docs/guides/overview/auth/byok" target="_blank" rel="noopener noreferrer">提供商密鑰</a>後，在支持該功能的提供商上的批處理會通過你的密鑰路由，你只需支付 BYOK 費用。</li><li>逐請求結果：每個結果獨立返回，因此少數幾行出錯絕不會導致整個任務失敗。</li><li>保留期限：輸入和結果會保留 30 天，或直到你<code>DELETE</code>該批次。</li><li>日誌記錄：每個批次都會顯示在<a href="https://openrouter.ai/logs" target="_blank" rel="noopener noreferrer">日誌的 Batches 標籤頁</a>中，包含模型、提供商、狀態和費用。</li><li>定價：折扣適用於按 token 計費的價格，並因模型而異。網絡搜索調用按標準費率計費。</li><li>輸入：圖像和文件必須是公開 URL。音頻、視頻以及 OpenRouter 自有的網絡搜索插件在批處理中不可用（參見<a href="https://openrouter.ai/docs/batch-quickstart#limitations" target="_blank" rel="noopener noreferrer">文檔中的限制部分</a>）。</li></ul><p>選擇一個<a href="https://openrouter.ai/models?variant=batch" target="_blank" rel="noopener noreferrer">支持批處理的模型</a>，獲取一個<a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">API 密鑰</a>，然後將你的第一個批次提交到<code>https://openrouter.ai/api/v1/batches</code>。<a href="https://openrouter.ai/docs/batch-quickstart" target="_blank" rel="noopener noreferrer">快速入門</a>中有完整的請求和響應結構。</p><p>在 Discord 的<a href="https://discord.gg/fVyRaUDgxW" target="_blank" rel="noopener noreferrer">#feedback</a>中告訴我們你在批處理什麼。</p><p><a href="https://openrouter.ai/blog/announcements/batch-api" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://openrouter.ai/blog/announcements/batch-api" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

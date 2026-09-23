@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenAI 為 GPT-6 推出改進的提示詞緩存系統與診斷工具</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>OpenAI 為 GPT-6 推出改進的提示詞緩存系統與診斷工具</h1>
+<div class="notice">內容機器翻譯自第三方媒體（OpenAI），僅供參考，以原文為準。</div><p><img src="https://live.staticflickr.com/5720/21667172841_c459656c59_b.jpg" alt=""></p><h3>AI 導讀</h3><p>OpenAI 為 GPT-6 系列推出改進的提示詞緩存系統，默認提高緩存命中率，對 30 分鐘窗口內複用的合格共享前綴提供最高 90% 的緩存輸入 token 折扣。</p><h3>推薦理由</h3><p>原文給出緩存命中率、30 分鐘窗口折扣上限和新監控診斷工具，讀者可以據此優化長期運行智能體的成本和延遲。</p><h3>正文</h3><p>更高的緩存命中率，以及幫助持久化智能體運行更快、成本更低的新工具。</p><p>GPT‑6 讓持久化智能體能夠連續數小時處理複雜任務，從重構代碼庫到產出經過充分調研的文檔和演示文稿。支撐這些智能體的應用會發起一系列相互依賴的 API 請求，往往會沿用早前輪次中的相同指令、工具定義和上下文。OpenAI 會緩存這些共享上下文，以便在多個請求之間複用計算，從而縮短響應時間，併為開發者提供最高 90% 的緩存輸入 token 折扣。</p><p>藉助 GPT‑6 系列，我們推出了改進的提示詞緩存系統，默認即可實現更高的緩存命中率。我們現在對在 30 分鐘窗口內複用的符合條件的共享前綴提供緩存摺扣。我們還推出了新工具，幫助開發者監控緩存性能、診斷未命中情況，並選擇要緩存提示詞的多少部分。</p><a href="https://openai.com/index/better-prompt-caching-for-gpt-6" target="_blank" rel="noopener noreferrer">媒體內容 · 前往原文查看</a><blockquote>“OpenAI 的提示詞緩存在幫助 GitHub Copilot 大規模提供快速、高效體驗方面發揮着關鍵作用。在過去幾個月裏，相對於此前的基線，我們在向 OpenAI 模型發起的數十億次請求中，將需要全新處理的提示詞 token 佔比降低了 50% 以上。其結果是更高效的推理棧，以及開發者獲得首次響應的時間更快。”</blockquote>——Mario Rodriguez，首席產品官 <h3>監控緩存並診斷緩存未命中</h3><p>全新的 <a href="https://platform.openai.com/usage?usage_section=prompt-caching" target="_blank" rel="noopener noreferrer">提示詞緩存儀表盤⁠</a> 可展示你的應用輸入中有多少來自緩存。你可以追蹤一段時間內的命中率，並使用輸入構成圖表來對比已緩存和未緩存的 token。這些視圖有助於你發現緩存命中的下降，並評估應用改動對緩存性能的影響。</p><p>當你遇到意外的緩存未命中時，可使用 <a href="https://developers.openai.com/api/docs/guides/prompt-caching/diagnostics" target="_blank" rel="noopener noreferrer">提示詞緩存診斷工具⁠</a> 來了解發生了什麼。將某個請求與近期的響應進行對比，以識別導致無法複用緩存的模型、工具、設置或輸入變化。受影響的 token 估算數量可幫助你評估影響規模，並決定如何優化你的集成以最大化緩存命中率。</p><pre><code>{
+  &quot;prompt_cache_diagnostics&quot;: {
+    &quot;type&quot;: &quot;cache_miss&quot;,
+    &quot;reason&quot;: &quot;tools_changed&quot;,
+    &quot;comparison_reusable_tokens&quot;: 5629,
+    &quot;cache_missed_tokens&quot;: 5629
+  }
+}
+</code></pre><h3>為你的應用優化緩存</h3><p><b>選擇要緩存的內容。</b> 顯式緩存斷點讓你可以選擇要複用哪些提示詞前綴。更新後的 <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener noreferrer">提示詞緩存指南⁠</a> 解釋瞭如何使用它們、緩存前綴保持有效的時間，以及工具和輸入的變化如何影響複用。</p><p><b>調整推理強度而不破壞緩存。</b> 在 GPT‑6 模型上，你現在可以在多次響應之間 <a href="https://developers.openai.com/api/docs/guides/reasoning?api-mode=responses#change-reasoning-mid-conversation" target="_blank" rel="noopener noreferrer">更改推理強度⁠</a> 而不破壞緩存。對於更難的任務可以提高強度，對於常規的後續跟進可以降低強度，只需追加一個 <code>configuration_update</code>，同時保持請求級別的推理強度不變。這讓你可以調整任務所需的推理量，同時保留可複用的上下文。</p><p><b>在工具和指令發生變化時保留緩存。</b>當你的智能體的工具使用需求發生變化時，保持工具定義、schema 和順序穩定，以便較早的上下文保持可複用。使用 <code>allowed_tools</code> 讓只有相關的工具可被調用，或者在不需要工具時將 tool_choice 設為 none，而不是移除定義。使用新的 developer 消息在上下文末尾追加新指令，以覆蓋較早的指令。參見我們的<a href="https://developers.openai.com/api/docs/guides/prompt-caching#manage-tools-with-append-only-updates" target="_blank" rel="noopener noreferrer">關於管理工具變更的指南⁠</a>。</p><p><b>預熱緩存以降低延遲。</b><a href="https://developers.openai.com/api/docs/guides/prompt-caching#prewarm-the-cache" target="_blank" rel="noopener noreferrer">預熱⁠</a>會提前準備好已知上下文，這樣當請求到達時，模型可以更快開始響應。例如，應用可以在啓動期間預熱共享指令、工具定義或參考資料，在用户提出第一個問題之前完成。這樣就把處理過程移出了用户的等待時間。</p><p>這些可選控制項建立在引擎的默認性能之上，幫助你根據自身工作負載定製緩存。</p><a href="https://openai.com/index/better-prompt-caching-for-gpt-6" target="_blank" rel="noopener noreferrer">媒體內容 · 前往原文查看</a><blockquote>“OpenAI 的提示詞緩存診斷和儀表盤幫助我們將緩存命中率提高了幾個百分點，成本降低了 20%。現在當緩存意外失效時我們會收到告警，並使用 Codex 智能體來診斷根本原因。顯式斷點還讓我們能夠緩存穩定的上下文，同時將頻繁變化的內容保留在提示詞末尾。這使得為後台任務分叉對話、同時複用幾乎全部共享上下文在經濟上變得可行。”</blockquote>—Arian Hanifi，首席技術官 <ul><li><p>在<a href="https://platform.openai.com/usage?usage_section=prompt-caching" target="_blank" rel="noopener noreferrer">提示詞緩存儀表盤⁠</a>中監控緩存命中率。</p></li><li><p>使用<a href="https://developers.openai.com/api/docs/guides/prompt-caching/diagnostics" target="_blank" rel="noopener noreferrer">診斷工具⁠</a>排查意外未命中。</p></li><li><p>按照<a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noopener noreferrer">提示詞緩存指南⁠</a>改進你的配置，或者<a href="https://developers.openai.com/api/docs/guides/prompt-caching#how-to-optimize-prompt-caching" target="_blank" rel="noopener noreferrer">使用 Codex⁠</a>來審查代碼、應用改進並衡量結果。</p></li></ul><p><a href="https://openai.com/index/better-prompt-caching-for-gpt-6" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://openai.com/index/better-prompt-caching-for-gpt-6" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
