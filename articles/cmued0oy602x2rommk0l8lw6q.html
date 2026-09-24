@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Antigravity SDK 支持本地模型，可完全離線運行智能體</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Antigravity SDK 支持本地模型，可完全離線運行智能體</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Google Developers Blog），僅供參考，以原文為準。</div><p><img src="https://storage.googleapis.com/gweb-developer-goog-blog-assets/images/Gemini_Generated_Image_y76nsky76n.2e16d0ba.fill-1200x600.jpg" alt=""></p><h3>AI 導讀</h3><p>Google 宣佈 Antigravity SDK 支持本地模型工作流，首發通過 Google AI Edge 的 LiteRT 支持 Gemma 4 26B A4B，可完全離線運行智能體，建議機器配備 &gt;24GB VRAM 或統一內存。</p><h3>推薦理由</h3><p>官方發佈了本地模型支持與混合編排示例，給出代碼、硬件要求和具體 token 數據，開發者可評估離線智能體工作流的可行性。</p><h3>正文</h3><p>今天，我們宣佈<a href="https://antigravity.google/product/antigravity-sdk/" target="_blank" rel="noopener noreferrer">Antigravity SDK</a>支持跨多種本地模型和執行選項的本地工作流，並初步支持<a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank" rel="noopener noreferrer">Gemma 4 26B A4B</a>使用<a href="https://developers.google.com/edge" target="_blank" rel="noopener noreferrer">Google AI Edge</a>的<a href="https://developers.google.com/edge/litert" target="_blank" rel="noopener noreferrer">LiteRT</a>.<br></p><p>Antigravity SDK 讓開發者能夠利用驅動 <a href="https://antigravity.google/" target="_blank" rel="noopener noreferrer">Google Antigravity</a> 的同一套智能體能力進行構建。藉助這項新支持，你可以完全離線地通過本地模型啓用智能體輔助。我們已針對 LiteRT 和 Gemma 4 26B 優化了這一工作流，高效利用本地 GPU 和 RAM，從而進一步放大你本地機器所能提供的性能！</p><h3><b>為什麼要本地運行智能體？</b></h3><p>本地模型執行能為智能體體驗帶來多項優勢：</p><ul><li><b>成本效益：</b>無需 API 費用或速率限制即可執行本地智能體工作流。</li><li><b>隱私性：</b>將你的代碼和請求完全保留在本地機器上，非常適合需要應對嚴格數據隱私要求或受合規限制的企業環境的開發者。</li><li><b>離線韌性：</b>即使在沒有穩定或持續互聯網連接的環境中，也能無縫執行你的智能體工作流。</li><li><b>混合工作流：</b>將 token 高效的本地流程與雲端流程相結合，在需要時仍可訪問更大、更強大的模型，從而最大化效率。</li></ul><p>以下是如何開始：（<b>我們建議使用顯存或統一內存大於 24GB 的機器）。</b></p><h3><b>創建虛擬環境：</b></h3><pre><code>python3 -m venv .venv
+source .venv/bin/activate</code></pre><h3><b>安裝 Antigravity SDK 和 LiteRT-LM，並下載 Gemma 4 26B A4B：</b></h3><pre><code>pip install google-antigravity litert-lm
+
+litert-lm import \
+  --from-huggingface-repo=litert-community/gemma-4-26B-A4B-it-litert-lm \
+  gemma-4-26B-A4B-it-gpu.litertlm \
+  gemma4-26b</code></pre><p><b>在你的目錄中，創建一個文件</b>，命名為 <code>agy_sample.py</code>。將以下內容粘貼進去。</p><pre><code>import asyncio
+import os
+from google.antigravity import Agent, LiteRTAgentConfig
+from google.antigravity.hooks import policy
+
+# UPDATE: Point to the locally downloaded model from the previous step (litert-lm import ...)
+MODEL_PATH = os.path.expanduser(&quot;~/.litert-lm/models/gemma4-26b/model.litertlm&quot;)
+
+async def main():
+   print(f&quot;Using local LiteRT model: {MODEL_PATH}. Please wait for local inference to complete. This could take several minutes.&quot;)
+
+   config = LiteRTAgentConfig(model_path=MODEL_PATH).lightweight()
+   async with Agent(config) as agent:
+      response = await agent.chat(&quot;What files are in the current directory?&quot;)
+      async for token in response:
+         print(token, end=&quot;&quot;, flush=True)
+
+if __name__ == &quot;__main__&quot;:
+   asyncio.run(main())</code></pre><h3><b>混合編排：雲端架構師遇上端側工作大軍</b></h3><p>在許多情況下，我們發現架構師-構建者模式是將雲端模型規模與本地模型優勢相結合的絕佳方式。在下方使用更新版 Antigravity SDK 構建的混合演示視頻中，一位雲端架構師（Gemini 3.8 Flash）擔任規劃者和指揮者，而由 Gemma 4 26B 實例組成的本地集群則完全在端側承擔繁重的工作。</p><p>當任務是對三個存在漏洞的模塊（auth.py、billing.py 和 database.py）進行審計和修補時，該工作流保持了嚴格的數據隱私，並讓我們能夠最大限度地利用 token：</p><ul><li><b>未上傳任何代碼：</b> Gemini 3.8 Flash 僅根據文件名和任務描述來規劃策略並拆解工作——僅消耗 95 個雲端 token，且任何源代碼都從未離開本機。</li><li><b>自主本地挑戰流程：</b> 本地 Gemma 4 26B 模型接管本地 GPU，執行對抗性審計循環：復現安全漏洞、編寫候選修復、評審補丁，並針對迴歸測試套件進行驗證。</li><li><b>成本與隱私的巨大收益：</b> 在本次記錄的運行中，97.2% 的 token（3,322 個 token）在本地離線運行，未調用任何雲端 API，在交付完全驗證通過的綠色補丁的同時，將專有代碼完全安全地保留在設備本地。</li></ul><p>查看<a href="https://goo.gle/47cKYyV" target="_blank" rel="noopener noreferrer">此處</a>的示例項目，運行內置的 3 文件挑戰流程，或將其指向你自己的 Python 模塊和測試套件。</p><a href="https://developers.googleblog.com/introducing-support-for-local-ai-models-in-the-antigravity-sdk/" target="_blank" rel="noopener noreferrer"></a><a href="https://developers.googleblog.com/introducing-support-for-local-ai-models-in-the-antigravity-sdk/" target="_blank" rel="noopener noreferrer">視頻 · 前往原文觀看</a><h3><b>零 token 本地實用工具：CLI 資源監控器</b></h3><p>搭載 Gemma 4 26B A4B 的 Antigravity SDK 在<b>構建</b>實用系統工具方面表現出色。在這個示例中，該智能體構建了一個在終端中運行的實時更新資源監視器。只需一條提示詞，智能體就會自主編寫一個使用 <b>psutil</b> 和 <b>rich</b> 庫來跟蹤 CPU 和內存使用情況的 Python 腳本，生成所需的 <b>requirements.txt</b> 文件，甚至還會測試生成的代碼以確保其正常工作——這一切都完全在你的本地機器上運行，並使用 Gemma 4 26B。</p><a href="https://developers.googleblog.com/introducing-support-for-local-ai-models-in-the-antigravity-sdk/" target="_blank" rel="noopener noreferrer"></a><a href="https://developers.googleblog.com/introducing-support-for-local-ai-models-in-the-antigravity-sdk/" target="_blank" rel="noopener noreferrer">視頻 · 前往原文觀看</a><p>一個使用 Gemma 4 26B 在設備端生成的基於 Python 的 CLI 資源監視器工具</p><p><code>## cli_resource_monitor.py</code></p><pre><code>import asyncio
+import os
+from google.antigravity import Agent, LiteRTAgentConfig
+from google.antigravity.hooks import policy
+
+# UPDATE: Your prompt
+PROMPT = &quot;Build a command-line interface tool using the psutil and rich libraries that displays a live-updating terminal dashboard. It should show CPU usage, memory consumption, and a sorted table of the top 5 most memory-intensive processes. Save the script as &#x27;monitor.py&#x27; and create a &#x27;requirements.txt&#x27; file. Test that it works.&quot;
+
+# UPDATE: Point to the locally imported LiteRT-LM model path
+MODEL_PATH = os.path.expanduser(&quot;~/.litert-lm/models/gemma4-26b/model.litertlm&quot;)
+
+# UPDATE: Give AGY-SDK a workspace to write files
+WORKING_DIR = os.path.expanduser(&quot;~/agy-test&quot;)
+
+os.makedirs(WORKING_DIR, exist_ok=True)
+os.chdir(WORKING_DIR)
+
+async def main():
+  print(f&quot;Using local LiteRT model: {MODEL_PATH}. Please wait for local inference to complete. This could take several minutes.&quot;)
+
+  config = LiteRTAgentConfig(
+     model_path=MODEL_PATH,
+     workspaces=[WORKING_DIR],
+     policies=[policy.allow_all()],
+  ).lightweight()
+
+  async with Agent(config) as agent:
+     response = await agent.chat(PROMPT)
+     async for token in response:
+        print(token, end=&quot;&quot;, flush=True)
+
+if __name__ == &quot;__main__&quot;:
+  asyncio.run(main())</code></pre><p>Antigravity SDK 還通過 <code>LocalOpenAIAgentConfig</code> 為任何兼容 OpenAI 的服務器（如 Ollama、LM Studio 或 vLLM）提供無縫的即插即用支持。這讓你能夠靈活地試驗不同的本地推理後端，同時保持你的智能體編排、工具和工作流完全不變。</p><p>查看 <a href="https://github.com/google-antigravity/antigravity-sdk-python#local-ai-models" target="_blank" rel="noopener noreferrer">Antigravity Python SDK README</a> 中的説明即可開始使用本地 AI，並通過 <a href="https://developers.google.com/edge/litert-lm/overview" target="_blank" rel="noopener noreferrer">LiteRT</a> 瞭解更多關於如何在邊緣高效運行模型的信息。請在 Antigravity Python SDK <a href="https://github.com/google-antigravity/antigravity-sdk-python/issues" target="_blank" rel="noopener noreferrer">GitHub Issue Tracker.</a> 上分享你的反饋和功能請求。我們期待看到你構建的作品！</p><p>致謝：Abhi Patel、Ander Dobo、Ben Miles、Cormac Brick、Ian Ballantyne、Jingxiao Zheng、Jonathan Reay、Kimish Patel、Lu Wang、Marissa Ikonomidis、Matthias Grundmann、Olivier Lacombe、Omar Sanseviero、Rishika Sinha、Rody Davis、Taylor Mullen、Tyler Mullen、Wai Hon Law、Xiaoming Hu、Xu Chen、Yu-hui Chen</p><p><a href="https://developers.googleblog.com/introducing-support-for-local-ai-models-in-the-antigravity-sdk" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://developers.googleblog.com/introducing-support-for-local-ai-models-in-the-antigravity-sdk" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

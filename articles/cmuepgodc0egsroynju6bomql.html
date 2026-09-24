@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cursor 發佈 Rollouts 和 Security Reviewer 開發機器人</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Cursor 發佈 Rollouts 和 Security Reviewer 開發機器人</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Cursor Blog），僅供參考，以原文為準。</div><p><img src="https://ptht05hbb1ssoooe.public.blob.vercel-storage.com/assets/blog/og/blog-two-new-bots-shipping-code-safely-2-20260922-174024-i8g6Hb7oURmLsgTMAH2l8rBjyBEJ4N.png" alt=""></p><h3>AI 導讀</h3><p>Cursor 發佈兩款軟件開發機器人 Rollouts 和 Security Reviewer，幫助團隊更快把安全可靠的代碼送入生產環境。</p><h3>推薦理由</h3><p>原文説明了兩款機器人的工作機制和可配置動作，讀者可以據此評估是否接入自己的部署與安全流程。</p><h3>正文</h3><p>今天我們發佈軟件開發機器人，幫助你更快地將安全、可靠的代碼投入生產。</p><ul><li><strong>Rollouts</strong> 會跟蹤一項變更從 PR 到生產環境的全過程，標記迴歸問題，並採取行動恢復健康狀態。</li><li><strong>Security Reviewer</strong> 會發現並修復你代碼庫中的安全問題。</li></ul><h3>我們為什麼構建這些</h3><p>編寫代碼不再是慢的那一環。沒有加速的是 PR 提交之後的一切：確保代碼安全、盯住部署、判斷延遲上升是否屬實、弄清楚十一個變更中究竟是哪一個弄壞了結賬流程。</p><p>這類工作既困難又重複，還需要大量上下文。聽起來正是機器人應該乾的活！</p><p>我們説過，我們正在朝着自動駕駛式代碼庫的方向構建。Rollouts 和 Security Review 自主處理每個軟件團隊都希望自己擁有更多專業知識和時間去做的常見任務。</p><h3>Rollouts</h3><p>Rollouts 會跟蹤一項變更，從 PR 打開的那一刻，一直到你確信它在生產環境中正常工作為止。</p><p>連接源代碼管理、你的部署系統和你的遙測工具（Datadog、Grafana、Honeycomb，或者你的指標和追蹤數據所在的任何地方）。在合併之前，Rollouts 會讀取 diff 並撰寫一份監控計劃：它識別到的風險、該變更預期產生的影響，以及你的埋點無法告訴你它是否奏效的地方。如果計劃遺漏了什麼，你可以編輯它。</p><p>部署之後，Rollouts 會將計劃中的信號與部署前的基線進行對比。當它發現迴歸時，會告訴你它懷疑是哪項變更，以及它計劃採取什麼措施。取決於你的配置方式，這可能是一條發給作者的提醒、一次暫停的漸進式發佈，或者一個等待審批的回滾 PR。</p><p>它目前擅長做三件事：</p><ul><li>它能在全局告警觸發之前，捕獲侷限於某一區域某個端點的迴歸</li><li>它能區分預期影響與迴歸，因此有意的峯值不會觸發任何人的告警</li><li>它會在合併前標記出缺失的埋點，而這正是糟糕變更被忽視的最常見原因</li></ul><p>即將推出：功能開關集成，讓 Rollouts 能夠直接增減流量，以及對發佈列車和部署凍結的感知。</p><h3>安全審查器</h3><p>安全審查器會在每個 PR 上運行，結合整個代碼庫的上下文來閲讀變更，並報告漏洞，附帶解釋和擬議的修復方案。</p><p>靜態分析靠模式匹配：它會把 SQL 調用附近的每一處字符串拼接都標記出來，卻漏掉了那次重構之後就不再運行的授權檢查。Security Review 像安全工程師那樣閲讀代碼：用户輸入從哪裏進入，最終到哪裏去，途中經過了哪些環節。</p><p>開箱即用，它會查找：</p><ul><li>跨 SQL、命令、模板和 LDAP 層面的注入</li><li>新增和變更路由上缺失或失效的身份認證與授權</li><li>提交到源碼中的密鑰和憑據</li><li>不安全的反序列化和未經驗證的重定向</li><li>引入已知漏洞的依賴變更</li><li>基礎設施和配置中的不安全默認設置</li></ul><p>每一條發現都包含嚴重程度、攻擊路徑和一鍵修復。</p><p>Rollouts 和 Security Reviewer 現已在 Teams 和 Enterprise 套餐中提供。在 <a href="https://cursor.com/automations" target="_blank" rel="noopener noreferrer">automations</a> 標籤頁中啓用任一機器人即可開始使用。</p><p><a href="https://cursor.com/blog/rollouts-and-security-reviewer" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://cursor.com/blog/rollouts-and-security-reviewer" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
