@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>vLLM 新增基於 Gumbel-max 的無失真文本水印功能</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>vLLM 新增基於 Gumbel-max 的無失真文本水印功能</h1>
+<div class="notice">內容機器翻譯自第三方媒體（vLLM 官方博客），僅供參考，以原文為準。</div><p><img src="https://vllm.ai/blog-assets/figures/2026-09-24-watermarking-in-vllm/gumbel-max-sampling.png" alt=""></p><h3>AI 導讀</h3><p>vLLM 宣佈支持基於 Gumbel-max 算法的無失真水印，將其集成進 Model Runner v2 的採樣管線，並通過 PR #54053、#56122、#56233 實現融合 GPU kernel、雙鍵方案和上下文去重，以兼容投機解碼並保持輸出多樣性。</p><h3>推薦理由</h3><p>原文給出水印算法原理、雙鍵與去重方案及實測吞吐數據，讀者可評估在生產環境啓用水印的可行性與代價。</p><p><a href="https://vllm.ai/blog/2026-09-24-watermarking-in-vllm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://vllm.ai/blog/2026-09-24-watermarking-in-vllm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
