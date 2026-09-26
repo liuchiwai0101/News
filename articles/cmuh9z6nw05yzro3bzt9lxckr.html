@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude 開放插件目錄提交門户，Plugins 成為第三方擴展的主要方式</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Claude 開放插件目錄提交門户，Plugins 成為第三方擴展的主要方式</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Anthropic），僅供參考，以原文為準。</div><p><img src="https://cdn.prod.website-files.com/68a44d4040f98a4adf2207b6/69051360369f8c1bb58fc2fe_og_build-artifacts.jpg" alt=""></p><h3>AI 導讀</h3><p>Anthropic 宣佈 Plugins 是為 Claude 構建第三方擴展的主要方式，插件可打包 MCP 連接器、Agent Skills 或兩者，經新的目錄提交門户審核後上架 Claude 目錄。</p><h3>推薦理由</h3><p>原文給出了插件提交入口、審核流程和 MCP 2.0 擴展支持，第三方開發者可據此瞭解如何為 Claude 構建和分發擴展。</p><h3>正文</h3><p>每天，數百萬人將 Claude 連接到他們的應用、工作工具和數據。今天，我們讓開發者更容易觸達這些用户。</p><p>插件可以打包 MCP 連接器、Agent Skills，或兩者兼有，是為 Claude 構建第三方擴展的主要方式。構建一個插件，通過新的目錄提交門户提交，一旦獲批，它就會出現在 <a href="https://claude.ai/directory" target="_blank" rel="noopener noreferrer">Claude 目錄</a>中。</p><h3><strong>在目錄提交門户中提交併跟蹤插件</strong></h3><p><a href="https://claude.ai/directory/manage/new" target="_blank" rel="noopener noreferrer">目錄提交門户</a>面向付費 Claude 套餐的開發者開放。有兩種方式可以提交併讓你的插件發佈到 Claude 目錄中：</p><ul><li><strong>單個 MCP 連接器：</strong>指向你的遠程 MCP 服務器。</li><li><strong>插件包：</strong>將 MCP 服務器和技能組合起來，託管在 GitHub 上，然後提交該倉庫。在 Claude Code 中，插件還可以包含 LSP、命令、鈎子和智能體。</li></ul><p>無論你選擇哪條路徑，門户都會引導你從提交到發佈的全過程。你可以：</p><ul><li><strong>自動驗證你的插件。</strong>每次提交都會在你提交後立即接受檢查和安全掃描，讓你儘早發現問題。</li><li><strong>查看審核狀態和反饋。</strong>查看你的插件在審核流程中的進展、安全掃描結果以及建議的修改。</li><li><strong>準備好後再發布。</strong>一旦獲批，由你決定何時在 Claude 中發佈你的插件。</li></ul> 插件審核狀態和建議修改的示意圖。數據僅作演示。 <h3><strong>插件發佈後進行監控和優化</strong></h3><p>插件上線後，使用分析會按產品界面和版本展示安裝量，讓你能夠為用户優先安排修復和功能。在發現方面，你可以看到你的列表被查看的頻率，以及哪些搜索將用户引導至此，從而優化它以觸達新用户。</p> 已發佈插件使用指標的示意圖。數據僅作演示。 <h3><strong>藉助 MCP 2.0 及其擴展為用户帶來豐富體驗</strong></h3><p>Claude 支持最新的 MCP 規範，通常被稱為 <a href="https://modelcontextprotocol.io/specification/2026-07-28" target="_blank" rel="noopener noreferrer">MCP 2.0</a>，其中包含無狀態核心。你可以通過兩個 <a href="https://modelcontextprotocol.io/extensions/overview" target="_blank" rel="noopener noreferrer">MCP 擴展</a>來提升插件的使用體驗：<a href="https://claude.com/docs/connectors/building/mcp-apps/getting-started" target="_blank" rel="noopener noreferrer">MCP Apps</a>，用於在聊天中提供交互式 UI；以及 <a href="https://claude.com/docs/connectors/building/enterprise-managed-auth" target="_blank" rel="noopener noreferrer">Enterprise Managed Auth</a>，為企業用户提供零接觸 OAuth。對更多 MCP 功能和擴展的支持即將推出。</p><h3><strong>開始為 Claude 構建插件</strong></h3><p>插件是第三方開發者為 Claude 創建擴展的主要方式。在接下來的幾周內，一個統一的發現體驗將陸續在 Claude 和 Claude Code 中推出。<br><br>技能和 MCP 連接器仍作為構建模塊保留，Claude 目錄也將繼續列出它們。未來，開發者將能夠把自己的連接器列表轉化為插件。如果你在 Claude 目錄中已有技能、連接器或插件，則無需做任何更改。</p><p>要開始構建插件，請閲讀我們的文檔，瞭解<a href="https://claude.com/docs/build/overview" target="_blank" rel="noopener noreferrer">如何構建插件</a>，並<a href="https://claude.ai/directory/manage/new" target="_blank" rel="noopener noreferrer">在此處</a>提交你的插件。</p><a href="https://claude.com/blog/build-plugins-for-claude" target="_blank" rel="noopener noreferrer">視頻 · 前往原文觀看</a><p><a href="https://claude.com/blog/build-plugins-for-claude" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://claude.com/blog/build-plugins-for-claude" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

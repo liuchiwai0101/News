@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GitHub Copilot app 新手教程：如何用 canvases 構建自定義工作流</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>GitHub Copilot app 新手教程：如何用 canvases 構建自定義工作流</h1>
+<div class="notice">內容機器翻譯自第三方媒體（GitHub Blog），僅供參考，以原文為準。</div><p><img src="https://github.blog/wp-content/uploads/2026/09/Screenshot-2026-09-23-at-3.59.20-PM.png" alt=""></p><h3>AI 導讀</h3><p>GitHub 官方博客發佈 GitHub Copilot app 新手教程，介紹用 /create-canvas 技能通過自然語言描述生成可自定義的 canvas 界面。</p><h3>推薦理由</h3><p>教程來自 GitHub Copilot 官方博客，講解了用 /create-canvas 生成雙向共享界面的具體做法，適合想定製智能體工作流的讀者上手。</p><h3>正文</h3><p>大多數工具給你一套固定的界面，要求你把工作塞進它們的框架裏。但如果你能反過來，從自己想要的工作流出發，讓界面圍繞它自然成形，會怎樣？</p><p>這正是 <a href="https://docs.github.com/en/copilot/how-tos/github-copilot-app/working-with-canvas-extensions" target="_blank" rel="noopener noreferrer">GitHub Copilot 應用中的 canvas</a> 背後的理念。canvas，也叫 canvas 擴展，是一種你和智能體共享的可定製界面。它可以是一塊看板、一塊 issue 分診板、一份發佈清單、一個儀表盤、一張表單，甚至是一張電子表格：一個按照你的工作方式塑造的 UI。</p><p>由於 canvas 是雙向的，智能體可以在工作時更新它，你也可以通過按鈕、卡片、篩選器和其他控件來做出更改。就像使用一塊實時共享的白板一樣。</p><p>讓我們來創建一個吧。</p><h3>使用 /create-canvas 創建 canvas</h3><p>要創建一個 canvas，你無需手動編寫任何代碼或進行任何設計。只需打開一個智能體會話，輸入 <code>/create-canvas</code><a href="https://docs.github.com/en/copilot/reference/github-copilot-app-reference/built-in-skills" target="_blank" rel="noopener noreferrer">技能</a>，然後用大白話描述你想要什麼。</p><p>確保你的提示詞涵蓋三件事：</p><ul><li>canvas 應支持的工作流。</li><li>你在界面中應該能夠做什麼。</li><li>智能體應該能夠做什麼。</li></ul><p>例如，你可以輸入：</p><pre><code>/create-canvas Create a release notes canvas for tracking new feature work completed across GitHub Copilot app sessions. Include controls for reviewing and organizing entries and allow the agent to add and update them.</code></pre><p>隨後，智能體會構建該界面並在右側面板中打開它，你無需編寫文件或處理佈局。一段描述就能變成一個可直接使用的自定義工具。</p><h3>圍繞你的工作流塑造畫布</h3><p>由於界面是根據你的描述生成的，你的第一個版本只是一個起點，你可以不斷優化，直到滿意為止。</p><p>你可以讓智能體添加一列或一個篩選器、拉取你未關閉的 pull request，或者把整個畫布變成你一天的待辦清單。智能體會相應地修改畫布。雖然沒有固定的佈局菜單，但只要能描述出一個工作流，你大概率就能把它變成一個畫布。</p><p>創建後，你的畫布會保存為一個擴展，因此你可以再次使用它。你可以將它保留在項目中供團隊共享，也可以將其保存為僅供你個人使用的個人擴展。</p><h3>即時協作，而非下達命令後等待</h3><p>畫布真正的強大之處在於，你和智能體可以同時持續工作。</p><p>當你點擊按鈕、更新字段或移動卡片時，畫布的共享狀態會立即改變。智能體會看到同樣的更新，無需單獨的發送或同步步驟。</p><p>反過來也一樣。你可以讓智能體使用畫布自身的能力——也就是你能使用的那些相同操作——來添加一條發佈説明或移動一張卡片，然後看着這一改動出現在界面中。你不再只是發送一條命令然後等待響應，而是在與它共同推進工作。</p><h3>帶走這些要點</h3><p>創建一個有用的畫布，從三個簡單的問題開始：</p><ul><li>我想看到哪些信息？</li><li>我想直接改動什麼？</li><li>智能體應該能夠更新或執行什麼？</li></ul><p>不確定從哪裏開始？社區已經通過 <a href="https://awesome-copilot.github.com/extensions/" target="_blank" rel="noopener noreferrer">Awesome Copilot 分享了現成的畫布擴展</a>，包括髮布説明工具、看板、issue 分診工作流等等。安裝一個與你需求接近的，然後讓智能體按照你的工作流來定製它，就像你會對自己創建的畫布進行完善一樣。</p><p>從小處着手：打開一個會話，運行 <code>/create-canvas</code>，併為你當前正在做的某件事描述一個簡單的看板或清單。</p><p><a href="https://github.com/features/ai/github-app" target="_blank" rel="noopener noreferrer">試試使用 GitHub Copilot 應用 &gt;</a></p><p><a href="https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-how-to-build-custom-workflows-with-canvases" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+<p><a href="https://github.blog/ai-and-ml/github-copilot/github-copilot-app-for-beginners-how-to-build-custom-workflows-with-canvases" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
