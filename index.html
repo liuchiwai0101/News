@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b266b">
 <meta name="build" content="20260826080354">
+<script>
+(function(){
+  var KEY='news-theme';
+  var t;
+  try { t = localStorage.getItem(KEY); } catch (e) {}
+  if (t !== 'night' && t !== 'day') {
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'night' : 'day';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+  var m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', t === 'night' ? '#0c1020' : '#1b266b');
+})();
+</script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260826080354">
 <title>AI HOT 日報 · 2026-09-30</title>
 <style>
@@ -17,6 +30,15 @@
     --line:#e2e8f0;         /* soft borders */
     --accent:#2f44c4;       /* deeper indigo for links/badge (AA contrast) */
     --accent-soft:#eef2fb;
+    --hero-bg:linear-gradient(135deg,#1b266b 0%,#2f3fb0 58%,#4b34c4 100%);
+    --nav-bg:rgba(255,255,255,.94);
+    --chip:#f3f6fc;
+    --chip-hover:#e6ecfb;
+    --chip-on:#1b266b;
+    --count-bg:#fff;
+    --card-hover-line:#cbd5e7;
+    --card-shadow:0 1px 2px rgba(15,23,42,.05);
+    --reader-panel:#fff;
     --c0:#2f44c4; --c1:#0e8f6e; --c2:#c2410c; --c3:#7c3aed; --c4:#be123c; --c5:#0e7490;
     --c6:#d97706; --c7:#4f46e5;
     --g0:linear-gradient(135deg,#3b4fd1,#2f44c4);
@@ -28,6 +50,28 @@
     --g6:linear-gradient(135deg,#f59e0b,#d97706);
     --g7:linear-gradient(135deg,#6366f1,#4f46e5);
     --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.06);
+    color-scheme:light;
+  }
+  html[data-theme="night"] {
+    color-scheme:dark;
+    --bg:#0c1020;
+    --card:#161b30;
+    --ink:#eef2ff;
+    --body:#c5cde0;
+    --muted:#8b94ab;
+    --line:#2c3552;
+    --accent:#9aacff;
+    --accent-soft:#1a2344;
+    --hero-bg:linear-gradient(135deg,#10162f 0%,#1a2260 58%,#2a1f68 100%);
+    --nav-bg:rgba(12,16,32,.94);
+    --chip:#1c2340;
+    --chip-hover:#252d4e;
+    --chip-on:#4f63d2;
+    --count-bg:#12172b;
+    --card-hover-line:#3d4a72;
+    --card-shadow:0 1px 2px rgba(0,0,0,.35);
+    --reader-panel:#161b30;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 28px rgba(0,0,0,.32);
   }
   * { box-sizing:border-box; }
   html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
@@ -41,7 +85,7 @@
 
   /* HERO — calmer deep-indigo gradient, white text stays high-contrast */
   .hero {
-    background:linear-gradient(135deg,#1b266b 0%,#2f3fb0 58%,#4b34c4 100%);
+    background:var(--hero-bg);
     color:#fff; padding:22px max(18px,env(safe-area-inset-right)) 20px max(18px,env(safe-area-inset-left));
   }
   .hero-top { max-width:1080px; margin:0 auto 4px; }
@@ -77,21 +121,21 @@
 
   /* NAV */
   .nav {
-    position:sticky; top:0; z-index:20; background:rgba(255,255,255,.94);
+    position:sticky; top:0; z-index:20; background:var(--nav-bg);
     backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
     padding:11px max(18px,env(safe-area-inset-right)) 11px max(18px,env(safe-area-inset-left));
   }
   .nav-inner, .nav-inner-old { max-width:1080px; margin:0 auto; display:flex; flex-wrap:wrap; gap:8px; }
   .nav-link {
     display:inline-flex; align-items:center; gap:7px; font-size:13.5px; font-weight:600;
-    color:var(--ink); background:#f3f6fc; border:1px solid var(--line);
+    color:var(--ink); background:var(--chip); border:1px solid var(--line);
     padding:7px 13px; border-radius:999px; transition:.15s;
   }
-  .nav-link:hover { background:#e6ecfb; }
+  .nav-link:hover { background:var(--chip-hover); }
   .nav-link.on {
-    background:#1b266b; color:#fff; border-color:#1b266b;
+    background:var(--chip-on); color:#fff; border-color:var(--chip-on);
   }
-  .nav-link.on:hover { background:#24308a; }
+  .nav-link.on:hover { filter:brightness(1.08); }
   .nav-link.on .nav-count {
     background:rgba(255,255,255,.18); color:#fff;
   }
@@ -99,7 +143,7 @@
   .dot-0{background:var(--c0);} .dot-1{background:var(--c1);} .dot-2{background:var(--c2);}
   .dot-3{background:var(--c3);} .dot-4{background:var(--c4);} .dot-5{background:var(--c5);}
   .dot-6{background:var(--c6);} .dot-7{background:var(--c7);}
-  .nav-count { background:#fff; color:var(--muted); border-radius:999px; padding:0 8px; font-size:12px; font-weight:700; }
+  .nav-count { background:var(--count-bg); color:var(--muted); border-radius:999px; padding:0 8px; font-size:12px; font-weight:700; }
 
   /* TABS — Old News switch, lives inline on the right of the hero (no extra row) */
   [hidden] { display:none !important; }
@@ -152,6 +196,56 @@
   }
   .search-clear:hover { color:#fff; }
 
+  /* THEME TOGGLE — icon-only, sits with search in the hero tabs row */
+  .theme-toggle {
+    font:inherit; width:32px; height:32px; padding:0; flex:0 0 auto;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; color:rgba(255,255,255,.88); cursor:pointer;
+    box-sizing:border-box; transition:background .15s, border-color .15s;
+  }
+  .theme-toggle:hover { background:rgba(255,255,255,.20); border-color:rgba(255,255,255,.36); }
+  .theme-toggle svg { width:15px; height:15px; display:block; }
+  .theme-toggle .ico-sun { display:none; }
+  html[data-theme="night"] .theme-toggle .ico-moon { display:none; }
+  html[data-theme="night"] .theme-toggle .ico-sun { display:block; }
+
+  /* NIGHT: remaining hardcoded light surfaces (reader, deals, notices) */
+  html[data-theme="night"] .tab.on {
+    color:#eef2ff; background:#3b4aa0; border-color:#8da4ff;
+  }
+  html[data-theme="night"] .tab.on .tcount {
+    background:rgba(255,255,255,.16); color:#eef2ff;
+  }
+  html[data-theme="night"] .online-badge {
+    background:rgba(12,16,32,.92); border-color:rgba(255,255,255,.22);
+  }
+  html[data-theme="night"] .reader {
+    background:rgba(5,8,18,.72);
+  }
+  html[data-theme="night"] .reader-bar {
+    background:linear-gradient(135deg,#10162f,#1a2260);
+  }
+  html[data-theme="night"] .reader-scroll code {
+    background:#12172b; color:#f9a8d4;
+  }
+  html[data-theme="night"] .reader-scroll .notice {
+    background:#132a38; border-color:#1e4a5c; color:#9ee7f5;
+  }
+  html[data-theme="night"] .reader-summary {
+    background:#1a2344; border-color:#33407a;
+  }
+  html[data-theme="night"] .reader-deal {
+    background:linear-gradient(135deg,#2a2110,#3a2a12); border-color:#6b4e16;
+  }
+  html[data-theme="night"] .reader-deal .rd-orig { color:#fbbf24; }
+  html[data-theme="night"] .reader-deal-img { background:#12172b; }
+  html[data-theme="night"] .card.deal .cover-deal {
+    background:#1c2340; color:#fbbf24;
+  }
+  html[data-theme="night"] .card.deal .dp-cur { color:#fbbf24; }
+  html[data-theme="night"] .card.deal .dp-orig { color:var(--muted); }
+
   /* BODY */
   .wrap { max-width:1080px; margin:0 auto; padding:28px max(18px,env(safe-area-inset-right)) 10px max(18px,env(safe-area-inset-left)); }
   .section { margin-bottom:36px; scroll-margin-top:66px; }
@@ -174,10 +268,10 @@
 
   .card {
     position:relative; background:var(--card); border:1px solid var(--line);
-    border-radius:11px; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.05);
+    border-radius:11px; overflow:hidden; box-shadow:var(--card-shadow);
     cursor:pointer; display:flex; flex-direction:column; transition:.15s;
   }
-  .card.wall:hover { transform:translateY(-2px); box-shadow:var(--shadow); border-color:#cbd5e7; }
+  .card.wall:hover { transform:translateY(-2px); box-shadow:var(--shadow); border-color:var(--card-hover-line); }
 
   /* compact card (E layout) — title only, thin color top-bar */
   .card.wall { min-height:0; }
@@ -268,7 +362,7 @@
     display:flex; justify-content:center; align-items:stretch;
     padding:env(safe-area-inset-top) max(18px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(18px,env(safe-area-inset-left)); }
   .reader[hidden] { display:none; }
-  .reader-panel { width:100%; max-width:1080px; min-width:0; background:#fff; border-radius:16px;
+  .reader-panel { width:100%; max-width:1080px; min-width:0; background:var(--reader-panel); border-radius:16px;
     display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 70px rgba(0,0,0,.4); }
   .reader-bar { flex:0 0 auto; padding:14px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));
     background:linear-gradient(135deg,#1b266b,#2f3fb0); color:#fff; }
@@ -330,7 +424,7 @@
   .reader-deal-img.reader-deal-icon svg { width:104px; height:104px; color:rgba(255,255,255,.88);
     display:block; }
   .reader-foot { flex:0 0 auto; text-align:center; font-size:13.5px; color:var(--muted);
-    padding:14px; border-top:1px solid var(--line); background:#fff; cursor:pointer;
+    padding:14px; border-top:1px solid var(--line); background:var(--reader-panel); cursor:pointer;
     -webkit-tap-highlight-color:transparent; }
 
   /* FOOTER */
@@ -382,6 +476,8 @@
     .search-box:focus-within .search-input {
       position:static; width:96px; height:100%; opacity:1; cursor:text;
     }
+    .theme-toggle { width:28px; height:28px; }
+    .theme-toggle svg { width:14px; height:14px; }
 
     /* NAV / grouping: thin sticky chip strip, selected chip filled */
     .nav {
@@ -451,6 +547,10 @@
         <input type="text" id="search-input" class="search-input" placeholder="搜尋..." autocomplete="off" spellcheck="false" aria-label="搜尋文章">
         <button type="button" id="search-clear" class="search-clear" aria-label="清除搜尋" hidden>&times;</button>
       </div>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="夜間模式" title="夜間模式" aria-pressed="false">
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
     </div>
   </div>
   <div class="hero-meta">
@@ -1081,6 +1181,44 @@ document.getElementById('foot').innerHTML =
   + (NML ? '（全站 ' + NML.total + ' 篇，本頁 ' + NML.shown + ' 篇，新增 ' + NML.newCount + '）' : '')
   + '，版權與原文均歸原媒體所有。</div>'
   + '<div style="margin-top:6px">「今日要聞」綜合 BBC 中文、RTHK、Yahoo、德國之聲、新浪及 Google 新聞等平台當日頭條，相同事件合併為一則，版權與原文均歸原媒體所有。</div>';
+
+// Night / day theme — persisted; first visit follows prefers-color-scheme
+(function(){
+  var KEY = 'news-theme';
+  var btn = document.getElementById('theme-toggle');
+  var meta = document.querySelector('meta[name="theme-color"]');
+  function current(){
+    return document.documentElement.getAttribute('data-theme') === 'night' ? 'night' : 'day';
+  }
+  function apply(t, persist){
+    t = t === 'night' ? 'night' : 'day';
+    document.documentElement.setAttribute('data-theme', t);
+    if (meta) meta.setAttribute('content', t === 'night' ? '#0c1020' : '#1b266b');
+    if (btn) {
+      var night = t === 'night';
+      btn.setAttribute('aria-pressed', night ? 'true' : 'false');
+      btn.setAttribute('aria-label', night ? '日間模式' : '夜間模式');
+      btn.setAttribute('title', night ? '日間模式' : '夜間模式');
+    }
+    if (persist) {
+      try { localStorage.setItem(KEY, t); } catch (e) {}
+    }
+  }
+  apply(current(), false);
+  if (btn) {
+    btn.addEventListener('click', function(){
+      apply(current() === 'night' ? 'day' : 'night', true);
+    });
+  }
+  try {
+    if (!localStorage.getItem(KEY) && window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+        try { if (localStorage.getItem(KEY)) return; } catch (err) {}
+        apply(e.matches ? 'night' : 'day', false);
+      });
+    }
+  } catch (e) {}
+})();
 
 // 在線人數（優先自建 Cloudflare Worker 按 IP 統計；未部署時回退 herenow 連線數）
 (function(){
