@@ -904,15 +904,42 @@ def _ld_walk(obj) -> list[dict]:
     return found
 
 
+def strip_noise_html(html: str) -> str:
+    html = re.sub(r"<script\b[^>]*>.*?</script>", "", html or "", flags=re.S | re.I)
+    html = re.sub(r"<style\b[^>]*>.*?</style>", "", html, flags=re.S | re.I)
+    html = re.split(r'id="recommended-article-stream"', html, maxsplit=1)[0]
+    return html
+
+
+def paras_match_title(title: str, paras: list[str]) -> list[str]:
+    head = _norm_headline(title or "")
+    if len(head) < 4 or not paras:
+        return paras
+    keys = {head[i : i + 2] for i in range(len(head) - 1)}
+    kept: list[str] = []
+    for i, p in enumerate(paras):
+        pn = _norm_headline(p)
+        grams = {pn[j : j + 2] for j in range(max(0, len(pn) - 1))}
+        if len(keys & grams) >= 1:
+            kept.append(p)
+            continue
+        if kept and i <= 3 and _cjk_count(p) >= 28:
+            kept.append(p)
+            continue
+        if kept:
+            break
+    return kept or paras[:3]
+
+
 def extract_paragraphs(html: str, url: str) -> list[str]:
     host = urllib.parse.urlparse(url).netloc.lower()
     inner = ""
     if "rthk.hk" in host:
         inner = inner_html_by_class(html, "itemFullText") or inner_html_by_class(html, "itemBody")
     elif "yahoo." in host:
-        inner = inner_html_by_class(html, "module-article-body") or inner_html_by_class(
-            html, "caas-body"
-        )
+        inner = inner_html_by_tag(html, "article") or inner_html_by_class(
+            html, "module-article-body"
+        ) or inner_html_by_class(html, "caas-body")
     elif "newmobilelife.com" in host or "aihot.virxact.com" in host:
         inner = extract_source_html(html, url)
     if not inner or len(strip_tags(inner)) < 80:
@@ -924,6 +951,8 @@ def extract_paragraphs(html: str, url: str) -> list[str]:
         art = inner_html_by_tag(html, "article")
         if art and len(strip_tags(art)) > len(strip_tags(inner)):
             inner = art
+    if inner:
+        inner = strip_noise_html(inner)
     paras = paras_from_chunk(inner) if inner else []
     if len(paras) < 2:
         for blob in re.findall(r"<script[^>]*ld\+json[^>]*>(.*?)</script>", html or "", re.S | re.I):
@@ -957,7 +986,8 @@ def extract_paragraphs(html: str, url: str) -> list[str]:
                 paras = [desc]
     if len(paras) < 2:
         extras = []
-        for p in re.findall(r"<p\b[^>]*>(.*?)</p>", html or "", re.S | re.I):
+        src = inner if inner else (html or "")
+        for p in re.findall(r"<p\b[^>]*>(.*?)</p>", src, re.S | re.I):
             t = to_hant(re.sub(r"\s+", " ", strip_tags(p)))
             if is_good_para(t):
                 extras.append(t)
@@ -1033,6 +1063,7 @@ def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
             if bits.get("img") and not looks_like_photo(item.get("img") or ""):
                 item["img"] = bits["img"]
     if best_score >= 80:
+        best = paras_match_title(item.get("title") or "", best)
         item["_paras"] = best[:16]
         lead = best[0]
         if len(best) > 1:
