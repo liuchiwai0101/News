@@ -221,7 +221,39 @@ OPENVERSE_TERMS = [
 ]
 _IMG_CACHE: dict[str, str] = {}
 _PAGE_CACHE: dict[str, dict] = {}
+_GNEWS_CACHE: dict[str, str] = {}
 _OV_USED: set[str] = set()
+_GARTURLREQ_CTX = [
+    ["X", "X", ["X", "X"], None, None, 1, 1, "US:en", None, 1, None, None, None, None, None, 0, 1],
+    "X",
+    "X",
+    1,
+    [1, 1, 1],
+    1,
+    1,
+    None,
+    0,
+    0,
+    None,
+    0,
+]
+ARTICLE_CLASS_TOKENS = [
+    "itemFullText",
+    "module-article-body",
+    "caas-body",
+    "article-content",
+    "article__content",
+    "article-body",
+    "article_content",
+    "story-body",
+    "post-content",
+    "entry-content",
+    "news-content",
+    "longText",
+    "artibody",
+    "content-body",
+    "RichTextArticleBody",
+]
 
 
 def fetch(url: str, timeout: int = 45) -> str:
@@ -267,6 +299,135 @@ def upgrade_wp_img(url: str) -> str:
 def is_google_news(url: str) -> bool:
     host = urllib.parse.urlparse(url or "").netloc.lower()
     return "news.google." in host
+
+
+def gnews_article_id(url: str) -> str:
+    try:
+        parts = urllib.parse.urlparse(url or "").path.split("/")
+        if len(parts) > 1 and parts[-2] in ("articles", "read"):
+            return parts[-1] or ""
+    except Exception:
+        return ""
+    return ""
+
+
+def _gnews_signature(html: str) -> tuple[str, str]:
+    sg = re.search(r'data-n-a-sg="([^"]+)"', html or "")
+    ts = re.search(r'data-n-a-ts="([^"]+)"', html or "")
+    if sg and ts:
+        return sg.group(1), ts.group(1)
+    return "", ""
+
+
+def _gnews_parse_batch(text: str) -> dict[str, str]:
+    body = text or ""
+    if "\n\n" in body:
+        body = body.split("\n\n", 1)[1]
+    body = body.lstrip()
+    if body.startswith(")]}'"):
+        body = body.split("\n", 1)[1] if "\n" in body else body[4:]
+        body = body.lstrip()
+    try:
+        rows = json.loads(body)
+    except Exception:
+        return {}
+    if rows and isinstance(rows[-1], list) and rows[-1] and rows[-1][0] == "di":
+        rows = rows[:-1]
+    if rows and isinstance(rows[-1], list) and rows[-1] and rows[-1][0] == "e":
+        rows = rows[:-1]
+    out: dict[str, str] = {}
+    for row in rows:
+        if not (isinstance(row, list) and len(row) >= 3):
+            continue
+        payload = row[2]
+        if row[0] == "wrb.fr" or row[1] == "Fbv4je":
+            if isinstance(payload, str):
+                try:
+                    payload = json.loads(payload)
+                except Exception:
+                    continue
+            if isinstance(payload, list) and len(payload) > 1 and payload[0] == "garturlres":
+                dest = payload[1]
+                req_id = None
+                for cell in reversed(row[3:]):
+                    if cell is not None:
+                        req_id = str(cell)
+                        break
+                if req_id and isinstance(dest, str) and dest.startswith("http"):
+                    out[req_id] = dest
+    return out
+
+
+def unwrap_google_urls(urls: list[str]) -> dict[str, str]:
+    """Turn news.google.com/rss/articles/... links into publisher URLs."""
+    pending: list[tuple[str, str, str, str]] = []
+    seen_ids: set[str] = set()
+    for url in urls:
+        if not is_google_news(url):
+            continue
+        if url in _GNEWS_CACHE:
+            continue
+        art_id = gnews_article_id(url)
+        if not art_id or art_id in seen_ids:
+            continue
+        seen_ids.add(art_id)
+        page = (
+            f"https://news.google.com/rss/articles/{art_id}"
+            f"?hl=zh-Hant&gl=HK&ceid=HK:zh-Hant"
+        )
+        try:
+            html = fetch(page, timeout=12)
+            sg, ts = _gnews_signature(html)
+            if sg and ts:
+                pending.append((url, art_id, ts, sg))
+        except Exception as e:
+            print("gnews params fail", art_id[:24], e)
+        time.sleep(0.04)
+    for i in range(0, len(pending), 12):
+        chunk = pending[i : i + 12]
+        envelopes = []
+        for idx, (_url, art_id, ts, sg) in enumerate(chunk):
+            inner = [
+                "garturlreq",
+                _GARTURLREQ_CTX,
+                art_id,
+                int(ts) if str(ts).isdigit() else ts,
+                sg,
+            ]
+            envelopes.append(
+                ["Fbv4je", json.dumps(inner, separators=(",", ":")), None, str(idx)]
+            )
+        body = (
+            "f.req="
+            + urllib.parse.quote(json.dumps([envelopes], separators=(",", ":")))
+        ).encode()
+        req = urllib.request.Request(
+            "https://news.google.com/_/DotsSplashUi/data/batchexecute",
+            data=body,
+            headers={
+                "User-Agent": UA,
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                pairs = _gnews_parse_batch(r.read().decode("utf-8", "replace"))
+        except Exception as e:
+            print("gnews decode fail", e)
+            pairs = {}
+        for idx, (url, _art_id, _ts, _sg) in enumerate(chunk):
+            dest = pairs.get(str(idx), "")
+            if dest:
+                _GNEWS_CACHE[url] = dest
+    return dict(_GNEWS_CACHE)
+
+
+def unwrap_url(url: str) -> str:
+    if is_google_news(url):
+        if url not in _GNEWS_CACHE:
+            unwrap_google_urls([url])
+        return _GNEWS_CACHE.get(url) or url
+    return url
 
 
 def is_article_url(url: str) -> bool:
@@ -555,6 +716,15 @@ def inner_html_by_class(html: str, class_token: str) -> str:
     return html[start:]
 
 
+def inner_html_by_tag(html: str, tag: str) -> str:
+    m = re.search(rf"<{re.escape(tag)}\b[^>]*>", html or "", re.I)
+    if not m:
+        return ""
+    start = m.end()
+    close = re.search(rf"</{re.escape(tag)}\s*>", html[start:], re.I)
+    return html[start : start + close.start()] if close else html[start:]
+
+
 class BodyCleaner(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -688,6 +858,8 @@ def extract_source_html(page: str, url: str) -> str:
 PARA_JUNK = re.compile(
     r"跳過此內容|其他人也在看|你可能也想看|延伸閱讀|熱門點擊|點擊收看|"
     r"登入\s*首頁|首頁\s*新聞|觀看\s*分類|圖像來源|Getty Images|"
+    r"AI重點|文章重點整理|重點[一二三四五六七八九十][：:]|"
+    r"更新時間|發佈時間|字體大小|即時國際|即時港聞|相關新聞|"
     r"^編輯[：:︰]|^記者[：:]",
     re.I,
 )
@@ -701,7 +873,12 @@ def is_good_para(text: str) -> bool:
     t = (text or "").strip()
     if not t or PARA_JUNK.search(t):
         return False
-    return _cjk_count(t) >= 18 and len(t) >= 22
+    cjk = _cjk_count(t)
+    if cjk < 18 or len(t) < 22:
+        return False
+    if cjk / max(len(t), 1) < 0.28:
+        return False
+    return True
 
 
 def paras_from_chunk(chunk: str) -> list[str]:
@@ -733,9 +910,20 @@ def extract_paragraphs(html: str, url: str) -> list[str]:
     if "rthk.hk" in host:
         inner = inner_html_by_class(html, "itemFullText") or inner_html_by_class(html, "itemBody")
     elif "yahoo." in host:
-        inner = inner_html_by_class(html, "caas-body")
+        inner = inner_html_by_class(html, "module-article-body") or inner_html_by_class(
+            html, "caas-body"
+        )
     elif "newmobilelife.com" in host or "aihot.virxact.com" in host:
         inner = extract_source_html(html, url)
+    if not inner or len(strip_tags(inner)) < 80:
+        for tok in ARTICLE_CLASS_TOKENS:
+            chunk = inner_html_by_class(html, tok)
+            if chunk and len(strip_tags(chunk)) > len(strip_tags(inner)):
+                inner = chunk
+    if not inner or len(strip_tags(inner)) < 80:
+        art = inner_html_by_tag(html, "article")
+        if art and len(strip_tags(art)) > len(strip_tags(inner)):
+            inner = art
     paras = paras_from_chunk(inner) if inner else []
     if len(paras) < 2:
         for blob in re.findall(r"<script[^>]*ld\+json[^>]*>(.*?)</script>", html or "", re.S | re.I):
@@ -773,11 +961,11 @@ def extract_paragraphs(html: str, url: str) -> list[str]:
             t = to_hant(re.sub(r"\s+", " ", strip_tags(p)))
             if is_good_para(t):
                 extras.append(t)
-            if len(extras) >= 8:
+            if len(extras) >= 16:
                 break
         if len(extras) > len(paras):
             paras = extras
-    return paras[:8]
+    return paras[:16]
 
 
 def make_keypoints(*texts: str) -> list[str]:
@@ -814,7 +1002,7 @@ def fetch_article_bits(url: str) -> dict:
         return _PAGE_CACHE[url]
     bits: dict = {"img": "", "paras": []}
     try:
-        html = fetch_prefix(url, timeout=10, nbytes=2_000_000)
+        html = fetch_prefix(url, timeout=14, nbytes=2_000_000)
         img = parse_og_image(html, url) or first_img_in_html(html, url)
         bits["img"] = img if looks_like_photo(img) else ""
         bits["paras"] = extract_paragraphs(html, url)
@@ -828,24 +1016,31 @@ def fetch_article_bits(url: str) -> dict:
 def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
     urls: list[str] = []
     for u in list(extra_urls or []) + [item.get("sourceUrl") or ""]:
+        if is_google_news(u):
+            u = unwrap_url(u)
         if u and is_article_url(u) and u not in urls:
             urls.append(u)
-    paras: list[str] = []
-    for u in urls:
+    best: list[str] = []
+    best_score = 0
+    for u in urls[:8]:
         bits = fetch_article_bits(u)
         time.sleep(0.06)
-        if bits.get("paras"):
-            paras = bits["paras"]
-            break
-    if paras:
-        item["_paras"] = paras[:8]
-        lead = paras[0]
-        if len(paras) > 1:
-            lead = paras[0] + paras[1]
+        paras = bits.get("paras") or []
+        score = sum(_cjk_count(p) for p in paras)
+        if score > best_score:
+            best = paras
+            best_score = score
+            if bits.get("img") and not looks_like_photo(item.get("img") or ""):
+                item["img"] = bits["img"]
+    if best_score >= 80:
+        item["_paras"] = best[:16]
+        lead = best[0]
+        if len(best) > 1:
+            lead = best[0] + best[1]
         cur = item.get("summary") or ""
         if not cur or is_dump_summary(cur) or "均有報道" in cur:
             item["summary"] = to_hant(lead[:420])
-        kps = make_keypoints(*paras)
+        kps = make_keypoints(*best)
         if kps:
             item["keypoints"] = kps
         return
@@ -1252,13 +1447,15 @@ def wire_body_html(item: dict) -> str:
         parts.append(f'<p><img src="{escape(img, True)}" alt=""></p>')
     paras = item.get("_paras") or []
     if paras:
-        parts.append("<h3>重點內容</h3>")
-        for p in paras[:6]:
+        body_chars = sum(len(p) for p in paras)
+        heading = "正文" if len(paras) >= 3 or body_chars >= 280 else "重點內容"
+        parts.append(f"<h3>{heading}</h3>")
+        for p in paras[:16]:
             parts.append(f"<p>{escape(p)}</p>")
     else:
         summary = item.get("summary") or ""
         if summary:
-            parts.append(f"<p>{escape(summary)}</p>")
+            parts.append(f"<h3>重點內容</h3><p>{escape(summary)}</p>")
     related = item.get("related") or []
     if related:
         parts.append("<h3>各方報道</h3><ul>")
@@ -1357,6 +1554,35 @@ def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
     _take(with_art, WIRE_MAX)
     _take(fresh, WIRE_MAX)
     chosen = chosen[:WIRE_MAX]
+    g_urls: list[str] = []
+    for c in chosen:
+        rows = list(c.get("related") or []) + list(c.get("members") or [])
+        rows.sort(
+            key=lambda r: (
+                2
+                if "rthk" in (r.get("source") or "").lower()
+                or "香港電台" in (r.get("source") or "")
+                else 0
+            )
+        )
+        n = 0
+        for r in rows:
+            u = (r.get("url") if isinstance(r, dict) else "") or ""
+            if is_google_news(u):
+                g_urls.append(u)
+                n += 1
+                if n >= 6:
+                    break
+    print("gnews unwrap", len(g_urls))
+    unwrap_google_urls(g_urls)
+    for c in chosen:
+        for bucket in (c.get("related") or [], c.get("members") or []):
+            for r in bucket:
+                if not isinstance(r, dict):
+                    continue
+                dest = _GNEWS_CACHE.get(r.get("url") or "")
+                if dest:
+                    r["url"] = dest
     donors = [it for it in raw if it.get("img") or is_article_url(it.get("url") or "")]
     copy_donors = [it for it in raw if is_article_url(it.get("url") or "")]
     for c in chosen:
