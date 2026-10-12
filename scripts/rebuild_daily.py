@@ -912,23 +912,28 @@ def strip_noise_html(html: str) -> str:
 
 
 def paras_match_title(title: str, paras: list[str]) -> list[str]:
+    """Drop leading chrome and trailing related-news; keep the article body."""
     head = _norm_headline(title or "")
     if len(head) < 4 or not paras:
         return paras
     keys = {head[i : i + 2] for i in range(len(head) - 1)}
     kept: list[str] = []
-    for i, p in enumerate(paras):
+    miss = 0
+    for p in paras:
         pn = _norm_headline(p)
         grams = {pn[j : j + 2] for j in range(max(0, len(pn) - 1))}
-        if len(keys & grams) >= 1:
+        hit = len(keys & grams)
+        long_p = _cjk_count(p) >= 28
+        if hit >= 1 or (kept and long_p):
             kept.append(p)
+            miss = 0
             continue
-        if kept and i <= 3 and _cjk_count(p) >= 28:
-            kept.append(p)
+        if not kept:
             continue
-        if kept:
+        miss += 1
+        if miss >= 2:
             break
-    return kept or paras[:3]
+    return kept or paras[:8]
 
 
 def extract_paragraphs(html: str, url: str) -> list[str]:
@@ -991,11 +996,11 @@ def extract_paragraphs(html: str, url: str) -> list[str]:
             t = to_hant(re.sub(r"\s+", " ", strip_tags(p)))
             if is_good_para(t):
                 extras.append(t)
-            if len(extras) >= 16:
+            if len(extras) >= 24:
                 break
         if len(extras) > len(paras):
             paras = extras
-    return paras[:16]
+    return paras[:24]
 
 
 def make_keypoints(*texts: str) -> list[str]:
@@ -1064,7 +1069,7 @@ def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
                 item["img"] = bits["img"]
     if best_score >= 80:
         best = paras_match_title(item.get("title") or "", best)
-        item["_paras"] = best[:16]
+        item["_paras"] = best[:24]
         lead = best[0]
         if len(best) > 1:
             lead = best[0] + best[1]
@@ -1478,15 +1483,13 @@ def wire_body_html(item: dict) -> str:
         parts.append(f'<p><img src="{escape(img, True)}" alt=""></p>')
     paras = item.get("_paras") or []
     if paras:
-        body_chars = sum(len(p) for p in paras)
-        heading = "正文" if len(paras) >= 3 or body_chars >= 280 else "重點內容"
-        parts.append(f"<h3>{heading}</h3>")
-        for p in paras[:16]:
+        parts.append("<h3>正文</h3>")
+        for p in paras[:24]:
             parts.append(f"<p>{escape(p)}</p>")
     else:
         summary = item.get("summary") or ""
         if summary:
-            parts.append(f"<h3>重點內容</h3><p>{escape(summary)}</p>")
+            parts.append(f"<h3>正文</h3><p>{escape(summary)}</p>")
     related = item.get("related") or []
     if related:
         parts.append("<h3>各方報道</h3><ul>")

@@ -1124,8 +1124,10 @@ function openReader(card) {
   let kp = [];
   try { kp = JSON.parse(card.dataset.keypoints || '[]'); } catch (e) {}
   kp = kp.filter(function(k){ return k && (String(k).length > 18 || /[。！？]/.test(k)); });
+  const body = (window.ARTICLES && window.ARTICLES[id]) || '';
+  const bodyPlain = body.replace(/<[^>]+>/g, '');
   let sumHtml = '';
-  if (sum || kp.length) {
+  if ((sum || kp.length) && bodyPlain.length < 280) {
     let inner = '';
     if (sum) inner += '<p class="rs-lead">' + sum + '</p>';
     if (kp.length) {
@@ -1135,7 +1137,6 @@ function openReader(card) {
     }
     sumHtml = '<div class="reader-summary"><span class="rs-label">重點整理</span>' + inner + '</div>';
   }
-  const body = (window.ARTICLES && window.ARTICLES[id]) || '';
   const cover = card.dataset.img || '';
   const hero = (cover && body.indexOf(cover) < 0)
     ? '<p class="reader-hero"><img src="' + cover + '" alt=""></p>' : '';
