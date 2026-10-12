@@ -1860,8 +1860,6 @@ def main() -> None:
     sections = []
     if nml40:
         sections.append({"label": "限時情報王", "items": nml40, "kind": "external", "ci": 5})
-    if app_items:
-        sections.append({"label": APP_LABEL, "items": app_items, "kind": "app", "ci": CI[APP_LABEL]})
     if wire_items:
         sections.append({"label": WIRE_LABEL, "items": wire_items, "kind": "wire", "ci": CI[WIRE_LABEL]})
     for lab in AIHOT_LABELS:
@@ -1875,6 +1873,8 @@ def main() -> None:
                 }
             )
     sections.append(deals)
+    if app_items:
+        sections.append({"label": APP_LABEL, "items": app_items, "kind": "app", "ci": CI[APP_LABEL]})
 
     flat = []
     for sec in sections:
