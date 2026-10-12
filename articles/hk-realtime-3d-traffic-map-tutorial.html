@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>【實用教學】香港 AI 達人自製免費「實時 3D 交通地圖」！一網睇盡全港交通動態 + 路況即時追蹤</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>【實用教學】香港 AI 達人自製免費「實時 3D 交通地圖」！一網睇盡全港交通動態 + 路況即時追蹤</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/05215713/PCM_Banner_1080-20261005_hkrealtime3dmaps.jpg" alt=""></p><p>搭車最怕遇到塞車或者港鐵、巴士班次延誤？雖然政府有提供開放數據（Open Data），但一般人很難直觀地一次過睇曬全港所有交通狀況。</p><p>本地著名 AI 專家及科技企業家李勁華（Keith Li） 最近利用 AI 開發工具，打造了一個名為 「中國香港智慧城市交通情報網」 的免費線上工具！這個網站結合了政府「數字政策辦公室」的開放數據，將全港各大幹道的塞車情況、交通意外事故、行車速度，甚至是 港鐵與專營巴士的即時估算位置，全部視覺化呈現於立體 3D 地圖上。最吸引的是，這個項目完全免費、無需下載 App、只要開啟瀏覽器即可使用，而且還將程式碼開源（Open Source）！以下就為大家帶來詳細的實測與功能教學。</p><h3>「交通情報」主要亮點功能一覽</h3><ul><li><strong>3D 立體地圖視覺化</strong>：以立體建築模型呈現維港兩岸及全港各區，比起傳統平面地圖更具臨場感。</li><li><strong>路段擠塞與車速分析</strong>：自動標示告士打道、紅磡海底隧道、青山公路等主要幹道的塞車長度與平均車速。</li><li><strong>公共交通實時動態</strong>：根據開放數據即時計算並標示港鐵列車及各路綫巴士的當前位置與移動狀況。</li><li><strong>即時事故與路況快拍</strong>：整合全港交通意外、道路工程、隧道管制及 CCTV 交通快拍。</li><li><strong>跨平台極速載入</strong>：採用 Cloudflare Workers 部署，手機或電腦開啟網頁均極為流暢。</li></ul><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/05214545/Screenshot-2026-10-05-at-14.44.01-1024x880.png" alt="">地圖有衞星、平而地圖及 3D 模型地圖顯示選擇。<h3>3 步上手！「中國香港 3D 交通地圖」實用教學</h3><p><strong>Step 1：進入網站與基本操作</strong><br>直接透過手機或電腦瀏覽器造訪 <a href="https://hktraffic.keith-li.workers.dev/" target="_blank" rel="noopener noreferrer">中國香港智慧城市交通情報網</a>。</p><ul><li><strong>旋轉與傾斜</strong>：在電腦上記住按住滑鼠右鍵並拖曳；手機上則可用雙指滑動，調整 3D 視角。</li><li><strong>縮放地圖</strong>：滾輪或雙指拉遠拉近，即可從「全港巨觀路況」切換至「分區微觀街道」。</li></ul><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/05214843/Screenshot-2026-10-05-at-14.46.43-2-1024x768.png" alt="">電腦按住滑鼠右鍵並拖曳便可移動方向和放大縮細。<p><strong>Step 2：查看即時交通事故與幹道車速</strong><br>進入網站後，畫面右側會列出目前的主要交通事故與擠塞路段：</p><ol><li><strong>點擊右側卡片</strong>：地圖會自動 Fly-to（飛往）該事故地點或塞車路段。</li><li><strong>點擊道路線條</strong>：地圖上的主要幹道會以不同顏色標示流暢度（綠色順暢、紅色擠塞）。點擊特定路段即可查看即時平均車速（km/h）及塞車隊尾長度。</li><li><strong>檢視 CCTV 快拍</strong>：點擊地圖上的「攝影機」圖示，可即時載入運輸署最新的現場路況快拍照片。</li></ol><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/05214932/Screenshot-2026-10-05-at-14.46.07-869x1024.png" alt="">右下角的文字資訊工具會快速告之所有留意事項。<p><strong>Step 3：追蹤港鐵與巴士即時位置</strong><br>想知道自己等緊的巴士或者港鐵到咗邊？</p><ol><li><strong>切換至公共交通圖層</strong>，地圖上會顯示代表 MTR 列車 及 巴士 的動態圖示。</li><li><strong>點擊圖示即可查看該班次</strong>／車輛的最新位置與預計抵達時間。</li><li><strong>底部設有即時統計圖例</strong>（包含：快拍、工程、隧道、事故、管制站等總數），方便掌握全港整體交通健康度。</li></ol><img src="https://www.pcmarket.com.hk/wp-content/uploads/2026/10/Screenshot-2026-10-05-at-14.52.32-1-1024x863.png" alt="">按下地圖的巴直站圖示，就會顯示當刻的各線停靠巴士到站時間。<p>這款地圖不僅實用，背後的開發過程同樣值得關注！作者 Keith Li 表示，此項目是為了演講與示範而製作，全程善用 AI 程式工具輔助開發，並將專案開源發佈至 <a href="https://github.com/keithligh/hk-traffic-intelligence" target="_blank" rel="noopener noreferrer">GitHub</a>。整個架構完全無需負擔昂貴的伺服器費用，充分展示了 Open Data（開放數據）與 Modern AI 開發工具結合的強大潛力。<br>如果你平時經常要跨區返工返學，不妨將這個網頁加入書籤，出門前睇一睇，提早避開塞車黑點！</p><p><strong>即刻試玩</strong>：<a href="https://hktraffic.keith-li.workers.dev/" target="_blank" rel="noopener noreferrer">https://hktraffic.keith-li.workers.dev/</a><br><br><strong>GitHub 開源專案</strong>：<a href="https://github.com/keithligh/hk-traffic-intelligence" target="_blank" rel="noopener noreferrer">hk-traffic-intelligence</a></p>
+<p><a href="https://www.pcmarket.com.hk/hk-realtime-3d-traffic-map-tutorial/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
