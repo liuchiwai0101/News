@@ -40,7 +40,7 @@
     --card-shadow:0 1px 2px rgba(15,23,42,.05);
     --reader-panel:#fff;
     --c0:#2f44c4; --c1:#0e8f6e; --c2:#c2410c; --c3:#7c3aed; --c4:#be123c; --c5:#0e7490;
-    --c6:#d97706; --c7:#4f46e5;
+    --c6:#d97706; --c7:#4f46e5; --c8:#15803d;
     --g0:linear-gradient(135deg,#3b4fd1,#2f44c4);
     --g1:linear-gradient(135deg,#10a37f,#0b7a5d);
     --g2:linear-gradient(135deg,#ea580c,#c2410c);
@@ -49,6 +49,7 @@
     --g5:linear-gradient(135deg,#0ea5e9,#0e7490);
     --g6:linear-gradient(135deg,#f59e0b,#d97706);
     --g7:linear-gradient(135deg,#6366f1,#4f46e5);
+    --g8:linear-gradient(135deg,#22c55e,#15803d);
     --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.06);
     color-scheme:light;
   }
@@ -142,7 +143,7 @@
   .dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
   .dot-0{background:var(--c0);} .dot-1{background:var(--c1);} .dot-2{background:var(--c2);}
   .dot-3{background:var(--c3);} .dot-4{background:var(--c4);} .dot-5{background:var(--c5);}
-  .dot-6{background:var(--c6);} .dot-7{background:var(--c7);}
+  .dot-6{background:var(--c6);} .dot-7{background:var(--c7);} .dot-8{background:var(--c8);}
   .nav-count { background:var(--count-bg); color:var(--muted); border-radius:999px; padding:0 8px; font-size:12px; font-weight:700; }
 
   /* TABS — Old News switch, lives inline on the right of the hero (no extra row) */
@@ -800,6 +801,12 @@ function buildPanel(sec, si){
     nmlSub.className = 'nml-sub';
     nmlSub.textContent = '監測分類：限時情報王 ＋ 限時免費情報';
     panel.appendChild(nmlSub);
+  }
+  if (sec.kind === 'app') {
+    const appSub = document.createElement('div');
+    appSub.className = 'nml-sub';
+    appSub.textContent = '限時免費 App 與宣傳';
+    panel.appendChild(appSub);
   }
   if (sec.kind === 'wire') {
     const wireSub = document.createElement('div');

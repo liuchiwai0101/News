@@ -54,6 +54,7 @@ CI = {
     "限時情報王": 5,
     "熱門優惠": 6,
     "今日要聞": 7,
+    "APP 優惠": 8,
 }
 NML_LISTS = [
     "https://www.newmobilelife.com/category/featured/",
@@ -62,6 +63,12 @@ NML_LISTS = [
     "https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/page/2/",
 ]
 WIRE_LABEL = "今日要聞"
+APP_LABEL = "APP 優惠"
+APP_MAX = 40
+APP_PROMO = re.compile(
+    r"限時免費|限時免费|《[^》]{1,48}》.*(?:免費|免费|兌換碼|兑换码)|【\s*PC\s*】",
+    re.I,
+)
 WIRE_MAX = 36
 WIRE_HOURS = 36
 WIRE_SKIP_TITLE = re.compile(r"招聘啟事|誠聘以下|廣告主|sponsored", re.I)
@@ -611,6 +618,12 @@ def zh_source(name: str) -> str:
 def show_label(label: str) -> str:
     lab = (label or "").strip()
     return AIHOT_SHOW.get(lab, to_hant(lab) or "其他")
+
+
+def is_app_promo(item: dict) -> bool:
+    """限時免費 App / 兌換碼宣傳，從限時情報王拆到 APP 優惠。"""
+    title = item.get("title") or ""
+    return bool(APP_PROMO.search(title))
 
 
 def hantify_item(it: dict) -> dict:
@@ -1785,15 +1798,20 @@ def main() -> None:
         seen.add(it["sourceUrl"])
         uniq.append(it)
     uniq.sort(key=lambda x: x["isoDate"], reverse=True)
-    nml40 = uniq[:40]
-    if not nml40:
+    app_items = [it for it in uniq if is_app_promo(it)][:APP_MAX]
+    nml40 = [it for it in uniq if not is_app_promo(it)][:40]
+    if not nml40 and not app_items:
         raise SystemExit("NML parsed 0 articles")
-    for it in nml40:
+    for it in app_items:
+        it["ci"] = CI[APP_LABEL]
+        it["kind"] = "app"
+        it["_sec_label"] = APP_LABEL
+    for it in nml40 + app_items:
         it["isNew"] = it["isoDate"] == iso
         if not it.get("keypoints"):
             it["keypoints"] = make_keypoints(it.get("summary") or "")
     new_count = sum(1 for it in nml40 if it["isNew"])
-    added = sum(1 for it in nml40 if it["sourceUrl"] not in prev_nml_urls)
+    added = sum(1 for it in nml40 + app_items if it["sourceUrl"] not in prev_nml_urls)
 
     wire_items: list[dict] = []
     wire_bodies: dict[str, str] = {}
@@ -1808,6 +1826,7 @@ def main() -> None:
         hantify_item(it)
 
     keep = {it["sourceUrl"] for it in nml40}
+    keep.update(it["sourceUrl"] for it in app_items)
     for items in aihot.values():
         keep.update(it["sourceUrl"] for it in items)
     keep.update(it["sourceUrl"] for it in deals["items"])
@@ -1832,8 +1851,17 @@ def main() -> None:
             hantify_item(rec)
             old.insert(0, rec)
             old_urls.add(u)
+    for it in old:
+        if is_app_promo(it):
+            it["board"] = APP_LABEL
+            it["ci"] = CI[APP_LABEL]
+            it["kind"] = "app"
 
-    sections = [{"label": "限時情報王", "items": nml40, "kind": "external", "ci": 5}]
+    sections = []
+    if nml40:
+        sections.append({"label": "限時情報王", "items": nml40, "kind": "external", "ci": 5})
+    if app_items:
+        sections.append({"label": APP_LABEL, "items": app_items, "kind": "app", "ci": CI[APP_LABEL]})
     if wire_items:
         sections.append({"label": WIRE_LABEL, "items": wire_items, "kind": "wire", "ci": CI[WIRE_LABEL]})
     for lab in AIHOT_LABELS:
