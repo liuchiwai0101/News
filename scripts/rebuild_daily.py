@@ -55,6 +55,7 @@ CI = {
     "熱門優惠": 6,
     "今日要聞": 7,
     "APP 優惠": 8,
+    "PCM": 9,
 }
 NML_LISTS = [
     "https://www.newmobilelife.com/category/featured/",
@@ -69,9 +70,22 @@ APP_PROMO = re.compile(
     r"限時免費|限時免费|《[^》]{1,48}》.*(?:免費|免费|兌換碼|兑换码)|【\s*PC\s*】",
     re.I,
 )
+PCM_LABEL = "PCM"
+PCM_MAX = 40
+PCM_FEEDS = [
+    "https://www.pcmarket.com.hk/feed/",
+    "https://www.pcmarket.com.hk/feed/?paged=2",
+    "https://www.pcmarket.com.hk/category/tech/feed/",
+    "https://www.pcmarket.com.hk/category/buyer-guide/feed/",
+    "https://www.pcmarket.com.hk/category/artificial-intelligence/feed/",
+    "https://www.pcmarket.com.hk/category/biz-it/feed/",
+    "https://www.pcmarket.com.hk/category/how-to/feed/",
+    "https://www.pcmarket.com.hk/category/reviews/feed/",
+]
 WIRE_MAX = 36
 WIRE_HOURS = 36
 WIRE_SKIP_TITLE = re.compile(r"招聘啟事|誠聘以下|廣告主|sponsored", re.I)
+PCM_FOOTER = re.compile(r"這篇文章\s*.*?最早出現於\s*.*?。?\s*$", re.S)
 WIRE_FEEDS = [
     ("Google 新聞 香港", "https://news.google.com/rss?hl=zh-Hant&gl=HK&ceid=HK:zh-Hant"),
     ("Google 新聞 台灣", "https://news.google.com/rss?hl=zh-TW&gl=TW&ceid=TW:zh-Hant"),
@@ -154,6 +168,9 @@ SOURCE_ALIAS = {
     "zaobao.com": "聯合早報",
     "thenewslens.com": "關鍵評論網",
     "upmedia.mg": "上報",
+    "pcmarket.com.hk": "PCM",
+    "www.pcmarket.com.hk": "PCM",
+    "pcm": "PCM",
 }
 ARTICLE_TPL = """<!DOCTYPE html>
 <html lang="zh-Hant">
@@ -185,7 +202,16 @@ KEEP_TAGS = {
     "strong", "em", "b", "i", "br", "img", "a",
     "table", "thead", "tbody", "tfoot", "tr", "th", "td", "caption",
 }
-DROP_CLASS = ("featured-posts", "related-posts", "sharedaddy", "jp-relatedposts", "cs-custom-content")
+DROP_CLASS = (
+    "featured-posts",
+    "related-posts",
+    "sharedaddy",
+    "jp-relatedposts",
+    "cs-custom-content",
+    "td-a-ad",
+    "td-adspot-title",
+    "code-block",
+)
 STUB_MARKERS = ("無法擷取全文", "未提供本地譯文", "已略去翻譯步驟")
 MIN_BODY_CHARS = 80
 SKIP_IMG_HOST = re.compile(
@@ -253,6 +279,7 @@ ARTICLE_CLASS_TOKENS = [
     "article-body",
     "article_content",
     "story-body",
+    "td-post-content",
     "post-content",
     "entry-content",
     "news-content",
@@ -865,6 +892,23 @@ def extract_source_html(page: str, url: str) -> str:
                 bits.append(f"<p>{reason}</p>")
             return "".join(bits)
         return inner
+    if "pcmarket.com.hk" in host:
+        inner = (
+            inner_html_by_class(page, "td-post-content")
+            or inner_html_by_class(page, "post-content")
+            or inner_html_by_class(page, "entry-content")
+        )
+        if inner:
+            cut = re.search(
+                r'<div[^>]*class="[^"]*(?:td-post-source-tags|td-post-next-prev|td-related|'
+                r'related-posts|td-a-rec)',
+                inner,
+                re.I,
+            )
+            if cut:
+                inner = inner[: cut.start()]
+            inner = PCM_FOOTER.sub("", inner)
+        return inner
     return inner_html_by_class(page, "entry-content") or inner_html_by_class(page, "post-content")
 
 
@@ -959,7 +1003,7 @@ def extract_paragraphs(html: str, url: str) -> list[str]:
         inner = inner_html_by_tag(html, "article") or inner_html_by_class(
             html, "module-article-body"
         ) or inner_html_by_class(html, "caas-body")
-    elif "newmobilelife.com" in host or "aihot.virxact.com" in host:
+    elif "newmobilelife.com" in host or "aihot.virxact.com" in host or "pcmarket.com.hk" in host:
         inner = extract_source_html(html, url)
     if not inner or len(strip_tags(inner)) < 80:
         for tok in ARTICLE_CLASS_TOKENS:
@@ -1107,7 +1151,11 @@ def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
 
 def can_extract(url: str) -> bool:
     host = urllib.parse.urlparse(url).netloc.lower()
-    return "newmobilelife.com" in host or "aihot.virxact.com" in host
+    return (
+        "newmobilelife.com" in host
+        or "aihot.virxact.com" in host
+        or "pcmarket.com.hk" in host
+    )
 
 
 def is_stub(body: str) -> bool:
@@ -1327,6 +1375,97 @@ def aihot_from_existing(data: dict) -> dict[str, list[dict]]:
         lab = aliases.get(sec.get("label") or "")
         if lab:
             out[lab] = list(sec.get("items") or [])
+    return out
+
+
+def clean_pcm_summary(text: str) -> str:
+    text = to_hant(re.sub(r"\s+", " ", strip_tags(text or "")).strip())
+    text = PCM_FOOTER.sub("", text).strip()
+    return text[:280]
+
+
+def parse_pcm_feed(xml: str, today: date) -> list[dict]:
+    items: list[dict] = []
+    for block in re.findall(r"<item\b[^>]*>(.*?)</item>", xml or "", re.S | re.I):
+        title = clean_headline(to_hant(_rss_text(block, "title")))
+        link = _rss_text(block, "link")
+        if not title or not link or "pcmarket.com.hk" not in link:
+            continue
+        desc = _rss_text(block, "description") or _rss_text(block, "content:encoded")
+        summary = clean_pcm_summary(desc)
+        if is_dump_summary(summary):
+            summary = ""
+        pd = _rss_text(block, "pubDate") or _rss_text(block, "dc:date")
+        d = today
+        iso = today.isoformat()
+        if pd:
+            try:
+                raw_dt = parsedate_to_datetime(pd)
+                if raw_dt.tzinfo is None:
+                    raw_dt = raw_dt.replace(tzinfo=TZ)
+                d = raw_dt.astimezone(TZ).date()
+                iso = d.isoformat()
+            except Exception:
+                try:
+                    d = datetime.fromisoformat(pd.replace("Z", "+00:00")).astimezone(TZ).date()
+                    iso = d.isoformat()
+                except Exception:
+                    pass
+        img = rss_image(block) or rss_image(desc)
+        if img:
+            img = upgrade_wp_img(img)
+        aid = slug_from_url(link)
+        items.append(
+            {
+                "title": title,
+                "summary": summary,
+                "sourceName": "PCM",
+                "sourceUrl": link,
+                "img": img,
+                "imgKind": "og" if img else "",
+                "imgCreator": "",
+                "imgLicense": "",
+                "imgSource": link if img else "",
+                "date": zh_date(d),
+                "isoDate": iso,
+                "ci": CI[PCM_LABEL],
+                "kind": "pcm",
+                "isNew": iso == today.isoformat(),
+                "_sec_label": PCM_LABEL,
+                "articleId": aid,
+                "articleUrl": f"articles/{aid}.html",
+                "embedded": summary,
+            }
+        )
+    return items
+
+
+def build_pcm_items(today: date) -> list[dict]:
+    raw: list[dict] = []
+    for url in PCM_FEEDS:
+        try:
+            xml = fetch(url, timeout=20)
+            got = parse_pcm_feed(xml, today)
+            print("pcm", url.split("pcmarket.com.hk")[-1] or "/", len(got))
+            raw.extend(got)
+            time.sleep(0.08)
+        except Exception as e:
+            print("pcm fetch fail", url, e)
+    uniq: list[dict] = []
+    seen: set[str] = set()
+    for it in raw:
+        u = it.get("sourceUrl") or ""
+        if not u or u in seen:
+            continue
+        seen.add(u)
+        uniq.append(it)
+    uniq.sort(key=lambda x: x.get("isoDate") or "", reverse=True)
+    out = uniq[:PCM_MAX]
+    for it in out:
+        fill_item_photo(it)
+        if not it.get("keypoints"):
+            it["keypoints"] = make_keypoints(it.get("summary") or "")
+        time.sleep(0.06)
     return out
 
 
@@ -1820,6 +1959,12 @@ def main() -> None:
     except Exception as e:
         print("wire fail", e)
 
+    pcm_items: list[dict] = []
+    try:
+        pcm_items = build_pcm_items(today)
+    except Exception as e:
+        print("pcm fail", e)
+
     deals = next(s for s in data["sections"] if s.get("kind") == "deals")
     deals["label"] = to_hant(deals.get("label") or "熱門優惠")
     for it in deals.get("items") or []:
@@ -1827,6 +1972,7 @@ def main() -> None:
 
     keep = {it["sourceUrl"] for it in nml40}
     keep.update(it["sourceUrl"] for it in app_items)
+    keep.update(it["sourceUrl"] for it in pcm_items)
     for items in aihot.values():
         keep.update(it["sourceUrl"] for it in items)
     keep.update(it["sourceUrl"] for it in deals["items"])
@@ -1856,6 +2002,10 @@ def main() -> None:
             it["board"] = APP_LABEL
             it["ci"] = CI[APP_LABEL]
             it["kind"] = "app"
+        elif it.get("kind") == "pcm" or "pcmarket.com.hk" in (it.get("sourceUrl") or ""):
+            it["board"] = PCM_LABEL
+            it["ci"] = CI[PCM_LABEL]
+            it["kind"] = "pcm"
 
     sections = []
     if nml40:
@@ -1873,6 +2023,8 @@ def main() -> None:
                 }
             )
     sections.append(deals)
+    if pcm_items:
+        sections.append({"label": PCM_LABEL, "items": pcm_items, "kind": "pcm", "ci": CI[PCM_LABEL]})
     if app_items:
         sections.append({"label": APP_LABEL, "items": app_items, "kind": "app", "ci": CI[APP_LABEL]})
 
@@ -1981,10 +2133,12 @@ def main() -> None:
     print("AIHOT", iso, aihot_n, {k: len(v) for k, v in aihot.items() if v})
     print("photos nml", sum(1 for it in nml40 if it.get("img")),
           "wire", sum(1 for it in wire_items if it.get("img")),
-          "aihot", sum(1 for v in aihot.values() for it in v if it.get("img")))
+          "aihot", sum(1 for v in aihot.values() for it in v if it.get("img")),
+          "pcm", sum(1 for it in pcm_items if it.get("img")))
     print("keypoints wire", sum(1 for it in wire_items if (it.get("keypoints") or [""])[0:1] and len((it.get("keypoints") or [""])[0]) > 18),
           "/", len(wire_items))
-    print("flat", len(flat), "old", len(old), "added", added, "wire", len(wire_items))
+    print("flat", len(flat), "old", len(old), "added", added, "wire", len(wire_items),
+          "pcm", len(pcm_items))
     print("bodies filled", ok, "fail", fail, "already", skip, "notice", kept)
 
 
