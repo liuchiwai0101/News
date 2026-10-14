@@ -320,9 +320,19 @@ ARTICLE_CLASS_TOKENS = [
 ]
 
 
+def encode_url(url: str) -> str:
+    """Percent-encode non-ASCII path/query so urllib can open Chinese URLs."""
+    if not url or not url.startswith("http"):
+        return url
+    parts = urllib.parse.urlsplit(url)
+    path = urllib.parse.quote(urllib.parse.unquote(parts.path), safe="/:@-._~!$&'()*+,;=")
+    query = urllib.parse.quote(urllib.parse.unquote(parts.query), safe="=&%@:/?-._~!$'()*+,;")
+    return urllib.parse.urlunsplit((parts.scheme, parts.netloc, path, query, parts.fragment))
+
+
 def fetch(url: str, timeout: int = 45) -> str:
     req = urllib.request.Request(
-        url,
+        encode_url(url),
         headers={
             "User-Agent": UA,
             "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
@@ -335,7 +345,7 @@ def fetch(url: str, timeout: int = 45) -> str:
 
 def fetch_prefix(url: str, timeout: int = 8, nbytes: int = 1_800_000) -> str:
     req = urllib.request.Request(
-        url,
+        encode_url(url),
         headers={
             "User-Agent": UA,
             "Accept": "text/html,application/xhtml+xml",
