@@ -9,8 +9,9 @@
 - **預覽**：只在瀏覽器打開頁面即可。不要截圖、不要產出 walkthrough 圖片／影片。
 
 ## 自動化
-- **現行發佈路徑**：GitHub Actions `Daily dashboard`（cron 每小時 `:17` UTC，或 Actions 頁手動 Run）→ `scripts/rebuild_daily.py`（列表 + 擷取 NML / AI HOT 全文 + **今日要聞** 解開 Google 新聞連結後抓原文段落；限時免費 App 宣傳拆到 **APP 優惠**；**PCM** 自 pcmarket.com.hk RSS 進新 group，全文擷取 `td-post-content`）→ push `main` → `pages-build-deployment`。Windows `AIReviewDailySite` 與 Cursor 日更 PR **不再依賴**。
-- **板塊順序**：限時情報王 → 今日要聞 → AI HOT ×5 → 熱門優惠 → **PCM** → **APP 優惠**（APP 最右）。CI：APP=8、PCM=9（`--c9` sky）。
+- **現行發佈路徑**：GitHub Actions `Daily dashboard`（cron 每小時 `:17` UTC，或 Actions 頁手動 Run）→ `scripts/rebuild_daily.py`（列表 + 擷取 NML / AI HOT 全文 + **今日要聞**／**本地新聞** 解開 Google 新聞連結後抓原文段落並合併相同事件；限時免費 App 宣傳拆到 **APP 優惠**；**PCM** 自 pcmarket.com.hk RSS 進新 group，全文擷取 `td-post-content`）→ push `main` → `pages-build-deployment`。Windows `AIReviewDailySite` 與 Cursor 日更 PR **不再依賴**。
+- **板塊順序**：限時情報王 → 今日要聞 → **本地新聞** → AI HOT ×5 → 熱門優惠 → **PCM** → **APP 優惠**（APP 最右）。CI：APP=8、PCM=9、本地新聞=10（`--c10` amber）。
+- **本地新聞來源**：RTHK 本地、Yahoo 港聞、星島頭條、東網、巴士的報、政府新聞公報、法庭線、Google 港聞／港媒（補 HK01／明報等無公開 RSS 者）；相同標題聚合成一則，正文含「各方報道」。
 - 舊 Cursor 任務名 **automation-1784089722231** 不是 UUID；`list-cloud-agents(sources=["automations"])` = 0。
   流程：fetch_daily → scrape_nml → build_dashboard(1) → 中文/前端補充 → build_dashboard(2) → pin 置頂 → cp→ghpages→git push → WeChat。**不要再跑 `build_nml_report.py`**（已 drop；bits 抄入 `build_dashboard.py`；`nml-daily.html` 由 dashboard 寫成 `/#nml` 轉址）。
 - 發佈目標：GitHub Pages 倉庫在 `ghpages/`（remote 含 x-access-token，勿外洩）。固定網址 **https://liuchiwai0101.github.io/News/**（勿用小寫 `/news/`）。
