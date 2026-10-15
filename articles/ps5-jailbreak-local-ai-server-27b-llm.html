@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PS5 遭成功「越獄」改造成 AI 伺服器 順暢運行 27B 大語言模型</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>PS5 遭成功「越獄」改造成 AI 伺服器 順暢運行 27B 大語言模型</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/15200726/PCM_Banner_1080-20261015_ps5_jailbreak.jpg" alt=""></p><p>Sony PlayStation 5（PS5）推出至今仍然是遊戲玩家的最愛神器之外，其強勁的硬體規格亦一直吸引不少極客（Geek）進行改裝實驗。最近，網路社群再盛傳有開發者成功透過破解（Jailbreak）PS5，將這台家用遊戲機改造成一套高效能的「本地 AI 伺服器」，甚至成功順暢執行高達 270 億參數（27B）的大型語言模型（LLM）！</p><h3>解放 16GB GDDR6 記憶體！開源驅動成關鍵突破</h3><p>一直以來，PS5 搭載的 AMD Custom Zen 2 CPU 與 RDNA 2 架構 GPU，配合 16GB 的 GDDR6 統一記憶體（Unified Memory）及 448 GB/s 記憶體頻寬，以硬體規格來説相當適合用於 AI 算力推演。然而，早期的 PS5 破解嘗試主要依賴 CPU 運行，記憶體配給限制在 6GB，僅能執行不足 2B 參數的微型模型。</p><p>這次社群採用的全新方案「PS5LM」，關鍵突破在於導入了開源的 RADV 驅動程式與 Vulkan API。開發者將 AI 運算工作完全由 CPU 轉移至 GPU，並成功獲取高達 11.4GB 至 12GB 的系統記憶體控制權。這項改動讓 PS5 有足夠空間載入更龐大的模型架構。</p><h3>實測運行 Qwen 27B 模型：生成速度達 20 Tok/s</h3><p>根據國外論壇 Reddit 用户與開發者公開的實測數據，這台「越獄版 PS5」成功載入了經量化處理（Quantized）的 Qwen3.8-27B 大語言模型。在 GPU 100% 滿載運作下，文字生成速度可達到約每秒 20 個 Token（20 tok/s），表現出乎意料地流暢！</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/15195707/Running-a-27B-AI-model-on-a-jailbroken-PS5-3-1456x819-1-1024x576.jpg" alt=""><p>如果是執行參數較小的模型，PS5 的表現更為驚人，輸出速度最高可達 124 tok/s，且功耗僅維持在極低的 86W 左右。PS5 甚至能開放 port 8081 端口，支援 OpenAI 及 Anthropic 的 API 接口，直接充當本地端的 AI 代理伺服器。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/15195702/Running-a-27B-AI-model-on-a-jailbroken-PS5-1-1456x819-1-1024x576.jpg" alt=""><h3>技術限制：高度量化犧牲精準度</h3><p>雖然成功挑戰 27B 模型，但 PS5LM 技術上仍有不少妥協：</p><ol><li><strong>模型精度受損</strong>： 為了容納於 12GB 左右的記憶體中，27B 模型採用了極高壓縮率的 2-bit（IQ2）量化。這會導致模型邏輯推理能力及回答準確度明顯下降，容易出現「幻覺」或錯誤。</li><li><strong>Context Window 記憶體吃緊</strong>： 當上下文視窗（Context Window）設定為 64K 時，系統記憶體佔用率高達 91%，幾乎觸及硬體極限。</li></ol><h3>小結：會否引發「另類炒風」？</h3><p>隨著 AI PC 與高階顯示卡（GPU）價格持續居高不下，一部幾千港元、擁有 16GB 快速記憶體的 PS5，在破解後瞬間變成極具性價比的本地 AI 實驗平台。</p><p>不過玩家亦無需過份擔心 PS5 會被 AI 狂熱者搶購一空。首先，此功能極度依賴特定的舊版韌體（目前僅支援 Firmware 13.60 或以下），官方早已修補相關漏洞；其次，越獄會導致主機失去保養，並面臨被 Sony 永久封鎖帳號（Network Ban）的風險。因此這項突破目前仍屬於 Geek 和改裝發燒友的實驗性質，但已充分展現了家用遊戲機在 AI 時代下的驚人潛力！</p>
+<p><a href="https://www.pcmarket.com.hk/ps5-jailbreak-local-ai-server-27b-llm/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
