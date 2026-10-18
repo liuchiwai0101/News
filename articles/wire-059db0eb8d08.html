@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Windows 11 備份災情未解？微軟號稱已修正 File History 問題，仍有用户反映備份時間異常</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Windows 11 備份災情未解？微軟號稱已修正 File History 問題，仍有用户反映備份時間異常</h1>
+<div class="notice">內容機器翻譯自第三方媒體（電腦王阿達 · Yahoo 新聞），僅供參考，以原文為準。</div><p><img src="https://www.kocpc.com.tw/wp-content/uploads/2026/10/20261018014044_0_b3277b.jpg" alt=""></p><h3>正文</h3><p>微軟在 2026 年 9 月推出的 Windows 安全更新，原本是要修補系統漏洞，沒想到卻讓部分使用者的「檔案歷史記錄」（File History）備份功能發生異常。儘管微軟隨後推出修正更新，並在官方文件中將問題標示為已解決，但仍有使用者反映備份時間沒有更新、檔案無法正常還原等狀況。日本科技媒體也在實際測試中發現，部分備份相關異常並未隨著更新完全消失。對於長期仰賴 Windows 內建功能備份重要資料的使用者來説，恐怕還是得親自確認備份檔案是否真的成功儲存。</p><p>九月 Windows 更新闖禍，微軟已承認備份功能出問題 這起事件最早可以追溯到 2026 年 9 月 8 日。當時微軟針對 Windows 11 24H2、25H2 推出例行安全更新 KB5124008，但更新後陸續有使用者反映，原本正常運作的 File History 突然無法辨識備份硬碟。</p><p>微軟剛叫大家別拖延更新，Windows 11 九月更新就出事了(KB5124008 災情)</p><p>File History 是 Windows 內建的檔案備份功能，可以定期將使用者的文件、圖片及其他支援的資料夾內容備份到外接硬碟或網路儲存位置，並保留不同時間點的檔案版本，方便日後還原。</p><p>問題在於，部分使用者明明已經正確連接外接硬碟，系統仍持續顯示「重新連接磁碟機」的警告。更麻煩的是，有些電腦甚至沒有明顯的錯誤訊息，卻出現備份時間不再更新、檔案找不到先前版本的情況。</p><p>微軟在官方支援文件中證實，九月安全更新可能導致 File History 無法建立或更新備份，部分電腦的事件檢視器還會留下 FileHistory.exe 與 KERNELBASE.dll 相關的程式當機紀錄。</p><p>由於備份功能不像一般應用程式，使用者不一定每天都會檢查，一旦長期沒有發現問題，等到真正需要還原資料時，才可能發現最近的檔案根本沒有成功備份。</p><p>KB5124010 宣稱修復，但日本媒體實測仍發現異常 針對這次問題，微軟在 9 月 22 日推出 Windows 11 預覽更新 KB5124010，官方更新説明明確將 File History 列為已修復項目，指出這次更新解決了系統錯誤要求重新連接備份磁碟機，以及無法正常備份或還原檔案的問題。</p><p>日本科技媒體「 ニッチなPCゲーマーの環境構築Z 」在 9 月 28 日發表的報導中指出，即使安裝 KB5124010，仍收到部分使用者表示 File History 無法正常運作的回報。</p><p>Source 該媒體也自行進行測試，發現一個相當微妙的問題：在控制枱中手動執行備份後，「最後複製的日期和時間」並沒有更新，但實際檢查備份資料夾後，發現新建立的檔案確實已經成功備份。換句話説，至少在這個測試案例中，問題並不是備份完全失效，而是系統顯示的時間資訊與實際備份狀態不一致。</p><p>該媒體另外使用停留在 2026 年 2 月更新狀態的測試電腦比較，發現舊環境執行手動備份後，日期可以正常更新，因此認為新版 Windows 的相關行為仍有異常。</p><p>Microsoft Q&amp;A 也有使用者在安裝 KB5124010 後回報，雖然系統已能顯示正確的備份磁碟機，卻仍然出現無法辨識磁碟機的錯誤。不過，目前尚無足夠證據顯示這些殘留異常是大規模災情，也無法確認所有案例都出自同一原因。</p><p>十月更新已推出，還有讀者反映備份問題未解決 到了 10 月 13 日，微軟正式推出 Windows 11 累積安全更新 KB5127648，適用於 24H2、25H2 與 26H2，Windows 10 的延伸安全更新版本則推出 KB5126657。其中 Windows 10 的 KB5126657 官方更新説明，也將 File History 無法備份及還原的已知問題列為已修正項目。</p><p>然而，電腦王阿達近日收到讀者來信，表示自己在 Windows 11 25H2 與 Windows 10 22H2 上，經歷多次更新後仍然遇到與 File History 有關的異常。</p><p>手動按下「立即執行」備份後，最後複製日期沒有正確更新。</p><p>備份磁碟機可以正常讀寫，但部分新增或修改檔案沒有顯示最新的備份版本。</p><p>在檔案內容的「先前的版本」頁面中，無法找到最新備份。</p><p>備份資料夾內部分檔案與預期不一致，擔心備份資料不完整。</p><p>這名讀者表示，已經多次與微軟技術支援聯繫，也在 Microsoft Community Hub 及意見反應中樞提出相關問題。值得注意的是，讀者也曾手動調整 FileHistory 備份資料夾名稱，因此目前仍無法排除既有備份索引或本機設定影響後續行為的可能性。</p><p>另一方面，部分類似的清理版本錯誤在過去的 Windows 版本便曾出現，不能將所有異常都直接歸因於今年九月或十月的更新。</p><p>因此，現階段比較準確的説法是： 微軟已修復先前確認的 File History 備份問題，但部分使用者仍回報相似症狀，尚待進一步釐清。</p><p>不能只看備份時間！如何確認 Windows 真的有備份成功？ 對一般使用者來説，這次事件最大的提醒，就是不能只依靠 Windows 顯示的備份狀態判斷資料是否安全。如果你平常就有使用 File History，建議可以透過以下方式進行檢查。</p><p>開啟「控制枱」→「系統及安全性」→「檔案歷程記錄」（File History），確認備份目的地仍然正常連接，並查看目前顯示的備份時間。</p><h3>各方報道</h3><ul><li><a href="https://www.kocpc.com.tw/archives/672319" target="_blank" rel="noopener noreferrer">電腦王阿達</a>：Windows 11 備份災情未解？微軟號稱已修正 File History 問題，仍有用户反映備份時間異常</li><li><a href="https://hk.news.yahoo.com/%E5%BE%AE%E8%BB%9F%E5%87%BA%E6%89%8B%E5%B0%81%E5%A0%B5%E6%BC%8F%E6%B4%9E-%E6%9A%AB%E6%99%82%E5%86%8D%E6%B2%92%E8%BE%A6%E6%B3%95%E4%BB%A5%E6%9C%AC%E6%A9%9F%E5%B8%B3%E6%88%B6%E5%8F%96%E4%BB%A3%E5%BE%AE%E8%BB%9F%E5%B8%B3%E6%88%B6%E5%AE%89%E8%A3%9D-windows-11-003015676.html" target="_blank" rel="noopener noreferrer">Yahoo 新聞</a>：微軟出手封堵漏洞　暫時再沒辦法以本機帳户取代微軟帳户安裝 Windows 11</li></ul>
+<p><a href="https://www.kocpc.com.tw/archives/672319" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

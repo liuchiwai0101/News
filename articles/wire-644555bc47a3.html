@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PS5 不只用來打機　有開發者成功改裝成可以運行 Qwen3.8-27B</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>PS5 不只用來打機　有開發者成功改裝成可以運行 Qwen3.8-27B</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Yahoo 新聞），僅供參考，以原文為準。</div><p><img src="https://s.yimg.com/lo/mysterio/api/8669c0def4e62bbe8dc237d1760cfabc5bf4efa5686c20b8c8b718f098d8fa6c/lightyear_networkapi/resizefill_w1200%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fpc3mag.com%2Fa9bc9073e5a80b2237185c25e1df2163.jpg" alt=""></p><h3>正文</h3><p>PC3 PS5 不只用來打機 有開發者成功改裝成可以運行 Qwen3.8-27B 偽宅男 2026年10月17日週六 下午5:30 平日我們利用 PlayStation 5，就是用來遊玩不同類型的遊戲。近年在 AI 的輔助下，有些玩家及開發者開始研究 PS5 除了遊玩海量的兼容遊戲，還可以用來做甚麼。早前就已有人成功為 PS5 開發出專用的模擬器，可以用來運行眾多舊遊戲，近期更有人利用 PS5 本身的效能，運行 AI 大模型。</p><p>PS5 原來可勉強運行 Qwen 3.8-27B 本身 PS5 配備 16GB GDDR6 記憶體，頻寬為 448GB/s，若果此規格用在電腦，也不算太差，可以嘗試用來運行一些經量化處理的 AI 模型。早前就有 Reddit 用家嘗試將它改裝成本機 AI 伺服器，並成功執行有 270 億參數的 Qwen3.8-27B。</p><p>廣告 廣告 最初是一位網名為 u/metover 的開發者推出的非官方 llama.cpp 移植版 PS5LM，它以 CPU 作為 payload 運行模型，但可用記憶體只有 6GB，對運行較大的模型會甚為吃力。另一名開發者 u/AdIllustrious7246 在測試後，發現這個限制，改為透過 RADV 以 Vulkan 把 llama.cpp 做成 PS5 上的原生應用程式，把 AI 運算由 CPU 轉到 GPU 上進行，令可用記憶體由 6GB 大增至 11.4 GB。</p><p>Qwen3.8-27B 需要選特定量化版本才行 理論上，Qwen3.8-27B 以 16-bit 精度運行，需要多達 54GB RAM，所以只有具備多 GPU 的系統，或單一 GPU 搭配大量 RAM 才能應付。驟眼看來，PS5 只有 16GB RAM，遠遠未能滿足 Qwen3.8-27B 的需要。因此於測試時，改用 Qwen3.8-27B-UD-IQ2_XXS 版本，令每個權重只是約 2 位元，整個模型的體積亦縮至 6.8GB，生成速度可達 20.9 tok/s，期間 GPU 使用率 100%，CPU 只有 2%。同時，不過語境視窗設為 64K 時，整體記憶體用量達 91%。</p><p>這種經重度量化的模型，代價在於輸出答案的質素不穩，出錯的機會較高，推理能力亦較原版弱，實際表現未必達到日常使用所需。如果改為運行較小型的模型，例如 Gemma 4 E4B，生成速度就可達 61 tok/s；Llama 3.2 3B 則達 124 tok/s。</p><p>本身需要越獄才做到而這有甚大風險 雖然 PS5 不是不能運行大模型，但是因 RAM 只有 16GB，始終有甚大限制。而且，PS5 本身需要事先進行越獄處理，但這不但違反原廠保養，亦可能導致 PSN 帳户被封禁。加上要能把 PS5 越獄，本身只可以運行指定的舊版本韌體，只要 PS5 運行最新的韌體就已做不到。因此上述的測試，只是反映 PS5 本身的效能，具有不同的發展湣力，但就別期望可以做到許多打機以外的事。</p><p>這篇文章 PS5 不只用來打機 有開發者成功改裝成可以運行 Qwen3.8-27B 最早出現於 PC3 Magazine 。</p><h3>各方報道</h3><ul><li><a href="https://hk.news.yahoo.com/ps5-%E4%B8%8D%E5%8F%AA%E7%94%A8%E4%BE%86%E6%89%93%E6%A9%9F-%E6%9C%89%E9%96%8B%E7%99%BC%E8%80%85%E6%88%90%E5%8A%9F%E6%94%B9%E8%A3%9D%E6%88%90%E5%8F%AF%E4%BB%A5%E9%81%8B%E8%A1%8C-qwen3-8-003025500.html" target="_blank" rel="noopener noreferrer">Yahoo 新聞</a>：PS5 不只用來打機　有開發者成功改裝成可以運行 Qwen3.8-27B</li></ul>
+<p><a href="https://hk.news.yahoo.com/ps5-%E4%B8%8D%E5%8F%AA%E7%94%A8%E4%BE%86%E6%89%93%E6%A9%9F-%E6%9C%89%E9%96%8B%E7%99%BC%E8%80%85%E6%88%90%E5%8A%9F%E6%94%B9%E8%A3%9D%E6%88%90%E5%8F%AF%E4%BB%A5%E9%81%8B%E8%A1%8C-qwen3-8-003025500.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
