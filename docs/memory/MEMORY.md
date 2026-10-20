@@ -12,6 +12,7 @@
 - **現行發佈路徑**：GitHub Actions `Daily dashboard`（cron 每小時 `:17` UTC，或 Actions 頁手動 Run）→ `scripts/rebuild_daily.py`（列表 + 擷取 NML / AI HOT 全文 + **今日要聞** 含香港本地與各地要聞，解開 Google 新聞連結後抓原文並合併相同事件；限時免費 App 宣傳拆到 **APP 優惠**；**PCM** 自 pcmarket.com.hk RSS，全文擷取 `td-post-content`）→ push `main` → `pages-build-deployment`。Windows `AIReviewDailySite` 與 Cursor 日更 PR **不再依賴**。
 - **板塊順序**：限時情報王 → **今日要聞**（本地＋各地，同一 tab）→ AI HOT ×5 → 熱門優惠 → **PCM** → **APP 優惠**（APP 最右）。CI：APP=8、PCM=9。
 - **預設檢視**：導航第一個標籤是「全部」，進站即一條合併清單（各組輪流穿插）。同一事件（標題改寫、PS6／PlayStation、恒指／港股等）合成一張，正文附「同一事件的其他報道」。點其他標籤才只看該組；組內重複同樣合併。
+- **行業動態**：AI HOT 該欄若偏少，另抓量子位、IT之家、愛范兒、極客公園、Solidot、雷峰網、鈦媒體、InfoQ、cnBeta、Google 新聞「AI／大模型」（近 72 小時、最多 18 則），與既有 AI HOT 標題去重後併入。
 - **今日要聞來源**：原國際線（Google 港／台／國際、BBC、RTHK 本地／國際、Yahoo、德國之聲、新浪）加上本地線（Yahoo 港聞、星島頭條、東網、巴士的報、政府新聞公報、法庭線、Google 港聞／港媒）。同一標題聚成一則，最多 48 則。
 - 舊 Cursor 任務名 **automation-1784089722231** 不是 UUID；`list-cloud-agents(sources=["automations"])` = 0。
   流程：fetch_daily → scrape_nml → build_dashboard(1) → 中文/前端補充 → build_dashboard(2) → pin 置頂 → cp→ghpages→git push → WeChat。**不要再跑 `build_nml_report.py`**（已 drop；bits 抄入 `build_dashboard.py`；`nml-daily.html` 由 dashboard 寫成 `/#nml` 轉址）。

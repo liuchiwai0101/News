@@ -114,6 +114,33 @@ WIRE_FEEDS = [
     ("德國之聲", "https://rss.dw.com/rdf/rss-chi-all"),
     ("新浪國際", "https://rss.sina.com.cn/news/world/focus15.xml"),
 ]
+AI_INDUSTRY_MAX = 18
+AI_INDUSTRY_HOURS = 72
+AI_INDUSTRY_RX = re.compile(
+    r"人工智能|人工智慧|生成式|大模型|大語言模型|語言模型|智能體|具身|"
+    r"OpenAI|ChatGPT|Claude|Gemini|Anthropic|DeepSeek|深度求索|"
+    r"英偉達|英伟达|輝達|NVIDIA|算力|Sora|Copilot|通義|文心|豆包|Kimi|"
+    r"智譜|MiniMax|Grok|Perplexity|(?<![A-Za-z])AI(?![A-Za-z])",
+    re.I,
+)
+AI_INDUSTRY_FEEDS = [
+    (
+        "Google AI",
+        "https://news.google.com/rss/search?q="
+        "(AI+OR+%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD+OR+%E5%A4%A7%E6%A8%A1%E5%9E%8B"
+        "+OR+OpenAI+OR+ChatGPT+OR+DeepSeek)+when:2d"
+        "&hl=zh-Hant&gl=HK&ceid=HK:zh-Hant",
+    ),
+    ("量子位", "https://www.qbitai.com/feed"),
+    ("IT之家", "https://www.ithome.com/rss/"),
+    ("愛范兒", "https://www.ifanr.com/feed"),
+    ("極客公園", "https://www.geekpark.net/rss"),
+    ("Solidot", "https://www.solidot.org/index.rss"),
+    ("雷峰網", "https://www.leiphone.com/feed"),
+    ("鈦媒體", "https://www.tmtpost.com/rss.xml"),
+    ("InfoQ", "https://www.infoq.cn/feed"),
+    ("cnBeta", "https://www.cnbeta.com.tw/backend.php"),
+]
 SOURCE_ALIAS = {
     "bbc": "BBC 中文",
     "bbc中文": "BBC 中文",
@@ -1775,6 +1802,7 @@ def build_clustered_news(
     max_items: int,
     hours: int,
     log_name: str,
+    title_ok=None,
 ) -> tuple[list[dict], dict[str, str]]:
     """Fetch RSS feeds, merge same-event headlines, build cards + reader bodies."""
     raw: list[dict] = []
@@ -1782,6 +1810,8 @@ def build_clustered_news(
         try:
             xml = fetch(url, timeout=20)
             items = parse_rss_feed(xml, name)
+            if title_ok:
+                items = [it for it in items if title_ok(it.get("title") or "")]
             print(log_name, name, len(items))
             raw.extend(items)
         except Exception as e:
@@ -1996,6 +2026,73 @@ def news_feeds() -> list[tuple[str, str]]:
     return out
 
 
+def is_ai_industry_title(title: str) -> bool:
+    return bool(AI_INDUSTRY_RX.search(title or ""))
+
+
+_AI_ENTITY = re.compile(
+    r"DeepSeek|OpenAI|Anthropic|Gemini|Claude|英偉達|英伟达|NVIDIA|ChatGPT|MiniMax",
+    re.I,
+)
+_AI_BAN = re.compile(r"禁|移除")
+
+
+def ai_industry_dup(a: str, b: str) -> bool:
+    if same_story(a, b) or headlines_similar(a, b):
+        return True
+    ea = {m.group(0).lower() for m in _AI_ENTITY.finditer(a or "")}
+    eb = {m.group(0).lower() for m in _AI_ENTITY.finditer(b or "")}
+    if ea & eb and _AI_BAN.search(a or "") and _AI_BAN.search(b or ""):
+        return True
+    return False
+
+
+def supplement_ai_industry(aihot: dict[str, list[dict]], today: date) -> dict[str, str]:
+    """Fill 行業動態 from other AI sites when AI HOT itself is thin."""
+    items, bodies = build_clustered_news(
+        today,
+        AI_INDUSTRY_FEEDS,
+        label="行业动态",
+        kind="aihot",
+        aid_prefix="aiind",
+        max_items=AI_INDUSTRY_MAX,
+        hours=AI_INDUSTRY_HOURS,
+        log_name="aiind",
+        title_ok=is_ai_industry_title,
+    )
+    have = [it.get("title") or "" for rows in aihot.values() for it in rows]
+    added: list[dict] = []
+    for it in items:
+        title = it.get("title") or ""
+        if any(ai_industry_dup(title, prev) for prev in have if prev):
+            continue
+        it["kind"] = "aihot"
+        it["ci"] = CI["行业动态"]
+        it["_sec_label"] = AIHOT_SHOW["行业动态"]
+        added.append(it)
+        have.append(title)
+    folded: list[dict] = []
+    for it in added:
+        hit = next((c for c in folded if ai_industry_dup(c.get("title") or "", it.get("title") or "")), None)
+        if not hit:
+            folded.append(it)
+            continue
+        names = []
+        for part in ((hit.get("sourceName") or "") + " · " + (it.get("sourceName") or "")).split("·"):
+            part = re.sub(r"等\d+家", "", part).strip()
+            if part and part not in names:
+                names.append(part)
+        hit["sourceName"] = " · ".join(names[:4]) + (f" 等{len(names)}家" if len(names) > 4 else "")
+        extra = bodies.get(it.get("articleId") or "")
+        if extra and hit.get("articleId") in bodies:
+            bodies[hit["articleId"]] += "<h3>同一事件的其他報道</h3>" + extra
+        if (it.get("summary") or "") and len(it.get("summary") or "") > len(hit.get("summary") or ""):
+            hit["summary"] = it["summary"]
+    aihot["行业动态"] = list(aihot.get("行业动态") or []) + folded
+    print("ai industry extra", len(folded), "total", len(aihot["行业动态"]))
+    return {it["articleId"]: bodies[it["articleId"]] for it in folded if it.get("articleId") in bodies}
+
+
 def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
     return build_clustered_news(
         today,
@@ -2065,6 +2162,13 @@ def main() -> None:
             for it in items:
                 fill_item_photo(it)
                 fill_item_copy(it, [aihot_item_url(it), it.get("sourceUrl") or ""])
+
+    industry_bodies: dict[str, str] = {}
+    try:
+        industry_bodies = supplement_ai_industry(aihot, today)
+        aihot_n = sum(len(v) for v in aihot.values())
+    except Exception as e:
+        print("ai industry fail", e)
 
     nml_items: list[dict] = []
     for url in NML_LISTS:
@@ -2231,6 +2335,12 @@ def main() -> None:
                     write_article(it, body)
             elif aid not in articles:
                 articles[aid] = notice_html(it["sourceUrl"])
+            continue
+        if aid in industry_bodies:
+            articles[aid] = industry_bodies[aid]
+            if it in flat:
+                write_article(it, industry_bodies[aid])
+            ok += 1
             continue
         cur = articles.get(aid, "")
         filled_now = False
