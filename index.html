@@ -567,7 +567,7 @@
 </header>
 
 <div id="view-current">
-<nav class="nav"><div class="nav-inner"><a class="nav-link" href="#sec-0"><span class="dot dot-5"></span>限時情報王<span class="nav-count">40</span></a><a class="nav-link" href="#sec-1"><span class="dot dot-0"></span>模型發布/更新<span class="nav-count">1</span></a><a class="nav-link" href="#sec-2"><span class="dot dot-1"></span>產品發布/更新<span class="nav-count">5</span></a><a class="nav-link" href="#sec-3"><span class="dot dot-2"></span>行業動態<span class="nav-count">2</span></a><a class="nav-link" href="#sec-4"><span class="dot dot-3"></span>論文研究<span class="nav-count">1</span></a><a class="nav-link" href="#sec-5"><span class="dot dot-4"></span>技巧與觀點<span class="nav-count">5</span></a><a class="nav-link" href="#sec-6"><span class="dot dot-6"></span>熱門優惠<span class="nav-count">20</span></a></div></nav>
+<nav class="nav"><div class="nav-inner"><button type="button" class="nav-link on" data-cat="__all__">全部</button></div></nav>
 
 <main class="wrap" id="content"></main>
 </div>
@@ -836,11 +836,36 @@ function buildPanel(sec, si){
   return panel;
 }
 
-// 全部 panel: all section panels stacked (grouped by section)
+// 全部: one merged feed (round-robin across groups). Default tab.
 const allPanel = document.createElement('div');
 allPanel.className = 'tab-panel';
 allPanel.setAttribute('data-cat', '__all__');
-DATA.sections.forEach(function(sec, si){ allPanel.appendChild(buildPanel(sec, si)); });
+const allSub = document.createElement('div');
+allSub.className = 'nml-sub';
+allSub.textContent = '全部板塊合併顯示；可用上方標籤只看某一組';
+allPanel.appendChild(allSub);
+const allGrid = document.createElement('div');
+allGrid.className = 'grid wall';
+const queues = DATA.sections.map(function(sec){ return (sec.items || []).slice(); });
+let seq = 0;
+let guard = 0;
+while (guard++ < 5000) {
+  let took = false;
+  DATA.sections.forEach(function(sec, si){
+    if (!queues[si].length) return;
+    took = true;
+    const item = queues[si].shift();
+    seq++;
+    const ri = sec.ci != null ? sec.ci : si;
+    const card = sec.kind === 'deals'
+      ? makeDealCard(item, seq, ri)
+      : makeCard(item, seq, ri, sec.kind === 'external', false);
+    card.setAttribute('data-cat', sec.label);
+    allGrid.appendChild(card);
+  });
+  if (!took) break;
+}
+allPanel.appendChild(allGrid);
 content.appendChild(allPanel);
 
 // Per-section panels (hidden until their tab is selected)
@@ -1006,16 +1031,7 @@ function applySearch() {
       if (isAllPanel) {
         p.style.display = (activeCat === '__all__') ? '' : 'none';
         if (activeCat === '__all__') {
-          p.querySelectorAll('.tab-panel').forEach(function(sub){
-            if (!q) {
-              sub.style.display = '';
-              totalMatchInView += sub.querySelectorAll('.card').length;
-            } else {
-              const visN = countVisibleCards(sub);
-              sub.style.display = visN > 0 ? '' : 'none';
-              totalMatchInView += visN;
-            }
-          });
+          totalMatchInView += q ? countVisibleCards(p) : p.querySelectorAll('.card').length;
         }
       } else {
         const catMatch = (p.getAttribute('data-cat') === activeCat);
