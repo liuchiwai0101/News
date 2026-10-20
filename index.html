@@ -820,14 +820,8 @@ function buildPanel(sec, si){
   if (sec.kind === 'wire') {
     const wireSub = document.createElement('div');
     wireSub.className = 'nml-sub';
-    wireSub.textContent = '各大新聞平台當日要聞，相同事件已合併為一則';
+    wireSub.textContent = '香港本地與各地要聞，相同事件已合併為一則';
     panel.appendChild(wireSub);
-  }
-  if (sec.kind === 'local') {
-    const localSub = document.createElement('div');
-    localSub.className = 'nml-sub';
-    localSub.textContent = '香港本地媒體當日港聞，相同事件已合併為一則';
-    panel.appendChild(localSub);
   }
   const grid = document.createElement('div');
   grid.className = 'grid wall';
@@ -1203,7 +1197,7 @@ document.getElementById('foot').innerHTML =
   + '<div style="margin-top:6px">「限時情報王」聚合自 <a href="https://www.newmobilelife.com/category/apps-%e6%83%85%e5%a0%b1/%e9%99%90%e6%99%82%e5%85%8d%e8%b2%bb%e6%83%85%e5%a0%b1/" target="_blank" rel="noopener noreferrer">NewMobileLife 限時情報王 / 限時免費情報</a>'
   + (NML ? '（全站 ' + NML.total + ' 篇，本頁 ' + NML.shown + ' 篇，新增 ' + NML.newCount + '）' : '')
   + '，版權與原文均歸原媒體所有。</div>'
-  + '<div style="margin-top:6px">「今日要聞」綜合 BBC 中文、RTHK、Yahoo、德國之聲、新浪及 Google 新聞等平台當日頭條，相同事件合併為一則，版權與原文均歸原媒體所有。</div>';
+  + '<div style="margin-top:6px">「今日要聞」綜合香港本地（RTHK、星島、東網、巴士的報、政府公報、法庭線、HK01、明報等）與 BBC 中文、Yahoo、德國之聲、新浪及 Google 新聞，相同事件合併為一則，版權與原文均歸原媒體所有。</div>';
 
 // Night / day theme — persisted; first visit follows prefers-color-scheme
 (function(){

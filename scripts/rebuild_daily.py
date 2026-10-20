@@ -83,9 +83,6 @@ PCM_FEEDS = [
     "https://www.pcmarket.com.hk/category/how-to/feed/",
     "https://www.pcmarket.com.hk/category/reviews/feed/",
 ]
-LOCAL_LABEL = "本地新聞"
-LOCAL_MAX = 36
-LOCAL_HOURS = 36
 LOCAL_FEEDS = [
     ("RTHK 本地", "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml"),
     ("Yahoo 港聞", "https://hk.news.yahoo.com/rss/hong-kong"),
@@ -102,7 +99,7 @@ LOCAL_FEEDS = [
         "+OR+site:bastillepost.com+OR+site:881903.com+when:1d&hl=zh-Hant&gl=HK&ceid=HK:zh-Hant",
     ),
 ]
-WIRE_MAX = 36
+WIRE_MAX = 48
 WIRE_HOURS = 36
 WIRE_SKIP_TITLE = re.compile(r"招聘啟事|誠聘以下|廣告主|sponsored", re.I)
 PCM_FOOTER = re.compile(r"這篇文章\s*.*?最早出現於\s*.*?。?\s*$", re.S)
@@ -1924,29 +1921,28 @@ def build_clustered_news(
     return items, bodies
 
 
+def news_feeds() -> list[tuple[str, str]]:
+    """今日要聞 = 國際／兩岸要聞 + 香港本地媒體，同一 URL 只抓一次。"""
+    seen: set[str] = set()
+    out: list[tuple[str, str]] = []
+    for name, url in list(WIRE_FEEDS) + list(LOCAL_FEEDS):
+        if url in seen:
+            continue
+        seen.add(url)
+        out.append((name, url))
+    return out
+
+
 def build_wire_items(today: date) -> tuple[list[dict], dict[str, str]]:
     return build_clustered_news(
         today,
-        WIRE_FEEDS,
+        news_feeds(),
         label=WIRE_LABEL,
         kind="wire",
         aid_prefix="wire",
         max_items=WIRE_MAX,
         hours=WIRE_HOURS,
         log_name="wire",
-    )
-
-
-def build_local_items(today: date) -> tuple[list[dict], dict[str, str]]:
-    return build_clustered_news(
-        today,
-        LOCAL_FEEDS,
-        label=LOCAL_LABEL,
-        kind="local",
-        aid_prefix="local",
-        max_items=LOCAL_MAX,
-        hours=LOCAL_HOURS,
-        log_name="local",
     )
 
 
@@ -2043,13 +2039,6 @@ def main() -> None:
     except Exception as e:
         print("wire fail", e)
 
-    local_items: list[dict] = []
-    local_bodies: dict[str, str] = {}
-    try:
-        local_items, local_bodies = build_local_items(today)
-    except Exception as e:
-        print("local fail", e)
-
     pcm_items: list[dict] = []
     try:
         pcm_items = build_pcm_items(today)
@@ -2068,7 +2057,6 @@ def main() -> None:
         keep.update(it["sourceUrl"] for it in items)
     keep.update(it["sourceUrl"] for it in deals["items"])
     keep.update(it["sourceUrl"] for it in wire_items)
-    keep.update(it["sourceUrl"] for it in local_items)
 
     old = [
         hantify_item(it)
@@ -2108,10 +2096,6 @@ def main() -> None:
         sections.append({"label": "限時情報王", "items": nml40, "kind": "external", "ci": 5})
     if wire_items:
         sections.append({"label": WIRE_LABEL, "items": wire_items, "kind": "wire", "ci": CI[WIRE_LABEL]})
-    if local_items:
-        sections.append(
-            {"label": LOCAL_LABEL, "items": local_items, "kind": "local", "ci": CI[LOCAL_LABEL]}
-        )
     for lab in AIHOT_LABELS:
         if aihot[lab]:
             sections.append(
@@ -2177,7 +2161,7 @@ def main() -> None:
     for it in fill_items:
         aid = it["articleId"]
         if it.get("kind") in ("wire", "local"):
-            body = wire_bodies.get(aid) if it.get("kind") == "wire" else local_bodies.get(aid)
+            body = wire_bodies.get(aid)
             if body:
                 articles[aid] = body
                 if it in flat:
@@ -2233,15 +2217,12 @@ def main() -> None:
     print("AIHOT", iso, aihot_n, {k: len(v) for k, v in aihot.items() if v})
     print("photos nml", sum(1 for it in nml40 if it.get("img")),
           "wire", sum(1 for it in wire_items if it.get("img")),
-          "local", sum(1 for it in local_items if it.get("img")),
           "aihot", sum(1 for v in aihot.values() for it in v if it.get("img")),
           "pcm", sum(1 for it in pcm_items if it.get("img")))
     print("keypoints wire", sum(1 for it in wire_items if (it.get("keypoints") or [""])[0:1] and len((it.get("keypoints") or [""])[0]) > 18),
-          "/", len(wire_items),
-          "local", sum(1 for it in local_items if (it.get("keypoints") or [""])[0:1] and len((it.get("keypoints") or [""])[0]) > 18),
-          "/", len(local_items))
+          "/", len(wire_items))
     print("flat", len(flat), "old", len(old), "added", added, "wire", len(wire_items),
-          "local", len(local_items), "pcm", len(pcm_items))
+          "pcm", len(pcm_items))
     print("bodies filled", ok, "fail", fail, "already", skip, "notice", kept)
 
 
