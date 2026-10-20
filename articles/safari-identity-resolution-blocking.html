@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Safari 封鎖身份解析基建　切斷跨網站電郵追蹤</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Safari 封鎖身份解析基建　切斷跨網站電郵追蹤</h1>
+<div class="notice">內容機器翻譯自第三方媒體（NewMobileLife 流動日報），僅供參考，以原文為準。</div><p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/10/Safari-01.jpg" alt=""></p><p>Apple 在 iOS 27、iPadOS 27、macOS 27 及 visionOS 27 的 Safari 與 WebKit 中加入封鎖部分網絡連線的做法，阻止廣告商藉身份解析服務辨識瀏覽網頁的用户身份，從而避免用户資料落入資料中介商手中。Apple 在 10 月 19 日於 WebKit 網誌發文，説明公司為減少資料收集與用户追蹤所做的工作。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/10/Blocking-Identity-Resolution-04-Light-768x441-xl.jpg" alt="文章配圖"><h3>身份解析成追蹤新手法</h3><p>Apple 封鎖跨網站 Cookie 已有六年，廣告商無法再以同一個 Cookie 跨多個網站查看用户的瀏覽習慣，阻止 Cookie 被當作持續的用户識別碼是重要一步；應用程式層面的 App Tracking Transparency 亦取得相當成效。不過，追蹤業界即使在失去跨網站追蹤同一 Cookie 的能力後，仍繼續建立用户檔案以個人化網上廣告。</p><p>業界現時改用名為「身份解析」的系統。這種手法不依賴網站本身的 Cookie，而是透過第三方公司從網站收集電郵地址：當用户以電郵登入網站或訂閲電子報，該地址會被儲存，並獲指派一個不透明的追蹤 ID，再傳送至網頁。這個追蹤 ID 之後就成為用户再次登入該網站時的識別 Token。一個廣告檔案可關聯多個追蹤 ID，因此用户仍可像跨網站 Cookie 那樣被跨多個網站追蹤。第三方公司亦可收集用户的個人資料以填充檔案，即所謂身份圖譜。</p><p>在 Apple 眼中，電郵地址與電話號碼一樣，幾乎必然屬於個人可識別資料，雖然方便用户登入網站，卻同時是可讓資料中介商識別用户、並可持續數年的識別方式。問題在於用户提供資料只為單一既定目的，並非為了建立網上檔案或追蹤其網上動向。Apple 同時表明，第一方個人化不屬於追蹤，用户把資料交予的網站本身並非問題，其技術亦不打算阻止這種做法；真正的問題是第三方能綜合多個網站的相連資料，建立跨裝置、跨網站及跨機構的身份圖譜，這是第一方網站單憑自身無法做到的。</p><h3>網域層面封鎖身份解析</h3><p>為阻止這類跨網站追蹤，Apple 説明 iOS 27、iPadOS 27、macOS 27 及 visionOS 27 的 Safari 與 WebKit 會封鎖部分網絡連線，具體針對連接至身份解析基建的連線，即建立跨網站身份圖譜的公司。措施針對處理身份解析的第三方基建公司，而非用户所瀏覽的第一方網站，亦不是為標準用户驗證而接收電郵的一方；這些公司只為追蹤目的而在網頁加入隱形元素。</p><p>做法令電郵地址根本無法傳送至身份解析基建。電郵一旦無法送出，用户檔案便無法建立或核對。封鎖在「網域」層面執行，因此無論查詢或請求如何組成，都無法繞過 Apple 的封鎖。</p><p>iCloud+ 訂閲用户亦可使用「隱藏我的電郵」，作用相同但更為直接：它為每個新網站提供獨立電郵，由於沒有可供比對的共同元素，用户完全無法被追蹤。</p><h3>廣告商被整體封鎖</h3><p>目前 Apple 的技術運作良好，部分情況甚至過於嚴格。10 月初據報有一間廣告代理商被 Apple 整體封鎖，被歸類為可封鎖的資料中介商。該公司已向 Apple 投訴，但要待 iOS 27.2 推出後才有望解決。</p>
+<p><a href="https://www.newmobilelife.com/2026/10/20/safari-identity-resolution-blocking/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
