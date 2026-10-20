@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI生成的代碼看不懂就扔掉重來：一位首席架構師的 5 條 Agent 編程反常識原則</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI生成的代碼看不懂就扔掉重來：一位首席架構師的 5 條 Agent 編程反常識原則</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/59/4e/596e83044ac5f817db86768c3f68a44e.png" alt=""></p><h3>正文</h3><p>“我已經很久沒好好看過代碼了。”在 AI 編程工具越來越強的今天，這句話開始成為一些開發者描述自己工作方式的方式。需求交給 Agent，代碼由它生成，測試和審查還可以交給其他 Agent。軟件似乎從來沒有這麼容易做出來過。</p><p>但另一種情況也越來越常見：項目啓動得很快，做了幾輪後卻很難繼續。Agent 悄悄換掉原有部署腳本，同一個功能在代碼庫裏被實現了五遍；一旦需要大幅調整架構，它往往選擇繼續打補丁。開發者擁有了大量能運行的代碼，卻未必還看得清系統究竟是怎麼搭起來的。</p><p>在首席架構師 Carlos Kelkboom 看來，問題已經延伸到人與人的協作。開發者遇到問題越來越習慣先問 Agent，PR 下的討論逐漸減少，與用户溝通、理解產品需求、反覆思考架構的過程也更容易被跳過。代碼可以更快生成，但一個項目為什麼做、為誰做、以後怎樣演進，仍需要有人作出判斷。</p><p>在 Patrick Akil 主持的這期播客中，Carlos 分享了五條頗為反常識的 Agent 編程原則： 第一，親自搭建代碼骨架 ，提前確定目錄、關鍵文件和函數簽名； 第二，禁止主 Agent 直接修改代碼和文件 ，充分理解需求後才啓動執行 Agent； 第三，生成的代碼看不懂就扔 ，執行結果隔離在 Git Worktree 中，一旦發現偏離預期結構，就直接捨棄重來； 第四，儘可能讓 Agent 一次性完成較大任務 ，避免反覆修改導致代碼不斷打補丁； 第五，讓多個 Agent 並行探索不同方案 ，例如三個 Agent 分別開發，再由第四個 Agent 比較結果，只合並好的部分。</p><p>兩人的分歧也貫穿了整場對話。Patrick 更看重工具能否儘快做出有用的東西，Carlos 則反覆追問：開發者從中學到了什麼？如果代碼越來越便宜，工程判斷、代碼審查和初級工程師的培養該如何改變？討論最終從編程實踐延伸到未來編程語言、AI 泡沫，以及一個更根本的問題：當 Agent 能寫越來越多的代碼，人類工程師還應該把時間花在哪裏？</p><p>Carlos： 開發者越來越習慣與 Agent 一起工作，卻減少了與同事、用户的交流。PR 裏的討論變少了，產品意識也可能因此被削弱。能很快做出一個演示，和真正理解用户、把軟件長期做好，是兩回事。</p><p>Patrick：Agent 隨時能回答問題，為什麼還要花時間找人討論？</p><p>Carlos： 因為即時答案也會改變思考習慣。Agent 回答得快，還可能順着你的預期説；人與人的討論慢一些，卻能帶來不同經驗、質疑和反饋。學習不只是得到答案，還要留出時間自己消化。</p><p>Carlos： Agent 擅長迅速找到一條實現路徑，卻未必顧得上新代碼與整體架構的關係。我會先建目錄、文件和關鍵接口，明確模塊職責。否則，代碼重複、“上帝對象”和莫名其妙的新腳本都可能出現。能不能把方向交代清楚，是我認為拉開 Agent 工程師效率差距的關鍵。</p><p>Carlos： 可以先研究成熟的開源項目，讓 Agent 對比設計模式、解釋取捨，再自己動手寫些註釋和初步結構，反覆討論。關鍵不是讓它替你作出所有決定，而是藉助它培養自己的判斷力。</p><p>Carlos： 我希望它先專心理解我在問什麼，而不是聽到問題就急着實現。我讓主 Agent 負責對話、檢索和確認意圖，用多個模型輔助評分；只有當它對理解我的目標有超過 90% 的把握時，才向我提出啓動執行 Agent 的建議。</p><p>Carlos： 先看是否符合我預先設定的結構。如果打開代碼就認不出那些應該存在的東西，我寧可扔掉重做。我會在執行一兩個小時後就暫停檢查 Worktree；出了問題，就回到對話裏查清是骨架、需求還是上下文信息相互衝突，再開新會話重試。</p><p>Patrick：為什麼主張“代碼便宜了，就應該經常推倒重來”？</p><p>Carlos： 因為在我的經驗裏，Agent 對一次性完成較大任務比較擅長，對已有代碼反覆大改卻不太擅長。既然生成代碼的成本降低了，就可以並行探索不同方案，甚至讓三個 Agent 分別開發、第四個 Agent 評估，不必為了保住已有代碼而不斷疊加補丁。</p><p>Patrick：如果人人都能靠 AI 寫軟件，還需要專業工程師嗎？</p><p>Carlos： 更需要工程判斷。資深工程師要先釐清產品目標、架構、部署方式和安全邊界，也要幫助新手學習這些取捨。我擔心的一種情況是，我們培養了一代很會使用 Agent、卻缺少獨立開發能力的人。</p><p>Patrick：AI 生成的代碼越來越多，代碼審查應該看什麼？</p><p>Carlos： 除了最終 Diff，還應看前期需求和架構決策、每次提交如何推進方案，以及實際增加了哪些複雜性。可以藉助靜態分析、變異測試和新的可視化方式，但團隊圍繞 PR 的討論不能因此消失。</p><p>Carlos： 要分開看。AlphaFold、醫學和材料科學等方向的突破讓我覺得像魔法；LLM 在編程上的價值也很大，但鉅額投入與產業承諾是否都能兑現，我有疑問。與此同時，權力向大型科技公司集中，以及 AI 是否真的縮小機會差距，也令我擔憂。</p><p>Patrick：今天的嘉賓是 Carlos Kelkboom，他是我認識的最出色的工程師之一。Carlos 你覺得跟幾年前比，軟件工程最大的變化是什麼？</p><p>Carlos： 首先，我觀察到一個我不喜歡的現象：開發越來越像一個人的工作，同事之間的合作越來越少。過去大家重視拉取請求（PR，Pull Request），相互協作，也會在自己和同事的 PR 下交流意見；現在這樣的交流越來越少，甚至有人説 PR 以後可能會消失。現在你經常和智能體一起工作，卻不再和團隊一起工作。這是我觀察到的趨勢，也是我認為很危險的一件事。</p><p>Patrick： 你覺得為什麼會這樣？我有個猜測，可能和我們在 Reddit、YouTube 上看到的情況有關。那裏有很多獨立開發者，往往是他們最先嚐試新技術。當然，這也可能只是我的信息繭房，不知道這個觀察是否準確。那麼，在規模更大的企業裏，開發團隊依然有很多人，大家既要和 AI Agent 協作，也要和同事協作，實際情況又是怎樣的？</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/tgqMEJsqXfX6YzAcOiAR?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI生成的代碼看不懂就扔掉重來：一位首席架構師的 5 條 Agent 編程反常識原則</li></ul>
+<p><a href="https://www.infoq.cn/article/tgqMEJsqXfX6YzAcOiAR?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

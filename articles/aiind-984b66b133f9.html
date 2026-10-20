@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 程式開發工具 OpenCode 遭駭，OpenAI、Anthropic 與 Google API 金鑰恐外洩</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI 程式開發工具 OpenCode 遭駭，OpenAI、Anthropic 與 Google API 金鑰恐外洩</h1>
+<div class="notice">內容機器翻譯自第三方媒體（資安人科技網 · 鈦媒體），僅供參考，以原文為準。</div><p><img src="https://images.tmtpost.com/uploads/images/2026/10/30a3b1bf32847d679f88792ac2c31c40_1792488598.jpg" alt=""></p><h3>正文</h3><p>作為AI領域最成熟的應用場景，AI編程工具如今已成為了開發者最緊密的“開發搭子”，可即便如此，它還是時不時會“背刺”自己人一把。</p><p>10月18日，AI編程智能體OpenCode被曝出遭遇安全事件，部分通過其在線服務Console託管第三方大模型API密鑰的用户受到影響，密鑰面臨被盜刷風險。隨後在Reddit社區和社交平台X上，均有開發者發帖稱賬户出現異常調用和額外費用，涉及OpenAI、Anthropic和Google等主流模型，有開發者稱“一夜之間被盜刷1700美元，都記在了自己的OpenAI賬户上”。</p><p>隨後OpenCode官方確認相關安全事件，並稱是“大規模蒸餾攻擊”導致相關問題，還表示已啓動退款，將與主要涉及的Anthropic、OpenAI和Google合作進行補救。但開發者社群對此普遍並不買賬，近兩日相關話題持續發酵，不少聲音質疑官方解釋含糊不清、“甩鍋”蒸餾，並呼籲披露此次安全事件的詳情。</p><p>當紅編程Agent失守 據悉，OpenCode是主流AI編程工具之一，開發者可通過其閲讀、修改、測試和運行代碼。其核心功能主打免費、開源，但最大收入來源恰恰來自Console、Zen等按量付費的模型通道在線服務。</p><p>一名在新加坡工作、曾使用過OpenCode的開發者解釋稱，隨着AI編程功能逐漸強大、相關產品大批湧現，對於OpenCode等脱胎於開源社區的項目來説，其編程Agent有些像是一層殼，更核心的吸引力還是來自可切換使用不同模型的自由度以及可擴展的插件生態。</p><p>OpenCode也持續在這些方面做文章，不想自己找模型、不想費心力管理密鑰的人或團隊，可以通過模型通道直接在平台上充值用精選的主流大模型，按實際用量扣費。“此前OpenCode還用過較激進的手段拉新，用户可以通過其服務上傳自己在第三方模型賬户的API密鑰，並把它轉化成一個共享密鑰供其他用户使用，類似一個小中轉站。”</p><p>該開發者還介紹稱，強調模型通道、模型路由的模式，也就意味着開發者會更關心如何通過這些工具更省錢、高效地用到合適的模型，“也可以説是‘薅羊毛’的一種”。而OpenCode在遭遇安全事件前的走紅，正是因為免費開放DeepSeek-V4.1-Flash。</p><p>公開信息顯示，今年9月10日，DeepSeek發佈DeepSeek-V4.1-Flash時即宣佈，OpenCode與騰訊旗下的WorkBuddy、CodeBuddy均作為官方合作伙伴全量接入新模型。10月15日，OpenCode宣佈在平台上限時免費提供該模型，不再消耗用户套餐額度。</p><p>不過，上述開發者也表示，類似的模型通道服務，甚至短期流行過的共享密鑰功能，都靠便宜、便捷吸引用户，而其背後就是安全性難以得到可靠保障。</p><p>而目前來看，AI為網絡攻擊提供的便利，遠快於適應AI時代的安全管理體系的建立、完善進度，隨着AI能力的下沉、各類中間層服務和應用產品的湧現，類似的安全問題正變得愈發急迫。</p><p>AI防不住AI “亂開權限、亂傳密鑰、端口裸奔，不出事才怪。”</p><p>在有關OpenCode的討論中，不少聲音認為“網絡安全問題本質沒有變”，用户自己才是“第一責任人”。而幾乎每次出現熱門安全事件，類似觀點都會在討論區得到不少負荷。</p><p>不過，也有反駁聲音認為，在AI時代，這種説法已經顯得有些過時，甚至是“站着説話不腰疼”。</p><p>一位在AI Coding企業開發AI代碼審查產品的工程師認為，隨着個人Agent、企業Agent的規模化部署，如今的環境已經發生了翻天覆地的變化。</p><p>以開發流程為例，為了讓Agent自主修改代碼、運行測試，開發者往往需要開放一定的系統權限。在目前的工作流中，不給Agent授權就意味着放棄AI帶來的紅利，當其他人用AI數倍提高開發效率時，“閉門造車”顯然會被淘汰。但矛盾的是，Agent權限越大，危險也會成倍放大。一旦開發工具受到惡意指令誘導，或其運行環境遭到入侵，攻擊者就可能借助這些合法權限實施非預期操作。</p><p>而這些攻擊，可能同樣來自Agent。而它們帶給攻擊者的便利，甚至比使用者還多。</p><p>Nightfall AI在近期發佈的《2026年AI智能體數據安全態勢報告》中稱，二十年來，數據防泄露（DLP）都建立在“數據是由人移動的”這一假設上，傳統安全工具的核心也是監控“人的動作”。但Agent已經讓這一模式失效。擁有權限的Agent能自主調用工具，並以機器速度在系統間移動數據，傳統安全工具對此存在盲區，看不到上傳、粘貼，但數據已經被移動了。</p><p>而且，安全領域一向存在“木桶效應”，攻擊者只要找到相對薄弱環節，就有可能突破防線。雖然AI同樣在提升網絡安全能力，但目前看起來似乎仍是“道高一尺，魔高一丈”。</p><p>“網絡安全也是代碼主導的，AI編程能力可以順理成章地遷移到這一領域，這也是很多AI Coding產品、公司關注的重點領域。目前在AI的加持下，安全檢查、滲透測試等週期已經大幅縮短，對於Agent管理也有不少新的嘗試。但總的來説，建立新的防護機制，速度本就會慢於黑客手段的更新。”上述工程師介紹稱。有數據顯示，如果將安全防護完全交由AI自主判斷，高危漏洞的漏判率會高達82.4%。但與此同時，當黑客利用Agent大規模、自動化、無間歇地尋找並攻擊漏洞、薄弱環節時，事情則變得簡單了許多。</p><p>而這種“AI防不住AI”的情況，也讓類似“演習”的“攻擊模擬”“紅隊演練”等成為了主流防護方案之一。此類“先讓攻擊來得更猛烈些”的方案被寄望於能“變被動為主動”，但實際上安全事件仍有增無減，有觀點認為，BAS（入侵與攻擊模擬）類應對方案依賴預置路徑，無法復現未知的業務邏輯漏洞與社會工程攻擊，即使AI加持提升了強度和實戰參考性，但在新興場景、複雜業務中，仍難以“走在攻擊的前面”。</p><p>目前來看，行業內相對更有共識的防範方式仍是設立“行動網關”“動態委託鏈”，核心還是明確Agent等AI載體的權限邊界和行動規範。但隨着Agent生態持續爆發，Agent本身的數量和接入的各類場景都在指數級增長，常常是“計劃趕不上變化快”，防範措施只能苦苦追趕，這也讓這場網絡安全攻防戰變得更加嚴峻。 （本文首發於鈦媒體APP，文｜飛向Tai空）</p><h3>各方報道</h3><ul><li><a href="https://www.informationsecurity.com.tw/article/article_detail.aspx?aid=13399" target="_blank" rel="noopener noreferrer">資安人科技網</a>：AI 程式開發工具 OpenCode 遭駭，OpenAI、Anthropic 與 Google API 金鑰恐外洩</li><li><a href="https://www.tmtpost.com/8174735.html" target="_blank" rel="noopener noreferrer">鈦媒體</a>：OpenCode陷入“密鑰泄露”風波，AI時代如何守住安全紅線？</li></ul>
+<p><a href="https://www.informationsecurity.com.tw/article/article_detail.aspx?aid=13399" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
