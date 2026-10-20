@@ -710,10 +710,11 @@ function makeCard(item, idx, ri, isExt, featured) {
     '<div class="cover" style="background:var(--g' + (ri != null ? ri : 0) + ');">' + coverInner + '</div>'
     + '<div class="body">'
     +   '<h3>' + (item.translated ? '<span class="tr-mark">譯</span>' : '') + item.title + '</h3>'
-    +   (item.kind === 'wire' && item.sourceName ? '<div class="meta"><span class="ct-src">' + item.sourceName + '</span></div>' : '')
+    +   ((item.kind === 'wire' || item._merged) && item.sourceName ? '<div class="meta"><span class="ct-src">' + item.sourceName + '</span></div>' : '')
     + '</div>';
   card.dataset.aid = item.articleId || "";
   card.dataset.sname = item.sourceName || "";
+  if (item._also && item._also.length) card.dataset.also = JSON.stringify(item._also);
   card.dataset.summary = item.summary || "";
   card.dataset.img = item.img || "";
   card.dataset.keypoints = JSON.stringify(item.keypoints || []);
@@ -759,6 +760,135 @@ function makeDealCard(item, idx, ri) {
   return card;
 }
 
+// Same event, even when the headline is worded differently.
+function storyKey(title) {
+  let t = String(title || '');
+  t = t.replace(/\s*[-–—|｜]\s*[^|-–—｜]{1,30}$/g, '');
+  t = t.replace(/playstation\s*6/ig, 'ps6').replace(/playstation/ig, 'ps');
+  t = t.replace(/恒指/g, '港股').replace(/低開/g, '開跌').replace(/記憶體/g, 'ram');
+  t = t.toLowerCase();
+  t = t.replace(/[「」『』《》【】()（）\[\]\s\-—:：,，.。!！?？、·0-9０-９%％$＄￥¥]+/g, '');
+  return t;
+}
+function covOf(short, long) {
+  if (short.length < 2 || long.length < 2) return 0;
+  const gl = new Set();
+  for (let i = 0; i < long.length - 1; i++) gl.add(long.slice(i, i + 2));
+  let hit = 0, n = 0;
+  for (let i = 0; i < short.length - 1; i++) {
+    n++;
+    if (gl.has(short.slice(i, i + 2))) hit++;
+  }
+  return n ? hit / n : 0;
+}
+function lcsSpan(a, b) {
+  let best = '';
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < b.length; j++) {
+      let k = 0;
+      while (i + k < a.length && j + k < b.length && a[i + k] === b[j + k]) k++;
+      if (k > best.length) best = a.slice(i, i + k);
+    }
+  }
+  return best;
+}
+function regionTag(title) {
+  const m = /^【([^】]{1,8})】/.exec(title || '');
+  return m ? m[1] : '';
+}
+function sameStory(a, b) {
+  const ra = regionTag(a), rb = regionTag(b);
+  if (ra && rb && ra !== rb) return false;
+  const sa = storyKey(a), sb = storyKey(b);
+  if (sa.length < 8 || sb.length < 8) return false;
+  const short = sa.length <= sb.length ? sa : sb;
+  const long = sa.length <= sb.length ? sb : sa;
+  if (sa === sb || (short.length >= 12 && long.indexOf(short) >= 0)) return true;
+  const full = covOf(short, long);
+  const frag = lcsSpan(sa, sb);
+  const sa2 = frag ? sa.replace(frag, '') : sa;
+  const sb2 = frag ? sb.replace(frag, '') : sb;
+  const s2 = sa2.length <= sb2.length ? sa2 : sb2;
+  const l2 = sa2.length <= sb2.length ? sb2 : sa2;
+  const after = covOf(s2, l2);
+  const latin = frag && /^[a-z0-9]+$/.test(frag);
+  if (full >= 0.70 && short.length >= 10) return true;
+  if (after >= 0.35 && frag.length >= 6 && s2.length >= 6 && !latin) return true;
+  if (after >= 0.55 && frag.length >= 6 && s2.length >= 6) return true;
+  const nums = function(t) {
+    return (String(t).match(/\d{3,}/g) || []).filter(function(n){ return n.indexOf('202') !== 0; });
+  };
+  const share = nums(a).filter(function(n){ return nums(b).indexOf(n) >= 0; });
+  if (share.length && full >= 0.40 && frag.length >= 5) return true;
+  return false;
+}
+function allowMerge(a, b) {
+  if (a.kind === 'deals' || b.kind === 'deals' || a.kind === 'app' || b.kind === 'app') {
+    const ka = storyKey(a.title), kb = storyKey(b.title);
+    return ka.length >= 8 && ka === kb;
+  }
+  return sameStory(a.title, b.title);
+}
+function splitSources(name) {
+  return String(name || '').replace(/等\d+家/g, '').split(/[·＋]/).map(function(s){ return s.trim(); }).filter(Boolean);
+}
+function formatSources(list) {
+  const uniq = [];
+  list.forEach(function(s){ if (s && uniq.indexOf(s) < 0) uniq.push(s); });
+  if (!uniq.length) return '';
+  const head = uniq.slice(0, 4).join(' · ');
+  return uniq.length > 4 ? (head + ' 等' + uniq.length + '家') : head;
+}
+function foldItem(into, extra) {
+  into.sourceName = formatSources(splitSources(into.sourceName).concat(splitSources(extra.sourceName)));
+  into._also = into._also || [];
+  into._also.push({
+    title: extra.title || '',
+    aid: extra.articleId || '',
+    url: extra.sourceUrl || '',
+    source: extra.sourceName || ''
+  });
+  if ((extra.summary || '').length > (into.summary || '').length) into.summary = extra.summary;
+  if (!into.img && extra.img) into.img = extra.img;
+  into._merged = true;
+  return into;
+}
+function clusterList(items) {
+  const out = [];
+  (items || []).forEach(function(raw) {
+    let hit = null;
+    for (let i = 0; i < out.length; i++) {
+      if (allowMerge(out[i], raw)) { hit = out[i]; break; }
+    }
+    if (!hit) {
+      const copy = Object.assign({}, raw);
+      copy._also = [];
+      out.push(copy);
+    } else {
+      foldItem(hit, raw);
+    }
+  });
+  return out;
+}
+function roundRobin(sections) {
+  const queues = sections.map(function(sec){ return (sec.items || []).slice(); });
+  const seq = [];
+  let guard = 0;
+  while (guard++ < 5000) {
+    let took = false;
+    queues.forEach(function(q){
+      if (!q.length) return;
+      seq.push(q.shift());
+      took = true;
+    });
+    if (!took) break;
+  }
+  return seq;
+}
+const sectionItems = {};
+DATA.sections.forEach(function(sec){ sectionItems[sec.label] = clusterList(sec.items || []); });
+const allItems = clusterList(roundRobin(DATA.sections));
+
 // ===== E 緊湊卡片牆: tab 分組（每分類一個 tab）+ 緊湊網格 + 保留點開詳情 =====
 const navInner = document.querySelector('.nav-inner');
 const tabs = [{label:'全部', key:'__all__'}].concat(
@@ -772,7 +902,7 @@ tabs.forEach(function(t, ti){
   a.setAttribute('data-cat', t.key);
   const sec = (t.key === '__all__') ? null
     : (DATA.sections.filter(function(s){ return s.label === t.key; })[0] || null);
-  const cnt = (t.key === '__all__') ? DATA.flat.length : ((sec && sec.items) ? sec.items.length : 0);
+  const cnt = (t.key === '__all__') ? allItems.length : (sectionItems[t.key] ? sectionItems[t.key].length : 0);
   const ri = sec && sec.ci != null ? sec.ci : null;
   const dot = (ri != null) ? '<span class="dot dot-' + ri + '"></span>' : '';
   a.innerHTML = dot + t.label + ' <span class="nav-count">' + cnt + '</span>';
@@ -791,9 +921,10 @@ function buildPanel(sec, si){
   panel.setAttribute('data-cat', sec.label);
   const head = document.createElement('div');
   head.className = 'panel-head';
-  let cntHtml = sec.items.length + ' 則';
+  const shownItems = sectionItems[sec.label] || sec.items || [];
+  let cntHtml = shownItems.length + ' 則';
   if (sec.kind === 'external' && NML) {
-    cntHtml = '顯示 ' + NML.shown + ' · 全站 ' + NML.total + ' · 新增 ' + NML.newCount;
+    cntHtml = '顯示 ' + shownItems.length + ' · 全站 ' + NML.total + ' · 新增 ' + NML.newCount;
   }
   head.innerHTML = '<span class="bar" style="background:var(--c' + ri + ')"></span>'
     + '<h3>' + sec.label + '</h3>'
@@ -826,7 +957,7 @@ function buildPanel(sec, si){
   const grid = document.createElement('div');
   grid.className = 'grid wall';
   let secIdx = 0;
-  sec.items.forEach(function(item){
+  shownItems.forEach(function(item){
     secIdx++;
     const card = isDeal ? makeDealCard(item, secIdx, ri) : makeCard(item, secIdx, ri, sec.kind === 'external', false);
     card.setAttribute('data-cat', sec.label);
@@ -842,29 +973,22 @@ allPanel.className = 'tab-panel';
 allPanel.setAttribute('data-cat', '__all__');
 const allSub = document.createElement('div');
 allSub.className = 'nml-sub';
-allSub.textContent = '全部板塊合併顯示；可用上方標籤只看某一組';
+allSub.textContent = '全部板塊合併顯示；同一則新聞已合成一張。可用上方標籤只看某一組';
 allPanel.appendChild(allSub);
 const allGrid = document.createElement('div');
 allGrid.className = 'grid wall';
-const queues = DATA.sections.map(function(sec){ return (sec.items || []).slice(); });
-let seq = 0;
-let guard = 0;
-while (guard++ < 5000) {
-  let took = false;
-  DATA.sections.forEach(function(sec, si){
-    if (!queues[si].length) return;
-    took = true;
-    const item = queues[si].shift();
-    seq++;
-    const ri = sec.ci != null ? sec.ci : si;
-    const card = sec.kind === 'deals'
-      ? makeDealCard(item, seq, ri)
-      : makeCard(item, seq, ri, sec.kind === 'external', false);
-    card.setAttribute('data-cat', sec.label);
-    allGrid.appendChild(card);
-  });
-  if (!took) break;
-}
+const secByLabel = {};
+DATA.sections.forEach(function(sec, si){ secByLabel[sec.label] = {sec: sec, si: si}; });
+allItems.forEach(function(item, idx) {
+  const meta = secByLabel[item._sec_label] || {sec: null, si: 0};
+  const sec = meta.sec;
+  const ri = sec && sec.ci != null ? sec.ci : meta.si;
+  const card = sec && sec.kind === 'deals'
+    ? makeDealCard(item, idx + 1, ri)
+    : makeCard(item, idx + 1, ri, sec && sec.kind === 'external', false);
+  card.setAttribute('data-cat', (sec && sec.label) || item._sec_label || '');
+  allGrid.appendChild(card);
+});
 allPanel.appendChild(allGrid);
 content.appendChild(allPanel);
 
@@ -1172,8 +1296,20 @@ function openReader(card) {
   const cover = card.dataset.img || '';
   const hero = (cover && body.indexOf(cover) < 0)
     ? '<p class="reader-hero"><img src="' + cover + '" alt=""></p>' : '';
+  let also = [];
+  try { also = JSON.parse(card.dataset.also || '[]'); } catch (e) {}
+  let alsoHtml = '';
+  if (also.length) {
+    alsoHtml = '<h3>同一事件的其他報道</h3>' + also.map(function(o) {
+      const extra = (o.aid && window.ARTICLES && window.ARTICLES[o.aid]) || '';
+      const title = String(o.title || '').replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
+      const src = String(o.source || '').replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
+      const link = o.url ? '<p><a href="' + String(o.url).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>' : '';
+      return '<h3>' + title + '</h3>' + (src ? '<p>' + src + '</p>' : '') + extra + link;
+    }).join('');
+  }
   readerScroll.innerHTML = hero + sumHtml + (body ||
-    '<p class="notice">原文非中文，未提供本地譯文。</p>');
+    '<p class="notice">原文非中文，未提供本地譯文。</p>') + alsoHtml;
   readerScroll.querySelectorAll('table').forEach(function(t){
     if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
     var wrap = document.createElement('div');

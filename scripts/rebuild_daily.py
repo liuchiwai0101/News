@@ -1574,6 +1574,69 @@ def _headline_grams(title: str) -> set[str]:
     return {s[i : i + 2] for i in range(len(s) - 1)}
 
 
+def story_key(title: str) -> str:
+    t = title or ""
+    t = re.sub(r"\s*[-–—|｜]\s*[^|-–—｜]{1,30}$", "", t)
+    t = re.sub(r"playstation\s*6", "ps6", t, flags=re.I)
+    t = re.sub(r"playstation", "ps", t, flags=re.I)
+    t = t.replace("恒指", "港股").replace("低開", "開跌").replace("記憶體", "ram")
+    t = t.lower()
+    t = re.sub(r"[「」『』《》【】()（）\[\]\s\-—:：,，.。!！?？、·0-9０-９%％$＄￥¥]+", "", t)
+    return t
+
+
+def _lcs_span(a: str, b: str) -> str:
+    best = ""
+    for i in range(len(a)):
+        for j in range(len(b)):
+            k = 0
+            while i + k < len(a) and j + k < len(b) and a[i + k] == b[j + k]:
+                k += 1
+                if k > len(best):
+                    best = a[i : i + k]
+    return best
+
+
+def _cov(short: str, long: str) -> float:
+    if len(short) < 2 or len(long) < 2:
+        return 0.0
+    gs = {short[i : i + 2] for i in range(len(short) - 1)}
+    gl = {long[i : i + 2] for i in range(len(long) - 1)}
+    return len(gs & gl) / len(gs) if gs else 0.0
+
+
+def same_story(a: str, b: str) -> bool:
+    """True when two headlines are the same event, not merely the same product."""
+    ra = re.match(r"【([^】]{1,8})】", a or "")
+    rb = re.match(r"【([^】]{1,8})】", b or "")
+    if ra and rb and ra.group(1) != rb.group(1):
+        return False
+    sa, sb = story_key(a), story_key(b)
+    if len(sa) < 8 or len(sb) < 8:
+        return False
+    short, long = (sa, sb) if len(sa) <= len(sb) else (sb, sa)
+    if sa == sb or (len(short) >= 12 and short in long):
+        return True
+    full = _cov(short, long)
+    frag = _lcs_span(sa, sb)
+    sa2 = sa.replace(frag, "", 1) if frag else sa
+    sb2 = sb.replace(frag, "", 1) if frag else sb
+    s2, l2 = (sa2, sb2) if len(sa2) <= len(sb2) else (sb2, sa2)
+    after = _cov(s2, l2)
+    latin = bool(frag) and bool(re.fullmatch(r"[a-z0-9]+", frag))
+    if full >= 0.70 and len(short) >= 10:
+        return True
+    if after >= 0.35 and len(frag) >= 6 and len(s2) >= 6 and not latin:
+        return True
+    if after >= 0.55 and len(frag) >= 6 and len(s2) >= 6:
+        return True
+    nums_a = {n for n in re.findall(r"\d{3,}", a or "") if not n.startswith("202")}
+    nums_b = {n for n in re.findall(r"\d{3,}", b or "") if not n.startswith("202")}
+    if nums_a & nums_b and full >= 0.40 and len(frag) >= 5:
+        return True
+    return False
+
+
 def headlines_similar(a: str, b: str) -> bool:
     ga, gb = _headline_grams(a), _headline_grams(b)
     if not ga or not gb:
@@ -1727,7 +1790,7 @@ def build_clustered_news(
     for it in raw:
         placed = False
         for c in clusters:
-            if headlines_similar(it["title"], c["title"]):
+            if headlines_similar(it["title"], c["title"]) or same_story(it["title"], c["title"]):
                 c["members"].append(it)
                 for s in it["sources"]:
                     if s and s not in c["sources"]:
