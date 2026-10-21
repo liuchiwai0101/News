@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>代碼遷移準確率從 5.4% 飆至 97.9%！OpenAI 挑戰 COBOL，幾十年的老系統真能交給 AI 了？</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>代碼遷移準確率從 5.4% 飆至 97.9%！OpenAI 挑戰 COBOL，幾十年的老系統真能交給 AI 了？</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/23/01/234c78540f60ab210676c015e8f0ae01.png" alt=""></p><h3>正文</h3><p>在銀行、保險、製造業以及公共服務機構，一些核心業務系統已經運行了數十年。它們可能使用 COBOL、Fortran 等如今並不流行的編程語言，原始開發者早已離職，技術文檔不一定完整，許多業務規則甚至只存在於代碼裏。</p><p>這些系統並不一定經常出現故障，卻往往很難修改。對企業來説，重寫一套系統的難度，有時遠遠超過從零開發一套新系統。開發團隊既要理解幾十年前的代碼，也必須保證系統遷移後，賬目計算、數據處理和各種異常情況下的業務行為與原系統一致。</p><p>AI 編程工具的出現，曾讓人們期待這類問題可以得到解決。但過去幾年，大模型最擅長的仍然是 Python、JavaScript 等主流語言。遇到歷史悠久、公開訓練數據稀缺的編程語言，以及高度定製的企業代碼庫，它們的表現往往不夠可靠。</p><p>10 月 19 日，OpenAI 發佈了一項 針對低資源編程語言的最新研究 ，試圖改變這一局面。</p><p>在一項 COBOL 代碼遷移評測中，上一代 GPT-5.6 Sol 在低推理強度下的準確率只有 5.4%。最新 GPT-6.1 Sol 在相同推理強度下達到 86.6%，在提高推理強度後進一步達到 97.9%。與此同時，OpenAI 還公佈了一項覆蓋 20 種編程語言的測試，要求 AI 從零實現兼容 SQLite 的數據庫引擎。GPT-6 Astra 的平均測試通過率達到 87.4%，而上一代 GPT-5.6 Sol 只有 26.8%。</p><p>這些數字顯示，AI Coding 的能力正在向過去相對薄弱的編程語言擴展。但就算 AI 已經能夠在評測中完成複雜的跨語言代碼遷移，企業就真的可以放心把那些運行幾十年的遺留系統交給 AI 了嗎？</p><p>這次 OpenAI 研究的重點是所謂的“低資源編程語言”（Low-Resource Programming Languages）。這裏的“低資源”並不意味着這些語言不重要，而是指相較於 Python、JavaScript 等流行語言，它們可供模型學習的公開代碼、技術文檔及其他訓練材料相對有限。</p><p>COBOL 就是一個典型例子。這門誕生於 1959 年的編程語言，至今仍在全球金融交易和大型機系統中承擔重要工作。OpenAI 在文章中援引 IBM 的資料指出，COBOL 支撐着大量在線銀行、信用卡交易和 ATM 系統。除此之外，Fortran 仍被用於天氣預報、科學計算及核反應堆安全分析；Visual Basic、OCaml 等語言，也擁有各自的存量系統和應用場景。</p><p>對於 AI 模型來説，這些語言帶來了兩類不同的挑戰：一類是能不能使用它們編寫複雜的新程序，另一類則是能不能準確理解已有程序，並將其遷移到另一種語言。</p><p>為了分別測量這兩種能力，OpenAI 設計了兩項評測。第一項名為 MultiLangBench，要求模型在指定編程語言中，從零構建一個與 SQLite 兼容的數據庫引擎。這不是簡單生成幾段 SQL 查詢代碼。模型需要持續組織代碼庫、管理狀態、處理異常、添加功能，並確保此前已經完成的功能不會在後續修改中失效。</p><p>評測通過數據庫文件作為統一接口：待測程序接收初始數據庫和 SQL 查詢，生成修改後的數據庫，再與 SQLite 參考實現進行比較。這樣一來，不同語言生成的程序就可以接受同一組功能測試。</p><p>OpenAI 公佈的結果顯示，GPT-6 Astra 在 20 種編程語言上的平均測試通過率為 87.4%。其中，OCaml 從上一代的 25.6% 提升至 85.8%，Fortran 從 21.4% 提升至 83.5%，Visual Basic 從 27.5% 提升至 89.4%。</p><p>不過，COBOL 仍然是其中最困難的一門語言。GPT-6 Astra 在 COBOL 上的通過率為 72.1%，雖然已經遠高於上一代的 10.9%，但與其他語言仍存在差距。</p><p>值得注意的是，OpenAI 此次還公開了 MultiLangBench 的評測代碼與測試套件 ，開發者可以查看各語言的測試方式及結果。</p><p>相比常見的算法題和單文件編程測試，這項評測更接近真實軟件開發過程中的持續實現、調試和迴歸測試。但它仍然處於受控環境，不能直接等同於大型企業系統的開發能力。</p><p>OpenAI 的第二項評測要求模型將現有 COBOL 程序遷移至 C++、Java、Kotlin、Python 或 Rust，同時保留原程序的行為。</p><p>表面上看，這是一個代碼翻譯任務。但對於真正做過遺留系統遷移的開發者來説，代碼能夠成功編譯，距離遷移成功還有很長的距離。</p><p>以金融系統常見的金額計算為例。COBOL 具有特定的定點數運算語義。在某些情況下，如果程序沒有明確指定四捨五入，超出精度的部分會直接被截斷。假設原有程序按照這一規則計算金額，而遷移後的 Java 或 Python 程序使用了另一種默認舍入方式，那麼新程序可能完全沒有語法錯誤，也能夠正常執行，卻會得到不同的計算結果。</p><p>對於普通應用，這種差異也許只是一個不起眼的 Bug；但在金融結算、賬務核對等場景中，細微的數值偏差可能產生嚴重後果。類似的問題還包括缺失記錄如何處理、異常輸入如何響應、字符串與數字如何轉換，以及程序對既有數據格式的依賴。</p><p>很多時候，這些行為並沒有被寫進設計文檔，而是隱藏在長期運行的代碼中。更麻煩的是，有些看上去不夠合理的實現，可能恰恰承載着企業必須保留的歷史業務規則。</p><p>因此，OpenAI 沒有簡單地以“代碼生成成功”作為評測標準，而是使用隱藏測試檢查遷移前後程序的可觀察輸出是否逐字節一致。只有通過全部測試，一個遷移任務才被視為成功。</p><p>GPT-6.1 Sol 在相同推理強度下，準確率提升至 86.6%，估算 API 成本還降低了 39%。</p><p>這意味着，至少在 OpenAI 構建的評測任務中，模型不僅能夠將舊代碼轉換成新語言，還能在很高比例的任務上保持原有程序的可觀察行為。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/LZsVYHAH1jyOtLg6Yiwk?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：代碼遷移準確率從 5.4% 飆至 97.9%！OpenAI 挑戰 COBOL，幾十年的老系統真能交給 AI 了？</li></ul>
+<p><a href="https://www.infoq.cn/article/LZsVYHAH1jyOtLg6Yiwk?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
