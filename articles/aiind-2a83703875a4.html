@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>英偉達 DGX Spark 支持 8 台集群：128GB 版本統一內存最高達 1TB，RTX PRO 6000 Blackwell 相關任務提速 40%</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>英偉達 DGX Spark 支持 8 台集群：128GB 版本統一內存最高達 1TB，RTX PRO 6000 Blackwell 相關任務提速 40%</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/10/2cd60668-2ec4-441f-92a3-096bbc417ffc.jpg?x-bce-process=image/format,f_auto" alt=""></p><h3>正文</h3><p>IT之家 10 月 21 日消息，英偉達今日在柏林 GTC 2026 大會上宣佈，DGX Spark 此前支持最多 4 台設備組建集群，目前已開放手動配置最多 8 台設備組建集群。如果是以 128GB 版本組建，其統一內存容量最高可達 1TB。</p><p>同時，英偉達還發布了本地 AI 平台更新，並宣佈與 llama.cpp 、vLLM 開源社區合作優化 AI 推理性能，在特定工作負載下，RTX PRO 6000 Blackwell 的推理性能最高提升 40%，DGX Spark 和 DGX Station 也分別獲得最高 30% 和 20% 的性能提升。</p><p>英偉達表示，4,999 美元 （IT之家注：現匯率約合 33,450 元人民幣） 的 DGX Spark 的 64GB 版本將於 10 月 23 日開始通過合作伙伴陸續發售。針對集群部署，英偉達 Sync Model Launcher 計劃於本月晚些時候上線，用户可通過該工具下載與硬件配置相匹配的模型和容器，並將模型連接至 OpenCode。工具還將自動加載 DGX Spark Skills，為設備故障排查、維護及工作流程提供指導。</p><p>軟件更新方面，10 月版 DGX Spark 更新加入 Wi-Fi 助手，允許設備在 appliance mode 下切換無線網絡；DGX Spark Skills 也將通過 OpenCode 集成至英偉達 Sync，為日常維護和故障排查提供支持。</p><p>模型方面，英偉達宣佈支持更多可在本地運行的 AI 模型，包括 Nemotron、GLM、DeepSeek、Qwen、MiniMax 以及 FLUX.3 Klein 等，覆蓋智能體、編程、圖像生成和編輯等任務。</p><p>英偉達還推出針對本地 AI 硬件優化的 Recursive Flint 編程模型。該模型採用混合專家（MoE）架構，總參數量為 400 億，激活參數量為 25 億。英偉達稱，該模型在配備 64GB 內存的 RTX Spark 上推理速度超過每秒 220 個詞元。</p><p>針對本地運行大型模型時的內存壓力，英偉達還發布了一組優化內存使用的模型檢查點，通過量化降低內存佔用，同時儘可能保持接近全精度模型的準確性。其中， Qwen3.8-Flash-Next-FP4-Local 可在單台 128GB DGX Spark 或 RTX PRO 6000 上運行；GLM-5.3-Flash-FP4-Local 則面向兩台系統的配置。</p><p>推理性能優化是此次更新的另一項重點。根據英偉達公佈的數據，在 llama.cpp 中，針對 Qwen 3.8 Flash Next 的多 token 預測（MTP）推測解碼優化，可使 RTX PRO 6000 Blackwell 上的端到端智能體任務提速最高 1.4 倍；在 vLLM 中，針對 Qwen3.8 27B 的推測解碼和 FlashInfer 預填充內核優化，可使 DGX Spark 上的相關任務提速最高 1.3 倍；DGX Station 運行 GLM 5.3 Flash 時，吞吐量最高提升至原來的 1.2 倍。</p><p>英偉達還公佈了 DGX Station 的企業管理與應用擴展計劃，包括新增 Absolute Security、思科旗下 Splunk、Microsoft Intune、Tanium 等七項管理集成，幫助企業部署和管理本地 AI 基礎設施。</p><p>DGX Station 的 Windows 版本預計於 12 月推出，將支持製造業相關應用，以及設計、仿真、驗證和工程自動化工作流。</p><p>此外，英偉達計劃為 DGX Station 推出開放源代碼機器人蔘考工作流，並以早期訪問形式提供 NVIDIA Cloud Functions，讓團隊通過統一接口共享本地模型服務。</p><p>《 英偉達黃仁勳：已測超 1200 款應用，RTX Spark 是全球唯一本地原生運行所有應用的電腦 》</p><p>《 桌面 AI 超算新選擇：英偉達 NVIDIA DGX Spark 64GB 內存版正式發佈，4999 美元 》</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/016/148.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：英偉達 DGX Spark 支持 8 台集群：128GB 版本統一內存最高達 1TB，RTX PRO 6000 Blackwell 相關任務提速 40%</li></ul>
+<p><a href="https://www.ithome.com/1/016/148.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
