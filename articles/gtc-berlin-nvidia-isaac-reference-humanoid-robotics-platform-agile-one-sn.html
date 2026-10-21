@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>【GTC 柏林直擊】NVIDIA 發表全新 Isaac 人形機械人參考平台  大幅降低機械人研發門檻</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>【GTC 柏林直擊】NVIDIA 發表全新 Isaac 人形機械人參考平台  大幅降低機械人研發門檻</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/21202001/PCM_Banner_1080_20261021_nvidia_gtc_berlin_isaac_robo.jpg" alt=""></p><p>通用機器人有機會變成大量生產的消費性產品？NVIDIA 於 GTC Berlin 2026 大會上宣佈，大幅升級旗下的 NVIDIA Isaac 開放式機器人開發平台，並聯手 Agile Robots（智元機器人）推出了首款預裝 NVIDIA 軟硬體架構的全棧人形機器人參考平台——Agile ONE SN。新平台結合了超高算力的邊緣 AI 晶片與生成式模型，將開發者搭建與訓練人形機器人的設定時間從數星期縮短至幾天，全面加速「物理 AI（Physical AI）」落地的進程。</p><h3>Agile ONE SN：預裝 Jetson Thor 晶片與 GR00T 模型</h3><p>以往開發者在研發人形機器人時，往往需要分別處理模擬、訓練與邊緣端部署的工具鏈，整合難度極高。全新發表的 Agile ONE SN 為一機到底的開箱即用參考平台，身形高 1.4 米、重 40 公斤，具備 31 個全身自由度及每隻手臂 3 公斤的負載能力。</p><p>這款參考平台最大的亮點在於其「腦部與神經系統」：</p><ul><li><strong>核心算力</strong>： 搭載 NVIDIA Jetson Thor 邊緣 AI 晶片，提供高達 2,070 FP4 TFLOPS 的運算效能與 128GB 統一記憶體，支援即時推理與全身動作協調。</li><li><strong>靈巧雙手</strong>： 配備雙手五指的 WUJI Hand 2，擁有 20 個自由度、1kHz 力的控制能力與觸覺感測，能進行高精度的複雜抓取。</li><li><strong>全身控光與感測</strong>： 整合頭部與手腕鏡頭、LiDAR 光學雷達與 IMU 感測器，並預裝 NVIDIA Isaac GR00T 通用人形機器人基底模型，支援全身體控與動態平衡。</li></ul><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/21202329/nvidia-isaac-platform-1024x576.jpeg" alt="">Agile ONE SN 為一機到底的開箱即用參考平台，身形高 1.4 米、重 40 公斤，具備 31 個全身自由度及每隻手臂 3 公斤的負載能力。<p>Agile ONE SN 預計於 2027 年初正式推出，目前已吸引史丹福大學（Stanford University）及蘇黎世聯邦理工學院（ETH Zurich）等全球頂尖學府導入研究。</p><blockquote><p>Europe’s industrial future is taking shape at GTC Berlin.<br><br>With our CUDA-X and Omniverse libraries, plus Cosmos and Nemotron open models and tools, Europe’s industrial leaders are testing designs faster, simulating robots and improving factory operations.<br><br>Learn how Agile Robots,… <a href="https://t.co/yo0Q4BQ2ka" target="_blank" rel="noopener noreferrer">pic.twitter.com/yo0Q4BQ2ka</a></p>— NVIDIA AI (@NVIDIAAI) <a href="https://x.com/NVIDIAAI/status/2112859682415243776?ref_src=twsrc%5Etfw" target="_blank" rel="noopener noreferrer">October 21, 2026</a></blockquote><h3>推出 Isaac OS 與 Isaac Lab 3.0　開源 2,000+ 3D 模擬資產</h3><p>除了硬體平台，NVIDIA 亦針對軟體鏈進行全面升級，幫助開發者解決高品質訓練數據不足的痛點：</p><ol><li><strong>SimReady Central Library 與 Human 1M 數據集</strong>： 於 Hugging Face 平台上架超過 2,000 個可直接進行物理模擬的機器人與工廠組件資產（包括 FANUC、UR、Vertiv 等廠商資產），並提供涵蓋 1,000,000 個高精度人類動作與 3D 手勢追蹤的 Human 1M 數據集。</li><li><strong>Isaac Lab 3.0 與 Isaac OS</strong>： 正式開放 Isaac Lab 3.0 強化學習框架，支援多 GPU 開發與 PhysX / Newton 物理引擎；全新的開源 Isaac OS 執行時框架則能無縫連接 AI 模型、感測器與硬體控制，實現從模擬環境到實體機器人的低延遲精準映射。</li><li><strong>DGX Station 開源工作流程</strong>： 提供三大開源參考工作流，讓開發者能在本地端透過 Reinforcement Learning（強化學習）微調 GR00T 模型，並結合 ChatGPT Astra 與 Cosmos 世界模型生成高保真的合成訓練數據。</li></ol><h3>歐洲機器人巨頭全面歸隊　迎來機器人「ChatGPT 時刻」</h3><p>NVIDIA 開放式的 Isaac 平台已吸引 ABB Robotics、KUKA、Universal Robots、NEURA Robotics、Sereact 及 1X 等國際機器人與自動化大廠採納。例如 ABB 正在將 Omniverse 庫整合至 RobotStudio HyperReality 進行虛擬試運行，而 Universal Robots 的機械臂亦結合了 Isaac GR00T 進行高階物流揀貨訓練。</p><p>NVIDIA 創辦人兼 CEO 黃仁勳（Jensen Huang）表示：「通用機器人技術正在以驚人的速度演進——機器人領域的『ChatGPT 時刻』即將到來。透過 NVIDIA Isaac 全棧平台，我們將為開發者提供模型、數據、模擬工具與算力，將物理 AI 帶入全球規模最大的各個產業當中。」</p>
+<p><a href="https://www.pcmarket.com.hk/gtc-berlin-nvidia-isaac-reference-humanoid-robotics-platform-agile-one-sn/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
