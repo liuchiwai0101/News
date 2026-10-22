@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GitHub 通過 AI 輔助重構，將 Copilot 運行時遷移至 Rust</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>GitHub 通過 AI 輔助重構，將 Copilot 運行時遷移至 Rust</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/72/7d/72e9d60e44d2ea2174dbc6207a08407d.jpg" alt=""></p><h3>正文</h3><p>GitHub 已將 GitHub Copilot CLI、Copilot 應用和 Copilot SDK 背後的運行時 從 TypeScript 和 Node.js 遷移到了 Rust，通過 AI 輔助重寫替換了超過 800000 行代碼。這次遷移耗時約 14.5 周，包含 128 個 PR，遷移期間 GitHub 仍持續發佈該運行時版本。GitHub 報告稱，對於客户端啓動、會話創建與單輪交互場景，舊運行時耗時 5.25 秒，Rust 運行時進程內嵌入後耗時降至 292 毫秒。</p><p>這次遷移還改變了應用與運行時的集成方式。之前的實現需要 Node.js 和 V8，並通過進程邊界與宿主應用通信。GitHub 稱這會為每個客户端增加約 100MB 工作集內存。而 Rust 實現可以通過 C ABI 直接嵌入到宿主應用中，同時保留獨立進程模式可選。 Copilot SDK 目前支持 TypeScript、Python、Go、.NET、Java 和 Rust。</p><p>GitHub 採用了增量替換策略，而不是先並行重寫再進行一次性切換。各個 TypeScript 組件被 Rust 實現逐一替換，期間通過臨時的 N API 互操作層連接兩者。這使得現有的端到端測試能夠在其他組件仍使用 TypeScript 的情況下測試新代碼。GitHub 在遷移期間發佈了 135 個版本，包括 35 個穩定版和 100 個預發佈版。</p><p>該兼容層在移除前，內部 N API 導出項達到 2019 個，TypeScript 調用點共 3356 處。截至 8 月 21 日，運行時包含 832378 行生產 Rust 代碼以及 468689 行 Rust 單元測試代碼。絕大部分實現代碼由 AI 智能體生成，編譯、測試和人工評審用於發現各類迴歸問題，包括行為、狀態、生命週期處理、庫語義以及優化邏輯丟失等。GitHub 記錄了 4478 次直接 cargo check 執行，87.1% 可一次性校驗通過。</p><p>社區的反應也聚焦於 AI 輔助 遷移的驗證難題，並指出取消、重試和背壓等場景需要在編譯之外進行驗證。 PLBjt 寫道：</p><p>這件事有意思的地方不在於 Copilot 使用了 Rust，而在於這次遷移能否在邊界上保持運行時行為的穩定。</p><p>小體量、便於評審的變更、兼容層以及工程師的人工判斷是該方案的重要元素。</p><p>最終的架構提供原生 Rust 運行時，既可直接嵌入宿主應用也可獨立運行；Copilot SDK 在所有支持的語言中保留了語言專屬接口。本次遷移將 AI 生成代碼、增量集成、臨時兼容邊界、自動化校驗和人工評審相結合，生產環境運行時在遷移過程中持續迭代更新。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/zGqDWHF8tHDtlYcImAJS?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：GitHub 通過 AI 輔助重構，將 Copilot 運行時遷移至 Rust</li></ul>
+<p><a href="https://www.infoq.cn/article/zGqDWHF8tHDtlYcImAJS?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
