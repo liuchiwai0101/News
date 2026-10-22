@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>前OpenAI科學負責人創辦Warp Sciences 融資2.15億美元打造機器人藥物實驗室</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>前OpenAI科學負責人創辦Warp Sciences 融資2.15億美元打造機器人藥物實驗室</h1>
+<div class="notice">內容機器翻譯自第三方媒體（cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://static.cnbetacdn.com/article/2026/1023/e6e43381331c9e3.webp" alt=""></p><h3>正文</h3><p>數小時前，OpenAI 發表了一篇網誌，宣佈其大模型 GPT‑5.6 Sol 識別了一個開源編程語言 PHP 中的一個關鍵缺陷。在過去兩個月裏，OpenAI 領導了一個由維護者、研究人員和安全提供者組成的聯盟，以解決 PHP 中的關鍵漏洞。</p><p>PHP 驅動着全球約 70% 的網站，以及無數企業內部系統和政府門户。這意味着，這兩個漏洞的潛在影響範圍之大，實屬罕見。</p><p>數小時前，OpenAI 發表了一篇網誌，宣佈其大模型 GPT‑5.6 Sol 識別了一個開源編程語言 PHP 中的一個關鍵缺陷。（X@OpenAI） 10 月 21 日，PHP 官方緊急發布了 8.5.12、8.4.27、8.3.36 和 8.2.35 四個安全更新版本，修復兩個允許未經認證的遠端執行程式碼（RCE）的嚴重漏洞。這兩個漏洞被安全社區統稱為「PHP2Shell」，CVSS v4.0 評分 9.2（滿分 10），安全公司 watchTowr 將其評為 10.0 滿分。</p><p>人腦為什麼比AI靈活？中科院登《科學》解密：單神經元會自己比對 神人復刻《蜘蛛俠》綠魔滑板載人升空 曾爆燃起火 靠AI助攻圓夢 AI 挖出的「史詩級」漏洞 今年 8 月，OpenAI 內部安全研究團隊 Calif 在「Patch the Planet」（修復地球）計劃下，使用 GPT-5.6 Sol 對 PHP 代碼庫進行安全審計，發現了這兩個漏洞。幾乎在同一時間，Google 旗下雲安全公司 Wiz 也獨立發現了同樣的問題，Wiz 方面使用了自家安全 AI 代理 Wiz Atlas、Gemini 4 Argon 和 GPT-5.6 Sol 的組合。</p><p>今年8月，OpenAI內部安全研究團隊 Calif 在「Patch the Planet」計劃下，使用GPT-5.6 Sol對PHP代碼庫進行安全審計，發現了這兩個漏洞。（OpenAI） 兩個獨立團隊、兩條獨立路徑、兩套 AI 工具，指向了同一個深埋在 PHP 核心中的缺陷。OpenAI 在網誌中表示，這可能是「近年來最具影響力的安全問題之一」（one of the most impactful security issues in recent memory），並提出了一個關鍵概念：Defender&#x27;s Window（防禦者窗口）。</p><p>簡單來説，前沿 AI 在攻擊者之前發現了這些漏洞，為維護者和安全供應商爭取到了修復和部署防護的時間窗口。OpenAI 認為，這標誌着一個新階段的到來，AI 能夠發現具有網路級影響的安全漏洞。在這裏簡單的介紹一下 OpenAI 的「Patch the Planet」計劃。</p><p>OpenAI的「Patch the Planet」計劃。（OpenAI） 2026 年 6 月，OpenAI 在旗下安全平台 Daybreak 下正式推出「Patch the Planet」計劃，與知名安全審計公司 Trail of Bits 合作，目標是幫助開源軟件維護者加強關鍵基礎設施的安全性 。漏洞分類和協調披露由 HackerOne 負責，漏洞發現由 OpenAI 內部安全研究團隊 Calif 執行，AI 輔助分析和補丁開發則依託 Codex Security 工具鏈。</p><p>首批參與的項目包括 cURL、NATS Server、pyca/cryptography、Sigstore、aiohttp、Go、freenginx、Python 等，覆蓋網絡、密碼學、軟件供應鏈和語言基礎設施等多個領域。Trail of Bits 的安全工程師全職使用 Codex 和 GPT-5.5-Cyber，跨 19 個開源項目已識別數百個安全問題，合併了數十個補丁。</p><p>【延伸閲讀】 騰訊內測AI打機陪玩「鵝次元」！即時睇畫面互動 真人恐被搶飯碗 （點擊連結看原文）</p><p>+ 8 潛伏超過十年的兩個致命缺陷 這兩個漏洞的技術細節，揭示了 PHP 底層多年來的隱患。</p><p>CVE-2026-109618（GHSA-w8hw-w9fx-j79w）涉及 PHP 的記憶體管理機制。當一個請求恰好在特定時機觸發了 PHP 的 memory_limit 限制時，部分初始化的內部數據會被遺留，隨後被當作有效數據處理，造成記憶體損毀。</p><p>這兩個漏洞的技術細節，揭示了 PHP 底層多年來的隱患。（PHP） 在 Apache + mod_php 的默認配置下，研究人員成功演示了未經認證的遠端執行程式碼；在 PHP-FPM 環境中也通過應用層代碼路徑得到確認 。</p><p>CVE-2026-109619（GHSA-6wmf-4rv5-p3rp）則關乎 PHP 的錯誤處理流程。當 fatal error 在錯誤的時間點發生時，內部狀態仍然指向上一個請求的內存區域。</p><p>後續請求在同一個 worker 中重複使用了已釋放的記憶體空間（Use-After-Free, UAF）。研究人員在 Apache + mod_php 環境上，針對真實應用程序成功演示了遠端執行程式碼。</p><p>兩個漏洞都深入 PHP 引擎中幾乎每個請求都會觸及的部分，也就是內存管理和錯誤處理。更棘手的是，受影響的 PHP 版本範圍從 5.4 一直延伸到 8.5，覆蓋了過去十多年間發布的所有主流版本。</p><p>事實上，這類問題早就有人注意到了。2024 年，PHP 迎來了多年來的首次外部安全審計，由 Sovereign Tech Agency 資助、OSTIF 組織、Quarkslab 執行。</p><p>在修復 Quarkslab 報告的一個問題時，PHP 基金會的一名核心開發者發現了 OOM（內存溢出）問題的初步跡象 。當時團隊推演了一種可能的攻擊方式，但沒有找到具體的利用路徑。</p><p>隨後的修復方案在內部陷入了僵局。安全團隊提出了多種修復思路，但每種都有各自的代價：有的會破壞向後兼容性，有的可能引入新的 DoS 攻擊面，有的需要第三方擴展同步修改。</p><p>PHP 基金會在事後檢討復盤中坦承，決策流程多次停滯和重啟，這是一次「結構性失敗」（structural failure），根源在於決策機制和資源不足。直到 AI 真正找到了可利用的攻擊路徑。</p><p>馬斯克指中國AI算力將超全球 關鍵在電力 發電量達美國3倍佔優 日本公司僱用62名AI打工仔！包辦9大部門業務 人類只做最後把關 一個混亂的時間軸 OpenAI 在過去兩個月中牽頭組建了一個由 PHP 維護者、安全研究者和安全供應商組成的聯盟，協調修復和披露工作。他們制定了一個五階段框架：驗證並修復上游漏洞、通知關鍵基礎設施提供商準備更新、在披露前給防禦者部署修復的時間、公開披露、運營者根據風險評估行動速度。</p><p>但計劃趕不上變化。10 月 20 日，也就是正式披露前一天，漏洞消息在 Hacker News 論壇上洩漏。安全公司 watchTowr 在 X 上發布了相關訊息，更糟糕的是，Calif 團隊誤發了一段概念驗證（PoC）攻擊視頻。</p><p>與此同時，開發平台 Chainguard 提前發布了包含補丁的二進製版本，這讓攻擊者得以通過對比代碼差異反推出漏洞細節。</p><p>PHP 基金會在博文中對此表達了不滿，稱此舉「無視了多方數周以來為協調披露所做的努力」。</p><p>PHP 維護者被迫提前在 php.net 上發布更新預告，敦促用户做好準備。安全公司 Sansec 預測「大規模攻擊將在補丁發布 15 分鐘內開始」。</p><h3>各方報道</h3><ul><li><a href="https://www.cnbeta.com.tw/articles/tech/1583428.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：前OpenAI科學負責人創辦Warp Sciences 融資2.15億美元打造機器人藥物實驗室</li></ul>
+<p><a href="https://www.cnbeta.com.tw/articles/tech/1583428.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
