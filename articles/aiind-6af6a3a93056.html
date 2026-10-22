@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌 CEO 皮查伊：AI 智能體的優勢，是每週 7 天、每天 24 小時不間斷工作</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌 CEO 皮查伊：AI 智能體的優勢，是每週 7 天、每天 24 小時不間斷工作</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/84/d2/84e1d6b5d7aa376722cb0112ba02f6d2.jpg" alt=""></p><h3>正文</h3><p>在近期的“生日周”活動中， Cloudflare 發佈了 Clef ，這是一組開源權重 AI 模型，用於在預設選項之間做出選擇，而不是生成文本。Cloudflare 發佈了 90 億參數和 270 億參數版本的模型，以及一個將它們適配到特定決策任務的平台。</p><p>Clef 是一款 270 億參數的多模態模型，它接收狀態和帶類型問題的 Schema 作為輸入，並輸出決策結果。它可以處理文本、JSON、圖像或視頻，只需一次前向推理就能返回針對每個問題的所有可選項對應的概率，無需生成自由文本或解析輸出。</p><p>決策模型對輸入進行分類，輸出附帶概率的類型化結果，AI 智能體可以利用這些結果來決定後續動作，例如分配客服工單、升級工單，或是將決策交由人工處理。Cloudflare 的 API 兼容 Typesafe AI 的 Jev System One 模型。</p><p>由於模型託管在 Cloudflare 的基礎設施上，我們可以利用邊緣 GPU 實現較低的網絡延遲和更快的決策。這意味着你可以把 Clef 放在智能體決策的核心路徑中，並將其與 Workers AI 上的某個 LLM 結合起來執行後續操作。</p><p>Cloudflare 還發布了 Clef-Flash，這是一款更小的 90 億參數多模態模型，專為對延遲敏感的決策場景而設計。在 Cloudflare 的基準測試中，它的中位延遲為 38.8 毫秒，而 270 億參數的 Clef 模型為 209.3 毫秒。Chen、Reneau 和 Flansburg 解釋了 Clef 與其他決策模型的不同之處：</p><p>首先，它有一個視覺編碼器，因此能夠接收圖像並對視覺內容進行分類。這與 Jev 不同，後者目前只做文本分類。其次，我們的模型擁有 64k 的上下文窗口（而 Jev 為 32k），這使用户能夠塞入更多輸入狀態供模型做分類判斷。</p><p>在 Hacker News 的一個熱門討論帖 中，社區圍繞決策模型、延遲、開源權重，以及這是否屬於全新模型品類展開了討論。Jacek Złydach 評論道：</p><p>這不是什麼“新範式”，而是一個多年來擺在那裏的易得成果；Typesafe 是第一個願意停下來摘取它的人，並把它大肆營銷了一番。</p><p>公開基準很容易做手腳。如果我是 Typesafe，我同樣會發佈公開基準，以此轉移專業人員的注意力，讓大家一味去擬合基準，而不是去做真正有用的東西。</p><p>Cloudflare 計劃針對客服工單分級、機器人識別等場景對 Clef 進行微調，利用自身歷史標註數據提升模型準確率與速度。在 Reddit 上，用户 bugra_sa 留言道 ：</p><p>相比原始準確率分數，我更關心 Clef 是否知道何時該放棄判斷。用那些誤報代價比漏報高得多的案例對它進行測試，然後對數據進行足夠大的改動，觀察它的置信度何時崩潰。如果它在這種情況下仍保持高置信度，那基準測試數字就沒有太大意義。</p><p>Cloudflare 還發布了一項微調服務，客户可以使用自有數據對 Clef 進行適配；初期由 Cloudflare 工程師提供支持，自助服務平台計劃後續上線，暫未公佈確切日期。</p><p>Cloudflare 已通過 Workers AI 提供 Clef 模型，並在 Hugging Face 上提供可下載的權重，邀請開發者進行試驗並提供反饋。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/016/338.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：谷歌 CEO 皮查伊：AI 智能體的優勢，是每週 7 天、每天 24 小時不間斷工作</li></ul>
+<p><a href="https://www.ithome.com/1/016/338.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
