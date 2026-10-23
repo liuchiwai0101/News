@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 賦能開發，Spotify 月代碼變更量翻倍</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI 賦能開發，Spotify 月代碼變更量翻倍</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/70/e2/700294539060fea50a17943aace360e2.jpg" alt=""></p><h3>正文</h3><p>Spotify 擴大了 AI 輔助開發的應用範圍，8 月份合併變更量同比增長一倍以上，從約 8100 個增至 17000 個。該公司正在調整質量與可靠性控制體系，以應對生產系統中激增的軟件變更數量。</p><p>Spotify 運營着近 3000 個生產服務，支撐着 7.77 億月活用户，約 1 億併發客户端，每秒處理 1100 萬至 1200 萬次後端請求。在覆盤工作中發現了內容處理、集群變更、計算容量以及移動端應用質量方面的問題。對此，Spotify 對監控、測試、發佈防護、回滾能力、容量規劃和質量度量進行了優化。</p><p>其中一次事故與 Spotify 的內容處理流水線有關，該流水線每天處理超 50 萬首新增歌曲、視頻、播客及有聲書。6 月 24 日，一個計劃內的定時批處理任務與新節目內容搶佔資源，一項質量優化提升了處理資源需求，而一個調度錯誤使吞吐量降低了約 10%。原本幾分鐘內就能上線的節目，延遲了數小時。Spotify 後續新增端到端監控、修復調度器、調低批處理任務優先級、重構任務優先級策略並進行了擴容。</p><p>集群自動化帶來了不一樣的挑戰。Spotify 的集群管理系統已合併超過 250 萬個自動化維護拉取請求，其中大部分在安全檢查後自動合併。公司後來引入了 Honk，這是一個在 Kubernetes Pod 中使用 Agent SDK 運行 Claude 的後台編碼智能體。Fleetshift 負責目標選擇、調度和進度跟蹤，Honk 完成代碼修改並可在 CI 中執行構建。Spotify 報告稱，最近其後端服務的一次 Java 遷移耗時三天。</p><p>不過 Spotify 表示，一次自動化依賴升級雖然通過了現有校驗，卻在生產環境發生故障。公司正在強化防護手段、擴大回滾能力，並將自動化變更安排在負責團隊的工作時段執行。</p><p>更多的變更意味着測試、評審和可觀測性面臨更大壓力。</p><p>編寫代碼變得更容易了。現在的難點是確保代碼上線前質量達標。</p><p>這些發現為谷歌 2025 年 DORA 研究提供了背景：該研究發現，採用 AI 會提升軟件交付吞吐量與產品性能，但同時和交付穩定性呈負相關。研究指出，自動化測試、版本控制與快速反饋閉環是在引入 AI 時管理軟件交付的關鍵實踐。</p><p>Spotify 將標準化維護交給集群管理系統，Honk 用於複雜的代碼變更，Fleetshift 負責編排，CI 承擔驗證工作。質量和優化工作佔合併變更的比例從 27% 上升至 31%，而維護和配置工作從 31% 下降至 25%。Spotify 報告稱返工量並未隨之增長，但拉取請求體量與代碼複雜度正在上升。事件審查發現 AI 編寫的代碼沒有造成實質性的直接影響，但變更數量已經超過了一些驗證機制的處理能力。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/rVqEbaXeaJ91UWlQF4F9?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI 賦能開發，Spotify 月代碼變更量翻倍</li></ul>
+<p><a href="https://www.infoq.cn/article/rVqEbaXeaJ91UWlQF4F9?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

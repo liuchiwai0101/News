@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PostgreSQL 19 發不出來？AI“找茬”太快，人類修Bug的速度跟不上了</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>PostgreSQL 19 發不出來？AI“找茬”太快，人類修Bug的速度跟不上了</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/27/1b/273f3083bf2bb7a1a815914d561bf91b.png" alt=""></p><h3>正文</h3><p>近日，PostgreSQL 19 的發佈出現罕見波折。PostgreSQL 團隊宣佈，原計劃於 10 月 29 日正式發佈的 PostgreSQL 19，將推遲至 11 月 19 日。在此之前，項目還將額外增加一個 RC2 候選版本，於 11 月 12 日發佈。官方給出的原因是，近期被加入各維護分支的修復數量較多，希望先通過 RC2 將這些修復交給社區驗證，再進入正式發佈。</p><p>與此同時，在 Beta 階段開始後，大約有 8～10 項重要功能被從 PostgreSQL 19 中撤回，其中部分功能是在相當靠後的階段才被移除。正常情況下，一個 PostgreSQL 大版本週期出現一項重要功能回滾並不罕見，但一次撤回接近 10 項，已經明顯超出了慣例。</p><p>PostgreSQL 核心提交者、EDB 副總裁 Peter Eisentraut 隨後專門撰文解釋了這次異常，其中一個關鍵變量，正是迅速成熟起來的大模型輔助代碼審查和模糊測試。</p><p>Peter Eisentraut 否定了一個很容易出現的猜測：這些問題大體上並不是 vibe coding 造成的。</p><p>他解釋道，大多數受到影響並最終被撤回的功能，早在 LLM 輔助編程和代碼審查成熟之前就已經完成。也就是説，並不是開發者讓 Claude、Codex 等模型大量生成了質量不佳的 PostgreSQL 代碼，然後在 Beta 階段集中爆雷；相反，是後來越來越強的 AI 審查工具，開始重新檢查此前按照傳統流程開發出來的代碼。</p><p>Peter 將被發現的問題大致分為兩類。第一類確實比較嚴重，一些被撤回功能存在架構層面的缺陷，在 Beta 階段短時間內很難徹底修正。但除此之外，還出現了一系列長尾問題：大量單獨看並不嚴重、只會在特定邊緣條件下觸發的問題。</p><p>過去，這類問題可能不會在發佈前被發現。PostgreSQL 會先正常發佈，然後在未來幾年裏隨着真實用户撞上各種罕見組合，再一點點補丁修復。Peter 估計，其中不少問題原本可能要在接下來的 5 年內逐漸浮現。</p><p>LLM 改變了這個過程。藉助 AI 輔助代碼審查，過去分散在數年時間裏的邊緣缺陷，現在可能在幾天或幾周內被集中掃出來。</p><p>Peter 舉例道，開發者突然面對大約 40 份缺陷報告，即便每個問題平均只需要改 3 行代碼，但處理每一個問題仍然需要固定成本，於是代碼本身可能只改幾分鐘，但幾十個問題疊加起來，人類的時間很快就被耗盡。</p><p>這也導致了一個非常反直覺的結果：AI 提高了軟件質量，卻可能在短期內降低軟件發佈速度。</p><p>Peter 將這種現象概括為“有效質量門檻被抬高了”。這些功能當初被開發和提交時，行業還沒有如今這樣的 LLM 審查能力；等到 PostgreSQL 19 準備發佈時，新的工具已經可以發現過去難以發現的問題。原本可能符合發佈標準的代碼，在新的審查能力下突然“不夠好了”。</p><p>PostgreSQL 的一個重要特點是，開發者往往期待不同功能能夠自由組合。一個 SQL 功能不僅需要在最普通的情況下運行，還可能被放進 domain、複合類型、分區表、視圖、安全定義函數、觸發器等各種環境裏，並且這些能力還能繼續互相嵌套。</p><p>Peter 舉例稱，一個 SQL 層面的新功能可能需要面對這樣的組合：domain 套在複合類型上，複合類型裏的字段本身又是 domain；domain 帶有非空約束；列曾被刪除又重新添加；表分區被 detach 後又按照不同列順序 attach；最終這一切又出現在一個視圖裏，而這個視圖從觸發器中的 security-definer 函數被調用。</p><p>理論上，開發者希望這些東西全部正常工作，問題在於人類甚至很難枚舉出所有組合，更不用説逐個手工測試。</p><p>LLM 輔助模糊測試恰好非常擅長這一類工作。模型可以不斷生成邊緣組合、構造測試輸入、觀察異常，再繼續沿着異常路徑擴展。Peter 因此判斷，這類 AI 輔助模糊測試未來很可能需要直接進入 PostgreSQL 的功能開發流程，而不能等到 Beta 後期才集中使用。</p><p>實際開發過程已經出現類似跡象。今年 8 月，PostgreSQL 社區成員 Robert Haas 曾讓 Claude 根據 feature freeze 之後修復的 Bug 數量和類型，對 PostgreSQL 19 的補丁進行風險評估。其中 SQL 屬性圖查詢被列為高風險功能之一，當時已經經歷 17 次修復。</p><p>核心開發者 Tom Lane 隨後表示，如果 SQL/PGQ 按當時狀態進入 PostgreSQL 19，他甚至願意“賭一頓晚飯”，認為發佈後還會發現只能等到 PostgreSQL 20 才能徹底解決的問題。最終，SQL/PGQ 確實從 PostgreSQL 19 被撤回。</p><p>另一名 PostgreSQL 社區成員隨後也提到，對該功能啓動 AI 審查之後，又發現了一些嚴重問題，並進行了人工確認。這意味着在這次發佈週期中，AI 並不僅僅充當“聊天式代碼評論員”，而是已經開始參與真實開源項目的風險篩查。</p><p>不過，Peter 也強調，AI 並不是這次大規模撤回的唯一原因。部分代碼自身質量和架構設計確實存在問題，今年 PostgreSQL 社區還經歷了一輪密集安全問題處理，大量資深開發者從 4 月到 8 月都在忙於修復安全問題，導致 Beta 前期原本應該進行的額外評審和測試受到影響。等這些開發者重新投入 PostgreSQL 19 時，許多問題已經到了發佈週期後段才暴露出來。此外，PostgreSQL 自身持續增長的複雜性也是根本問題之一。</p><p>大量問題最終迫使 PostgreSQL 社區做出了相當保守的決定。</p><p>Peter 稱，根據統計方式不同，大約有 8～10 項重要功能已經從 PostgreSQL 19 分支撤回，其中不少預計將在修正後重新進入 PostgreSQL 20。其中一個代表性功能就是 SQL/PGQ，它用於按照 SQL 標準查詢由節點和邊組成的屬性圖數據，但由於仍存在未解決的問題，最終未能進入 PostgreSQL 19。</p><p>值得注意的是，PostgreSQL 社區此前甚至一度認為 PostgreSQL 20 可能主要用於修 Bug，不會有太多新功能；現在情況反了過來：PostgreSQL 19 撤下的一批功能，反而已經為 PostgreSQL 20 留下了一批接近完成的候選功能。</p><p>PostgreSQL 19 本身也並非因此變成一個“小版本”。Peter 提到，其中仍將包括 REPACK CONCURRENTLY、序列的邏輯複製，以及通過 pg_plan_advice 實現的查詢規劃器提示等重要能力。在經歷這輪額外審查之後，他反而預計 PostgreSQL 19 會成為一個更加穩健的版本。</p><p>RC1 已按計劃於 10 月 15 日推進，但正式版從原定 10 月 29 日推遲至 11 月 19 日。發佈團隊還新增了 11 月 12 日的 RC2，希望讓近期積累的大量修復再經歷一輪驗證。官方將今年稱為一個“不尋常的大版本發佈週期”，並強調最終目標仍然是保證 PostgreSQL 的穩定性和可靠性。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/Q6mgHWCSqV6KeZzee3NT?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：PostgreSQL 19 發不出來？AI“找茬”太快，人類修Bug的速度跟不上了</li></ul>
+<p><a href="https://www.infoq.cn/article/Q6mgHWCSqV6KeZzee3NT?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
