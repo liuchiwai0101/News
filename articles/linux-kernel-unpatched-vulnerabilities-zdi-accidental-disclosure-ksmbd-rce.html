@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>漏洞一波未平一波又起！Linux 核心多項高危漏洞遭提前公開　兩項遠端攻擊風險達 9.0 分</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>漏洞一波未平一波又起！Linux 核心多項高危漏洞遭提前公開　兩項遠端攻擊風險達 9.0 分</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/23154303/linux-kernel-unpatched-vulnerabilities-zdi-accidental-disclosure-ksmbd-rce-FB.jpg" alt=""></p><p>繼日前 <a href="https://www.pcmarket.com.hk/php-critical-rce-vulnerabilities-cve-2026-109618-109619-wordpress-security-update/" target="_blank" rel="noopener noreferrer">PHP 被揭發存在重大安全漏洞</a>，令全球網站及伺服器管理員急忙採取防護措施後，Linux 核心（Linux Kernel）亦傳出嚴重安全事故。網絡安全公司 Trend Micro 旗下的 Zero Day Initiative（ZDI）於 10 月 22 日，將多份尚未完成修補的 Linux 核心漏洞報告發送至公開郵件列表，令原本應透過保密渠道處理的漏洞細節提前曝光。其中兩項涉及遠端執行程式碼（Remote Code Execution，RCE），CVSS 嚴重程度評分高達 9.0 分，令 Linux 開發團隊面臨必須在攻擊者利用漏洞前完成修補的壓力。</p><h3>Trend Micro 旗下 ZDI 提前公開漏洞　Linux 核心維護者提出質疑</h3><p>根據 Linux 技術網站 Phoronix 報道，今次公開漏洞的並非外部黑客，而是專門研究及通報零日漏洞的 Trend Micro Zero Day Initiative。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/23154331/Trend-Micro-Zero-day-Initiative_large-1.jpg" alt="今次公開漏洞的並非黑客，而是專門研究及通報零日漏洞的 Trend Micro Zero Day Initiative。">今次公開漏洞的並非黑客，而是專門研究及通報零日漏洞的 Trend Micro Zero Day Initiative。<p>ZDI 將多份安全漏洞報告發送至公開的 Linux Kernel Mailing List（LKML），而非一般處理未公開安全問題的私人郵件列表。由於 LKML 內容可供任何人查閲及存檔，漏洞技術細節因而提前曝光。</p><p>Linux 核心主要維護者之一 Greg Kroah-Hartman 隨即對相關報告提出質疑，指出報告不但發送至公開列表，部分更沒有附上修補程式，要求 ZDI 改善漏洞提交流程。</p><p>事件最初被外界視為意外公開，但目前尚不能確定是否純粹寄錯收件人。部分報告將漏洞發現歸功於 TrendAI，而 Linux 核心安全文件對 AI 工具發現的漏洞另有公開通報指引，因此今次事件亦可能涉及對披露程序的不同理解。</p><h3>兩項漏洞嚴重程度達 9.0 分　可能遠端控制 Linux 伺服器</h3><p>今次曝光的漏洞涉及 Linux 核心多個不同子系統，其中最受關注的是兩項與 KSMBD 相關的遠端執行程式碼漏洞。</p><p>KSMBD 是 Linux 核心內建的 SMB 檔案共享伺服器實作，讓其他電腦透過網絡存取共享檔案。由於相關程式碼在核心空間執行，一旦遭成功利用，可能對整個系統造成嚴重影響。</p><p><strong>ZDI-CAN-33549：SMB Direct 整數下溢漏洞（CVSS 9.0）</strong></p><p>此漏洞涉及 SMB Direct 的整數下溢（Integer Underflow）問題，可能造成記憶體存取錯誤，進而讓攻擊者遠端執行惡意程式碼。攻擊需要特定 SMB Direct、RDMA 網絡及共享權限條件，並非所有 Linux 檔案伺服器都會受到影響。</p><p>據報相關修補程式已在預定供 Linux 7.5 開發使用的程式碼分支中準備，但截至事件曝光時，尚未正式合併至主線核心。</p><p><strong>ZDI-CAN-33774：KSMBD 競態條件漏洞（CVSS 9.0）</strong></p><p>另一項漏洞涉及 KSMBD 處理 SMB 網絡封包時的競態條件（Race Condition），可能導致記憶體越界存取及遠端程式碼執行。</p><p>尤其值得注意的是，部分攻擊路徑可能在用户完成身份驗證前觸發。因此，對於啟用了受影響 KSMBD 服務、並容許攻擊者連接相關網絡連接埠的系統，風險尤其值得關注。</p><p>此外，其他公開漏洞還涉及 Linux 網絡程式碼、VMware 圖形驅動及 NVMe Target 子系統，可能造成本機權限提升或敏感資料洩漏。</p><h3>修補前提前公開　等同給予黑客研究攻擊方法的時間</h3><p>今次事件最令人憂慮的地方，並非單純發現了 Linux 核心漏洞，而是漏洞技術細節在正式修補程式推出前已經公開。</p><p>一般而言，安全研究人員發現重大漏洞後，會先透過保密渠道通知軟件開發者，讓開發團隊分析問題、編寫及測試修補程式，並與相關供應商協調發布時間，避免攻擊者在用户尚未獲得更新前掌握漏洞細節。這種做法稱為協調式漏洞披露（Coordinated Vulnerability Disclosure）。</p><p>然而，今次情況卻出現相反次序：漏洞資料已公開，但部分修補程式仍處於測試階段，甚至尚未完成。</p><p>攻擊者可能利用公開報告中的漏洞成因、受影響程式碼及觸發條件，加快開發概念驗證攻擊程式（Proof of Concept，PoC），再進一步製作可實際入侵系統的工具。</p><p>即使攻擊者原本不知道漏洞存在，這些資料亦可能大幅縮短其研究時間。另一方面，Linux 發行版供應商仍需要將修補程式移植至各自維護的核心版本，並完成兼容性測試，才能向用户發布安全更新。</p><p>換言之，<strong>攻擊者可能已開始研究如何利用漏洞，但系統管理員卻暫時沒有正式修補程式可以安裝。</strong>這段介乎漏洞公開與修補程式普及之間的時間，便形成危險的安全空窗期。</p><p>不過，漏洞提前公開並不代表已有黑客成功利用。現階段亦未有充分證據證明相關漏洞已被大規模用於實際攻擊。</p><h3>Linux 伺服器及 NAS 管理員應如何應對？</h3><p>Linux 廣泛應用於網站伺服器、雲端平台、企業儲存設備及 NAS，因此核心漏洞往往受到高度關注。</p><p>不過，今次披露的漏洞分別涉及不同核心模組及功能，並不代表所有 Linux 系統均存在相同風險。例如，兩項高達 9.0 分的遠端執行漏洞主要涉及 KSMBD，使用傳統 Samba 檔案共享服務的系統，不能直接視為受到這兩項漏洞影響。</p><p>在正式修補程式推出前，系統管理員應先確認是否啟用了 KSMBD、SMB Direct 或其他受影響模組，避免將不必要的檔案共享服務暴露於互聯網，並透過防火牆限制相關網絡存取。</p><p>企業亦應密切留意 Linux 核心開發團隊及 Ubuntu、Debian、Red Hat 等發行版供應商的安全公告。由於不同發行版可能採用自行維護的核心版本，不能單憑核心版本號碼判斷是否已完成修補。</p><p>對於需要長期運作的生產環境，亦不建議未經測試便自行套用仍在開發中的核心修補程式，以免引發系統穩定性問題。</p><h3>PHP 之後再有 Linux 安全風波　開源軟件披露程序受考驗</h3><p>昨日 PHP 重大漏洞事件已令不少網站管理員提高警覺，如今 Linux 核心又發生未修補漏洞提前曝光事件，令網絡基礎設施安全再次成為焦點。</p><p>兩宗事件並沒有已知的直接技術關聯，但同樣反映出一個重要問題：即使安全研究人員成功發現漏洞，如果披露時間與修補程序未能妥善協調，仍可能令系統使用者面對額外風險。</p><p>對企業而言，除了及時安裝安全更新，更重要的是建立完善的漏洞管理、網絡隔離及應急機制，才能在修補程式尚未推出時降低系統遭受攻擊的機會。</p>
+<p><a href="https://www.pcmarket.com.hk/linux-kernel-unpatched-vulnerabilities-zdi-accidental-disclosure-ksmbd-rce/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

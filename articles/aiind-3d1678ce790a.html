@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Agent 正在改寫 CPU 的價值：當 Token 變成行動，算力競爭不再只是拼 GPU</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI Agent 正在改寫 CPU 的價值：當 Token 變成行動，算力競爭不再只是拼 GPU</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/f9/f5/f9effab09dab2237356133de3a5f07f5.png" alt=""></p><h3>正文</h3><p>過去兩年，AI 基礎設施的競爭幾乎圍繞 GPU 展開。模型能生成多少 Token、每秒能輸出多少 Token、每瓦功耗能夠支撐多少推理吞吐量，成為衡量算力效率的重要指標。</p><p>但隨着 AI Agent 從聊天問答走向軟件開發、企業自動化和複雜任務執行，一個新的問題開始浮現：如果模型生成了代碼，卻要花很長時間才能完成編譯和測試；如果推理速度足夠快，工具調用、數據庫訪問和任務編排卻跟不上，那麼更快的 Token 生成速度，究竟能帶來多少實際生產力？</p><p>這也讓 CPU 在 AI 基礎設施中的作用開始被重新審視。</p><p>Arm 雲 AI 解決方案架構總監 Ravi Malhotra 在一場技術分享中提出，智能體 AI 正在改變 CPU 性能的評價邏輯。過去，AI 性能主要圍繞 Token 生成展開，而在 Agent 場景下，基礎設施不僅需要支持模型思考，還必須讓模型生成的內容轉化為真實行動。</p><p>這一判斷的背景，是 AI 工作負載正在發生變化。Arm 此前發佈的新評估方法，將智能體應用中的工具調用、任務編排、推理支持和端到端任務執行納入 CPU 性能評價，並與富士通、Meta、OpenAI 等企業共同探索相關方法。</p><p>從行業角度看，這場討論實際上指向一個更深層次的問題：當 AI 不再只是生成答案，而是持續執行任務，數據中心的算力分工是否需要重新調整？CPU 的價值，又該如何衡量？</p><p>傳統大模型推理主要依靠 GPU 等加速器完成密集計算，CPU 更多承擔請求處理、資源調度、數據準備等工作。但 Agent 的工作方式有所不同。</p><p>以軟件開發智能體為例，用户提出一個需求後，模型首先分析任務並生成代碼，隨後智能體需要創建文件、調用編譯器、運行測試、檢查錯誤，必要時再將結果反饋給模型，進入下一輪修改。</p><p>整個過程並不是連續不斷地生成 Token，而是在模型推理與外部操作之間反覆切換。</p><p>Ravi Malhotra 將這種工作負載分為兩個主要部分：一部分是推理與規劃，主要由 AI 加速器承擔；另一部分是工具調用與編排，包括代碼執行、數據庫訪問、沙箱運行等，大量依賴 CPU 資源。</p><p>“在智能體 AI 時代，CPU 的關鍵任務可以分為三類。”他表示，首先是將生成的 Token 轉化為行動，其次是為推理提供數據和上下文支持，最後是負責工作流編排以及沙箱隔離。</p><p>這意味着，CPU 不再只是推理任務的輔助組件，而是決定 Agent 能否順利執行任務的重要環節。</p><p>尤其是在軟件開發場景中，編譯和測試可能消耗大量 CPU 計算資源。如果 CPU 無法及時完成這些工作，後續模型推理就需要等待，昂貴的 GPU 也可能因為依賴前序任務而無法充分發揮效率。</p><p>Ravi Malhotra 指出，CPU 需要儘快完成自身承擔的操作，使任務控制權重新回到 GPU 或其他加速器上。“如果 CPU 不夠快，更昂貴的 GPU 就會處於閒置狀態，而這是沒有人希望看到的結果。”</p><p>當然，這並不意味着 Agent 越複雜，CPU 的工作量就一定越大。不同任務中的模型推理、工具調用及外部等待時間佔比可能相差很大。真正需要關注的，是 CPU 是否處於整個任務執行鏈路的關鍵路徑上，以及它的處理能力是否正在限制系統整體效率。</p><p>Agent 給 CPU 帶來的另一項挑戰，是工作負載越來越難以用單一指標概括。</p><p>在分享中，Ravi Malhotra 將當前較有代表性的智能體應用歸納為五類：軟件工程、企業自動化、科學與金融研究、個人助理以及機器人技術。</p><p>這些應用雖然都被稱為 Agent，但底層的計算特徵並不相同。</p><p>軟件開發智能體通常需要執行編譯、測試、代碼分析等計算密集型操作，任務持續時間較長，對單核性能和內存訪問效率提出較高要求。在這類場景中，讓單個任務更快完成，可能比單純增加同時運行的 Agent 數量更加重要。</p><p>企業自動化則呈現出另一種特徵。客户服務、庫存管理或供應鏈系統中的智能體，可能需要頻繁訪問數據庫、調用 API 或執行較短的業務操作。單次任務的 CPU 開銷不一定很高，但同時運行的任務數量可能非常龐大。</p><p>這時，系統關注的重點就變成了併發能力、吞吐量以及單位資源能夠處理多少次請求。</p><p>個人助理同樣如此。一次日程查詢或網頁訪問可能十分短暫，但當大量用户同時使用智能體服務時，成千上萬個短任務會對服務端的資源管理、I/O 和調度能力形成持續壓力。</p><p>因此，軟件開發場景需要較強的單任務執行能力，而企業運營場景更強調高併發下的穩定吞吐，兩者未必適合採用完全相同的 CPU 配置。</p><p>Ravi Malhotra 在分享中提到，對於 Terminal-Bench、SWE-bench 所代表的軟件開發負載，每個 CPU 核心運行一到兩個 Agent 可能已經足夠。繼續增加併發數量，雖然可能提高資源使用率，卻也可能導致單個任務的完成時間超出服務等級協議（SLA）的要求。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/AkDgwN6h72cqUOJ35Zok?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI Agent 正在改寫 CPU 的價值：當 Token 變成行動，算力競爭不再只是拼 GPU</li></ul>
+<p><a href="https://www.infoq.cn/article/AkDgwN6h72cqUOJ35Zok?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
