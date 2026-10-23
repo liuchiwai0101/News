@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>上下文語言模型：通過自主管理上下文提升性能、降低計算成本</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>上下文語言模型：通過自主管理上下文提升性能、降低計算成本</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/bb/30/bbedbd20e9317863ddbffe1f07975d30.jpg" alt=""></p><h3>正文</h3><p>Meta、麻省理工學院與華盛頓大學的研究人員提出 上下文語言模型（Context Language Model，CLM），一種使語言模型能夠自主管理和編輯自身上下文的新方法 。該方法不再依賴預定義的摘要、壓縮和信息檢索機制，在性能和計算效率方面均取得顯著提升。</p><p>研究人員實現了一種讓 LLM 自主管理上下文的機制，將上下文視為一個可以無限制更新的文件。這種方法為傳統的上下文管理策略提供了一種替代方案，傳統策略（如壓縮、外存卸載和檢索）用於防止上下文無限增長，但各有侷限。摘要可能會丟失關鍵細節或引入錯誤，壓縮通常使用預定義的規則集，而外部存儲則需要智能體決定哪些信息需要重新載入上下文。</p><p>與之不同，CLM 可以改寫歷史消息、保留重要事實、刪除無關信息、維護進度記錄，並習得屬於自身的上下文管理策略。研究人員強調，大模型能夠學習超出現有人工設計方案的策略，有可能突破“現有的人類先驗認知”。</p><p>將上下文管理從外部輔助控制轉為模型的內在行為， 天然支持用於上下文管理的上下文學習和參數學習。我們首先表明，用户只需要告知智能體期望的策略，就能引導上下文管理行為。此外，CLM 可以迭代生成一份上下文技能文檔，捕捉可用的上下文管理流程供後續複用。</p><p>CLM 能夠習得的新能力包括：創建內部筆記、刪除無關中間結果並保留有用內容、記錄失敗實驗與待探索思路等。</p><p>研究人員探索了三種不同的上下文管理方法。第一種是零樣本上下文管理，即 CLM 不接收特定訓練。第二種是上下文學習，即通過自然語言指導 CLM 如何管理上下文，並通過迭代技能優化循環來改進策略。第三種是強化學習，即以任務成功為主要目標、計算效率為額外優化標準來學習上下文管理策略。</p><p>研究人員使用多個基準測試對 CLM 進行了評估，結果顯示性能與計算效率均大幅提升。零樣本 CLM 取得了以下成績：</p><p>在 BrowseComp-Plus 數據集上，準確率提升 11.4%，浮點運算量減少了 21.5%；在 12 小時的 EdgeBench 任務上，得分提升 5%，浮點運算量減少 59%；在 24 小時多倉庫智能體集群任務上，同等算力下性能提升幅度高出 65%。</p><p>採用上下文學習的 CLM 在 ContextBench 任務上最高提升 35.9 個百分點的準確率，同時算力消耗更低。強化學習方案將 Qwen3.5-9B 在 BrowseComp-Plus 上的準確率從 28.8% 提升至 42.5%，相對提升 47.6%，浮點運算量還減少了 12%。</p><p>研究人員也指出若干尚未解決的難題。首先，CLM 有可能丟棄後續無法找回的重要信息。其次，允許 CLM 編輯自身上下文會帶來新的安全風險：可編輯上下文“會成為另一類通道，讓提示詞注入或模型自生成指令在多輪對話中持續留存”。最重要的是，更強的上下文控制權並不等價於更好的模型表現，模型仍可能在保留、修改或丟棄信息上做出錯誤判斷。</p><p>在 X.com 上對該公告的評論中 ，@Rennix7t 警告説“論文中的準確性和算力結果來自特定任務”，而 @omarsar0 認為該方向很有研究價值，但對端到端信任模型自主管理上下文持保留態度，認為仍需更完善的解決方案。</p><p>在 Reddit 上， Combinatorilliance 認為 CLM 尚未達到生產就緒狀態 ，他指出，重寫上下文會使模型緩存失效，並且“研究人員所用的緩存技巧本身並不完美，存在一些需要考量的缺陷”。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/Pwu4FNskSB2cbKV9BZKq?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：上下文語言模型：通過自主管理上下文提升性能、降低計算成本</li></ul>
+<p><a href="https://www.infoq.cn/article/Pwu4FNskSB2cbKV9BZKq?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

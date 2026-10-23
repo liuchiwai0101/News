@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Foresight AI 正式可用，Gremlin 將智能體引入可靠性工程</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Foresight AI 正式可用，Gremlin 將智能體引入可靠性工程</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/67/7c/678cb4340257c03d4a197f7b8dbdf17c.jpg" alt=""></p><h3>正文</h3><p>可靠性管理公司 Gremlin 宣佈其智能體產品 Foresight AI 正式全面上線。該產品可分析服務中的潛在故障、給出優化建議，並重新執行測試以驗證修復方案是否有效。它作為 Gremlin 平台的附加組件提供。該平台支持團隊開展計劃內實驗、控制故障的影響範圍，並使用自動化測試確保修復措施長期有效。企業可利用可靠性評分量化改進進度，優先投入資源提升系統彈性。</p><p>Foresight AI 的目標是提供可靠性檢測能力，無需每位開發者都成為分佈式系統專家。Gremlin 將這款產品定位為應對 AI 輔助軟件快速交付的解決方案。Gremlin 首席執行官兼聯合創始人 Kolton Andrus 認為，當前有大量代碼在缺少人工深度審查的情況下直接進入了生產環境。</p><p>該產品將工作劃分為四個智能體角色：分析師智能體（Analyst）收集服務數據並推薦測試用例，測試員智能體（Tester）負責安排和執行測試，運維智能體（Operator）解讀失敗的測試結果並提出修復方案，技術項目經理智能體（Technical Program Manager）跟蹤各團隊的測試覆蓋率、可靠性風險和承諾事項。最後一個智能體可以生成每週報告，並通過 Slack 推送更新。</p><p>Foresight AI 的推薦基於 Gremlin 的故障圖譜（Failure Atlas）。該公司稱，這是一個專有的記錄庫，包含過去十多年在數萬個分佈式系統上進行的數百萬次故障注入實驗。Gremlin 表示，系統數據不會被用於訓練大語言模型。智能體使用平台數據和故障圖譜進行決策，而 LLM 僅用於搜索、總結和解釋結果。</p><p>其主要技術特點是閉環驗證機制。當測試發現系統薄弱點時，服務會提出變更建議，然後重新運行原始測試。Gremlin 表示，Foresight AI 在未獲得許可的前提下不會執行任何測試或應用修復方案。這樣既保持由工程師對變更負責，又把大部分分析和重複驗證工作自動化。</p><p>“告警恢復正常不能證明什麼。在真實場景、負載壓力下通過的測試才具備説服力。”</p><p>該服務還支持通過自然語言指令生成報表和儀表盤，內容可包含圖表、表格、分頁和鏈接，用於展示可靠性評分變化以及團隊已處理的風險。這解決了可靠性團隊的一個常見難題：被避免發生的事故無法像實際發生的故障那樣產生直觀的證據。</p><p>在 另一篇文章 中，Intellyx 分析師 Jason English 指出，可觀測性和 AI SRE 產品有用，但大多數是被動型的。他認為，這些產品通常從已經發生問題的遙測數據開始，而故障注入則採取了不同的思路：在事故發生前創造受控的故障條件，並記錄服務的響應。</p><p>English 還告誡説，可靠性計劃不能簡單地作為一個軟件包來安裝。要取得持續成效，仍然需要工程團隊和管理層共同承擔責任。這一點十分關鍵，因為 Foresight AI 可以協調測試與任務，但組織仍須決定哪些風險是可以接受的，以及是否採納提議的變更方案。</p><p>此次發佈也是行業將自動化彈性檢測與交付流水線集成的眾多實踐之一，其中一些近期已被 InfoQ 報道。 谷歌雲混沌工程指南 建議採用真實的故障條件、有限的故障影響範圍以及通過 CI/CD 實現持續自動化。 Wix 也描述了在 CI/CD 中使用 AI 進行日誌解讀和生成修復建議，同時將部署和關鍵基礎設施決策權保留在人手中。</p><p>這些控制措施與 Foresight AI 的審批邊界類似，同時又和高度自主化模型存在區別。例如， Cloudflare 的智能體開發生命週期（Agent Development Lifecycle）提案 設想由智能體承擔更多的測試、部署和維護工作。而 Gremlin 目前採取的是監督模式，使用智能體來提議測試和變更，必須經由人工授權才能執行。</p><p>在一個關於基於 AI SRE 自動化的 LinkedIn 討論帖 中，工程師 Sandip Bhattacharya 認為，企業仍然需要專家來配置智能體、通過指標評估其行為，並隨着模型和基礎設施的變化做出調整。這為 Gremlin 的監督模式提供了一個有用的檢驗：自動化或許能減少重複性工作，但也創造了一個可靠性工程師必須評估的新系統。</p><p>Amplify Partners 合夥人 Mike Dauber 將 Foresight AI 比作“替你完成重複訓練的教練” 。這個比喻説明了該產品對重複測試的側重，儘管目前提供的證據來自 Gremlin 及其測試計劃。不過 Gremlin 尚未公佈對比準確率數據、誤報率或詳細的測試結果。</p><p>Gremlin 由曾任職於亞馬遜和 Netflix 的工程師創立。 Andrus 此前曾在兩家公司從事可靠性工程工作，Netflix 的 Chaos Monkey 幫助普及了自動化故障注入。Foresight AI 將這種方法從運行實驗擴展到了測試篩選、結果解讀、修復方案生成和持續驗證。該產品經過內測驗證，能夠在風險演變為事故前識別並處理可靠性隱患，Gremlin Foresight AI 現已正式全面可用。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/2bKQkdiAcGEycHJLYPv5?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Foresight AI 正式可用，Gremlin 將智能體引入可靠性工程</li></ul>
+<p><a href="https://www.infoq.cn/article/2bKQkdiAcGEycHJLYPv5?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
