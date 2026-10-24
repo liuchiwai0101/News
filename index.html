@@ -872,24 +872,17 @@ function clusterList(items) {
   });
   return out;
 }
-function roundRobin(sections) {
-  const queues = sections.map(function(sec){ return (sec.items || []).slice(); });
+// Homepage feed follows the group-tab order: every item in tab 1, then tab 2, and so on.
+function sectionOrder(sections) {
   const seq = [];
-  let guard = 0;
-  while (guard++ < 5000) {
-    let took = false;
-    queues.forEach(function(q){
-      if (!q.length) return;
-      seq.push(q.shift());
-      took = true;
-    });
-    if (!took) break;
-  }
+  (sections || []).forEach(function(sec){
+    (sec.items || []).forEach(function(it){ seq.push(it); });
+  });
   return seq;
 }
 const sectionItems = {};
 DATA.sections.forEach(function(sec){ sectionItems[sec.label] = clusterList(sec.items || []); });
-const allItems = clusterList(roundRobin(DATA.sections));
+const allItems = clusterList(sectionOrder(DATA.sections));
 
 // ===== E 緊湊卡片牆: tab 分組（每分類一個 tab）+ 緊湊網格 + 保留點開詳情 =====
 const navInner = document.querySelector('.nav-inner');
@@ -975,13 +968,13 @@ function buildPanel(sec, si){
   return panel;
 }
 
-// 全部: one merged feed (round-robin across groups). Default tab.
+// 全部: one merged feed, groups in the same order as the nav tabs. Default tab.
 const allPanel = document.createElement('div');
 allPanel.className = 'tab-panel';
 allPanel.setAttribute('data-cat', '__all__');
 const allSub = document.createElement('div');
 allSub.className = 'nml-sub';
-allSub.textContent = '全部板塊合併顯示；同一則新聞已合成一張。可用上方標籤只看某一組';
+allSub.textContent = '依上方標籤順序排列各組；同一則新聞已合成一張。可用上方標籤只看某一組';
 allPanel.appendChild(allSub);
 const allGrid = document.createElement('div');
 allGrid.className = 'grid wall';
