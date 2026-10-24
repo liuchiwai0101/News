@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>英國承諾出資1億英鎊設立生物安全實驗室 OpenAI、Anthropic參與合作</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>英國承諾出資1億英鎊設立生物安全實驗室 OpenAI、Anthropic參與合作</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Moomoo · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://s.yimg.com/lo/mysterio/api/175d353daeb7b2efa45deb2e32d67867f72aa445d083acf9c4b76cfbd0ae7a16/lightyear_networkapi/resizefill_w1200%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fvi%2Fsunmedia_664%2F9222d9339ab0a48e78228b88567ed245.jpg" alt=""></p><h3>正文</h3><p>漏洞「偷跑」，也倒逼 PHP 基金會在昨晚 10 點提前發佈正在籌備的緊急安全補丁。</p><p>你可能聽説過但不熟悉 PHP，但只需要知道， 全世界約有七成網站後台都使用了這項技術 ，使用比例高達 92% 的日本，更是成了「重災區」。</p><p>於是，從昨晚開始，無數網站運維人員經歷了奪命連環 call，高市早苗親自發文敦促網站管理者打補丁，半個歐洲的政府與學術機構緊急「拔網線」，二次元熟悉的 niconico、pixiv，乃至《賽馬娘》《碧藍幻想》和任天堂相關遊戲服務也紛紛下線，開始了歸期未定的漫長升級。</p><p>甚至連壽司郎，也宣佈小程序暫停運行，恐怕要到明天下午，我們才能重新用上小程序預約。</p><p>PHP 出問題，全球互聯網抖一抖 和很多類似的技術一樣，PHP 是一種「不出圈」但相當重要的互聯網基礎設施。</p><p>想象你登錄一個電商網站，下單買了一本書。這個過程中你看見的只是前端的網頁，但服務器其實在後台處理了諸如驗證密碼、檢查庫存、查詢訂單、生成網頁等動態功能。</p><p>根據統計，目前有 69.4% 的網站後端用到了 PHP，WordPress、Drupal、Joomla 等流行的網站管理系統都建立在 PHP 之上，維基百科使用的 MediaWiki，同樣主要由 PHP 編寫。</p><p>但就像曾經種滿全球的大麥克香蕉被黃葉病團滅一樣，普遍性本身也是一種脆弱性：如果 PHP 在底層上出現安全問題，可想而知，幾乎全球的網站都會受到牽連。</p><p>這次爆出的兩個漏洞，對應編號分別為 CVE-2026-109618 和 CVE-2026-109619，PHP 基金會給它們定下的嚴重程度評分達到 9.2 分（滿分 10 分）。</p><p>舉個不完全準確的比喻：假設 PHP 是麥當勞中央廚房，後廚工作人員會根據顯示屏上的下單情況來製作餐食。而最新曝光的內存管理漏洞，就相當於讓黑客有機會修改顯示屏內容，讓後廚給自己做出源源不斷的「自助餐」。</p><p>這裏的「自助餐」內容，可以是讓服務器乖乖交出存儲的用户資料，也可以是修改新聞網站的內容，或者將電商網站的收款信息改成黑客的賬户；進一步地，往服務器植入勒索軟件或以此為跳板入侵更大的系統也不在話下。</p><p>這也是為什麼，在安裝好補丁之前，用到 PHP 的網站與服務寧願徹底下線，不給攻擊者留下可乘之機。</p><p>但官方發佈補丁，也不代表萬事大吉。一方面，不是所有網站管理者都有時間、有意願去更新系統；另一方面，基建上的慣性導致目前世界上還有近半網站使用的是已經結束了支持週期的舊版 PHP，而這些舊版分支從一開始就得不到補丁。</p><p>也就是説，如果不徹底升級 PHP 版本，這些網站從今天開始幾乎都是處於「裸奔」狀態。</p><p>早在補丁推送之前，思科、WatchTowr 和 360 等公司的安全團隊已經根據公開信息復現了攻擊流程，而 Cloudflare 也開始觀察到小規模的攻擊行為。</p><p>可以預想，在主要公司密鑼緊鼓地升級的同時，還有很多潛在的攻擊者正在搜尋那些怠於維護的網站，隨時準備分食服務器上潛藏的資源。</p><p>AI 開始發掘「沉睡漏洞」 值得注意的是，根據官方覆盤，這起事件中 AI 扮演了相當核心的角色。</p><p>引發這次安全風暴的漏洞，其實早在 2024 年就被發現——</p><p>當時，PHP 基金會啓動了一次外部安全審計，而在檢查審計結果時，PHP 維護團隊的成員開始注意到，在內存不足的情況下 PHP 會存在安全隱患。但由於沒有找到穩定可復現的攻擊方式，加上修復核心代碼可能會影響兼容性，修復工作一拖再拖，始終沒有提上日程。</p><p>今年 6 月，OpenAI 發起了一項名為「Patch the Planet」（修復星球）的安全項目，這個頗有「萬物皆可 Patch」氣質的計劃找來了多家安全公司，合作利用 AI 發現並報告開源項目的漏洞，作為開源項目的 PHP 自然也被列入研究目標。</p><h3>各方報道</h3><ul><li><a href="https://www.moomoo.com/hant/news/post/1002246085" target="_blank" rel="noopener noreferrer">Moomoo</a>：英國承諾出資1億英鎊設立生物安全實驗室 OpenAI、Anthropic參與合作</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1583644.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：英國將投入1億英鎊建設AI生物安全實驗室 OpenAI和Anthropic提供模型額度</li><li><a href="https://tw.stock.yahoo.com/news/anthropic%E6%8E%A8claude-duet%E6%90%B6%E6%94%BBai%E4%BB%A3%E7%90%86%E5%B8%82%E5%A0%B4-%E6%8C%91%E6%88%B0meta%E8%88%87openai-225026746.html" target="_blank" rel="noopener noreferrer">Yahoo 股市</a>：Anthropic推Claude Duet搶攻AI代理市場 挑戰Meta與OpenAI - Yahoo股市</li></ul>
+<p><a href="https://www.moomoo.com/hant/news/post/1002246085" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
