@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>開源項目 GPU Unlock 可釋放英偉達 RTX 30 系列顯卡隱藏 AI 算力，實際性能提升可達 60%</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>開源項目 GPU Unlock 可釋放英偉達 RTX 30 系列顯卡隱藏 AI 算力，實際性能提升可達 60%</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/10/4620fdf7-473c-40de-9133-91539778aa49.jpg?x-bce-process=image/format,f_auto" alt=""></p><h3>正文</h3><p>IT之家 10 月 25 日消息，英偉達已經上市一段時間的 GeForce RTX 30 系列（代號安培，Ampere）顯卡，顯然還有大量尚未釋放的計算潛力。GitHub 用户扎吉塔（Zagitta）開發了一款名為 GPU Unlock 的開源新項目，可以解除安培架構顯卡上部分人為設置的性能限制，在特定負載下，張量核心的計算吞吐量幾乎可以翻倍，而且不需要修改英偉達驅動，也不用永久刷寫顯卡的 VBIOS。</p><p>IT之家注意到，這個項目專門針對一項指令發射速率限制：在使用 FP32 累加的 FP16/BF16 張量核心運算中，消費級安培顯卡的運行速率相比專業卡更低。解除這項限制之後，工具就能釋放顯卡硬件本身就具備的額外計算性能。</p><p>有意思的是，GPU Unlock 建立在早前針對英偉達 CMP 加密貨幣挖礦顯卡的相關研究之上。它把 CMP 項目的固件解鎖技術和一套提前初始化方案結合起來，依靠一個 Linux 內核模塊，在英偉達顯卡驅動加載之前執行操作。該模塊修改對應的硬件速度選擇寄存器，執行一次功能級重置（FLR），之後原版驅動就可以正常初始化顯卡。</p><p>這也意味着用户每次更新驅動新版本時，都不用再給驅動打補丁。開發者目前標註支持 GA102、GA103、GA104、GA106 型號 GPU，覆蓋了 RTX 30 系列裏的大部分型號，不過並不是每一張顯卡都一定能兼容，也不保證都能獲得性能提升。</p><p>性能提升的幅度可以相當可觀。根據項目 GitHub 倉庫放出的基準測試數據，一塊功耗上限設置在 450W 的 RTX 3090 Ti，在使用 FP32 累加的稠密矩陣乘法（GEMM）測試中結果如下：</p><p>這類提升並不只出現在 RTX 3090 Ti 上。一位 RTX 3080 Ti 用户反饋，在顯卡功耗限制為 315W 的條件下，BF16 吞吐量從 71.59 TFLOPS 提升至 113.98 TFLOPS，TF32 性能從 35.65 TFLOPS 提升至 65.28 TFLOPS。還有一份 RTX 3080 10GB 的兼容報告顯示，在顯卡原廠 320W 功耗上限下，FP16/BF16 性能從大約 65 TFLOPS 提升到 110–113 TFLOPS。這些測試結果也在 X 平台上被廣泛討論。</p><p>那在實際應用裏的表現如何？好在社區用户已經開始在真實 AI 負載下測試這項解鎖功能，初步結果比較樂觀。</p><p>Reddit 上一位 RTX 3090 Ti 用户在 ComfyUI 中做了跑分測試，MOSS-Image SFT BF16 吞吐量提升 58.6%，Qwen-Image 2.1 Turbo BF16 提升 57.2%，Z-Image Turbo BF16 提升 56.1%。而 INT8 精度模式下提升幅度很小，MOSS-Image SFT INT8 僅提升 0.3%。測試者同時表示，默認狀態和解鎖後生成的圖片解碼結果完全一致。</p><p>大語言模型（LLM）推理也是潛在受益場景，不過提升效果高度取決於負載類型。例如一份 RTX 3090 的兼容報告顯示，vLLM 的提示詞處理與推理吞吐量提升 33%，但詞元（token）生成速度基本沒有變化。這也很好理解，大語言模型解碼環節的瓶頸往往是顯存帶寬，而不是張量核心的原始計算吞吐量。</p><p>還有一項值得關注的進展是實驗版 Windows 實現方案，它不再使用原先的 Linux 內核模塊，而是基於 UEFI 的方式。開發者記錄了 RTX 3090 的成功案例，BF16 計算吞吐量提升約 82.5%。但這個版本仍然屬於實驗性質，只適配特定硬件，並不是通用可用的 Windows 正式版本。</p><p>該方案同樣存在明顯侷限。GPU Unlock 不會提高顯存帶寬，不會解鎖更多 CUDA 核心，也無法讓所有負載自動提速。至少有一份 RTX 3080 Ti 20GB 的反饋顯示，解鎖流程執行成功，但 BF16 性能沒有出現預期提升，説明效果並不通用。</p><p>遊戲方面，英偉達的 DLSS 技術同樣會用到張量核心，但目前沒有可靠證據證明 GPU Unlock 可以提升遊戲幀率或是縮短 DLSS 的運行耗時。只有當任務本身調用了這些受影響的指令和累加模式時，才有可能獲得收益。所以，這些亮眼的計算跑分，不能等同於遊戲幀數會同步上漲。</p><p>即便如此，對於 RTX 30 系列顯卡持有者來説，GPU Unlock 仍是一個很有吸引力的新嘗試，尤其是那些把顯卡用於本地 AI 推理、圖像生成以及其他高計算負載場景的用户。這個項目目前還處在實驗階段，但不用永久改動硬件，就能從現有顯卡里挖出可觀的額外性能，確實很有吸引力。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/017/525.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：開源項目 GPU Unlock 可釋放英偉達 RTX 30 系列顯卡隱藏 AI 算力，實際性能提升可達 60%</li></ul>
+<p><a href="https://www.ithome.com/1/017/525.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
