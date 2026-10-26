@@ -2225,11 +2225,7 @@ def main() -> None:
     keep.update(it["sourceUrl"] for it in deals["items"])
     keep.update(it["sourceUrl"] for it in wire_items)
 
-    old = [
-        hantify_item(it)
-        for it in (data.get("old") or [])
-        if it.get("kind") not in ("wire", "local")
-    ]
+    old = [hantify_item(it) for it in (data.get("old") or [])]
     old_urls = {it.get("sourceUrl") for it in old}
     for sec in data["sections"]:
         if sec.get("kind") in ("deals", "wire", "local"):
@@ -2279,6 +2275,49 @@ def main() -> None:
     if app_items:
         sections.append({"label": APP_LABEL, "items": app_items, "kind": "app", "ci": CI[APP_LABEL]})
 
+    def _item_day(it: dict) -> date | None:
+        raw = (it.get("isoDate") or "")[:10]
+        try:
+            return date.fromisoformat(raw)
+        except Exception:
+            return None
+
+    kept_sections = []
+    moved = 0
+    for sec in sections:
+        if sec.get("kind") == "deals":
+            kept_sections.append(sec)
+            continue
+        fresh, aged = [], []
+        for it in sec.get("items") or []:
+            day = _item_day(it)
+            if day is not None and day < today:
+                aged.append(it)
+            else:
+                fresh.append(it)
+        for it in aged:
+            u = it.get("sourceUrl")
+            if u and u in old_urls:
+                continue
+            rec = {k: it.get(k) for k in (
+                "title", "summary", "sourceName", "sourceUrl", "img", "imgKind",
+                "imgCreator", "imgLicense", "imgSource", "date", "isoDate",
+                "articleId", "articleUrl", "ci", "kind",
+            )}
+            rec["board"] = sec.get("label") or "其他"
+            rec["keypoints"] = it.get("keypoints") or []
+            hantify_item(rec)
+            old.insert(0, rec)
+            if u:
+                old_urls.add(u)
+            moved += 1
+        if fresh:
+            sec = dict(sec)
+            sec["items"] = fresh
+            kept_sections.append(sec)
+    sections = kept_sections
+    print("moved to old", moved, "before", iso)
+
     flat = []
     for sec in sections:
         for it in sec["items"]:
@@ -2301,8 +2340,9 @@ def main() -> None:
     data["flat"] = flat
     data["old"] = old
 
+    nml_today = next((len(s["items"]) for s in sections if s.get("kind") == "external"), 0)
     nml_js = "const NML = {total:%d, shown:%d, newCount:%d};" % (
-        old_total + added, len(nml40), new_count
+        old_total + added, nml_today, new_count
     )
     html2 = html[: m.start()] + "const DATA = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n" + html[m.end() :]
     html2 = re.sub(r"const NML = [^;]+;", nml_js, html2, count=1)
