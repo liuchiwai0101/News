@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>讓 AI 從需求一路幹到上線，軟件開發組織要變了？</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>讓 AI 從需求一路幹到上線，軟件開發組織要變了？</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/0e/5c/0e7821cb89fffc1880ac458297ccd95c.png" alt=""></p><h3>正文</h3><p>過去兩年，AI Coding 幾乎成為軟件開發者的標配。無論是代碼補全、函數生成，還是 Bug 修復、代碼重構，AI 都在不斷提高開發人員的工作效率。</p><p>但一個值得注意的現象是，開發者寫代碼的速度越來越快，企業的軟件項目交付效率卻未必同步提升。</p><p>美國軟件工程數據分析與研發效能管理公司 Faros AI 分析了超過 1 萬名開發者、1255 個軟件工程團隊的工作流數據，涵蓋版本控制、代碼審查、任務管理和 CI/CD 等系統。</p><p>儘管開發者完成了更多任務，研究卻沒有發現 AI 採用率與企業層面關鍵交付指標改善之間存在顯著相關性。更有意思的是，PR 合併數量增加了 98%，代碼審查時間卻增加了 91%。 這反映出一個可能的瓶頸轉移：代碼生成加速之後，審查、測試和集成未必能跟上。</p><p>原因並不複雜。一個軟件項目從提出需求到最終上線，除了編碼，還涉及需求分析、產品設計、架構規劃、測試驗證、部署發佈，以及後續維護。即使 AI 能讓某個開發環節的效率提高 30%，也不意味着整個項目可以提前 30% 完成。</p><p>這也是當前 AI Coding 行業面臨的一個新問題：當代碼生成能力逐漸成為基礎能力，下一步究竟應該優化什麼？</p><p>10 月 26 日，網易智企正式發佈 CodeWave SDD「AI 軟件交付團隊」，試圖將 AI 的作用範圍從單個開發者擴展到軟件交付全流程。</p><p>與常規 AI Coding 工具不同，這款產品不再只為開發者提供代碼生成能力，而是通過需求分析師、架構師、開發工程師、測試工程師等多個 Agent 分工協作，完成從需求理解到應用發佈的完整流程。</p><p>網易智企副總經理、CodeWave 業務負責人王桐此前提出了一個判斷：“我們現在跟企業聊，就不聊開發提效了，直接聊擴產能。”</p><p>按照網易智企披露的數據，該產品經過內部驗證及超過 100 家企業的實際項目驗證，能夠實現約 3～5 倍的產能提升。</p><p>但相比提效數字，更值得關注的是其背後反映出的行業變化：AI Coding 的競爭重點，正在從幫助程序員更快寫代碼，向如何組織 AI 完成完整的軟件工程任務延伸。</p><p>王桐談到，網易內部已經廣泛使用各類 AI Coding 工具，開發單點環節獲得了約 20%—～0% 的效率提升。</p><p>但如果從企業整體經營角度衡量，這種改善可能被稀釋至個位數百分比。</p><p>軟件項目的交付成本並不只由程序員寫代碼的時間決定。需求反覆變更、不同崗位之間的信息傳遞、測試返工、歷史系統維護，以及最終客户驗收，都可能消耗大量資源。</p><p>特別是面對大型企業項目，一份需求文檔可能包含上百頁內容，既有業務流程，也有界面設計、權限規則和複雜的數據關聯。即使模型能夠快速生成代碼，也很難僅靠一次提示就準確理解全部要求。</p><p>開發者通常需要先手動拆解需求，再將不同任務分批交給 AI Coding 工具，最後自行整合代碼、檢查一致性並解決衝突。</p><p>這意味着，AI 雖然承擔了部分編碼工作，但需求拆解、任務組織和交付管理仍然需要大量人工參與。</p><p>“我們的下一代，不是讓人用 AI Coding 工具，而是直接讓 Agent 員工去用 AI Coding 工具。”王桐表示。</p><p>具體而言，開發者不再需要圍繞單個工具持續編寫提示詞、拆分任務和檢查生成結果，而是將完整需求交給一個由多個專業 Agent 組成的軟件交付系統，由其自主規劃、協作和執行。</p><p>當然，這並不意味着 AI Coding 工具本身已經失去價值。相反，代碼生成工具仍然是這類系統的重要基礎，只是人機交互和任務組織的層級發生了變化。</p><p>一支 AI 軟件交付團隊，如何真正完成複雜項目？</p><p>從技術實現看，CodeWave SDD 的主要特點是試圖通過統一的工程規範和執行環境，將不同 Agent 組織成一條完整的軟件交付流水線。其中有兩個值得關注的技術設計：</p><p>首先是規格驅動開發（Spec-Driven Development，SDD）。在傳統開發流程中，需求文檔往往存在不完整甚至相互矛盾的情況。人類工程師可以通過會議、溝通和經驗補充缺失信息，但 AI 如果直接基於模糊需求生成代碼，容易出現功能遺漏、理解偏差等問題。</p><p>為減少這種不確定性，CodeWave SDD 首先由需求分析師 Agent 讀取需求文檔，並識別其中的文本、表格、流程圖、原型圖等多模態信息。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/b32Mw2zaPrxyJ6ChePD5?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：讓 AI 從需求一路幹到上線，軟件開發組織要變了？</li></ul>
+<p><a href="https://www.infoq.cn/article/b32Mw2zaPrxyJ6ChePD5?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
