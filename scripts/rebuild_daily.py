@@ -820,6 +820,40 @@ def inner_html_by_class(html: str, class_token: str) -> str:
     return html[start:]
 
 
+def inner_html_by_id(html: str, id_token: str) -> str:
+    rx = re.compile(
+        r"<([a-zA-Z0-9]+)([^>]*\bid=(['\"])"
+        + re.escape(id_token)
+        + r"\3[^>]*)>",
+        re.I,
+    )
+    m = rx.search(html or "")
+    if not m:
+        return ""
+    tag = m.group(1).lower()
+    start = m.end()
+    depth = 1
+    i = start
+    open_rx = re.compile(rf"<{tag}\b", re.I)
+    close_rx = re.compile(rf"</{tag}\s*>", re.I)
+    while i < len(html) and depth:
+        om = open_rx.search(html, i)
+        cm = close_rx.search(html, i)
+        if not cm:
+            return html[start:]
+        opos = om.start() if om else 10**12
+        cpos = cm.start()
+        if opos < cpos:
+            depth += 1
+            i = om.end()
+        else:
+            depth -= 1
+            if depth == 0:
+                return html[start:cpos]
+            i = cm.end()
+    return html[start:]
+
+
 def inner_html_by_tag(html: str, tag: str) -> str:
     m = re.search(rf"<{re.escape(tag)}\b[^>]*>", html or "", re.I)
     if not m:
@@ -985,15 +1019,27 @@ PARA_JUNK = re.compile(
     r"^編輯[：:︰]|^記者[：:]",
     re.I,
 )
+# Site chrome that is not the story: HKEJ print calendar, footer disclaimer, promos.
+SITE_CHROME = re.compile(
+    r"印刷版出報日|休刊日|信報簡介\s*[\|｜]|服務條款\s*[\|｜]|"
+    r"概不構成任何投資意見|股票及指數資料由|期貨指數資料由|"
+    r"版權所有，不得轉載|訂戶登入|（節錄）|原文刊於|"
+    r"如欲投稿|支持\s*EJ\s*Tech|最早出現於",
+    re.I,
+)
 
 
 def _cjk_count(text: str) -> int:
     return sum(1 for ch in text or "" if "\u4e00" <= ch <= "\u9fff")
 
 
+def is_site_chrome(text: str) -> bool:
+    return bool(SITE_CHROME.search(text or ""))
+
+
 def is_good_para(text: str) -> bool:
     t = (text or "").strip()
-    if not t or PARA_JUNK.search(t):
+    if not t or PARA_JUNK.search(t) or is_site_chrome(t):
         return False
     cjk = _cjk_count(t)
     if cjk < 18 or len(t) < 22:
@@ -1004,7 +1050,11 @@ def is_good_para(text: str) -> bool:
 
 
 def paras_from_chunk(chunk: str) -> list[str]:
-    parts = re.split(r"</p>|<br\s*/?>\s*<br\s*/?>|\n{2,}", chunk or "", flags=re.I)
+    parts = re.split(
+        r"</p>|</h[1-6]>|</figcaption>|</blockquote>|<br\s*/?>\s*<br\s*/?>|\n{2,}",
+        chunk or "",
+        flags=re.I,
+    )
     out: list[str] = []
     for p in parts:
         t = to_hant(re.sub(r"\s+", " ", strip_tags(p)))
@@ -1055,13 +1105,72 @@ def paras_match_title(title: str, paras: list[str]) -> list[str]:
         miss += 1
         if miss >= 2:
             break
-    return kept or paras[:8]
+    if kept:
+        return kept
+    # A list of unrelated headlines shares no title bigram and is not the story.
+    # Real copy that simply doesn't repeat the headline is still kept.
+    prose = [
+        p
+        for p in paras
+        if p.count("。") >= 1 and _cjk_count(p) >= 36 and not is_site_chrome(p)
+    ]
+    return prose[:8]
+
+
+def _blocks_from_html(chunk: str) -> list[str]:
+    """Turn loose article text (not only <p>) into paragraphs, dropping chrome."""
+    if not chunk:
+        return []
+    chunk = re.split(
+        r'id=["\'](?:login-message-wrapper|next-article-wrapper|footer)',
+        chunk,
+        maxsplit=1,
+    )[0]
+    chunk = re.split(r"支持\s*EJ\s*Tech|如欲投稿", chunk, maxsplit=1, flags=re.I)[0]
+    chunk = re.sub(r"<script\b[^>]*>.*?</script>", " ", chunk, flags=re.S | re.I)
+    chunk = re.sub(r"</(p|div|h[1-6]|li|blockquote|figcaption|tr)>", "\n", chunk, flags=re.I)
+    chunk = re.sub(r"<br\s*/?>", "\n", chunk, flags=re.I)
+    out: list[str] = []
+    for line in re.split(r"\n+", chunk):
+        t = to_hant(re.sub(r"\s+", " ", strip_tags(line)).strip())
+        t = re.sub(r"(?:\s*[.．…]){1,}\s*$", "", t).strip()
+        if is_good_para(t):
+            out.append(t)
+    return out
+
+
+def hkej_paragraphs(html: str) -> list[str]:
+    """HKEJ article pages put the story in #article-detail-wrapper and the
+    print calendar / other headlines in the footer. Never treat the footer as copy.
+    """
+    wrapper = inner_html_by_id(html or "", "article-detail-wrapper")
+    paras = _blocks_from_html(wrapper)
+    if paras:
+        return paras[:24]
+    for blob in re.findall(r"<script[^>]*ld\+json[^>]*>(.*?)</script>", html or "", re.S | re.I):
+        try:
+            obj = json.loads(blob)
+        except Exception:
+            continue
+        for node in _ld_walk(obj):
+            body = node.get("articleBody") or ""
+            if isinstance(body, str) and _cjk_count(body) >= 24:
+                got = _blocks_from_html(body) or paras_from_chunk(body)
+                if got:
+                    return got[:24]
+    return []
 
 
 def extract_paragraphs(html: str, url: str) -> list[str]:
     host = urllib.parse.urlparse(url).netloc.lower()
     inner = ""
-    if "rthk.hk" in host:
+    if "ejtech.ai" in host or host.endswith("ejtech.hkej.com"):
+        inner = inner_html_by_id(html, "content-area")
+        inner = re.split(r"支持\s*EJ\s*Tech|如欲投稿", inner, maxsplit=1, flags=re.I)[0]
+    elif "hkej.com" in host:
+        # Paywalled pages still include a short excerpt. Footer <p> tags are not the story.
+        return hkej_paragraphs(html)
+    elif "rthk.hk" in host:
         inner = inner_html_by_class(html, "itemFullText") or inner_html_by_class(html, "itemBody")
     elif "yahoo." in host:
         inner = inner_html_by_tag(html, "article") or inner_html_by_class(
@@ -1170,6 +1279,73 @@ def fetch_article_bits(url: str) -> dict:
     return bits
 
 
+_EJTECH_POSTS: list[dict] | None = None
+
+
+def _without_kicker(title: str) -> str:
+    """Drop a short section kicker such as 'Deel調查｜' or '惠普AI電腦｜'."""
+    stripped = re.sub(r"^[^｜|]{1,16}[｜|]\s*", "", title or "").strip()
+    return stripped or (title or "")
+
+
+def titles_same_piece(a: str, b: str) -> bool:
+    keys_a = {_norm_headline(a or ""), _norm_headline(_without_kicker(a or ""))}
+    keys_b = {_norm_headline(b or ""), _norm_headline(_without_kicker(b or ""))}
+    keys_a.discard("")
+    keys_b.discard("")
+    for x in keys_a:
+        for y in keys_b:
+            if len(x) >= 8 and len(y) >= 8 and (x in y or y in x):
+                return True
+            if headlines_similar(x, y) or same_story(x, y):
+                return True
+    return False
+
+
+def ejtech_posts() -> list[dict]:
+    """Recent EJ Tech posts. HKEJ often paywalls the same CEO AI piece."""
+    global _EJTECH_POSTS
+    if _EJTECH_POSTS is not None:
+        return _EJTECH_POSTS
+    _EJTECH_POSTS = []
+    try:
+        raw = fetch(
+            "https://www.ejtech.ai/wp-json/wp/v2/posts?per_page=20&_fields=link,title,content",
+            timeout=15,
+        )
+        rows = json.loads(raw)
+    except Exception as e:
+        print("ejtech list fail", e)
+        return _EJTECH_POSTS
+    for row in rows if isinstance(rows, list) else []:
+        title = row.get("title") or {}
+        if isinstance(title, dict):
+            title = title.get("rendered") or ""
+        content = row.get("content") or {}
+        if isinstance(content, dict):
+            content = content.get("rendered") or ""
+        title = to_hant(unescape(strip_tags(str(title))))
+        html = re.split(r"支持\s*EJ\s*Tech|如欲投稿", str(content), maxsplit=1, flags=re.I)[0]
+        paras = [p for p in paras_from_chunk(html) if not is_site_chrome(p)]
+        if title and paras:
+            _EJTECH_POSTS.append({"title": title, "url": row.get("link") or "", "paras": paras})
+    return _EJTECH_POSTS
+
+
+def ejtech_match(title: str) -> dict | None:
+    best: dict | None = None
+    best_score = 0
+    for post in ejtech_posts():
+        if not titles_same_piece(title, post.get("title") or ""):
+            continue
+        paras = paras_match_title(title, post.get("paras") or []) or list(post.get("paras") or [])
+        score = sum(_cjk_count(p) for p in paras)
+        if score > best_score:
+            best = {"title": post.get("title") or "", "url": post.get("url") or "", "paras": paras}
+            best_score = score
+    return best
+
+
 def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
     urls: list[str] = []
     for u in list(extra_urls or []) + [item.get("sourceUrl") or ""]:
@@ -1189,22 +1365,55 @@ def fill_item_copy(item: dict, extra_urls: list[str] | None = None) -> None:
             best_score = score
             if bits.get("img") and not looks_like_photo(item.get("img") or ""):
                 item["img"] = bits["img"]
-    if best_score >= 80:
-        best = paras_match_title(item.get("title") or "", best)
+    title = item.get("title") or ""
+    if best:
+        matched = paras_match_title(title, best)
+        if matched:
+            best = matched
+            best_score = sum(_cjk_count(p) for p in best)
+        else:
+            best = []
+            best_score = 0
+    hkejish = any("hkej.com" in urllib.parse.urlparse(u).netloc.lower() for u in urls)
+    if hkejish:
+        alt = ejtech_match(title)
+        alt_paras = (alt or {}).get("paras") or []
+        alt_score = sum(_cjk_count(p) for p in alt_paras)
+        if alt and alt_score > best_score + 40:
+            best = alt_paras
+            best_score = alt_score
+            url = alt.get("url") or ""
+            if url:
+                rel = item.setdefault("related", [])
+                if isinstance(rel, list) and not any(
+                    isinstance(r, dict) and r.get("url") == url for r in rel
+                ):
+                    rel.append({"title": alt.get("title") or title, "url": url, "source": "EJ Tech"})
+    if best and (best_score >= 80 or (hkejish and best_score >= 36)):
         item["_paras"] = best[:24]
         lead = best[0]
         if len(best) > 1:
             lead = best[0] + best[1]
         cur = item.get("summary") or ""
-        if not cur or is_dump_summary(cur) or "均有報道" in cur:
+        # A headline restated with the site name is not a lead.
+        thin = cur.count("。") == 0 and _cjk_count(cur) < 36
+        off = (
+            not cur
+            or thin
+            or is_dump_summary(cur)
+            or "均有報道" in cur
+            or is_site_chrome(cur)
+            or not paras_match_title(title, [cur])
+        )
+        if off:
             item["summary"] = to_hant(lead[:420])
-        kps = make_keypoints(*best)
-        if kps:
-            item["keypoints"] = kps
+        item["keypoints"] = make_keypoints(*best)
         return
     cur = item.get("summary") or ""
-    if is_dump_summary(cur) or "均有報道" in cur:
+    if is_dump_summary(cur) or "均有報道" in cur or is_site_chrome(cur):
         item["keypoints"] = []
+        if is_site_chrome(cur):
+            item["summary"] = ""
         return
     kps = make_keypoints(cur)
     if kps:
