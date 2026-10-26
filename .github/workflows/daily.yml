@@ -27,7 +27,7 @@ jobs:
           python-version: "3.12"
       - name: Install Python deps
         run: pip install opencc-python-reimplemented
-      - name: Rebuild index.html
+      - name: Rebuild index.html and archive news dated before today
         run: python scripts/rebuild_daily.py
       - name: Commit and push to main
         run: |

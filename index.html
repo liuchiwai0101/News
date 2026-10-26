@@ -880,6 +880,58 @@ function sectionOrder(sections) {
   });
   return seq;
 }
+// Every page load: dated stories from before today (Hong Kong) leave the latest board.
+(function archiveBeforeToday(){
+  let today = '';
+  try {
+    today = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Hong_Kong', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date());
+  } catch (e) {
+    today = new Date(Date.now() + 8 * 3600000).toISOString().slice(0, 10);
+  }
+  const old = DATA.old || [];
+  const seen = {};
+  old.forEach(function(it){ if (it && it.sourceUrl) seen[it.sourceUrl] = 1; });
+  const kept = [];
+  (DATA.sections || []).forEach(function(sec){
+    if (sec.kind === 'deals') { kept.push(sec); return; }
+    const fresh = [];
+    (sec.items || []).forEach(function(it){
+      const day = (it.isoDate || '').slice(0, 10);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(day) && day < today) {
+        if (!it.sourceUrl || !seen[it.sourceUrl]) {
+          const rec = Object.assign({}, it);
+          rec.board = sec.label || it._sec_label || '其他';
+          old.unshift(rec);
+          if (it.sourceUrl) seen[it.sourceUrl] = 1;
+        }
+      } else {
+        fresh.push(it);
+      }
+    });
+    if (fresh.length) {
+      sec.items = fresh;
+      kept.push(sec);
+    }
+  });
+  DATA.sections = kept;
+  DATA.old = old;
+  DATA.flat = [];
+  DATA.sections.forEach(function(sec){
+    (sec.items || []).forEach(function(it){
+      const row = Object.assign({}, it);
+      row._sec_label = sec.label;
+      DATA.flat.push(row);
+    });
+  });
+  if (typeof NML !== 'undefined' && NML) {
+    const ext = DATA.sections.filter(function(s){ return s.kind === 'external'; })[0];
+    const items = ext ? (ext.items || []) : [];
+    NML.shown = items.length;
+    NML.newCount = items.filter(function(it){ return (it.isoDate || '').slice(0, 10) === today; }).length;
+  }
+})();
 const sectionItems = {};
 DATA.sections.forEach(function(sec){ sectionItems[sec.label] = clusterList(sec.items || []); });
 const allItems = clusterList(sectionOrder(DATA.sections));
