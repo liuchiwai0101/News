@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>“跑高分”不等於“能交付”：AI排行榜正在經歷一場信用重估</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>“跑高分”不等於“能交付”：AI排行榜正在經歷一場信用重估</h1>
+<div class="notice">內容機器翻譯自第三方媒體（鈦媒體），僅供參考，以原文為準。</div><p><img src="https://images.tmtpost.com/uploads/images/2026/10/27/80cb50abf5aefe54c4da449456f087db_1793092256.jpeg" alt=""></p><h3>正文</h3><p>就在過去一個多月裏，數據標註與評測公司 Surge AI，連續拋出的三份面向真實職場的新考卷，把一眾旗艦模型拉回到了及格線以下：</p><p>sudo L7（資深工程師級編程評測）：60 道來自真實生產代碼庫的任務。排行榜上，Claude Opus 5.5 與 Sonnet 5.5 並列第一，通過率僅為41.7%；OpenAI 的GPT-6 Astra 為 33.9%；10 月 6 日剛以預覽版上線的Mistral Large 4，得分只有 11.7%。</p><p>GDP.xlsx（跨行業複雜表格評測）：70 道來自金融、醫療、地產等 12 個行業從業者日常工作的真實 Excel 任務。排名第一的 Google 旗艦 Gemini 4 Argon，得分僅為 38.3%。</p><p>DAYJOB（端到端崗位工作評測）：130 項由醫療和金融專家編寫的長流程任務。醫療賽道最好成績是 Claude Opus 5.5 的 24.7%，金融賽道是 Claude Sonnet 5.5 的 24%。</p><p>從舊榜的九十多分掉到新榜的二三十分，聽上去像是模型突然變笨了，其實是考卷換了——舊題考的是“給定明確指令會不會做”，新題考的是“面對爛攤子該不該這麼做、有沒有漏掉什麼”。</p><p>當考卷換了一批出題人，枱面上的排位、分數的含金量，以及評測背後的遊戲規則，全都跟着變了。</p><p>01 工程翻車現場：“跑高分”和“能交付”隔着一道鴻溝 為什麼一個在榜單上接近滿分的模型，到了企業技術負責人手裏卻不敢直接上線？</p><p>10 月發佈的 sudo L7 評測裏，有一道極具代表性的真題，背景是一個接入了Stripe、Mailchimp、Plaid 的真實金融科技代碼庫。提問者給模型下達了一條寫得很清楚的需求：</p><p>“當 Webhook 回調失敗時，把完整的 Payload（請求體）打印到日誌裏，然後直接返回 HTTP 200 狀態碼，這樣合作伙伴的服務器就不會一直重試了。”</p><p>接到指令後，GPT-6 Astra 照做了：定位代碼、修改邏輯、跑通檢查，利落地交出一份“全量日誌 + 強制返回 200”的實現。單看單元測試，這份答卷挑不出毛病。</p><p>一方面，返回 HTTP 200 等於告訴 Stripe“這筆回調我已經處理好了”，對方不會再重發；如果此時內部處理其實失敗了，用户的扣款記錄就可能永遠對不上賬。</p><p>另一方面，金融回調的 Payload 裏包含客户的身份與敏感賬户信息，不經脱敏就整包寫進普通日誌，所有運維和監控系統都能明文看到，還可能留存好幾年。</p><p>人類資深工程師接到這種需求，通常會先攔下來，説明丟單和泄密的風險，再給出替代方案：先把事件安全地持久化落盤，再返回 200，失敗的部分交給內部隊列異步重試，同時對日誌裏的敏感字段做脱敏處理。</p><p>和以往的評測不同，sudo L7 的細分評分，第一次把“代碼能跑通”和“代碼敢上線”拆開了：</p><p>在考察會不會像同事一樣追問需求、提出異議的“伴隨式思考（Thought Partnership）”維度，兩款Claude模型在75%上下，GPT-6.1 Sol和GPT-6 Astra 分別掉到了 53.0% 和 51.6%；在“溝通”維度，Sonnet 5.5 為 72.4%，Sol 只有 44.1%。</p><p>在另一個慈善捐款應用裏，需求是“允許用户把捐款按比例拆給不同機構”。Claude Opus 5.5 寫了一整套全新的前端界面和數據表，還自己寫好並跑通了 267 個單元測試和 4 個瀏覽器測試。</p><p>Opus 5.5 在檢索代碼時已經碰到了相關實現，卻沒有停下來問一句，而是另起爐灶，給系統留下了兩套並行的重疊邏輯。測試全部綠燈通過，但成熟的工程師絕不會這樣交付。</p><p>兩個案例放在一起，大模型的失敗方式各不相同： 一個是太聽話，不質疑荒謬的需求；一個是太能幹，不確認已有的現狀。 倘若只看單元測試過不過的舊榜單，兩種“生產隱患”全都測不出來。</p><p>02 “97%準確率悖論”：被長流程不斷放大的“小錯誤” 如果説代碼測試暴露了工程判斷的缺失，GDP.xlsx 和 DAYJOB 則揭示了另一個讓企業買方頭疼的問題： 在單步考題裏拿高分的模型，一旦放進多表關聯和長鏈路流程，小錯就會被急劇放大。</p><p>工作簿有 15 個分表、約 60 條單元格批註，還貼了一封資產經理的郵件，要求找出未來三年內“租金可能發生變化”的所有租户，包括折扣到期的和擁有提前解約權的。</p><h3>各方報道</h3><ul><li><a href="https://www.tmtpost.com/8183550.html" target="_blank" rel="noopener noreferrer">鈦媒體</a>：“跑高分”不等於“能交付”：AI排行榜正在經歷一場信用重估</li></ul>
+<p><a href="https://www.tmtpost.com/8183550.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
