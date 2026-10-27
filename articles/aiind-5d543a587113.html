@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>科技｜OpenAI發布GPT-6.1 Terra中階模型 任務速度升逾3倍API價格減半</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>科技｜OpenAI發布GPT-6.1 Terra中階模型 任務速度升逾3倍API價格減半</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Yahoo 財經），僅供參考，以原文為準。</div><p><img src="https://s.yimg.com/lo/mysterio/api/b2d0f870813cd240965903c54909e564b8cbba9a4cab92a94f2edb37d5425b32/lightyear_networkapi/resizefill_w1200%3Bquality_80%3Bformat_webp/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Ffortune_insight_694%2Fdbddec0f78d2a1ab4bc25a6950c04ffb.png" alt=""></p><h3>正文</h3><p>OpenAI 在美國時間 26 日公告，旗下模型已經推翻電腦科學的「指數時間假説」（ETH）。這個 ETH 和以太坊代號同個名字，但講的是 SAT 這類邏輯問題最快能算多快，1999 年提出後被數百篇論文當成前提。證明已公開在 GitHub 並通過 Lean 驗證，外部小組正在審查。（ （前情提要： OpenAI 推翻指數時間假説、解出千禧年楊–米爾斯：三項 AI 科學突破震撼學術界 ） （背景補充： OpenAI 一次丟出 722 篇數學論文，有學者多年心血一夜歸零 ）</p><p>Toggle SAT 問題：找出讓所有條件成立的填法 ETH 斷定這類問題無法大幅加速 OpenAI 證出的是精確計數演算法 理論上能更快，實務還要再研究</p><p>OpenAI 宣佈推翻 1999 年提出的指數時間假説 這個 ETH 是電腦科學假説，只是和以太坊代號同名 新演算法精確算出 k-SAT 解數，通過 Lean 驗證 O penAI 在美國時間 10 月 26 日發布 研究公告 ，宣佈內部 AI 模型證明「指數時間假説」不成立。指數時間假説的英文是 Exponential Time Hypothesis，簡稱 ETH。這項證明已用定理證明工具 Lean 完成形式化驗證，也就是由程式逐步檢查每一步推理。這裡的 ETH 是電腦科學名詞，和以太坊的代號同名，兩者沒有關係。</p><p>同一份公告還宣佈了數學與物理各一項證明。ETH 是三項成果中屬於電腦科學的那一項，牽涉一大批「某個問題有多難算」的研究結論。</p><p>SAT 問題：找出讓所有條件成立的填法 ETH 討論的是「布林可滿足性問題」（SAT）。題目給出一串邏輯條件，每個變數只能填真或假，要問的是有沒有一種填法讓所有條件同時成立。每個條件最多牽涉 3 個變數的版本叫 3-SAT，最多 k 個就叫 k-SAT。</p><p>變數有 n 個，可能的填法就有 2 的 n 次方種。逐一嘗試的話，變數每多 1 個，工作量就翻倍。研究者發展出 Schöning、PPSZ 等演算法，比逐一嘗試快，但計算時間仍隨變數數量呈指數成長。</p><p>算出「總共有幾種填法成立」又更難。OpenAI 論文整理了既有紀錄，計算 3-SAT 解的個數，目前最快的決定性演算法約需 1.637 的 n 次方步。等於變數每多 1 個，計算時間就乘上 1.637 倍。</p><p>ETH 斷定這類問題無法大幅加速 ETH 由加州大學聖地牙哥分校的 Russell Impagliazzo 與 Ramamohan Paturi 在 1999 年提出。它主張 3-SAT 在最壞情況下，所需時間至少是 2 的「常數乘以 n」次方。依這個定義，不管演算法怎麼改，變數每多一個，計算時間平均至少要乘上一個大於 1 的固定倍數。</p><p>比這更快、但還沒有快到多項式時間的演算法，叫做「亞指數時間」演算法。亞指數時間的意思是，平均到每個變數的倍數會隨著問題變大，一路往 1 靠近。ETH 等於斷定 3-SAT 不存在這種演算法。</p><p>OpenAI 公告指出，數百篇論文以 ETH 為前提，推導圖論、計算生物學、資料庫、計算幾何等領域的問題有多難。論文另外提到更強的「強指數時間假説」（SETH）。研究者過去用它論證，編輯距離等問題很難明顯快過現有的平方級做法。編輯距離算的是兩段文字最少要改幾個字才會一樣。論文也提醒，其中一部分結論可以改由其他尚未被推翻的假設支撐。</p><p>OpenAI 證出的是精確計數演算法 OpenAI 公開的 論文 標題是〈The Exponential Time Hypothesis is False〉。論文日期標 10 月 17 日，10 月 25 日修訂。論文給出一個決定性演算法，也就是不靠隨機猜測、每次執行結果都一樣。對任何固定的 k（k 大於等於 2），它都能精確算出 k-SAT 解的個數，記憶體用量只到多項式等級。</p><p>算得出解有幾個，就能判斷有沒有解，所以這個演算法也能解 3-SAT。論文給出的時間上限，指數部分是 n 乘上 log log n 再除以 log n 的平方根。複雜度理論學者 Scott Aaronson 把它簡述為大約 exp(n/√log n)。指數裡多了一個會隨 n 變大的除數，成長速度低於 ETH 主張的下限，ETH 因此不成立。</p><p>論文表示，這個結果同時推翻了 SETH、Gap-ETH、NSETH 與計數版的 #ETH 等相關假設。OpenAI 在 GitHub 的 説明頁 寫明，Lean 驗證的版本時間上限稍寬。論文正文證明的上限更緊，兩者都屬於亞指數時間。</p><p>理論上能更快，實務還要再研究 OpenAI 在公告中表示，ETH 被推翻後，這些問題能變得多快的疑問重新打開，可能有助於尋找更好的演算法。不過要找出這樣的演算法，並轉成實務上的改善，還需要大量研究。</p><p>外部驗證小組由 ETH 的兩位提出者 Russell Impagliazzo、Ramamohan Paturi，以及麻省理工學院的 Ryan Williams 帶領。OpenAI 依小組要求公開全部原始資料，並承諾出資舉辦一場研討會，討論這項結果對整個領域的影響。</p><p>Scott Aaronson 在 10 月 26 日的 部落格文章 提到，學生跑到辦公室告訴他這件事。他接著寫道：「我們還在努力消化前面幾道菜，這場吃不完的自助餐又繼續上菜。」截至發稿，驗證小組尚未公佈審查結論。</p><p>不是。這裡的 ETH 指 1999 年提出的指數時間假説，講 3-SAT 這類問題能算多快，只是和以太坊同名，OpenAI 公告也沒有提到加密貨幣。</p><p>還不會。OpenAI 表示，要找出實際更快的演算法並轉成實務改善，還需要大量研究，證明本身也還在由 3 位學者帶領的小組驗證。</p><p>📍相關報導📍 OpenAI 一次公開 722 篇數學手稿，數學家轟 AI 公司「黑幫行徑」</p><p>OpenAI 稱正在訓練的新模型已解開超 100 道數學難題，同步成立學者顧問團</p><h3>各方報道</h3><ul><li><a href="https://hk.finance.yahoo.com/news/%E7%A7%91%E6%8A%80-openai%E7%99%BC%E5%B8%83gpt-6-1-terra%E4%B8%AD%E9%9A%8E%E6%A8%A1%E5%9E%8B-010018082.html" target="_blank" rel="noopener noreferrer">Yahoo 財經</a>：科技｜OpenAI發布GPT-6.1 Terra中階模型 任務速度升逾3倍API價格減半</li></ul>
+<p><a href="https://hk.finance.yahoo.com/news/%E7%A7%91%E6%8A%80-openai%E7%99%BC%E5%B8%83gpt-6-1-terra%E4%B8%AD%E9%9A%8E%E6%A8%A1%E5%9E%8B-010018082.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
