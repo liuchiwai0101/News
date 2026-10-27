@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TypeSafe AI發佈Jev：一種只返回類型化概率而非文本的決策模型</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>TypeSafe AI發佈Jev：一種只返回類型化概率而非文本的決策模型</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/db/ef/dbe30d9a2a9c850b5380fyy0133719ef.jpg" alt=""></p><h3>正文</h3><p>前 OpenAI 研究員 Diogo Almeida 創立的舊金山 AI 實驗室 TypeSafe AI 發佈了 Jev ，這是其所謂的 System One Models 中的首款產品。Jev 不生成文本，而是返回帶有類型的概率化決策，軟件可以直接據此採取行動。</p><p>調用方會發送一段狀態信息（可以是字符串或結構化數據）以及一組帶有類型定義的問題。Jev 會在單次並行處理中對它們進行全部評估，並返回 Choice（選擇） 、 Score（評分） 和 Noul（布爾概率） 答案，同時附帶概率分佈和置信度值。這樣，調用代碼就可以在置信度高於閾值時直接執行操作，並在低於閾值時進行升級處理。其輸入成本為每百萬 Token 0.042 美元，輸出免費，上下文窗口為 32000 個 Token，TypeSafe 給出的端到端延遲為 70 毫秒至 500 毫秒。該模型的訓練採用了一種名為“校準決策強化學習”（Reinforcement Learning for Calibrated Decisions）的方法。</p><p>Vercel 在 Jev 發佈的第二天就將其加入了 AI Gateway ，並表示在 24 小時內，它已覆蓋了 近13%的付費團隊 ，這一比例是 GPT-5.6 系列模型的兩倍。Netlify 隨後也進行了 跟進 ，LangChain 發佈了 TypeSafeClassifier集成 ，支持模型路由以及一種 AutoMode 中間件，該中間件可在工具調用執行前對其進行篩查。此外，幾天內還 湧現出五個獨立的Elixir語言客户端 。</p><p>Vercel 的工程師 Pranit Sharma 發現，安全分類器的運行速度比它所替代的大語言模型（LLM） 快了5到18倍 。Bryo AI 的 CTO Nikhil Mudholkar 認為， Gemini在郵件分類上的準確率略高 ，但成本卻高出了 10 到 20 倍，他看重 Jev 是因為它是唯一能返回真實概率的模型。Earendil 的 CTO Armin Ronacher 在接受 TechCrunch 採訪時表示，這種設計“在一定程度上將幻覺問題交給了用户”，因為用户必須自行決定 50%的概率是否值得採取行動，他還指出模型路由是另一個非常適合的應用場景。 OpenChamber 對 12759 條發佈推文進行的分析顯示，用户報告的速度提升中位數為 7 倍（遠低於官方宣稱的 193.6 倍），成本節省的中位數為 30 倍，延遲中位數為 76 毫秒，上四分位數為 270 毫秒。</p><p>Reddit 上的一位開發者稱該模型在 200 毫秒到 300 毫秒延遲下處理智能體任務的表現“絕對瘋狂”，而 Hacker News 上的一位早期體驗用户稱其“非常巧妙”，同時提醒其分佈外行為（out of distribution）的表現會與大語言模型有所不同。</p><p>在 Hacker News 上，一位開發者指出，Jev 雖然不會輸出無效的類型，但仍然可能輸出完全錯誤的合法值：</p><p>首先，祝賀團隊發佈了真正有趣且新穎的東西。不過，似乎更準確的標題應該是“Jev：用通用生成能力換取快速的類型化推理”。</p><p>這確實很有意思，但速度對比似乎有些誤導性？能夠輸出圖靈完備語言代碼的生成式模型，理論上可以完成計算機能做的任何事情。</p><p>Jev 只能生成結構化輸出，對吧？這對於分類、路由、評分可能非常有用，但它與我們今天用於代碼和自動化的代碼生成模型完全不同。</p><p>另外，“不會產生幻覺”的説法似乎不準確？確實，它不會輸出無效的類型，但仍然可能輸出完全錯誤的合法值。你完全可以通過適當的約束機制等，強制大語言模型輸出結構化內容。</p><p>準備替換 LLM 分類器的團隊應從 jev-1.13版本的“已知不穩定特性（jaggedness）”頁面 入手，該頁面記錄了其在計數、算術和日期比較方面的不可靠性，以及在處理包含大量噪聲的長狀態信息時準確率的下降問題，並建議將數學計算保留在代碼中完成。在版本管理上，請固定使用如 jev-1.13.0 這樣的具體版本，而不是使用不斷更新的 jev-latest 和 jev-preview 別名 ，在進行基準測試時，請使用 System One adapter 適配器讓現有模型針對相同的 Schema 運行。 快速入門指南 涵蓋了 API 密鑰、SDK 和 Playground 的使用説明。</p><p>TypeSafe AI 是一家位於舊金山的 AI 實驗室，由 Diogo Almeida、Erik Gafni 和 Sasha Sheng 共同創立。Almeida 是 RLHF 的聯合發明人，並參與了 ChatGPT 背後的研究工作。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/3o7gwgKJt2SbH8AhdpkU?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：TypeSafe AI發佈Jev：一種只返回類型化概率而非文本的決策模型</li></ul>
+<p><a href="https://www.infoq.cn/article/3o7gwgKJt2SbH8AhdpkU?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
