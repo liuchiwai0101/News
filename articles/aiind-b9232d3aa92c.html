@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>當 AI 智能體代表用户行動時，企業治理將面臨哪些新問題？ ｜ 技術趨勢</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>當 AI 智能體代表用户行動時，企業治理將面臨哪些新問題？ ｜ 技術趨勢</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/86/b3/8688f20261d50eeeece730a13a5689b3.jpeg" alt=""></p><h3>正文</h3><p>2026 年，智能體將在企業級應用中取得哪些實質性突破？ 點擊下載 《2026 年 AI 與數據發展預測》白皮書，獲悉專家一手前瞻，搶先擁抱新的工作方式！</p><p>AI 智能體不只是回答問題。它們還會查詢數據、調用工具，並替你執行操作。問題在於，智能體代表你行動時，也可能繼承你的訪問權限。這帶來了治理挑戰： 如何在賦予智能體完成任務所需權限的同時，避免授予超出需要的權限？</p><p>人可以查看敏感數據，並自行判斷如何處理。智能體則可能通過彙總敏感數據、將其傳遞給其他工具，或把數據呈現給無權訪問的人，大規模暴露敏感信息。</p><p>Snowflake 提供了五項控制措施來管理這類行為： 識別智能體、限制其權限、保護敏感數據、控制資源消耗，並審計其行為。</p><p>這五項措施共同回答了五個問題： 智能體是誰？它能做什麼？它能看到什麼？它能消耗多少資源？它做過什麼？</p><p>將智能體連接到獲准使用的工具，只解決了部分問題。智能體接入 Snowflake 後，你還需要知道 當前會話中執行操作的是智能體，而不只是用户 ，才能應用恰當的控制措施。</p><p>智能體身份功能可以識別由智能體參與的會話，並將這一上下文傳遞到現有的策略與審計界面中。對於來自 Snowflake 支持的入口的會話，Snowflake 會自動識別智能體，包括 Cortex Agents、Cortex 輕量級智能體、CoCo 客户端、CoWork，以及由 Snowflake 管理的 MCP 服務器。</p><p>為需要獨立 Snowflake 身份和權限的自主智能體創建 SERVICE_AGENT 用户 。該用户可以通過工作負載身份聯合、密鑰對身份驗證或程序化訪問令牌進行身份驗證；</p><p>對代表最終用户執行操作的委託智能體，在自定義 Snowflake OAuth 或 External OAuth 安全集成上設置 IS_AGENTIC = TRUE。</p><p>Snowflake 識別出智能體參與的會話後，現有控制措施便可以使用這一上下文：</p><p>SYS_CONTEXT(&#x27;SNOWFLAKE$CURRENT&#x27;, &#x27;IS_AGENT_ACTIVATED&#x27;) 在智能體處於活動狀態時返回 TRUE。在策略邏輯中使用時，請將結果轉換為 BOOLEAN；</p><p>ACCESS_HISTORY.agents_info 記錄參與對象訪問的智能體，並可呈現嵌套調用鏈中的多個智能體。</p><p>智能體身份回答了傳統用户和角色信息無法回答的一個問題：**當前會話中是否有智能體參與？**數據策略、會話限制和審計查詢隨後都可以使用這一上下文。</p><p>識別智能體，並不會自動減少它能執行的操作。當智能體代表用户行動時，它可能繼承用户的權限，即使任務只需要其中一小部分。這就帶來了授予智能體超出所需訪問權限的風險。</p><p>智能體受限會話範圍 現已正式發佈，可為智能體參與的會話設定權限上限。它與 RBAC（基於角色的訪問控制）協同工作：可以 減少 智能體可用的權限，但不能授予用户本身不具備的權限。管理員可以通過會話策略應用預定義範圍：</p><p>智能體處於活動狀態時，這一預定義範圍允許讀取數據、發現對象，以及使用獲准的 AI 相關對象，同時禁止寫入、DDL、授權操作和存儲過程。沒有智能體參與時，受限範圍會被忽略，用户仍按常規 RBAC 權限執行操作。</p><p>如果預定義範圍無法滿足需求，也可以針對特定工作流設定更嚴格的邊界：</p><p>允許讀取生產環境數據，但將寫入操作限制在沙箱或個人數據庫中；</p><p>禁止在智能體會話期間將指定的特權角色用作主角色或次要角色（如果需要嚴格限制，請使用允許列表，因為角色繼承仍然生效）；</p><p>允許使用指定的智能體、函數或其他程序化對象。</p><p>RBAC 與智能體受限會話範圍之間的區別很重要： RBAC 定義用户可以執行哪些操作；智能體受限會話範圍則定義智能體代表該用户行動時可以執行操作的權限上限。這與數據保護不同。會話範圍控制智能體可以訪問哪些位置、執行哪些操作 ；數據策略則控制 智能體到達相應位置後可以看到哪些值 。</p><p>即使設置了權限上限，智能體仍可能訪問用户有權訪問的數據。這正是數據策略發揮作用的地方。例如，當智能體處於活動狀態時，現有的掩碼策略可以返回經過掩碼處理的值，即使用户的角色本來可以查看原始值：</p><p>使用 ANALYST 角色的人可以查看原始電子郵件地址；智能體參與的會話則會收到經過掩碼處理的值。</p><p>提示詞可以要求智能體不要暴露敏感值。數據策略則可以在數據層決定智能體能否訪問該值；只要 Snowflake 識別出當前會話有智能體參與，這項控制就會生效。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/CxWoiprQltg8YXmwmghd?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：當 AI 智能體代表用户行動時，企業治理將面臨哪些新問題？ ｜ 技術趨勢</li></ul>
+<p><a href="https://www.infoq.cn/article/CxWoiprQltg8YXmwmghd?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

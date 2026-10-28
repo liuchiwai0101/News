@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meta 利用私有處理技術將機密計算擴展至 AI 眼鏡</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Meta 利用私有處理技術將機密計算擴展至 AI 眼鏡</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/2e/98/2e5a1cc47d4e6eb0b94bf7f589288898.jpg" alt=""></p><h3>正文</h3><p>Meta 已將“私有處理”（Private Processing）功能擴展至 AI 眼鏡 ，利用機密虛擬機（CVM）處理敏感 AI 工作負載，並在雲端持久化保存用户的上下文信息。該設計融合了可信執行環境（TEE）、遠程認證、匿名憑證、OHTTP 以及加密存儲技術。Meta 表示，該功能支持流式轉錄、上下文搜索以及需要更多計算能力和持久狀態的長期記憶召回功能。</p><p>通話和消息等基礎交互可以在 AI 眼鏡上運行，但更復雜的工作負載則需要更大的模型，並且需要訪問隨時間積累的個人上下文信息。Meta 於 2025 年針對 WhatsApp 和 Meta AI 推出了“私有處理（Private Processing）”功能，現在將其擴展到了可穿戴 AI 工作負載。</p><p>在 LinkedIn 上，Meta 公司 XR 技術副總裁 Oskar Linde 將這一方法 描述 為：在確保 Meta 無法訪問相關數據的同時，讓 AI 能在全天使用中發揮更大的作用，而且滿足 AI 眼鏡所需的有狀態、個性化場景需求。</p><p>該架構將機密計算邊界從設備端轉移至 Meta 的雲基礎設施中。AI 模型在由硬件 TEE 支持的 機密虛擬機 （CVM）內運行，其中配備了處理器加密的內存。Meta 表示，其邊界覆蓋 CPU 和 GPU，可以確保混合工作負載始終受到保護。</p><p>在傳輸個人上下文之前，AI 眼鏡會執行遠程認證，並與 TEE 建立經過認證的 TLS 會話。設備會驗證經硬件簽名的證書，並將工作負載測量值與僅可追加的透明賬本進行比對。如果驗證失敗，則將阻止數據傳輸。匿名憑證以及由 Fastly 或 Cloudflare 運營的第三方 OHTTP 中繼則進一步將用户身份與請求處理分離。</p><p>持久化狀態始終保留在機密計算邊界之內。Meta 將存儲引擎置於 TEE 內，並在數據離開受保護環境之前使用用户提供的密鑰對其進行加密。查詢也是在同一邊界內執行，限制了數據庫訪問模式的暴露。</p><p>私有處理基於硬件隔離、故障關閉保證、公開可驗證性、不可被針對性識別以及加密存儲構建。生產環境 CVM 鏡像會在透明賬本中進行註冊。由於工程師無法檢查受保護的內存，也無法捕獲模型的輸入和輸出，所以 Meta 使用了 CPU 利用率、內存分配、網絡延遲和硬件故障率等聚合運營信號。</p><p>始終在線的可穿戴 AI 所涉及的隱私問題也引發了社區討論。在 Reddit 上一個關於 Meta 眼鏡的 討論 中，有評論者提出，要讓智能助手提供上下文相關信息，就必須持續監聽、觀測周邊環境，這也凸顯了持續感知模式下的隱私風險問題。</p><p>部署方面仍然存在侷限。 WIRED 雜誌報道稱，Meta AI 眼鏡目前尚未支持“私有處理”功能，Meta 也未明確説明哪些功能將率先採用該系統，也未提供具體的上線時間表。Meta 工程總監 Pritam Shah 表示，該平台已經準備就緒而且運行正常，但 Meta 在廣泛部署前進行公告，是為了與安全和隱私研究人員以及第三方審計機構展開合作。</p><p>Meta 表示，正與包括 NCC Group 在內的獨立安全公司及安全研究人員合作，共同審查該系統的架構和認證機制。隨着該系統為支持具備狀態感知能力、多模態及自主性的 AI 體驗而不斷擴展，該公司還計劃向研究人員提供 CVM 二進制文件、工具及文檔。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/r1ibrq9kmZ1qFAWAtzJf?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Meta 利用私有處理技術將機密計算擴展至 AI 眼鏡</li></ul>
+<p><a href="https://www.infoq.cn/article/r1ibrq9kmZ1qFAWAtzJf?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
