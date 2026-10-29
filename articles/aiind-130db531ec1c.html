@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>亞馬遜雲科技開源智能體“決策器”和“安全箱”，但併發與冷啓動仍待解決</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>亞馬遜雲科技開源智能體“決策器”和“安全箱”，但併發與冷啓動仍待解決</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/d4/f5/d47776a94a8230f776374d575d3b70f5.jpg" alt=""></p><h3>正文</h3><p>亞馬遜雲科技推出了兩個面向 AI 智能體開發的開源項目： Strands Decider 2B 是一個用於在智能體工作流中作出決策的小型模型， Strands Box 則是一個用於控制智能體執行的沙箱。兩個項目分別解決了構建能夠使用工具、執行代碼並與外部系統交互的智能體時所面臨的不同問題。</p><p>Strands Decider 2B 是一個擁有 20 億參數的模型，旨在從預定義選項中進行選擇，而不是生成冗長的文本響應。它支持模型路由、工具選擇、分類、護欄和上下文管理等任務。開發者無須讓通用語言模型生成答案，而是可以提供一組選項，獲得決策結果及相應的置信度分數。</p><p>該模型以 Qwen3.5-2B 為基礎，將其語言模型頭替換為一個用於為候選答案評分的指針頭。它使用 rank-16 LoRA 適配器進行微調。亞馬遜雲科技已經發布了模型權重、訓練數據和腳本，讓開發者可以在本地運行並修改該模型。</p><p>據亞馬遜雲科技介紹， Strands Decider 2B 在 NVIDIA RTX 3090 上的決策延遲中位數約為 115 毫秒，在 Apple M3 MacBook 上處理小型任務時約為 153 毫秒。該公司還使用 JevBench 對模型進行了評估，其 v19 檢查點在 231 項公開任務中的準確率為 72.3%。開發者可以安裝 strands-decider 軟件包，使用其命令行界面，或者將該模型集成到 Strands 智能體中。</p><p>第二個項目 Strands Box 目前處於開發者預覽階段，為執行 AI 智能體提供隔離環境。它將操作系統級隔離與 Dogwood 結合起來。Dogwood 是一門開源策略語言，用於定義智能體可以執行哪些操作。該沙箱支持 Shell 命令、Python 執行、MCP 工具、文件系統操作和網絡訪問。</p><p>Strands Box 使用由內核強制執行的隔離機制，將智能體交互路由至策略層。開發者可以根據操作內容和執行歷史允許或拒絕相關操作。例如，策略可以要求智能體必須通過測試才能將代碼推送到倉庫，也可以限制外部 API 的調用頻率。這些控制機制運行在語言模型之外，可以減少執行邊界對提示詞指令的依賴。</p><p>亞馬遜雲科技表示， Strands Box 可以配合不同的模型和智能體框架使用，無論它們運行在本地還是雲環境中。這讓開發者能夠在不替換現有智能體架構的情況下引入執行策略。</p><p>Strands Decider 2B 的競爭對手包括 TypeSafe AI 的 Jev ，後者同樣是一款專門用於作出結構化決策，而不是生成冗長響應的模型。兩者都支持分類、路由和工具選擇，並會在返回決策結果的同時提供置信度分數。主要區別在於部署方式：Strands Decider 2B 是開源項目，可以在本地運行；Jev 則通過託管 API 提供。亞馬遜雲科技使用 JevBench 對 Strands Decider 進行了評估，但已公佈的結果並不能證明它在性能上直接優於 Jev。</p><p>Strands Box 所解決的問題，也可以通過基於容器的沙箱、 Firecracker microVM 和託管式智能體執行環境處理。傳統沙箱主要限制文件系統、進程和網絡訪問，而 Strands Box 還增加了基於工具參數和歷史操作的策略。這使開發者能夠定義智能體在執行特定操作之前必須滿足的條件。</p><p>早期開發者反饋主要關注將小型決策模型集成到智能體工作流中的實際限制。在一篇實踐教程中， AWS Community Builder Yuuki Yamashita 表示：</p><p>Strands Decider 2B 可以阻止智能體調用不受支持的天氣工具。</p><p>GitHub 討論 還發現了與併發請求、Apple Silicon 兼容性和冷啓動延遲有關的問題，凸顯了開發者在將該模型用於生產環境之前可能需要評估的方面。</p><p>我寧願讓智能體在運行中途撞牆，也不願讓它沿着一條錯誤路徑執行到底。亞馬遜雲科技今天開源了 Strands Box：這是一個內核級沙箱，將 Shell、Python、工具和網絡訪問都路由至同一個策略層，因此可以設置這樣一條規則：智能體讀取客户文件後，禁止其發起出站 HTTP 請求。</p><p>Strands Decider 2B 和 Strands Box 共同將 Strands 生態系統 從智能體編排擴展至決策和執行控制領域。兩個項目分別提供了用於選擇智能體操作，以及限制這些操作如何執行的獨立組件。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/YmgmEh686wTClmj3PY8o?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：亞馬遜雲科技開源智能體“決策器”和“安全箱”，但併發與冷啓動仍待解決</li></ul>
+<p><a href="https://www.infoq.cn/article/YmgmEh686wTClmj3PY8o?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
