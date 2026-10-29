@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Instagram 負責人莫塞裏承認公眾普遍反感 AI，預計未來情況還將繼續惡化</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Instagram 負責人莫塞裏承認公眾普遍反感 AI，預計未來情況還將繼續惡化</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家 · InfoQ · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/80/59/8071d0ba1242f32e7418ec952c633559.jpg" alt=""></p><h3>正文</h3><p>Instagram Direct 將其 Android 用户界面從舊版的 Android View 系統遷移到了 Jetpack Compose，從而 創建了一個 AI 原生的用户界面代碼庫 ，使 AI 編碼代理更容易理解、修改和維護。據 Instagram 工程師稱，這次遷移使用户界面的代碼量減少了 50%，並將每個 AI 代理會話的 token 成本降低了 33%。</p><p>Instagram 工程師提出的一個關鍵觀點是：“設計 AI 原生架構帶來了顯著的收益”。與其採取零敲碎打的方式（要求開發人員逐個遷移各個組件），不如把重點放在評估底層架構是否便於生成正確的實現方案上。事實上，正如他們指出的那樣，“AI 工具往往會選擇阻力最小的路徑”，這很可能導致“隱蔽的 Bug、技術債務和性能退化”。</p><p>Instagram 的工程師們解釋道，面向 AI 優化代碼庫，意味着在狀態管理、可預測行為以及開發模式方面建立起正確的架構邊界，從而使 AI 代理的“最小阻力路徑”成為通向最佳轉換效果的路徑。他們的目標並非簡單地讓 AI 來彌補設計上的缺陷，而是基於對 AI 代理實際如何修改代碼的理解來設計代碼庫：</p><p>AI 代理天生會選擇阻力最小的路徑，因此，在設計的時候就應該確保該路徑最終生成正確且高質量的代碼，同時讓拙劣的設計決策難以實現且代價高昂。</p><p>另一個關鍵原則是最大限度地減少上下文依賴。也就是説，讓 AI 代理不再依賴於特定代碼庫的知識，而是優先採用經過驗證的最佳實踐和熟悉的模式，從而幫助它們生成更可靠的結果。</p><p>這次遷移在不影響整個團隊正常工作的前提下順利完成，工程師能夠在遷移期間繼續發佈新功能。AI 輔助工作流已經實現了標準化，這促進了一致性，並且可以確保與團隊內部通用的架構規範和最佳實踐保持一致。</p><p>通過這種方法，遷移到 Jetpack Compose 使 UI 代碼量減少了 50%，同時將 AI 代理的執行時間縮短了 35%，每個代理會話的 token 成本降低了 33%，工程師與代理之間的交互次數減少了 32%。</p><p>一個主要的挑戰是確保遷移不會導致性能退化。團隊重點關注了三個關鍵的生產指標：交互響應時間，即打開屏幕後到其可用的時間；完全加載時間，即所有屏幕內容加載完成的時間；以及滾動性能，即衡量屏幕內容滾動的流暢程度。</p><p>在生產環境中，這些指標是通過運行時監控進行追蹤，為的是能夠進行 A/B 測試，可以將遷移後的 Compose UI 與舊版 UI 進行對比，並評估遷移對性能的影響。</p><p>Instagram 工程師的一個重要發現是：只有將整個屏幕遷移到 Compose 之後，才能可靠地評估性能，從而消除任何可能導致性能測量結果失真的遺留 View 組件。</p><p>這意味着 Compose UI 組件應該從其所在的框架中進行抽象，同時仍然需要與 RecyclerView 和 LazyColumn 保持兼容。同樣重要的是，應該能夠在運行時通過功能標誌在這兩者之間進行切換，以便進行 A/B 測試。</p><p>最終，團隊使用 LazyColumn（Compose 中用於高效渲染可滾動列表的原生解決方案）替換了傳統的 RecyclerView（最初是作為容納新 Compose 可組合項的容器而被保留下來的）。</p><p>最後需要説明的是，這次遷移還提升了應用程序其他部分的啓動性能。其中一部分原因在於，Compose 的運行時預熱開銷只需要在每個應用會話中承擔一次，這樣其他基於 Compose 的界面便可以利用已初始化的運行時環境，而不需要再次承擔該開銷。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/019/481.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：Instagram 負責人莫塞裏承認公眾普遍反感 AI，預計未來情況還將繼續惡化</li><li><a href="https://www.infoq.cn/article/bXKVgLdpf7HONYHIi6Su?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Instagram 採用原生 AI 架構對用户界面進行了現代化改造，將 token 成本降低了 33%</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1584266.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：Instagram主管：公眾對AI的不滿情緒未來幾年或持續加劇</li></ul>
+<p><a href="https://www.ithome.com/1/019/481.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
