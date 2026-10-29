@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>今次輪到 Synology NAS 中招！PHP2Shell 漏洞引爆全球勒索風暴 官方急推修補套件</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>今次輪到 Synology NAS 中招！PHP2Shell 漏洞引爆全球勒索風暴 官方急推修補套件</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/30014201/PCM_Banner_1080_20261029_synology_nas_php2shell.jpg" alt=""></p><p>繼早前多個牌子的網絡設備爆出漏洞後，今次輪到大廠 Synology 的 NAS 用家淪為黑客攻擊目標！近期在國外論壇 Reddit 及 BleepingComputer 上，大批 Synology 用家紛紛發帖求助，表示家中或公司的 NAS 突遭入侵，所有檔案被加密並強行加上「.L0CK3D」副檔名，資料夾內更留下一封要求支付加密貨幣購買「C3rb3r Decryptor」解密工具的勒索信。</p><h3>核心問題出於 PHP2Shell 關鍵漏洞</h3><p>今次黑客大規模入侵的禍根，指向近期震撼全球 IT 界嘅 PHP2Shell 嚴重漏洞（包括 CVE-2026-109618 及 CVE-2026-109619）。這兩個漏洞的 CVSS 3.1 漏洞評分高達 9.8 分（滿分 10 分），屬於極度危險的「遠端執行程式碼」（RCE）漏洞。黑客無需任何帳號密碼，即可透過受影響嘅 PHP 程序在 NAS 系統內執行任意惡意指令。</p><p>據 Synology 官方安全團隊（PSIRT）發布安全公告（Synology-SA-26:14）顯示，雖然 DSM 系統內建的 PHP 組件未有對外暴露，但只要 NAS 安裝並執行了依賴 PHP 運作嘅應用套件，就會有機會直接落入黑客的攻擊射程範圍。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/10/30012520/Screenshot-2026-10-29-at-17.22.06-1024x582.png" alt="">Synology 在 10 月 29 日更新 SA-26:14 安全公告，指已於即日推出安全更新。<h3>10 大常用套件受波及 WordPress 與 phpMyAdmin 無一倖免</h3><p>受今次漏洞波及嘅 Synology 套件多達 10 個，當中不乏家用及企業極為常用嘅服務：</p><ul><li><strong>網站與數據庫工具</strong>： Web Station、WordPress、phpMyAdmin、Joomla、MediaWiki、KodExplorer</li><li><strong>生產力與通訊套件</strong>： Synology Calendar、Mail Station、vtigerCRM</li><li><strong>第三方套件</strong>： IDrive（註：Synology 官方 Drive 服務不受影響）</li></ul><p>由於很多用家搭建 Web Station 或 WordPress 目的就是為了提供外網服務，導致大量 NAS 系統無意中將漏洞暴露於網際網路之上。</p><h3>舊版系統亦獲特別修補 官方呼籲即時更新</h3><p>面對來勢洶洶嘅威脅，Synology 已即時採取行動，針對 DSM 7.4、7.3、7.2、7.1 甚至 7.0 等多個系統版本發佈了 PHP 套件更新。即使部分舊版 DSM 已經停止官方支援，官方亦破例提供修補程式，足見今次漏洞嘅嚴重程度。</p><p><strong>Synology 官方建議用户即時執行以下自保步驟：</strong></p><ol><li><strong>即時開啟套件中心（Package Center）</strong>： 將所有 PHP 版本套件（如 PHP 7.4、8.0、8.1、8.2、8.3、8.4）、Synology Calendar 及 Mail Station 更新至最新修補版本。</li><li><strong>淘汰過時版本</strong>： 官方已明確表示 PHP 7.3 已終止支援且不會提供修補，若套件仍指向 PHP 7.3，應儘快遷移至較新版本。</li><li><strong>收緊外網存取權限</strong>： 檢視並關閉不必要的對外開放連接埠（如 5000/5001 或 80/443），改用 Tailscale 或 VPN 進行遠端連線，大幅降低被黑客掃描並利用漏洞入侵嘅風險。</li></ol>
+<p><a href="https://www.pcmarket.com.hk/synology-nas-php2shell-c3rb3r-ransomware-security-update/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
