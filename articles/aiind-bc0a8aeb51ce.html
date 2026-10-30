@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>別在「下載資料夾」啟動 AI，惡意 AGENTS.md 恐讓寫程式代理變綁架工具</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>別在「下載資料夾」啟動 AI，惡意 AGENTS.md 恐讓寫程式代理變綁架工具</h1>
+<div class="notice">內容機器翻譯自第三方媒體（TechNews 科技新報），僅供參考，以原文為準。</div><p><img src="https://img.technews.tw/wp-content/uploads/2026/07/09094912/hacker-cyber-security-bitcoin-and-cyber.jpg" alt=""></p><h3>正文</h3><p>以色列資安公司 Rebora 發布最新警告，提醒開發者若習慣在預設的「下載資料夾」（~/Downloads）中直接啟動 AI 程式開發代理（AI Coding Agents），可能會讓看似平常的 Markdown 指引檔案成為駭客入侵的破口。攻擊者可利用自動植入的惡意 AGENTS.md 檔案，誘使 AI 代理自動修改系統設定、安裝惡意軟體，甚至竊取使用者的登入權杖（OAuth Tokens）。</p><p>攻擊機制：利用瀏覽器寫入特性與 AI 代理信任邏輯 Rebora 研究人員表示，先前在客户電腦的下載資料夾中發現了一份惡意的 AGENTS.md。這類檔案原是用於為 AI 代理提供專案規範與測試指引的 Markdown 文件。</p><p>由於多數主流瀏覽器能在使用者未主動點擊的情況下，直接將網頁下載的檔案存入 ~/Downloads 目錄，攻擊者便可事先將惡意指令檔放入該位置，靜靜等待開發者在同一資料夾下啟動 AI 代理工具，進而觸發惡意指令。</p><p>實測影響：OpenAI Codex 與 Claude Code 均可能照做 在實際測試中，一旦工作目錄（Working Directory）內存在惡意指令檔，OpenAI 的 Codex 與 Anthropic 的 Claude Code 都會如實遵照檔案內容執行後續動作：</p><p>OpenAI Codex ：測試中有超過 90% 的機率會執行惡意指示。 Claude Code ：測試中亦有約 50% 的機率照做。 其造成的資安風險包含：自動安裝惡意 npm 套件、改寫代理運作設定，或是將 OAuth 權杖等關鍵認證資訊傳送給外部伺服器。</p><p>Rebora 強調，這類攻擊並非 AI 工具本身出現軟體程式漏洞（Bug），而是利用了 AI 代理「預設信任當前工作目錄中指令檔」的設計特性。因此，OpenAI 或 Anthropic 無須也不會為此發布修補程式，防禦的核心主要取決於開發者自身的安全意識與操作習慣。</p><p>為防範 AI 代理遭惡意指引檔挾持，資安專家提出以下應對指南：</p><p>切勿在 ~/Downloads 啟動代理 ：避免將下載資料夾或系統根目錄設為 AI 工具的工作區域，應將其嚴格限制在特定專案的根目錄（Project Directory）內。 預先審查指引檔案 ：啟動前先檢查目錄下是否存在非本人撰寫的 AGENTS.md 或 CLAUDE.md 等指令檔。 檢查異常外部設定 ：確認 AI 代理設定中未被植入陌生的 MCP（Model Context Protocol）伺服器、代理伺服器（Proxy）或 API 端點。 維持安全防護啟用 ：確保操作確認提示（Approval Prompts）與沙箱（Sandbox）隔離機制始終維持開啟狀態。 即時外洩應變 ：若發現可疑指令檔或異常設定，應視為認證資訊可能已遭洩漏，須立即撤銷並重新發行既有的 API 金鑰與 OAuth 權杖。 「ダウンロードフォルダでAIを使わないで」――セキュリティ企業が注意喚起 エージェントが攻撃者の指示に従いマルウェアインストールの恐れ AI coding agents hijacked using AGENTS.md file in Downloads folder AI coding agents vulnerable to Downloads folder hijack via AGENTS.md （首圖來源： Unsplash ）</p><p>延伸閲讀： 單人駭客驅動 AI 代理，只數千美元就攻破逾百家企業網站 別再想 100％ 防堵了！駭客只靠「聊天」就能哄騙你的 AI AI 代理脱序不是覺醒而是人為疏失，專家籲嚴控授權與設計 原始碼、提示詞都被偷，Google 揭露 AI 資料竊取新型態勒索 AI 助理淪為駭客幫兇，新攻擊「HalluSquatting」利用 AI 幻覺打造殭屍網路</p><p>請我們喝杯咖啡 想請我們喝幾杯咖啡？ 每杯咖啡 65 元 x 1 x 3 x 5 x 您的咖啡贊助將是讓我們持續走下去的動力</p><h3>各方報道</h3><ul><li><a href="https://infosecu.technews.tw/2026/10/30/ai-agent-folder-vulnerability/" target="_blank" rel="noopener noreferrer">TechNews 科技新報</a>：別在「下載資料夾」啟動 AI，惡意 AGENTS.md 恐讓寫程式代理變綁架工具</li></ul>
+<p><a href="https://infosecu.technews.tw/2026/10/30/ai-agent-folder-vulnerability/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
