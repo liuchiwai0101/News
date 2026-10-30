@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chainguard 推出面向 AI 編碼智能體的安全工作區與安全校驗能力</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Chainguard 推出面向 AI 編碼智能體的安全工作區與安全校驗能力</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/41/d0/417b2d2b8438807c30fed17bd6529cd0.jpg" alt=""></p><h3>正文</h3><p>軟件供應鏈安全公司 Chainguard 發佈兩款測試版產品，用於運行和測試開發者與 AI 智能體編寫的代碼。 Chainguard Workspaces 提供基於加固型微型虛擬機的遠程開發環境，而 Chainguard Checks 將持續集成能力融入開發流程。該公司在倫敦 Assemble 大會上公佈了這兩款產品。</p><p>推出這兩款產品是為了解決代碼智能體面臨的一個實際難題。智能體需要權限來安裝軟件包、執行 shell 命令和編輯配置文件，還可能並行執行多項任務。如果在開發者本地電腦上執行這些操作，企業憑證和本地服務就有可能被生成代碼或第三方代碼訪問到。反之，如果將每一處修改都提交給傳統 CI 服務則可能造成隊列擁堵，並反覆下載相同的依賴項。</p><p>Workspaces 為每位開發者或智能體分配獨立的遠程微型虛擬機。通過 chainctl develop 命令將本地工作目錄（包括未提交的變更）同步到環境中。當用户斷開連接，會生成會話快照，並可在恢復會話後還原文件、進程和 shell 上下文。團隊還可以為同一個代碼庫創建多個相互隔離的 Workspaces，這樣智能體就可以嘗試多種解決方案，端口、緩存和進程狀態互不干擾。</p><p>Chainguard 表示，主機端代理會為已批准的出站請求添加短期憑證，而不是在虛擬機內部放置長期密鑰。可選的出站規則可以攔截並記錄訪問未授權端點的連接。該公司還會記錄命令、代碼變更與網絡調用，聲稱日誌具備防篡改特性。Paxton 和 Phillips 表示，這一設計旨在降低依賴包被入侵或提示詞注入攻擊導致智能體失控帶來的損害。</p><p>Checks 在獨立的預熱微型虛擬機中運行 CI 步驟，虛擬機鏡像基於 Chainguard 軟件包構建。依賴包會根據項目鎖定文件預先準備，當鎖定文件發生變更時，快照資源池會重新構建。開發者可以通過命令行、提交前鈎子或者 GitHub 應用調用相同的檢查任務。AI 智能體則可通過 MCP 服務器或 SDK 調用。Paxton 和 Phillips 表示，其目標是讓開發者和智能體能夠“ 安全地測試、報錯並修復代碼，無需等待緩慢的 CI 流程 ”。</p><p>當 Checks 和 Workspaces 一起使用時，Workspace 會在測試運行期間掛起。失敗的檢查會將結構化日誌返回到恢復的會話中，智能體可以嘗試另一個變更而無需重建環境。成功的運行會創建一個與環境、結果和提交相關聯的證明。提議的合併關卡可以驗證該證據，無需再次運行測試套件。</p><p>“每次運行都會產生一份簽名證明，將環境、判定結果和提交 SHA 綁定在一起，因此合併關卡可以驗證通過的結果，而無需重新運行測試。”</p><p>這一設計依賴兩個前提：被核驗的輸入內容保持不變，並且代碼庫信任 Chainguard 的執行與簽名系統。本次公告並未公佈 Checks 和主流 CI 服務的性能對比數據，也沒有説明客户該如何驗證日誌宣稱的防篡改能力。Workspaces 當前支持 Claude，後續計劃支持其他智能體，產品按實際消耗算力計費。兩款產品均提供 30 天測試試用。</p><p>Chainguard 還發布了另外兩項和構建流水線相關的公告。 Chainguard Actions 現已正式發佈，包含超過 1000 個經過重建並持續維護的 GitHub Actions； 面向 Go 和 .NET 的 Chainguard Libraries 進入早期預覽階段。Libraries 服務會掃描依賴包中的惡意軟件與灰色軟件，新增軟件包上線前可設置可配置延遲，併為選定漏洞移植修復補丁。Chainguard 報告稱，其測試版掃描器已對 5000 多個 Go 和 .NET 軟件包完成判定，其中超過 10% 的檢測樣本在公開數據源中無匹配記錄。</p><p>Chainguard 入局的市場已有成熟競品。 E2B 在 Firecracker 微型虛擬機中運行智能體會話，控制出站流量，並在虛擬機外部解析憑證。 StepSecurity Harden-Runner 監控 GitHub Actions 運行器上的網絡、文件與進程活動，可強制執行出站網絡策略。在依賴包防護方面， Sonatype Repository Firewall 在構建之前攔截或隔離存在惡意行為與漏洞的軟件包； JFrog Curation 在下載階段執行安全、許可證以及包齡策略。Chainguard 的方案將上述能力整合在一起，附帶簽名測試結果、重構後的 Actions 以及修復後的依賴包。</p><p>將微型虛擬機用於不可信構建任務與智能體工作負載的做法已經相當成熟。 InfoQ 在 AI 加速開發安全指南中建議 針對由智能體生成的代碼採用隔離式微型虛擬機或權限嚴格受限的容器，同時搭配短期憑證與默認拒絕訪問的網絡策略。 亞馬遜 Bedrock AgentCore 為每一個用户會話提供獨立隔離的 CPU、內存和文件系統資源； Vercel 的 Hive 構建系統 則使用 Firecracker 微型虛擬機以及短期 WireGuard 隧道。Chainguard 的獨到之處在於它把這種隔離能力和自家的軟件包目錄、持續集成證明以及智能體執行路徑整合在了一起。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/UNli8x0wc8XUNjI5ETya?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Chainguard 推出面向 AI 編碼智能體的安全工作區與安全校驗能力</li></ul>
+<p><a href="https://www.infoq.cn/article/UNli8x0wc8XUNjI5ETya?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

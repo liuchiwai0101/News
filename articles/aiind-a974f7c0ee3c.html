@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌推出 EnvHarness，支持自進化智能體動態環境學習</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌推出 EnvHarness，支持自進化智能體動態環境學習</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/42/9e/42790ce7ec5dd9bb1cbc0511d98d839e.jpg" alt=""></p><h3>正文</h3><p>谷歌研究人員開源 EnvHarness ，這是一個能夠根據智能體的短板動態調整智能體訓練環境的框架，且無需修改智能體、環境或評估系統。研究人員表示，這種方法既能提高學習效果和效率，又能幫助智能體克服自身缺陷。</p><p>研究人員表示，自我進化型智能體通常通過重寫提示詞和獲取新技能來改進自身，但很少會對其運行的環境進行調整。這帶來了一個關鍵問題：</p><p>一個在固定基準上不斷改進的智能體最終將無法再從該基準中學到東西。對於處於每個學習階段的每個學習者而言，初始狀態、規則和反饋都是相同的，因此一旦智能體能夠解決這些任務，環境就再也無法提供新的知識。</p><p>研究人員解釋説，環境生成成本高昂，需要特定領域的流水線，並且往往需要依賴昂貴或不可靠的驗證器。即便投入大量資源，生成出來的環境仍然是靜態的。為了讓工程師更容易在自適應環境中訓練智能體，他們開發了 EnvHarness 。</p><p>EnvHarness 是一層由可插拔組件構成的可編程封裝層，包裹住靜態環境，僅改變智能體交互的接口。它通過動態引入變異來重塑環境行為，不需要修改底層環境結構與評估體系。</p><p>EnvHarness 使用標準的 reset() 和 step() 接口來包裝現有環境，並提供三種可組合組件：setup，用於自定義環境的初始狀態；rule，用於根據智能體的動作約束狀態轉換；以及 link，用於自定義呈現給智能體的觀察結果。</p><p>該框架還引入了 EnvRigger，它通過分析智能體行為、識別反覆出現的薄弱點、生成有針對性的修改方案，並通過新的交互進行驗證，自動確定如何針對特定智能體調整環境。</p><p>反覆運行 EnvRigger 循環能夠實現智能體與環境之間持續的共同進化，帶來複合式的性能提升，並且該提升效果可隨定製任務數量有效擴展。</p><p>谷歌的論文 提到，添加 EnvHarness 層後，智能體在 WebArena、SWE-bench Verified、ALFWorld 等多個基準測試上的表現均有提升，且無需修改核心邏輯。研究人員測試了多個模型，包括 Gemini 3.1 Flash-Lite、Qwen3.6 27B、Gemini 3.5 Flash 和 Claude Sonnet 4.6，所有這些模型的性能都提升了 2.9 到 3.7 個百分點。</p><p>研究人員總結説，EnvHarness 在靜態環境無能為力的情況下帶來了持續的性能提升，通過領域無關的接口實現了跨領域泛化，並通過修正無效行為提高了效率。</p><p>它通過標準的 reset/step 接口封裝現有環境，原始任務以及人工編寫的校驗器都可以保持不變。大模型開發者只需要針對智能體運行軌跡中發現的缺陷編寫這層封裝邏輯。</p><p>同樣，DevOps 工程師 Aniket Kumar 強調 ，Stage（setup）、Contract（rule）和 Chain 提供了一種乾淨的抽象，保留了基準驗證器，避免了其他環境擴展方法的一個常見陷阱。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/FJqN3mFVyN1lMqHOiegs?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌推出 EnvHarness，支持自進化智能體動態環境學習</li></ul>
+<p><a href="https://www.infoq.cn/article/FJqN3mFVyN1lMqHOiegs?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
