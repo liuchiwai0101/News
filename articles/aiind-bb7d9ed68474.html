@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>11 小時影響約 5000 開發者：AI 編程工具 Cursor 官方商城出現惡意 Claude Code 插件</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>11 小時影響約 5000 開發者：AI 編程工具 Cursor 官方商城出現惡意 Claude Code 插件</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家 · Solidot），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/10/e964e040-7bc0-4450-9356-efc847f2df57.png" alt=""></p><h3>正文</h3><p>結合前段時間 The Information 的爆料，有已經體驗過 Anthropic 最新模型的知情人士提到，Anthropic 準備推出更能讀懂用户意圖的模型。</p><p>文中提到，這款新模型比一般的模型更擅長跳出常規性思維，例如我們要求它修復某個 Bug，新模型會找到用户的深層意圖和目標，不只是修復該 Bug，而是找到導致該 Bug 的底層問題，然後詢問是否修復整個問題類別。</p><p>而在 X 上網友分享出來的實測結果，要求 Opus 5.5 和 Gemini 4 Argon 和新模型一起完成 Three.js 測試，內容是生成奔跑的斑馬。</p><p>可以看到，三匹馬中只有 Fable 5.5 生成畫面，看起來是最真實地在奔跑，Opus 5.5 和 Gemini 4 都給人一種「跑得特別累」的感覺。</p><p>還有網友提到如何測試自己是否被路由到了新模型，最簡單的辦法就是問它「where did andrej karpathy go in may 2026? don’t search」。</p><p>通過 API 調用的 Opus 5.5 模型只能瞭解到 2024 年 7 月信息，而在 Claude 內被隨機路由到的新模型，不用搜索也能知道 Karpathy 在今年五月加入了 Anthropic。</p><p>我們也嘗試在 ChatGPT 內問同樣的問題，GPT-6 表示「我能夠可靠回憶起的最近一次變動是 Eureka Labs，這是 Karpathy 於 2024 年 7 月離開 OpenAI 後創辦的 AI 教育公司。」</p><p>雖然 GPT-6.1 Terra 和 Claude Opus 5.5 模型都寫着知識截止日期來到了 2026 年 6 月，但是都沒有準確回答出 Karpathy 在今年五月的去向。</p><p>更有意思的測試是，有網友發文説用 Fable 5.5 做了「一個控制器騎着自行車，自行車上有一隻鵜鶘，鵜鶘騎着自行車，自行車上還有一隻鵜鶘的 SVG。」</p><p>還有被 Claude Opus 5.5 隨機路由到新模型的用户，讓新模型用 JS 繪製了一段動畫的每一幀，描述了一個人的一生，用時 2 小時，消耗 2700 萬 Token。</p><p>而之前那些騎自行車的鵜鶘，還有遊戲掌機等 SVG 的繪製，也有網友分享了使用更新的 Fable checkpoint 生成的結果，提到一些新的 Claude 模型最近已進入早期測試階段。</p><p>請反思此對話的安全性 新模型估計很快就會發布，今天 Anthropic 官方分享的一篇安全博客卻更有意思，裏面提到自 Claude Fable 5 及之後發佈的模型，每次我們和這些模型問答結束後，模型都會再檢查一次對話是否危險。</p><p>自評估運行在 Fable 5 及之後發佈的每個 Claude 模型上，簽訂零數據保留協議的流量目前不會運行自評估。</p><p>Anthropic 提出了一種叫「自評估」（self-assessment）的安全監測方法，能讓 Claude 在每次回答後，額外生成一段用户看不到的「安全覆盤」，判斷整段對話是否可能涉及濫用，並決定是否值得進一步調查；它主要用於離線篩查，而不是單獨負責實時攔截。</p><p>網友一看到自己每次和 AI 聊天的內容，都要再一次交給 AI 評價，大多數的評論都是「自封為道德警察，這本身就是一種濫用！」</p><p>Anthropic 則認為一邊是越來越聰明的 AI 模型，另一邊是越來越防不勝防的惡意越獄與灰產濫用。</p><p>AI 安全領域長期面臨着兩難，用小模型當「安全監控」，容易被人類黑客用高階 Prompt 輕易繞過；用同樣強大的前沿大模型做獨立審查，推理成本和端到端延遲又會直接翻倍。</p><p>通過利用大模型推理底層的 KV Cache 複用機制，僅增加不到 2% 的算力開銷，就能讓剛回答完用户的 Claude 迅速切入「審計模式」對整段對話進行自我審視。</p><p>在 Claude Fable 5 上的實際測試數據顯示：它成功捕獲了重型分類器所能標記的 78% 違規對話，高危濫用行為的檢出率更高達 94%，同時誤判率降到了 1%。</p><p>具體的工作流程可以概括為 用户提問 → Claude 正常回答 → 模型生成隱藏的安全評估 → 系統記錄並聚合風險信號 → 高精度分類器或人工複核 → 必要時採取處置措施。</p><p>我們正常給 Fable 5 及其之後的新模型發送消息，Claude 像平時一樣理解上下文並生成回答。自評估不會在回答前替模型進行「自我審查」，也不會直接決定這次回答能否發出；實時攔截仍由其他安全分類器負責。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/020/466.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：11 小時影響約 5000 開發者：AI 編程工具 Cursor 官方商城出現惡意 Claude Code 插件</li><li><a href="https://www.solidot.org/story?sid=85756" target="_blank" rel="noopener noreferrer">Solidot</a>：Claude Code for VS Code 官方擴展被植入後門</li></ul>
+<p><a href="https://www.ithome.com/1/020/466.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

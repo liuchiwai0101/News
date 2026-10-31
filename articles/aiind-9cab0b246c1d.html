@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>終於不是 AI 了：Lambda 直接運行 Express，API Gateway 還需要嗎？</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>終於不是 AI 了：Lambda 直接運行 Express，API Gateway 還需要嗎？</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/be/3f/bed55503e10aae7784f071a8e19e513f.jpg" alt=""></p><h3>正文</h3><p>亞馬遜雲科技最近 推出了 Lambda Web Functions ，讓開發者能夠直接在 Lambda 上運行使用 Express 和 Hono 等框架構建的 Node.js Web 應用，並支持併發請求和流式響應。</p><p>根據 Lambda Web Functions 文檔 ，新函數支持併發 HTTP 請求和流式響應。其計費依據是活躍 CPU 時間和內存，而不是等待下游服務期間的 CPU 時間。多區域路由會將請求發送到距離最近的區域，而一個已經預熱的執行環境可以同時處理多個併發請求，從而顯著減少冷啓動。現有 Lambda 函數現在被稱為 Lambda Event Functions，無須進行任何改動。亞馬遜雲科技高級解決方案架構師 Micah Walter 總結了它的優勢，以及它為何能夠消除這些複雜性 ：</p><p>你可以使用 Express、Hono、Fastify、Next.js 或任何 Node.js 框架構建一個監聽標準端口的服務器，通過一條命令進行部署，隨後 Lambda 會自動處理擴縮容、多區域分發和活躍 CPU 計費。無須適配器，無須管理基礎設施，也不會被框架鎖定。</p><p>端點默認使用 Lambda 提供的域名。如果需要使用自定義域名、邊緣緩存或 AWS WAF，開發者可以 在前端部署 Amazon CloudFront ，並將 Lambda Web Functions 作為源站。</p><p>Lambda Web Functions 面向 HTTP 工作負載，包括全棧 Web 應用、REST 和 GraphQL API，以及可以獨立擴展的微服務。它還支持服務器端渲染和流式響應，例如大語言模型的增量輸出，而無須單獨的託管層。</p><p>Lambda Web Functions 目前僅支持 Node.js；包括 Python、Java 和 .NET 在內的其他語言仍可通過傳統 Lambda 函數使用。今年早些時候，亞馬遜雲科技還 推出了 Lambda MicroVM ，為運行不可信代碼或用户生成代碼提供隔離的有狀態沙箱環境，並允許客户自行管理生命週期。</p><p>在《 探索如何使用 AWS Lambda Web Functions 構建 Web 應用 》一文中， Julian Wood 、 Kim Wendt 和 Samrat Karak 構建了一個示例應用，展示單個執行環境如何同時處理多個請求，以及應用程序如何服務全球用户。他們總結道：</p><p>Lambda Web Functions 無須適配層，即可將無服務器運維模型帶入 Web 應用。你只需編寫一個標準 Node.js HTTP 服務器，通過一條命令或 CloudFormation 進行部署，就能獲得一個可擴展、按使用量計費的 HTTPS 端點，並內置全球路由。</p><p>Reddit 和 Hacker News 上的社區反響總體積極，討論重點包括更簡單的編程模型和併發請求支持。不過，討論也提出了有關 Python 支持，以及該服務與現有替代方案有何區別的問題。用户 magnetik79 評論 ：</p><p>這是一次重大更新——也很高興看到一個不完全圍繞 AI 打磨的功能。☺️ 看起來很棒的地方在於：許多工作負載現在可以完全繞過 API Gateway（……）這徹底改變了目前 Lambda 的 HTTP 編程模型——現在不再是一次調用對應一個請求，你可能需要開始關注同步和互斥鎖問題。</p><p>亞馬遜雲科技首席開發者佈道師 Eric Johnson 在《 為什麼我對 AWS Lambda Web Functions 感到興奮 》一文中強調，Lambda Web Functions 無須修改即可運行標準 HTTP 服務器和框架，並通過一個託管端點支持 REST、服務器發送事件、流式響應、RPC、Webhook 和 IAM 身份驗證。</p><p>亞馬遜雲科技並不是唯一提供這種模式的雲服務商： Google Cloud Run 和 Azure Container Apps 也支持無須適配層的 Web 應用、縮容至零和可配置併發，因此適合具有間歇性或突發流量的工作負載。</p><p>Lambda Web Functions 的 定價 基於活躍 CPU 時間和內存使用量，對於需要花費較多時間等待數據庫或 API 的工作負載，可能有助於降低成本。內存則按照執行環境的整個生命週期計費。這種模式可能適合服務器端渲染、API 後端和流式 AI 推理等 I/O 密集型工作負載。該服務目前已在五個區域推出：北弗吉尼亞、俄亥俄、俄勒岡、東京和愛爾蘭。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/fcdAAd69U452t9b39rLU?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：終於不是 AI 了：Lambda 直接運行 Express，API Gateway 還需要嗎？</li></ul>
+<p><a href="https://www.infoq.cn/article/fcdAAd69U452t9b39rLU?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
