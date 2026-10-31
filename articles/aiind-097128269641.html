@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>當AI從“會想”走向“會幹”——騰訊雲與英特爾共築Agentic AI執行新底座</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>當AI從“會想”走向“會幹”——騰訊雲與英特爾共築Agentic AI執行新底座</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/69/e4/699a625c708d36b143755b859fc461e4.png" alt=""></p><h3>正文</h3><p>過去，人們與大模型的交互是一條相對簡單的鏈路：輸入 Prompt，模型生成 Response。進入 Agent 時代，這條鏈路變成了“規劃—推理—行動—反饋”的循環。一次用户請求，可能進一步調用網頁、API、數據、工具、代碼和其他系統，展開為成千上萬個機器動作。</p><p>以“分析銷售數據並生成報告”為例，Agent 需要讀取文件、準備依賴、編寫並運行代碼、檢查結果，再根據反饋修改重試。生成文字只是其中一步，任務要靠一連串實際操作才能完成。CPU 也因此不再只是為 GPU 做配套，而要參與整個工作流的編排和 Action 執行。</p><p>問題隨之而來：當 AI 從“生成答案”走向“執行任務”，過去圍繞模型推理設計的基礎設施，還夠用嗎？騰訊雲與英特爾圍繞智能體基礎設施的協同，正是從這條更長的執行鏈路出發，回應計算、內存與執行環境上的三重挑戰。</p><p>Agent 並不是始終滿負荷計算。它更像“想一下，幹一下，再想一下”：等待模型或工具返回時，CPU 需求回落；處理數據、執行代碼、運行測試時，計算需求又迅速上升。這是 Agent 負載的常態——資源需求隨任務推進起起伏伏，要求基礎設施能夠跟隨行動節奏靈活調配算力，而不是始終按照峯值預留。</p><p>計算可以暫歇，工作現場卻不能隨之消失。已經載入的數據、裝好的依賴、執行到一半的程序，以及多輪交互中累積的狀態，都需要跨越多個 Action 持續保留。第一重挑戰由此出現：：應對突發性計算負載（bursty workloads），同時保障任務狀態的持久化（state persistence），讓 Agent 在下一次行動時能夠接着幹。</p><p>按峯值長期預留資源，等待階段容易閒置；每次空閒都拆掉環境，下一步又要重新搭建現場。Agent 需要的彈性基礎設施，不能只做到“忙時加核、閒時收核”，還要能夠保存現場，並在新的行動到來時恢復執行。彈性的對象，不只是算力，也包括支撐任務推進的狀態。</p><p>騰訊雲 Cube Sandbox 把這一需求拆成兩種彈性。計算彈性，強調快速啓動、高密度和大規模併發；狀態彈性，強調暫停與恢復、快照與克隆，以及跨節點恢復。平台不再只管理一次請求需要多少資源，還要管理一段任務如何等待、接續和分支執行。</p><p>這也明確了雙方協同的方向：Cube Sandbox 在運行時層面管理環境的創建、保存和接續，英特爾至強在底層支撐環境編排、任務執行與狀態處理。當越來越多的 Agent 需要同時保留工作現場，軟硬件配合要解決的下一個問題，就是這些現場究竟放在哪裏、如何高效容納。</p><p>增加 CPU 核心，並不必然帶來同比例增長的 Agent 承載能力。在高密度執行平台上，內存既要服務正在運行的程序，也要承載需要繼續保留的狀態。當大量環境同時存在，制約密度的可能先是內存容量，而不是核心數量。算力能否充分利用，也取決於這些核心能否獲得足夠的內存。</p><p>英特爾數據中心集團軟件技術總監胡勇以一組示例配置進行了測算：假設每個 Agent 佔用約 2GB 內存，每個 vCPU 承載 4 個 Agent，則每個 vCPU 需要約 8GB DRAM；而在一套 256 vCPU、12 內存通道、每條 DIMM 128GB 的配置中，平台平均可提供約 6GB DRAM/vCPU，由此形成約 2GB/vCPU 的容量缺口。面向這一問題，可以從三個互補方向提升容量效率。</p><p>1. 讓現有內存更高效，英特爾 IAA（存內分析加速器）可承擔內存壓縮與解壓。在此次測試配置下，軟件 LZ4 方案與 IAA Deflate 方案均達到約 2.1∶1 的壓縮比；相較軟件方案，IAA 將壓縮延遲從 5.70 毫秒降至 0.51 毫秒，將解壓延遲從 0.96 毫秒降至 0.08 毫秒，分別約為原來的 1/11 和 1/12。</p><p>2. 擴大本地 DRAM 容量，在支持的服務器上，從每通道一條內存的 1DPC 擴展到兩條的 2DPC，直接增加本地容量。</p><p>3. 引入 CXL 內存擴展路徑，為訪問頻率較低、但仍需保留的狀態提供空間，減輕本地 DRAM 的壓力。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/acC46slIVKJg1O0ac8w4?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：當AI從“會想”走向“會幹”——騰訊雲與英特爾共築Agentic AI執行新底座</li></ul>
+<p><a href="https://www.infoq.cn/article/acC46slIVKJg1O0ac8w4?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
