@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grok API 11 月起預設加浮水印 關閉須確認法律例外並自負披露責任</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Grok API 11 月起預設加浮水印 關閉須確認法律例外並自負披露責任</h1>
+<div class="notice">內容機器翻譯自第三方媒體（unwire PRO），僅供參考，以原文為準。</div><p><img src="https://cdn.unwire.pro/wp-content/uploads/2026/11/fb_grok-api-text-watermark.png" alt=""></p><h3>正文</h3><p>Grok API 將由 2026 年 11 月 7 日起，為 7 款模型的文字輸出預設加入肉眼看不到的統計式浮水印。提供 Grok API 的 SpaceXSI 表示，這是為了符合歐盟《人工智能法》（EU AI Act）。開發者毋須為啟用功能修改程式碼，但要查閲回應的 x-watermark header，才知道該次輸出有否帶浮水印；團隊管理員如要按模型關閉，則須確認用途屬適用法律下的例外，並自行承擔標記及披露責任。同時使用多個模型的團隊，要把每次輸出的浮水印狀態納入日誌管理。</p><p>SpaceXSI 通知電郵指出，多款 Grok API 模型的文字輸出將預設加入浮水印 功能適用於所有文字生成 API，包括 Responses API 和 Chat Completions API；一般文字回應、結構化輸出及工具呼叫參數均在範圍內。全球 endpoint api.x.ai 和各區域 endpoint 都會套用，選擇區域 endpoint 不能避開預設設定。有報道指改動只限 API，不影響面向消費者的 Grok 產品。</p><p>Grok 統計式浮水印：不加字元，偵測要申請 Grok 的統計式浮水印在模型生成文字時，輕微影響模型選取 token 的方式，不會在輸出加入字元、標記或隱藏文字。SpaceXSI 聲稱，浮水印不影響回應質素或速度。</p><p>偵測同樣採用統計方法，結果分為有浮水印、無浮水印或不確定；文字愈長訊號愈強。使用偵測 API 要先申請。由於浮水印不加入字元，而回應格式除新增 header 外不變，現有解析結構化輸出的流程應不受格式變動影響。</p><p>開發者毋須在 request 加入參數。回應的 x-watermark header 值為 true，代表該次輸出有浮水印；其他值或沒有該 header，則代表沒有。這個 header 顯示的是該次 request 的狀態，與另行偵測一段文字是兩種不同的查證方式。</p><p>Grok 浮水印 opt-out：責任轉到用户身上 Grok 團隊管理員可在 SpaceXSI Console 關閉部分或全部模型的浮水印，設定適用於團隊所有 API key，變更會在 5 分鐘內對新 request 生效；部分模型則可能對個別團隊鎖定開啟，不能在 Console 關閉。</p><p>關閉時，管理員須確認有關用途符合適用法律下的例外，並自行承擔標記、披露及其他法律要求的責任。SpaceXSI 文件沒有解釋哪些用途屬例外，也沒有指明浮水印對應的法例條文。每次開啟或關閉都會記入團隊 audit log，管理員可按事件 ID、描述、用户及時間搜尋。</p><p>歐盟《人工智能法》第 50 條的透明度義務已於 2026 年 8 月 2 日生效。據 euronews 報道，違反相關歐盟法規最高可罰 1,500 萬歐元（約港幣 1.31 億元）或全球年營業額的 3%，以較高者為準。</p><p>Anthropic Claude 浮水印全球適用，雲端平台亦帶標記 Anthropic 早前亦為符合歐盟《人工智能法》，在支援的 Claude 模型文字輸出加入肉眼看不到的浮水印。標記全球適用，涵蓋 Claude Platform（API）、Claude、Claude Code 等產品，經 AWS、Google Cloud 或 Microsoft Foundry 使用支援模型時亦會帶有浮水印。</p><p>2026 年 8 月 2 日或之後推出的 Claude 模型推出時已支援浮水印，舊模型則陸續加入；偵測功能仍屬 private preview（私人預覽），只開放予合資格機構及同樣有合規查證責任的企業。Anthropic 表示，其文字浮水印不含識別資料，不能追溯至特定人士、機構或對話，偵測只能判斷文字有多大可能部分由 Claude 撰寫。</p><p>多模型架構要保留 x-watermark 狀態作合規紀錄 多模型團隊若要追查 Grok 輸出有否浮水印，應先確認應用程式能否接收到 x-watermark header。開源專案 ReqLLM 在 GitHub issue 指出，其現有 SDK 轉換非串流的 Grok API 回應時會丟棄該 header，並建議公開這個值，供應用程式作審計、政策或合規紀錄。</p><p>使用 SDK、AI gateway 或其他中介層的團隊，可以檢查元件會否保留 header，並在日誌記錄每次 request 的浮水印狀態。若要 opt-out，法務或合規人員應先確認例外理據，再由管理員更改設定；Console 的 audit log 可作內部稽核證據。</p><p>服務歐盟市場或客户的企業可能受歐盟《人工智能法》約束，在同一流程使用不同模型時，可分別記錄各模型的標記狀態及設定，避免日後需要查證輸出時，才發現狀態沒有留下紀錄。</p><h3>各方報道</h3><ul><li><a href="https://unwire.pro/2026/11/01/grok-api-text-watermark/news/" target="_blank" rel="noopener noreferrer">unwire PRO</a>：Grok API 11 月起預設加浮水印 關閉須確認法律例外並自負披露責任</li></ul>
+<p><a href="https://unwire.pro/2026/11/01/grok-api-text-watermark/news/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>當 AI 能讀懂二進制，閉源軟件還剩多少護城河？</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>當 AI 能讀懂二進制，閉源軟件還剩多少護城河？</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/42/01/421c26c093be9yyc83308yyd7818cb01.jpg" alt=""></p><h3>正文</h3><p>Reverse Engineer Anything （REA）是一個開源項目，在 GitHub 上已獲得超過 20 萬個 Star。它將 Claude Code 和 Codex 等編碼智能體與 Ghidra、Hopper、IDA 等逆向工程工具連接起來，讓開發者能夠檢查編譯後的二進制文件、追蹤函數調用，並調查應用程序如何實現特定功能。</p><p>REA 使用 MCP 服務器向智能體開放逆向工程工具。智能體可以查詢反彙編器、檢查函數和交叉引用、追蹤程序行為，並針對二進制文件反覆驗證假設。該工具還支持對 JavaScript 和 Electron 應用以及 .NET 程序集進行靜態分析，並利用分析結果指導後續調查。REA 在本地運行，也沒有聲稱能夠恢復原始源代碼。</p><p>GitHub 上的 展示案例 演示了 REA 如何追蹤 Notion 的 Electron 剪貼板實現 ，如何從經典遊戲 DX-Ball 中重建聲音聲像定位函數，並通過測試匹配全部 3205 個原始 x86 用例和編譯後函數的全部 63 個字節，以及如何從 DOS 遊戲 Touhou 4 的 16 位代碼中恢復彈幕環的角度計算邏輯。</p><p>在 Hacker News 上，一些從業者質疑，與直接讓 AI 編碼智能體安裝並使用 Ghidra 相比，該項目究竟增加了什麼。Ghidra 是美國國家安全局開發的一款開源工具，用於分析編譯後的程序。另一些用户則表示，與過去通過 AI 智能體使用逆向工程工具的嘗試相比，REA 帶來了更好的結果。Hacker News 用户 revelationnow 則 寫道 ：</p><p>我覺得這會加速大型科技公司將應用遷移到雲端。只要不再提供二進制文件，至少就能切斷一種逆向工程途徑。</p><p>REA 並不侷限於 Ghidra。它還支持 Hopper ，一款原生 macOS 反彙編與逆向工程工具，以及 IDA ，一款用於分析多種處理器架構和平台可執行代碼的反彙編器和調試器。JavaScript 和 .NET 檢查則無需原生分析引擎即可運行。</p><p>在 Reddit 上，一些獨立開發者擔心，AI 輔助逆向工程可能會 讓他人更容易複製他們的遊戲和應用程序 、繞過付費功能，並在未經許可的情況下利用其成果牟利。另一些用户則在 討論希望逆向分析哪些硬件 ，以及可以利用分析結果構建什麼。AMD 總監 Sreekanth Pannala 指出 ：</p><p>十年時間帶來的變化真大！我們已經從軟件為王、硬件只是商品的時代，走到了硬件為王、專有軟件越來越容易被替代的時代。</p><p>REA 採用寬鬆的 MIT 許可證發佈，支持合法的逆向工程、研究、分析和重建。用户有責任取得必要授權，並遵守適用法律。Persistent Intelligence Project 的創建者 Cleverson Santos 在 LinkedIn 上 警告稱 ：</p><p>這是一條模糊的邊界！我並不贊成越過這些界線——而且這才剛剛開始。所有為了幫助人類而創造的東西，最終都會以某種方式被用來對付人類！希望我的看法沒有過於極端，這也不是批評，只是對哪些界線應該或不應該跨越的一點觀察。</p><p>該項目作者使用 morluto 這一網名，其真實姓名尚未公開。他還發布了 Awesome Reverse Engineering ，其中收錄了有關二進制文件、應用程序、固件、文件格式和協議的逆向工程工具與學習資源。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/8mCjWWFLdjDA2vb51QZs?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：當 AI 能讀懂二進制，閉源軟件還剩多少護城河？</li></ul>
+<p><a href="https://www.infoq.cn/article/8mCjWWFLdjDA2vb51QZs?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
