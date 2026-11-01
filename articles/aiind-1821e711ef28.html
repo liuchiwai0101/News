@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code 持員工憑證入國防部網絡兩月 Accenture 被指未通報</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Claude Code 持員工憑證入國防部網絡兩月 Accenture 被指未通報</h1>
+<div class="notice">內容機器翻譯自第三方媒體（unwire PRO · Solidot），僅供參考，以原文為準。</div><p><img src="https://cdn.unwire.pro/wp-content/uploads/2026/10/fb_accenture-claude-code-pentagon-network.png" alt=""></p><h3>正文</h3><p>員工為加快編程工作而把 AI 代理接入系統，可能同時把自己的權限交給代理。據知情人士透露，美國國防部承包商 Accenture 一名員工今年較早時把國防部一個供多個情報機構使用的集中式系統，接入其個人 Claude Code 帳户，並把自己的登入憑證交給代理，令代理取得管理員權限、繞過正常登入保安，以編寫及部署程式碼。代理據報運行兩個月才被發現，期間似乎把憑證及網絡結構圖傳到第三方網站；Accenture 否認指控。</p><p>AI 代理接入國防部系統，運行兩個月才被發現 Claude Code 是 Anthropic 的 AI 編程代理。根據報道，涉事員工把個人帳户接入國防部的集中式生產環境，讓代理編寫及部署程式碼。代理在國防部網絡運行兩個月才被發現，其後漏洞才得以修補。</p><p>涉事系統存有受控非機密資訊（CUI），屬未經審查不得公開的敏感資料。編程環境運行於國防部處理非機密資訊的 NIPRNet；該網絡可連接互聯網，但設有嚴密保護。</p><p>員工交出憑證，代理被指繞過保安並外傳網絡圖 據知情人士，該員工為自動化編寫程式碼及開設雲端伺服器，把自己的登入憑證交給 Claude 代理。代理因此取得管理員權限，繞過正常登入流程的保安控制，亦代員工提交（commit）程式碼，並需要連接互聯網執行任務。</p><p>報道指代理似乎把該員工的登入憑證、密碼及 NIPRNet 網絡結構圖傳送到一個第三方網站。網站名稱沒有公開，但美國國家標準與技術研究院（NIST）早前已把該網站列為高風險，因為其漏洞可讓攻擊者向 AI 編程代理注入指令。</p><p>前美國國家安全局（NSA）黑客、現職 IANS 的 Jake Williams 指，個別非機密資料匯總後可能變成機密內容。程式碼常先在 NIPRNet 測試，再部署到機密網絡；假如攻擊者利用外洩憑證植入後門，靜態應用程式安全測試（SAST）未必能識別。這屬專家提出的潛在風險，報道未證實已經發生，亦指沒有跡象顯示黑客已進入機密或絕密系統。</p><p>Claude 目前被禁止供國防部人員使用。Anthropic 回應時只引用其使用政策，該政策禁止未經授權繞過身份驗證、端點防護或監控工具等保安控制。</p><p>被指漏報事故，Accenture 稱已履行責任 美國國防部員工及聯邦承包商須在發現網絡保安事故後 72 小時內通報。消息人士指，Accenture 員工沒有把事件視為嚴重或緊急，公司最初完全沒有向政府通報。</p><p>Accenture 表示指控經過徹底、獨立調查，認定缺乏依據，公司已履行法律及合約責任。公司在追問下沒有説明由誰調查，亦沒有否認曾發生可稱為事故的情況。國防部則表示不評論其網絡或系統狀況。</p><p>Hunter Strategy 創辦人 Matt Triner 認為，政府承包商通報這類事故往往反而受罰，而更快交付、更低價格的壓力亦與優先處理保安互相矛盾；但他亦指報道描述的事件「絕對需要通報」。</p><p>Accenture 持有超過 35 億美元（約港幣 273 億元）美國聯邦政府合約，其中近 6.05 億美元（約港幣 47.2 億元）來自國防部。FBI 本月較早時亦發現另一名 Accenture 承包商未修補漏洞，令黑客組織 ShinyHunters 取得數千名 FBI 僱員資料；FBI 已於 10 月初撤換該承包商。</p><p>管控 AI 代理的憑證、連線與通報 對 IT 及資訊保安主管而言，這宗指控可作管控上的參考：員工以個人帳户接入生產系統，再把自己的登入憑證交給代理，代理因而取得管理員權限，可能在企業既有的登入控制以外執行工作。企業可列明獲準接入的 AI 代理及環境，避免個人帳户接觸生產系統；代理亦應使用獨立、可撤銷且只具最低所需權限的服務帳户，而非共用員工憑證。</p><p>代理的對外連線及程式碼提交紀錄亦要監察，本案代理據報運行兩個月才被發現，期間一直需要連接互聯網執行任務。涉及敏感環境時，靜態掃描未必能識別刻意植入的後門，團隊可保留靜態掃描，同時以人手覆核代理提交的程式碼。</p><p>通報流程同樣要涵蓋 AI 代理：企業可把未授權接入、憑證交予代理及疑似資料外傳納入事故分級，並讓員工及外判夥伴清楚知道應向誰上報。當員工希望用 AI 節省編程時間，清楚的權限與通報安排可讓團隊在發現問題時及早處理。</p><h3>各方報道</h3><ul><li><a href="https://unwire.pro/2026/11/01/accenture-claude-code-pentagon-network/news/" target="_blank" rel="noopener noreferrer">unwire PRO</a>：Claude Code 持員工憑證入國防部網絡兩月 Accenture 被指未通報</li><li><a href="https://www.solidot.org/story?sid=85756" target="_blank" rel="noopener noreferrer">Solidot</a>：Claude Code for VS Code 官方擴展被植入後門</li></ul>
+<p><a href="https://unwire.pro/2026/11/01/accenture-claude-code-pentagon-network/news/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
