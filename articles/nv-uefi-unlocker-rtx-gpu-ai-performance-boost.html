@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>一支 USB 即解鎖 NVIDIA 限制  RTX 顯示卡 AI 算力颷升 65%</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>一支 USB 即解鎖 NVIDIA 限制  RTX 顯示卡 AI 算力颷升 65%</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/02194854/PCM_Banner_1080_20261102-nvidia-rtx-ai.jpg" alt=""></p><p>對不少本土 AI 創作者或開發者來説，NVIDIA 顯示卡的算力表現直接影響運算效率。近日 <a href="https://github.com/physicsdolphin/nv-uefi-unlocker" target="_blank" rel="noopener noreferrer">網絡社群</a> 推出一款名為 nv-uefi-unlocker 的開源工具，標榜只需寫入普通的 USB 快閃碟並在開機時執行，就能繞過 Windows 環境下對 GeForce RTX 系列顯示卡的 AI 張量（Tensor）運算限制，令 FP16 浮點運算效能最高暴升 65%。</p><h3>免刷 VBIOS 開機即解鎖！涵蓋 RTX 20/30/40 系列</h3><p>據外媒報道，NVIDIA 過去為區隔消費級 GeForce 顯示卡與高階專業/數據中心顯示卡，在部分 FP16、BF16 及 TF32 張量運算路徑上實施了半速（Half-Speed）限制。以往若要解鎖，過程相當複雜且風險極高。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/02194540/nv-uefi-unlocker-1024x458.png" alt=""><p>今次開源社群開發出的 UEFI 開機工具，原理是在 Windows 作業系統與 NVIDIA 顯示卡驅動程式載入前，於韌體階段調整 GPU 的運算設定。其最大優點是完全無需修改或刷寫顯示卡的 VBIOS，亦不用替換驅動程式，大為降低了「砌機」玩家弄壞顯示卡的風險。由於工具僅在記憶體中暫時生效，一旦完全關機後就會還原，因此每次開機都需要透過該 USB 重新載入。</p><h3>實測數據：RTX 4060 筆電及 3060 算力顯著提升</h3><p>根據外媒及社群公佈的測試數據，這項破解對於需要進行 AI 模型推論與矩陣運算的用户影響甚大：</p><ul><li><strong>RTX 4060 Laptop</strong>： 在 FP16 矩陣乘法測試中，算力由原先的 29.89 TFLOPS 飆升至 49.33 TFLOPS，增幅高達 65%。</li><li><strong>RTX 3060 12GB</strong>： FP16 運算吞吐量由 25.37 TFLOPS 提升至 45.79 TFLOPS。</li><li><strong>RTX 4080</strong>： 在 BF16 測試中由 100.37 TFLOPS 提升至 192.18 TFLOPS。</li></ul><p>目前的解鎖名單已覆蓋 RTX 20、30 及 40 系列的桌面電腦與手提電腦顯示卡（包括 RTX 2070、3060、4060、4080 及 4090 等）。不過最新的 RTX 50 系列目前尚未支援。</p><h3>玩 Game 無幫助？玩家試玩前三大注意事項</h3><p>雖然算力提升幅度極吸引，但玩家在嘗試前仍需留意以下幾點：</p><ol><li><strong>對遊戲影格率（FPS）幫助有限</strong>： 此工具主要解放 Tensor Core 的半速張量運算限制，效能提升集中於 AI 繪圖、LLM 本地模型推論等工作，傳統遊戲或 FP32 一般運算並不會獲得同等大幅度的加速。</li><li><strong>需要關閉 Secure Boot</strong>： 由於工具需要在 UEFI 階段執行，用户必須在主機板 BIOS 中關閉 Secure Boot（安全啟動）或手動設定信任憑證。這可能會導致部分要求 Secure Boot 的線上遊戲反作弊系統（如《VALORANT》等）無法運作。</li><li><strong>相容性仍有待完善</strong>： 部分 RTX 2080 系列卡種在測試中出現過開機失敗的情況，且受限於記憶體頻寬或功耗上限，並非所有情境都能達到 65% 的理論增幅。</li></ol><p>這項工具目前已於 GitHub 開源發佈，對於經常執行本地 AI 任務（如 Stable Diffusion、LLM 跑模）的玩家而言，絕對是一個免成本提升生產力的特別方案。</p>
+<p><a href="https://www.pcmarket.com.hk/nv-uefi-unlocker-rtx-gpu-ai-performance-boost/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

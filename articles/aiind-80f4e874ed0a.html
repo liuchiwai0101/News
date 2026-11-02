@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌 SynthID Detector 簡化了水印檢測流程，並將支持範圍擴展至其他 AI 提供商</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌 SynthID Detector 簡化了水印檢測流程，並將支持範圍擴展至其他 AI 提供商</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/58/fe/58yyff2dcf903526c5dfc2e18f454afe.jpg" alt=""></p><h3>正文</h3><p>谷歌 DeepMind 宣佈， SynthID Detector 現已面向全球發佈 。該工具旨在幫助識別由 AI 生成的內容，包括使用 SynthID 合作伙伴（如 OpenAI、NVIDIA 和 Kakao）的 AI 工具創建的媒體內容，預計蘋果公司也將很快提供支持。</p><p>在 SynthID Detector 推出之前， 用户只能通過詢問 Gemini 來識別 AI 生成的內容 ，但該功能僅限於谷歌 AI 生成的內容。如果要識別其他 AI 提供商的內容，則需要使用各自的檢測工具。</p><p>SynthID.com 網站簡化了這一流程，用户只要上傳圖片、音頻或視頻文件，便可以在所有 SynthID 合作伙伴（包括 OpenAI、NVIDIA、Kakao 以及即將加入的蘋果）的系統中進行檢測。該工具會給出“是”或“否”的結果。不過，谷歌也指出，當檢測結果顯示“無明確信號”時，陰性結果並不一定意味着該內容不是由 AI 生成的：</p><p>這並非一款通用的 AI 檢測工具。我們僅能檢測來自上述已採用 SynthID 技術的公司的媒體內容。我們正在不斷地拓展合作伙伴關係，以實現對更多生成式媒體內容的檢測。</p><p>具體來説，SynthID 無法檢測使用 Meta 或微軟 AI 生成的內容，因為它們採用了不同的水印技術。此外，大規模修改也會削弱 SynthID 的水印信號，從而導致誤判。在這種情況下，用户需要採用 更全面的方法 ，結合其他工具進行檢測。儘管存在這些侷限性，SynthID 仍然入選了 《時代》雜誌“2026 年最佳發明”榜單 ，該榜單認可了其相較於其他 AI 檢測器在 AI 內容檢測方面的創新方法。</p><p>針對這一公告， Reddit 用户 Chicano_Ducky 對該方法的有效性表達了負面看法 ：</p><p>[這]從一開始就沒起過作用。文中提到，即使在他們自己模型生成的視頻上，誤報率也高得令人無法接受[……] 他們正試圖將‘魔鬼’重新裝回瓶子裏，但根本做不到。</p><p>創建水印移除節點非常簡單。只需對圖像進行一次低強度的降噪處理即可。你已經可以在 OpenAI 和 Gemini 生成的圖像上測試這一點了。</p><p>對於那些想利用 AI 生成的圖像進行欺詐的人來説，SynthID 只是個很小的障礙。它的存在對他們來説反而成了一件好事。</p><p>相較於對 AI 生成的內容進行水印標記，還有一種互補的方法是 C2PA 元數據 。它記錄文件的來源和編輯等歷史信息，可以幫助驗證其真實性。 Harry G 在 LinkedIn 上指出 ，這是唯一“真正可擴展的方法”，因為“事後檢測合成內容會演變成一場軍備競賽”。然而，C2PA 元數據在內容上傳時可能會丟失，而且在截圖中不會保留。</p><p>SynthID 由谷歌 DeepMind 於 2023 年推出，是一個針對 AI 生成的圖像、音頻、視頻和文本進行水印加密以及檢測的解決方案。它使用密鑰改變音頻頻率概率分佈或像素/token 模式，將不可見的水印直接嵌入到內容當中。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/JoVxAdq1OjtIDkRBjWOW?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌 SynthID Detector 簡化了水印檢測流程，並將支持範圍擴展至其他 AI 提供商</li></ul>
+<p><a href="https://www.infoq.cn/article/JoVxAdq1OjtIDkRBjWOW?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

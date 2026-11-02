@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI+科研：Agent加速科研，論文寫得快了，成果更難評了 ｜ 西湖大學工學院博導 王歡分享</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI+科研：Agent加速科研，論文寫得快了，成果更難評了 ｜ 西湖大學工學院博導 王歡分享</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/60/7f/601968872bee754fb902ffca6f53b17f.jpg" alt=""></p><h3>正文</h3><p>在 1024 模力工場 · AI社區日 主論壇上，西湖大學工學院助理教授、博士生導師、高效智能計算實驗室（ENCODE Lab）負責人王歡，以 《AI 智能體對科研的影響》 為題作主題分享。</p><p>王歡有兩個重點研究方向：Efficient AI（高效人工智能），關注如何提高 AI 的運行效率、降低資源消耗；AI Evaluation（AI 評測），關注如何定義和衡量智能。</p><p>這次分享中，他結合計算機和 AI 研究的經歷，討論了 Agent 帶來的兩方面影響。一方面正好也關於“效率”：讀文獻、寫代碼、做實驗等工作正在加速；另一方面則關於“評價”：論文更容易產出，也給成果鑑別、同行評審和科研評價帶來了更大壓力。</p><p>他認為，Agent 確實加快了科研進程：Agent 能自主決定下一步、調用工具執行任務，Harness 則提供上下文管理、工具調用等支持，讓大模型能夠持續開展工作；他自己每天早上 6 點，還會收到 Agent 篩選推薦的 10 篇相關文獻。</p><p>但論文產出更快，不等於科學進步更快：科研旨在增進認識，結論需要接受檢驗，大量成果都聲稱有新發現時，如何判斷它們是否可靠、究竟新在哪裏，就成了更緊迫的問題。</p><p>與此同時，科研評價仍看重論文等量化成果，因此當一些老師倡議“慢科研”、呼籲重質量而非數量時，也有學生反問：老師自己發了那麼多論文，為什麼要求我們慢下來？</p><p>在王歡看來，Agent 的影響已超出效率提升，觸及科研評價制度：論文越來越容易產出，評價體系該如何識別真正的貢獻？</p><p>不過，他仍持樂觀態度：AI 接手部分工作，也讓人有更多空間思考，哪些探索和判斷仍需要自己承擔，以及人的獨特價值在哪裏。</p><p>以下為王歡講演的完整速記，模力工場在不改變原意的前提下進行了訂正和編輯。</p><p>非常感謝主辦方的邀請。這好像是我第一次在非學術會議上做分享。雖然現在是老師，但我以前也是程序員，所以也祝大家、祝我自己節日快樂！</p><p>今天，我想和大家分享的是智能體對科研的影響。</p><p>先做一個簡單的自我介紹。我在浙江大學完成本科和碩士學業，之後去美國讀博士，大約兩年前回國，加入西湖大學。</p><p>這張來自我個人主頁的圖，概括了我的研究方向。其中一個關鍵詞是 “高效” ，也就是 Efficient AI ；另一個方向是 AI Evaluation ，也就是 AI 評測 。</p><p>“高效”就是大家理解的降本增效。我們會從算法、模型、系統和硬件等不同層面入手，這些都是我們關注的方向。</p><p>提到 AI 評測，大家可能會想到：開發一個模型，用各種 Benchmark 測試、打分。這是它的一種表現形式。但從我的角度來看，我們還需要追問更底層的問題。</p><p>Efficient AI 研究的是：已經有了一個 AI 模型、算法或系統，怎樣讓它運行得更快、更高效。而 AI Evaluation 關注的是：為什麼我們認為一個系統比另一個系統更智能？我們到底觀察到了什麼，才可以得出這個結論？“更智能”究竟意味着什麼？</p><p>這就是我為實驗室規劃的兩個主要方向：一個讓 AI 系統運行得更高效，另一個試圖回答什麼是智能，以及如何度量智能。</p><p>今天的分享不會涉及太多技術細節。科研是一個非常大的領域，我很難憑個人經驗概括智能體對整個科研體系的影響。因此，這次分享 主要立足於計算機領域，尤其是我們作為 AI 研究者所感受到的變化 。</p><p>我會圍繞三個方面展開：什麼是智能體，它給科研帶來了哪些變化，以及面對這些變化，我們應該如何思考。</p><p>這是一個非常熱門的詞，但我們需要想一想，它最根本的特徵是什麼。我們經常説某一年是某項技術的“元年”，那麼，我們究竟看到了什麼變化，才認為自己進入了一個新時代？</p><p>Agent 這個詞並不只存在於 AI 或計算機領域，也不是一個新出現的技術詞彙。在哲學文獻中，它很早就已經被使用，但其含義與今天技術領域中的用法存在一些細微差別。</p><p>大家可以試着打開瀏覽器的無痕模式，搜索“Agent”，看看會出現什麼圖片。很多時候，搜索結果裏最多的是“特工”。</p><p>從詞源來看，Agent 的一個核心含義是“行動”，與 Action、Act 等詞有關。在哲學意義上，行動的發出者或主體，就可以被稱為 Agent。比如，我做出了某個行動，我就是這個行動的 Agent。</p><p>而在今天的討論中，大家更強調的是：它仍然要採取行動，但不是由我親自完成，而是由另一個主體替我完成。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/MbwRCg4cKC2f3bwv0Cpb?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI+科研：Agent加速科研，論文寫得快了，成果更難評了 ｜ 西湖大學工學院博導 王歡分享</li></ul>
+<p><a href="https://www.infoq.cn/article/MbwRCg4cKC2f3bwv0Cpb?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
