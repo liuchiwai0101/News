@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CI 出錯後，誰來把關？Buildkite 的智能體新思路</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>CI 出錯後，誰來把關？Buildkite 的智能體新思路</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/33/58/33191e4ceec0f3281c71cf930db15d58.jpg" alt=""></p><h3>正文</h3><p>持續集成服務提供商 Buildkite 推出了限定流水線作用域的密鑰，以及用於驗證流水線、診斷構建失敗和修復 Webhook 的新模型上下文協議（MCP）工具。該公司還為其 GitHub Actions 兼容層增加了 Linux arm64 支持，並擴展了 Buildkite Agent v4.1.0 中的 OpenTelemetry 數據。</p><p>新的密鑰視圖位於流水線設置中。工程師可以在此創建僅限當前流水線訪問的集群密鑰，而不必通過範圍更廣的集群界面管理每個密鑰。團隊還可以按分支、隊列、構建來源或構建創建者添加訪問條件。密鑰值在創建後仍會保持隱藏。</p><p>Matt Mejia 在 Buildkite 的 公告 中表示，這項改動“將流水線專用密鑰集中在一起”，同時顯示集群還管理着多少其他密鑰。用户需要同時擁有編輯該流水線和管理其所屬集群的權限。GitHub Actions 流水線在首次運行工作流之前，也會顯示一個指向密鑰配置的提示。</p><p>流水線密鑰是僅限當前流水線使用的集群密鑰，而分支、隊列、構建來源或創建者條件可以進一步縮小訪問範圍。</p><p>Buildkite CLI 現在包含用於遷移 GitHub Actions 密鑰的命令。3.59.1 版本修復了遷移過程中對相對工作流路徑的處理。Agent v4.0.9 還會在作業日誌中按前綴遮蓋 Buildkite 令牌，而 v4.0.8 會使用為作業註冊的密鑰遮蓋捕獲到的作業錯誤。</p><p>這些改動針對的是憑證可能暴露或配置錯誤的多個環節，但限定存儲作用域並不能消除控制密鑰在步驟中如何使用的必要性。 InfoQ 在 2025 年曾報道 ，HashiCorp 主張在開發者工具和 CI/CD 系統中採用預防優先的密鑰管理方式。Buildkite 自己的文檔也建議團隊只向需要密鑰的步驟提供密鑰。</p><p>功能變化最多的是 Buildkite 的開源 MCP 服務器。新的 validate_pipeline 工具會根據 Buildkite 的官方模式檢查流水線 YAML 的語法和結構，無須上傳文件或啓動構建。它會返回路徑和錯誤信息，供 AI 編碼智能體修正無效步驟。該檢查不涵蓋環境變量插值、插件配置、依賴引用或動態生成的步驟。</p><p>第二個工具 compare_builds 會將失敗的構建與同一分支上最近一次成功的構建，或另一個指定構建進行比較。它會報告哪些步驟是新出現的失敗、已恢復或仍然失敗，並列出運行時間和重試情況的變化。對於最多三個新失敗的步驟，它還會附上作業日誌的末尾內容，為智能體提供一些即時診斷信息。</p><p>此次 MCP 版本還增加了 Test Engine 執行軌跡和最慢執行項查詢。另一個工具 create_pipeline_webhook 可以為現有流水線補上缺失的 GitHub Webhook，無須重新創建流水線。1.23.0 版本修改了 create_pipeline ，要求調用方必須指定 create_webhook ；這是一項破壞性變更。</p><p>在進行評估後，Buildkite 恢復了此前的一項默認行為：失敗摘要現在再次包含那些從未運行的作業，因為將這一行為設為可選會導致智能體發起額外的工具調用。現在還可以通過將 Buildkite 組織添加到服務器 URL，把遠程 MCP 連接限定到單個組織。該選項適用於工具集 URL 和只讀 URL。</p><p>為智能體提供獨立的驗證、比較和修復工具，應能減少它們對解析完整日誌和組合底層 API 調用的依賴。權限仍然重要，因為修復 Webhook 和創建流水線都可能修改 CI 配置。InfoQ 對 GitHub 智能體工作流的 報道 介紹了一種相關的安全模型，其基礎是隔離執行、受限權限和可審計的操作。</p><p>Buildkite 的 GitHub Actions 兼容層現在可以在 Linux arm64 Agent 上運行導入器和生成的作業。 ubuntu-24.04-arm 等標籤需要顯式配置隊列映射，不會回退到 x86-64 或仿真運行。對於擁有 arm64 CI 集群的組織，這項功能使它們在將兼容的 Actions 工作流遷移到 Buildkite 時，能夠繼續使用這一架構。</p><p>其他兼容性修復解決了服務容器配置中的環境值、命名密鑰、運行時變量和矩陣值問題。Buildkite 還向作業和步驟表達式開放了更多 strategy.* 值。路徑過濾器使用的變更文件數量上限從 300 提高到 3000，同時修復了原始推送後分支發生移動時的推送工作流問題。</p><p>Agent v4.1.0 在 Buildkite 遙測數據中增加了緩存保存和恢復的耗時及大小。OpenTelemetry 作業跨度現在包含提交、拉取請求和構建發起者信息。這些字段為團隊調查慢作業或重試模式提供了更多上下文。Pinterest 此前曾介紹 如何結合 Honeycomb 與 Buildkite ，區分 Agent 等待時間和腳本執行時間，並找出導致構建耗時激增的作業。</p><p>配套的 Elastic CI Stack v7 版本在 AWS 上的 Linux 和 Windows 實例中引入了 Agent v4。它移除了對 Agent v3 的支持，並停用或替換了部分追蹤和取消操作參數。Buildkite 建議用户在升級前檢查自定義參數文件、部署自動化配置，以及通過 AgentEnvFileUrl 提供的值。所有 Agent v3 版本的支持將於 2027 年 9 月 3 日結束。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/WmlATgJudjwPKqHf4QgX?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：CI 出錯後，誰來把關？Buildkite 的智能體新思路</li></ul>
+<p><a href="https://www.infoq.cn/article/WmlATgJudjwPKqHf4QgX?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
