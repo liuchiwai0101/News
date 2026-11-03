@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>月之暗面 Kimi 發佈遊戲開發與創意工作解決方案：AI 可直接操作 Unity、虛幻引擎等</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>月之暗面 Kimi 發佈遊戲開發與創意工作解決方案：AI 可直接操作 Unity、虛幻引擎等</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/11/be00cfaf-7729-4e3b-9f75-bc670c7718b7.png?x-bce-process=image/format,f_auto" alt=""></p><h3>正文</h3><p>10 月 23 日上午，Kimi 官方在 X 和視頻號上發了一段 24 秒的視頻。</p><p>畫面裏是一台復古風格的老式電腦，屏幕上開着 Kimi Code，終端裏一行行地寫着 Three.js 代碼，在生成一個複雜的 3D 場景。眼尖的網友很快在左上角的模型欄裏找到了答案——「Model: Kimi K3.1」。</p><p>用一台老古董般的機器，跑一段今天最前沿的 3D 代碼，這個反差本身就是月之暗面想説的話。</p><p>十幾個小時後，10 月 24 日零點剛過，卡着程序員節，Kimi K3.1 Pro 正式上線，同步推出的還有一個速度快 2 到 3 倍的 Highspeed 版本。官方承諾，完整模型權重將在 11 月 4 日前放出。</p><p>距離上一代 K3 發佈，過去了三個多月。這三個月裏，月之暗面經歷的事情，比大多數公司一年還多。</p><p>它不是一個全新的模型。月之暗面明確表示，K3.1 Pro 是 K3 的後訓練版本，底座沒換——仍然是 2.8 萬億總參數、1040 億激活參數的混合專家架構，仍然是 100 萬 token 的上下文窗口，仍然原生支持圖像和視頻輸入。</p><p>變的是後訓練。官方的説法是投入了「大幅增加的後訓練算力」，在數百個下游領域做了大規模聯合強化學習，為此把強化學習框架、沙箱基礎設施、長上下文推理這些底層工程都重構了一遍。</p><p>效果體現在榜單上。在考察編程智能體的 Terminal-Bench 4.0 上，K3.1 Pro 拿到 65.7%，超過 GPT-6 Astra 的 58.2%，和 Claude Opus 5.5 的 66.4% 只差不到一個點。上一代 K3 在這個榜單上的成績，按第三方機構 Artificial Analysis 的測法只有 13%。</p><p>第三方的綜合評分也給了面子。 Artificial Analysis 智能指數上，K3.1 Pro 拿到 55 分，比 K3 高出 11 分，排名全球第四，前面只有 Claude Opus 5.5、Claude Sonnet 5.5 和 Muse Wonder Full 。等權重正式放出，它將成為得分最高的開放權重模型，開源與閉源之間的差距會從 12 分縮小到 3 分。</p><p>K3.1 Pro 在 14 項編程、科學與知識工作評測上的表現｜圖片來源：Kimi 官方博客</p><p>K3.1 Pro 能驅動 Unity、Unreal、Godot 這樣的遊戲引擎，能寫 Blender 和 CAD 腳本做參數化建模。在從多視角圖片重建 3D 模型的 BenchCAD 測試裏，它藉助工具拿到 92.7%，接近 Opus 5.5 和 Astra。Kimi 網頁版和 App 也同步上線了「3D Make」，可以直接描述需求，生成 3D 網頁、3D 模型，甚至導出給 3D 打印機。</p><p>回頭再看那段預熱視頻，老電腦屏幕上跑的 Three.js，其實就是在給這條主線打預告。</p><p>金融方面，K3.1 Pro 在基於真實財報做多步數值推理的 OfficeQA Pro v2 上拿到 64.4 分，官方稱是目前最好成績。在官方自己設計的高難度幻覺測試裏，事實性錯誤率從 K3 的 23.4% 降到了 8.3%——當然，這是一個刻意找茬的壓力測試，不代表日常使用的錯誤率。</p><p>K3.1 Pro 的 API 定價是每百萬 token 輸入 13 元、輸出 68 元，比 K3 便宜了三分之一，大約是 Claude Opus 5.5 的一半。 更強的新模型反而比舊模型便宜，這在大模型行業並不常見。</p><p>不過 Artificial Analysis 也算了一筆賬，K3.1 Pro 完成同樣任務要多用 14% 的輸出 token，所以每個任務的實際成本大約 1.98 美元，和 K3 基本持平。</p><p>好評集中在「幹活」上。知乎上有開發者拿自己一個 Rust、C、彙編、CMake 混合的項目測試，認為 K3.1 Pro 的代碼能力明顯強過 DeepSeek V4.1 Flash，尤其對 Rust 常見設計模式掌握得更好，還順手修掉了 DeepSeek 前幾天留下的問題。同樣的任務，K3.1 Pro 花了 20 分鐘，換成 K3 估計要 40 分鐘到 1 個小時。</p><p>速度是另一個被反覆提到的改進。K3 的慢曾經是出了名的，有人形容慢到「可以流暢閲讀它的英文思考過程」。到了 K3.1 Pro，思考過程大多一閃而過，來不及看就被摺疊了。</p><p>有論壇用户用自己的私有題目做了一輪單文件 HTML 測試：雲上龍城、琉璃機械孔雀、鑽石。結論相當不客氣，認為 K3.1 Pro 在已測模型裏排在倒數，孔雀羽毛的高光甚至被畫到了羽毛背後。另一位開發者讓它根據參考照片用 Three.js 還原一個 Steam 手柄，改了三輪，LOGO 和部件的空間關係還是不對。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/021/539.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：月之暗面 Kimi 發佈遊戲開發與創意工作解決方案：AI 可直接操作 Unity、虛幻引擎等</li></ul>
+<p><a href="https://www.ithome.com/1/021/539.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

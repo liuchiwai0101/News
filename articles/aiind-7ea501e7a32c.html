@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌寧願少賣雲算力，也要先把算力留給 Gemini：皮查伊罕見長訪談，披露 AI 自我改進與算力爭奪內幕</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌寧願少賣雲算力，也要先把算力留給 Gemini：皮查伊罕見長訪談，披露 AI 自我改進與算力爭奪內幕</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/6b/e1/6be7128c95706f634144f6367390cbe1.png" alt=""></p><h3>正文</h3><p>10 月初，知名 AI 科技博主 Matthew Berman 在 X 上留下這句驚歎，將一款名為 REA（Reverse Engineer Anything）的開源逆向分析工具推上了風口浪尖。</p><p>REA（Reverse Engineer Anything）是 10 月 GitHub 上最熱的項目之一，它的可怕之處在於， 它為 AI Agent 賦予了“反彙編”的視野，將 AI 編程的目標直接擴展到了現成軟件。 它把二進制、應用與運行行為的分析能力，通過統一接口交給 Agent：原生程序可接 Ghidra、IDA、Hopper 等引擎，網頁則可檢查結構、腳本、網絡與截圖。分析結果附帶證據和已知限制，供模型追查。</p><p>它吸引人的地方，是把研究現成軟件接進了編碼會話，使開發者看到一個功能，可以要求 Agent 調查組件與（雷峯網 (公眾號：雷峯網) ）行為，再把發現寫進實現規格。這使得過去要人工來回傳遞的材料，在現在有機會在同一任務裏繼續使用。</p><p>這極大地降低了逆向工程的門檻。10 月 16 日，Perplexity 聯合創始人兼 CEO Aravind Srinivas 宣佈把 REA Skill 集成進 Computer，並給出體驗額度，這使得逆向分析開始被當作 Agent 產品的功能之一；緊接着就有開發者演示如何用 Codex 與 REA 重建了功能接近完整的 Claude Slides 編輯器。</p><p>狂歡之中也不乏冷水。有媒體和行業觀察者尖鋭地指出： 查出線索，和完美重建一個能長期維護的軟件，中間還隔着一條巨大的鴻溝。 這會不會又是一場“AI 幻覺”？</p><p>面對爭議，我們必須意識到一個工程真相： 用工具找線索，和用代碼重建系統，從來都不是一回事。</p><p>REA 就像是一台強悍的“X光機”，它能把現有軟件的骨架照得一清二楚，把數以萬計的 DOM 節點、零散的 API 接口以及雜亂的底層腳本，一股腦地堆在你面前。但這充其量只是一份未經修飾、且可能充滿陷阱的“建築圖紙”。</p><p>面對如此龐大的上下文信息，究竟能把圖紙一比一還原成運轉精密的“摩天大樓”，還是草草蓋出一個只剩空殼的“漏風茅草屋”？ 這一切，完全取決於負責幹活的“施工隊”，也就是大模型本身在長文本信息過濾、代碼架構理解以及多步邏輯推演上的硬實力。 工具再神，終究還得看背後是哪顆“大腦”在操盤。</p><p>恰逢此時，沉寂了一段時間的 Google 帶着新一代旗艦推理模型 Gemini 4 Argon 重磅迴歸。這款模型毫不掩飾其野心，將矛頭直指複雜軟件工程、專業知識工作和需要連續調用工具的長程 Agent 任務；而在國產大模型陣營中，GLM 5.3 近期同樣在代碼生成與長上下文處理上展現出了極強的統治力。</p><p>一邊是爆火出圈的逆向“神器”，一邊是宣稱代碼智商大幅躍升的中外頂級大模型。</p><p>如果把同樣的圖紙交給它們，會發生什麼？帶着這個問題， 我們在 OpenCode 中配合 REA 與 Reverse-skill，讓 Gemini 4 Argon 和 GLM 5.3 分別拆解、復刻故宮博物院的線上名畫鑑賞平台“故宮名畫記”。</p><p>這個網站不僅收錄了上千幅古代繪畫，還支持高清縮放、作品篩選和詳細信息查看，並不只是一個簡單的圖片展示頁面。</p><p>REA 與 Argon 的交匯，讓 AI 編程多了一項應用場景：調查現成軟件、重建已有功能。 同時，這也將進一步改變行業分工：軟件公司的競爭壓力會進一步落到數據、服務和持續維護上；模型廠商則必須證明，自己的模型能把分析線索變成可靠交付 。</p><p>本次測試的對象鎖定在故宮名畫記，核心是讓模型逆向復刻該網站的作品展示功能，同時，不涉及登錄、收藏提交、評論和完整標註服務。在名畫記的原始網站裏，作品列表有朝代、作者、流派和題材篩選，點擊作品可以進入詳情，打開詳情頁；進入其中，縮放、拖動、導航圖和信息面板，都需要在連續操作後保持合理狀態。</p><p>為了更直觀地觀察模型的能力， 我們選擇 GLM 5.3 作為 Gemini 4 Argon 的對照模型 ，讓兩個模型都使用 REA 對站點的功能進行觀察和分析，然後使用 Reverse-skill 對站點進行逆向還原，最後讓模型完成測試後給出複製版的名畫記網站。</p><p>先看 Gemini 4 Argon 駕馭 REA 的表現。從首頁截圖來看，它保住了名畫記的頁面骨架，與官方一致的地方包括三列作品佈局、四項篩選、清空選項、作品題名、作者與尺寸信息。頁頭紋理被簡化，字體與留白也有差別，但頁面的主次關係沒有被重新安排。</p><p>進一步，從下圖可以看出，對比左側的原站，右側復刻版本的頂部導航、篩選區和卡片文字的位置基本一一對應。儘管圖片換成了幾何圖案，但仍能看出模型在沿用原站的結構，而非另做一個通用畫廊。</p><p>Gemini 4 Argon 復刻版本與原站對比（左側：原站，右側：復刻版）</p><p>進入詳情頁，復刻版也保留了頂部橫幅、居中作品信息、查看細節入口與相關推薦。不過，從細節來看，按鈕和文字樣式沒有完全對齊，復刻版大致還原來原站的功能設計和內容，但細節上沒有做到完全一致。</p><p>Gemini 4 Argon 復刻版本與原站在作品詳情頁對比（左側：原站，右側：復刻版 ）</p><p>整體來看，Gemini 4 Argon 組合，很好地完成了對名畫記站點中作品展示功能的復刻，核心功能和細節設計都有對應。</p><p>作為對照組的 GLM 5.3 同樣做出了“作品列表—詳情—看畫”的瀏覽路徑，但列表一打開，復刻方向略有不同：三列卡片變成四列，淺色頁面鋪成棕色，原站的大塊篩選區消失了。意外的是，模型在頁頭明確註明這是使用本地測試圖的最小瀏覽流程版本。</p><p>進一步對比原站可以發現，四項篩選、頂部入口、卡片收藏圖標都未出現在對應位置，GLM 5.3 的復刻版本顯然對站點的結構作出了極大的改變。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/JmVl0yY2RYIBNpuD0xuu?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌寧願少賣雲算力，也要先把算力留給 Gemini：皮查伊罕見長訪談，披露 AI 自我改進與算力爭奪內幕</li></ul>
+<p><a href="https://www.infoq.cn/article/JmVl0yY2RYIBNpuD0xuu?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
