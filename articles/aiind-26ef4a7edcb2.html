@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 改變的是數據接口，而不是查詢引擎</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI 改變的是數據接口，而不是查詢引擎</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/98/06/9842bf34361ff907ac155b198262c806.jpg" alt=""></p><h3>正文</h3><p>AI 智能體如今可以生成分析代碼、從對象存儲讀取文件，並將運維數據轉為結構化報告。這是否意味着數據湖、湖倉一體和 SQL 引擎已經過時？我們在對一場大型容災演練做自動化分析時遇到了這個問題。我們最初的可行方案是：將 30 秒粒度的服務指標以 Parquet 格式存入兼容 S3 的對象存儲，使用 DuckDB 進行確定性聚合，再由 AI 智能體對故障轉移結果進行分類並給出證據説明。這個原型在沒有共享湖倉的情況下也能工作，但並不是因為查詢引擎消失了。恰恰相反，引擎變成了嵌入在智能體工作流內部的組件。本文將講解這個架構，介紹確定性計算與概率性推理之間的實用劃分，並給出四個判斷依據，用來決定什麼時候用嵌入式引擎就足夠，什麼時候需要託管湖倉。</p><p>原型跑通之後才出現的問題 這個問題並不是頭腦風暴空想出來的，而是在一個真實工作流成功產出第一份報告之後出現的。當時我們正在分析一次容災隔離演練。演練中，一個區域被有意隔離，流量預期會轉移到倖存區域。對每一個服務，我們都需要回答三個問題：</p><p>我們以 30 秒粒度導出服務指標，存為 Parquet 文件放到兼容 S3 的對象存儲中，然後讓 AI 智能體生成結構化分析報告。當這個工作流端到端跑通後，一個誘人的想法就出現了：</p><p>既然智能體能從對象存儲讀取文件並給出答案，那為什麼我們還需要表、目錄、湖倉或 SQL？</p><p>這個問題聽起來合乎情理，因為面向用户的交互方式已經變了。工程師不再需要打開儀表盤或者手寫查詢，而是直接讓智能體分析演練數據。智能體會識別相關數據，按需生成 DuckDB SQL 或者 Python 代碼，通過確定性工具執行分析，再解釋發生了什麼。舉個例子，為了驗證流量是否在故障轉移時從 A 區轉移到了 B 區，智能體會針對預設的表集合與時間範圍生成一條只讀的 DuckDB 查詢。執行前，這條查詢會經過白名單校驗，僅允許訪問許可的數據集與操作，隨後在沙箱分析運行時中執行。運行時返回結構化查詢結果，再由確定性應用代碼規整成事實數據包，裏面包含分區域流量、時間戳、變化百分比等字段。一條簡化的示例查詢如下：</p><p>在這個簡化示例裏，智能體只負責生成分析查詢。確定性校驗層會在執行前攔截對白名單外的表或非只讀操作的訪問。查詢在沙箱環境運行後，返回的數據行會由應用代碼轉換成結構化事實數據包。大模型拿到的是這個數據包（例如 A 區、B 區的請求量），而不是由模型自己編造或直接估算這些數值。</p><p>為什麼容災分析不只是簡單掃描指標 容災分析的難點不在於檢索時序數據，而在於判斷這個時間序列意味着什麼。假設 A 區被隔離，B 區保持正常，一次健康的故障轉移應該產生一個可識別的序列：</p><p>每一個結論都需要上下文支撐。QPS 上升不等於故障轉移成功，漲幅可能不足以承接隔離區域流失的流量。成功率下降也不代表容災失敗，指標裏可能包含預期內的業務拒絕請求。切換瞬間的延遲尖峯也可能無害，只要系統能快速回到穩態。因此我們設置了兩組基線和一個穩態窗口：</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/fvNWWYEmke5xJVsHEIIi?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI 改變的是數據接口，而不是查詢引擎</li></ul>
+<p><a href="https://www.infoq.cn/article/fvNWWYEmke5xJVsHEIIi?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

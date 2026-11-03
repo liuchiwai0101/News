@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 復刻 Adobe 系列軟件開發者坦言：項目遠未準備就緒</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI 復刻 Adobe 系列軟件開發者坦言：項目遠未準備就緒</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/88/yy/882bfbee93ae3287a085f09807d391yy.jpg" alt=""></p><h3>正文</h3><p>Brandon Thomas 把他用 AI 構建的七款 Adobe 應用 開源替代項目 發到了 Hacker News 上，但立刻又給它潑了冷水。“我還沒準備好把這個發到 HN 上，”他寫道，“離可讀還差得很遠。”他表示等項目結束 Beta 測試階段後會再發一次。</p><p>幾天前，五個 Reddit 子版塊都發布了 預告帖 ，傳遞的信息卻截然不同，稱項目即將進入 Beta 階段，有望在一個月內實現近乎 100% 的功能對齊。而代碼庫的説明與 Hacker News 上的説法一致。</p><p>PhotoCraft 的 ROADMAP.md （更新於 10 月 11 日）顯示，功能覆蓋度約為 76%，具體為：628 個菜單已全部完成（628/628）、68 個工具完成 56 個、35 個面板完成 30 個、31 種格式完成 13 種加 4 種待完善。另一組評估數據：面向正式工作的可用度約 45%；專業使用者體驗得分 43%；只使用核心功能的用户體驗得分 61%。距離 Beta 階段還需 1100 到 1800 小時，達到功能完全對等還需 2300 到 4100 小時——按一個智能體順序工作的 Claude Opus 5.5 實際耗時計算。目標被精確鎖定為：Photoshop 2026，版本 27.11.0，以 10 月 10 日本地安裝的原版程序作為參照基準。</p><p>PhotoCraft 截圖：這款開源版 Photoshop 替代品正在編輯一幅葛飾北齋版畫，層面板裏可見調整圖層、文字圖層與形狀圖層。（來源： GitHub ）</p><p>路線圖中對項目為何仍處於 Alpha 階段的自我剖析，比外界批評還要嚴苛。0.5 和 0.6 版本的用户已提交 579 個未解決的問題，25 項性能指標中有 22 項未達標，而且“我們生成的 PSD 文件尚無法被 Photoshop 穩定正常打開”。對於一款旨在取代 Photoshop 的軟件來説，文件互通性可不是可以忽略的小問題。</p><p>但項目體量是實打實的，首次提交於 9 月 30 日，最新提交為 10 月 13 日。短短 14 天內，代碼庫累計有 2152 次代碼提交、1004 個合併的 PR，1306 個文件，合計 539017 行 Rust 代碼。Git 記錄裏有 317 個不同貢獻者身份，因此“獨立開發者”的説法幾乎從一開始就不成立了。Claude 作為提交作者出現了 277 次。</p><p>安裝過這些應用的用户，反饋分化情況和路線圖的評估一致。Reddit 用户 Painted-Arcana 直接對這款 Photoshop 復刻版提出批評：</p><p>很糟糕。你甚至不能通過按 Alt 鍵來使用吸管工具。除了幾個靜態預設之外，你根本無法修改佈局。我還能列出一堆問題，但只用了 2 分鐘就很清楚，它根本沒法替代 Photoshop。</p><p>攝影師們主要吐槽 RAW 處理流程。用户 Sea-Temporary-6995 反饋，打開索尼 a7c 的文件提亮陰影時會出現噪點和色帶；用户 OspreyChaser 表示多款尼康機型的 RAW 文件無法識別。最簡單的一款應用則表現最好：Hacker News 用户 Krasnol 反饋 PDFCraft 運行無缺陷。</p><p>大部分報道很少提到代碼庫裏寫了多少開發規範。 AGENTS.md 裏有一條淨室規則：團隊“僅研究 Photoshop 及其他專有編輯器的行為和外觀”，不復制代碼、着色器、配置文件或資源，而是“基於公開規範（Adobe PSD 規範、ICC、ISO 32000 混合模式、論文）和實際的觀察”來實現。每個變更都要通過測試， panic_hunt 模糊測試會用異常參數遍歷所有命令；格式兼容性會用一套 Photoshop 原生生成的 PSD 測試集 來校驗。這些應用還公開了一個 JSON 控制通道和一個 MCP 服務器，這樣編碼智能體就能驅動正在運行的應用並截圖，以便自檢界面效果。</p><p>正是這種開發方式引發了爭議。用户 kmeisthax 直言：“根本不存在什麼潔淨室式的 Vibe Coding。”潔淨室開發規範要求有兩個完全隔離的團隊：一個負責撰寫規範，另一個在看不到原版代碼的前提下實現功能。</p><p>最公允的評價來自另一個做同類項目的開發者。用户 az_liberal_geek 正在開發 Hew，用 Claude 打造開源版 SketchUp 替代品：</p><p>Hew 的第一個版本出來得很快，觀感和基礎功能都很不錯，但 Bug 也很多，會以意想不到的方式失敗。添加一個大功能需要先寫提示詞，再加上幾個小時的 Claude 開發時間，然後我自己再花更多時間進行測試和打磨。</p><p>他認為達到功能對等需要一年時間，而不是一個月。這個代碼庫自身的預估時間也接近這個區間。</p><p>Thomas 之後也調整了對外説法，他在 Hacker News 上表示：“實現 99% 功能對齊還需要一段時間，但我確信是以月為單位，而不是以年。”</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/a2X4KVOXOt6lACRv8IWh?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI 復刻 Adobe 系列軟件開發者坦言：項目遠未準備就緒</li></ul>
+<p><a href="https://www.infoq.cn/article/a2X4KVOXOt6lACRv8IWh?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
