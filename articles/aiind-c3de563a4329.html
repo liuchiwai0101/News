@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Harbor 新增 Docker Sandboxes 支持，可在隔離的 MicroVM 中運行可重現的 AI 代理評估</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Harbor 新增 Docker Sandboxes 支持，可在隔離的 MicroVM 中運行可重現的 AI 代理評估</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/4e/8a/4e203930616e7b391750f7f1f477e58a.jpg" alt=""></p><h3>正文</h3><p>Docker 宣佈 ，開源代理評估框架 Harbor 現已支持 Docker Sandboxes 。這一變更使得每個評估任務都能在各自的微虛擬機（ microVM ）中運行。因此，各評估任務不再共享同一個容器，而是隔離的環境中運行，從而提升了性能。這些任務既可以在本地運行，也可以在 Docker Cloud Sandboxes 中運行。Docker 表示，他們已在雲端對 Harbor 做了 64 個併發任務的測試。</p><p>評估編程代理意味着允許其安裝軟件包、編輯文件並執行命令，而基準測試會重複執行這些操作數千次。Docker 工程師將此描述為大規模運行由 AI 編寫的不可信代碼。他們還特別指出了“獎勵破解”現象：代理通過篡改測試或覆蓋記錄其分數的文件來獲得及格分數，而非真正地完成任務。Harbor 負責協調管理工作，包括運行任務、收集分數和記錄日誌。它還支持 Terminal-Bench 等基準測試，並且需要一個既隔離又一致的執行環境。</p><p>每個任務都在 Docker Sandbox 中運行，這是一種擁有獨立內核的微虛擬機，因此，編碼代理的活動僅限於虛擬機內部，不會觸及主機、其他任務或任何環境外的內容。在 Docker Cloud Sandboxes 中，可配置的網絡策略允許任務在設置期間拉取依賴項，並在隨後的代理運行期間限制其互聯網訪問。然後，每個代理都會在相同的網絡條件下接受評估，從而解決了通常會導致結果無法復現的問題。由於支持 Docker Compose，Harbor 可以在單個雲沙箱內運行多容器任務，讓服務和邊車（sidecars）共享同一個微虛擬機。</p><p>該公告未包含有關啓動開銷、每項任務成本或評估分數波動的基準數據。唯一一個具體的規模數據是 Docker 在 Cloud Sandboxes 上測試的 64 個併發任務。如果需要更高的上限，可以通過 Docker 的官方聯繫渠道提出申請。對每項任務的延遲或成本較為敏感的團隊需要自行進行度量。</p><p>目前，該集成功能已經在 Docker Sandboxes 的夜間構建版本中提供。Docker 表示，該功能已於 10 月 23 日進入穩定版。Harbor 可以通過 sbx 擴展進行安裝，夜間構建版本固定為 0.24.1.dev202610150414。在雲端運行需要一個已啓用雲端訪問權限的 Docker 賬户。你還需要一個具有 Cloud Sandboxes 權限的個人訪問令牌。Harbor 會從 SBX_DOCKER_USERNAME 和 SBX_DOCKER_PAT 環境變量中讀取這些信息。運行時，可以通過 -e sbx 標誌選擇沙箱環境，例如：harbor run -t hello-world/hello-world -a oracle -e sbx。根據公告，本地選項是免費的，而云端擴展則取決於 Docker 的 Cloud Sandboxes 服務。</p><p>已經使用 Harbor 的團隊可以立即在夜間構建版本上嘗試這項集成，或者等到 10 月 23 日穩定版本發佈。本地運行需要在 sbx login 後通過 Docker Sandboxes CLI 進行，並在 Harbor 命令中添加 --ek target=local 參數。目前，本地集成僅支持公共模式和無網絡模式，具體取決於機器現有的沙箱策略。用於保障評測公平性的細粒度網絡策略僅與雲沙箱深度綁定，因此，需要此類控制的團隊應規劃採用雲端方案。網絡限制消除了一條作弊途徑，但本文並未説明如何防止沙箱內的獎勵破解行為，例如代理修改其可寫入的測試文件。Harbor 和 Docker Sandboxes 的文檔介紹了預集成的沙箱設置。</p><p>Docker 與 Harbor 的集成進一步豐富了該框架日益擴大的沙箱後端列表，同時也進一步拓展了 Docker Sandboxes 可集成的智能代理運行時的範圍。</p><p>在 Harbor 方面，該框架展示了與雲沙箱提供商的水平擴展集成，其中包括 Daytona、Modal、E2B、Runloop、Tensorlake、LangSmith、Blaxel、Novita Sandbox、EC2 和 Beam。要了解更多詳細信息，可以查看其 GitHub 倉庫 。在 Docker 之前，最新支持的是 LangSmith 沙箱。通過安裝 langsmith 擴展，你可以在 LangSmith 的生產沙箱中運行評估任務。其操作界面與 Daytona、E2B 或 Modal 完全一致。要了解更多詳情，請參閲 Towards AI 。 Harbor 的雲部署文檔 建議將 Daytona 作為最佳選擇。Daytona 支持通過 docker-compose.yaml 文件進行多容器部署。相比之下，Modal、E2B 和 Runloop 並不支持此項功能。</p><p>除了 Harbor 之外，Docker 還一直在將沙箱部署到其他代理平台中。NanoCo 與 Docker 已經達成合作。現在，你只需要一條命令，就可以在 Docker 的 MicroVM 沙箱中部署基於 Claw 的代理平台 NanoClaw。該信息來自 DevOps Digest 。2026 年 7 月，GitHub Agentic Workflows 將 Docker Sandboxes 添加到受支持的代理運行時列表中。該功能隨 gh-aw 0.82.9 版本發佈。 Docker 的操作指南 指出，該沙箱擁有獨立的 Docker 守護進程。這種配置使代理能夠運行基於 Testcontainers 的集成測試，而無需掛載 Host Docker Socket。Harbor 集成基於 9 月 24 日發佈的 Cloud Sandboxes 功能 。此次發佈將本地沙箱隔離擴展到了 Docker 管理的雲基礎設施。現在，即使筆記本電腦關機，代理工作流也能繼續運行。對於此次發佈，有 第三方報道 稱，默認會話時長為 1 小時，最長可達 24 小時，而且已暫停的沙箱不會產生計算費用。此次發佈還推出了以 OCI 鏡像形式打包的 Kits。而且，Docker 已承諾將 Kits 規範提交給 CNCF。NanoClaw 與 Docker Sandboxes 集成參見 這裏 。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/pgmES06L2MAH2TCSMhJ9?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Harbor 新增 Docker Sandboxes 支持，可在隔離的 MicroVM 中運行可重現的 AI 代理評估</li></ul>
+<p><a href="https://www.infoq.cn/article/pgmES06L2MAH2TCSMhJ9?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

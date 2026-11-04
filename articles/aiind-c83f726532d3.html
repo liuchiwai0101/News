@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>研究發現：AI 生成代碼受下游環節瓶頸制約，無法提升整體生產力</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>研究發現：AI 生成代碼受下游環節瓶頸制約，無法提升整體生產力</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/3f/7c/3f58986db7124yy775a0bed1f1006f7c.jpg" alt=""></p><h3>正文</h3><p>哈佛大學近期針對 718 家企業開展的一項研究 藉助了 Jellyfish 分析平台，研究發現：儘管 AI 編程助手與智能體能夠提升代碼產出量，但並不會轉化為完工工作量的同步增長，部分原因在於 AI 生成的代碼加大了開發後期的工作量，尤其是代碼評審環節。</p><p>研究數據的時段為 2021 年 1 月至 2026 年 3 月，覆蓋 700 餘家企業、70 萬名員工，合計約 3 億個工作事件。數據來源於多個渠道，包括人力資源信息、代碼版本控制系統、工單管理系統、谷歌日曆等日程工具，以及 GitHub Copilot、Cursor、Claude Code 等生成式 AI 工具。</p><p>研究人員採用三項指標衡量編碼產出：新增代碼行數、代碼提交記錄、合併請求。</p><p>AI 助手只會小幅提升編碼產出：代碼行數增加 12%，提交記錄增加 9%，合併請求增加 5%；其中僅提交記錄的增加具有統計顯著性。AI 智能體則能在三項指標上帶來顯著的大幅增長：代碼行數增加 30%，提交記錄增加 20%，合併請求增加 23%。</p><p>論文作者基於上述數據，以每名工程師每月解決的 Jira 工單和大型需求數量評估軟件交付成果；工單被視為獨立的工程任務單元，大型需求對應規模更大的項目或功能。研究發現，編程助手並沒有提升工單解決數量，而 AI 智能體帶來了 12% 的增長，但增幅遠低於代碼行數 30% 的預估漲幅。</p><p>為解釋這一落差，研究團隊考察了完整開發流程——編碼之外還包含多個環節：功能與範圍規劃、代碼評審、測試和部署。</p><p>我們基於 Jellyfish 數據推算工時分配，並通過面向 100 名 Prolific 平台工程師的調研驗證推算結果：工程師僅將 30% 至 40% 的時間用於寫代碼，其餘時間都投入到配套的任務中。當 AI 提升編碼效率時，後續配套任務就可能成為瓶頸。</p><p>具體來看，合併請求的平均評審時長增加了 49%，單條合併請求的評論數量增加了 53%，需要修改的合併請求佔比翻了一倍。除此之外，參與代碼評審的人員佔比增加了 14%，即便引入 AI 輔助評審也沒有改善這一狀況。作者同時指出，合併請求相關工作量上漲並不能用單次合併請求體量變大來解釋。</p><p>Reddit 用户 Prime_1 在評論這項研究結果時表示：“每一行代碼都是潛在風險”。用户 markehammons 進一步延伸了這個觀點， 強調了 AI 幻覺帶來的額外風險 ：</p><p>當你面對一個不可靠的合作對象時，風險更是加倍，而智能體比大多數合作對象都更不可靠。它們可能在毫無惡意的情況下做出最糟糕的事情，只是一心想要完成指派任務，卻會做出各種離譜的操作。</p><p>Reddit 用户 enigmamonkey 還進一步提出， 故障平均恢復時長 或許會成為評估 AI 對軟件開發影響的一項愈發重要的指標：</p><p>如果工程師對自己交付的代碼的編寫量越來越少、理解也越來越淺，我猜想故障會變得更加頻繁，排查修復也更加困難。尤其是代碼庫持續擴張的時候——而代碼庫必然會擴張。</p><p>Jellyfish 是一家軟件公司，提供用於衡量和分析軟件工程績效的平台。它接入了來自 GitHub 和 Jira 等工具的數據，幫助企業瞭解開發者生產力和軟件交付情況。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/c3vTLNrRwfCzw8SAmz90?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：研究發現：AI 生成代碼受下游環節瓶頸制約，無法提升整體生產力</li></ul>
+<p><a href="https://www.infoq.cn/article/c3vTLNrRwfCzw8SAmz90?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
