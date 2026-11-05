@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>百度開源文心5.5 Flash Base，多基準測試刷新同尺寸模型 SOTA</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>百度開源文心5.5 Flash Base，多基準測試刷新同尺寸模型 SOTA</h1>
+<div class="notice">內容機器翻譯自第三方媒體（量子位 · 雷峯網），僅供參考，以原文為準。</div><p><img src="https://static.leiphone.com/uploads/new/images/20261105/6aec27bc80709.png?imageView2/2/w/740" alt=""></p><h3>正文</h3><p>11月5日，百度正式開源最新基座模型文心5.5 Flash Base（ERNIE 5.5 Flash Base）。模型採用MoE架構，總參數量2800億，每個 Token 激活140億參數，使用33.5萬億個 Token 完成預訓練，預訓練上下文長度最高達128K，微調與推理階段支持最長100萬 Token上下文。在知識、推理、數學、代碼、多語言和長上下文等多個基準測試中取得同尺寸模型 SOTA 表現，超過 DeepSeek-V4-Flash-Base、Hy3-preview-Base、MiMo-V2.5-Base 等模型。</p><p>隨着大模型應用從文本問答向長文檔分析、多輪交互和智能體任務延伸，模型需要處理的信息量持續增加，計算和顯存開銷也隨之上升。在保證模型能力的同時提高資源利用效率，已成為大模型研發的重要課題。</p><p>文心 5.5 Flash Base圍繞“效率”這一設計主線，在注意力機制、專家路由及訓練機制等關鍵環節進行系統性優化，並實現了多項算法創新。</p><p>在注意力機制上，文心提出 Latent-Gated Sparse Attention ，將混合稀疏注意力、低秩門控注意力與虛擬頭注意力結合起來。其中，模型通過組合HCA與MLA，讓不同注意力層分別承擔壓縮歷史信息和細粒度訪問歷史位置的任務；低秩門控注意力（Low-Rank Gated Attention）則利用已有的低維表示計算信息門控，使門控投影權重參數減少75%；此外，虛擬頭注意力（Virtual Head Attention，VHA）可提升模型表達力與訓練質量，推理時融合進注意力算子，開銷極小。這些設計降低了長上下文處理的資源開銷，同時保留模型對關鍵信息的處理能力。</p><p>在專家路由上，模型採用 Multi-Router Latent MoE ，由多個獨立路由器共同參與專家選擇，改善路由評分與專家實際效用之間的相關性。相比依賴單一路由器的傳統方案，該設計旨在降低單一評分偏差對專家選擇的影響，同時保持激活專家數量、專家計算量和通信量不變。在訓練目標上，模型引入 ECHO ，無需額外增加 MTP 模塊（Multi-Token Prediction），而是複用主幹最後一層，讓主幹自身學習預測後續 token，從而提前規劃序列走向，有效提升推理與代碼能力。文心5.5 Flash 僅採用單步 ECHO 預訓練，複用的最後一層還可作為投機解碼的草稿模型，展現出多步外推能力：同樣只訓練一步，多步起草質量大幅優於輔助 MTP 模塊。</p><p>除模型架構外，大模型基建創新也十分重要。文心對分佈式Muon優化器進行了優化，並推出面向大 head dim 的注意力算子 FlashMask-4，改善大規模訓練中的通信、顯存利用與計算效率。模型能力的提升不僅依賴算法本身，也與訓練系統能否高效支撐這些設計密切相關。</p><p>基座模型不僅承載着預訓練階段形成的通用能力，也是下游模型開發與應用創新的重要基礎。與面向終端用户的應用模型不同，Base 模型為開發者和企業提供了進一步微調與定製的空間，可基於自身業務需求構建適應不同場景的專業模型與應用。開放基座模型能夠為開發者提供更多技術選擇，降低專業模型開發的訓練成本與技術門檻。</p><p>當前，大模型的競爭逐漸邁向模型能力、訓練效率與場景創新協同發展的新階段。隨着推理、Agent等技術與應用加速演進，行業對基座模型的需求也從單一的能力提升，轉向更高效的訓練範式、更靈活的能力拓展，以及更廣泛的場景適配需求。文心5.5 Flash Base在提升模型基礎能力與訓練推理效率的同時，為開發者和社區提供了更具拓展性的技術基礎，推動模型技術走向多樣化的能力探索與應用創新。</p><p>本文由百度提供，量子位獲授權轉載，觀點歸原作者所有。</p><p>7年寫了2份BP，改變了百度乃至中國自動駕駛發展歷程</p><p>10月15日，百度官方公眾號發文公佈百度世界2026五大亮點</p><p>量子位 QbitAI 版權所有©北京極客夥伴科技有限公司 京ICP備17005886號-1</p><h3>各方報道</h3><ul><li><a href="https://www.qbitai.com/2026/11/507787.html" target="_blank" rel="noopener noreferrer">量子位</a>：百度開源文心5.5 Flash Base，多基準測試刷新同尺寸模型 SOTA</li><li><a href="https://www.leiphone.com/category/industrynews/XOv7MDFAP99kUMEW.html" target="_blank" rel="noopener noreferrer">雷峯網</a>：百度開源文心5.5 Flash Base，多基準測試刷新同尺寸模型 SOTA</li></ul>
+<p><a href="https://www.qbitai.com/2026/11/507787.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
