@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌發佈 ML Drift：為各類 GPU 加速端側 AI 推理</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌發佈 ML Drift：為各類 GPU 加速端側 AI 推理</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/9c/a1/9cd4a3972bcd1748a7ceb51df84224a1.jpg" alt=""></p><h3>正文</h3><p>谷歌發佈 ML Drift，一個開源、跨平台的 GPU 計算引擎，專為端側 AI 和機器學習推理而設計 。它採用 Apache 2.0 許可，抽離了不同 GPU 硬件和底層 API 的複雜性，支持 OpenGL ES、OpenCL、Metal 和 WebGPU。</p><p>ML Drift 是為 LiteRT 提供動力的核心 GPU 加速引擎。谷歌將其開源後，開發者可以為各類應用構建自定義圖形渲染與推理運行時，應用範圍涵蓋傳統計算機視覺、音頻和深度處理，以及生成式 AI 等場景。</p><p>ML Drift 的主要目標之一是簡化開發者在創建設備端應用時面臨的多樣化 GPU 硬件的訪問問題。</p><p>開發者面對着各種各樣的 GPU 架構、驅動版本和底層 API，並且事先無法確定應用最終會在哪一種硬件上運行。</p><p>谷歌表示，ML Drift 旨在為可移植性和性能建立新的基礎，提供“傳統 ML 的穩定性和前沿生成式 AI 的峯值性能”。</p><p>為實現這一目標，相較於舊版 TFLite GPU 委託，ML Drift 引入了多項技術改進：基於張量虛擬化實現統一着色器、支持可擴展自定義算子、原生支持五維張量。它還針對 Arm、Intel 和高通技術公司的 GPU 進行了硬件專屬優化，以此充分利用現代 GPU 的硬件資源。</p><p>ML Drift 通過 Dawn （Chromium 的 WebGPU 實現）將桌面端推理支持擴展到 Windows 和 Linux，同時保留 macOS 上原生 Metal 後端支持。Dawn 提供了統一的 API 模型，可複用 WebGPU 的硬件抽象層，開發者無需直接對接 DirectX、Vulkan 這類平台專屬圖形 API。</p><p>谷歌使用 Gemma 模型在開發者級工作站硬件上對 ML Drift 進行了基準測試，報告顯示其內存開銷比其他框架（包括 llama.cpp 和 MLX LM）低 12%。谷歌還強調，ML Drift 已通過 Chrome、YouTube Shorts、Photos 和 Meet 等應用在數百萬台設備上運行。</p><p>對於 YouTube Shorts，ML Drift 讓 Android 和 iOS 平台上基於分割算法的特效平均幀延遲最高降低了 40%。對於谷歌 Photos，計算攝影與圖像分割流水線提速最高可達 2 秒。Adobe Lightroom 和 Photoshop 的特定 AI 照片編輯功能（如選擇主體、選擇天空和自適應人像）性能提升最高達 30%。最後，Snapchat 在 Android 上基於 ML 驅動的人臉和風格生成特效模型延遲降低了 30%，從而能夠使用更大的擴散模型。</p><p>無需通過佈局 Hack 就能原生支持 5D 張量，對於在邊緣 GPU 上運行空間模型和 Transformer 模型來説是重大利好。將邏輯張量和物理內存分配解耦能夠顯著減少在線推理過程中的內存碎片化。</p><p>Tensorust 創始人兼開發者 Matthew Charles Vladislav Busel 質疑“ 它與 Core ML 在新 iPhone 上的延遲和內存表現 ，畢竟這是目前大多數人的交付目標平台”，但谷歌並未提供任何對比數據。</p><p>隨着 ML Drift 的發佈，谷歌將停止更新舊版 TensorFlow Lite GPU 委託。為與現有模型保持向後兼容，谷歌建議遷移至 LiteRT ML Drift GPU 加速器。應用開發者可以使用 LiteRT ML Drift 加速器 ，GPU 和系統工程師可以通過其 底層 C++ API 構建自定義 GpuModel 計算圖並編寫自定義着色器。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/hHzARIJTeqoqYpjNKEuq?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌發佈 ML Drift：為各類 GPU 加速端側 AI 推理</li></ul>
+<p><a href="https://www.infoq.cn/article/hHzARIJTeqoqYpjNKEuq?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

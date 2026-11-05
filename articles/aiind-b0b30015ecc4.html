@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌用 Gemini 4 Argon 一夜優化 ADK 代碼庫的 20 萬行代碼</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌用 Gemini 4 Argon 一夜優化 ADK 代碼庫的 20 萬行代碼</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/b1/d1/b1387a0c7084cd72f391d650783757d1.jpg" alt=""></p><h3>正文</h3><p>昨天，Google 發佈世界模型 Genie 4，人們驚呼“太瘋狂了”。今早，Google 又緊接着推出 Gemini 4 Carbon，直接刷榜&quot;重回全球第一&quot;。再加上兩週前發佈的 Gemini 4 Argon，谷歌正以近乎 “一週一款” 的節奏刷新模型產品線。</p><p>這種高頻迭代在谷歌歷史上前所未有，過去它更習慣“兩年磨一劍”的大版本發佈節奏，如今卻突然切換成“小步快跑”的互聯網打法。</p><p>這場節奏突變的背後，是谷歌在 技術路線選擇、研發模式押注、算力基礎突圍和內部管理調整 上的全方位轉向，也是它在行業節奏失落後的一次集中反擊。</p><p>谷歌對外宣佈的內容中，最吸睛的標籤是 “重回世界第一” 。 在17項基準測試中，它有 15 項拿下了最高成績，甚至在最新的 Artificial Analysis （AA）智能指數評測中反超 Claude Opus 5.5（58分）和 GPT-6 Astra（57分），奪回世界第一。</p><p>但在資本市場，伴隨新模型和Q3財報的發佈， Alphabet 盤後股價一度大跌約10%，市值蒸發3000至4000億美元。 如果次日開盤延續這一跌幅，將創下谷歌歷史上單日市值損失的最高紀錄。</p><p>為什麼華爾街對於谷歌這次交出的“滿分答卷”，卻有如此截然不同的反應？還是説，谷歌為了應付這次“考試”，付出了什麼樣的慘痛代價？</p><p>谷歌這次模型更新主打的是 “安全能力”和“長任務能力” ，尤其在 發現安全漏洞方面 表現突出。按谷歌公佈的技術數據，可以説，Gemini 4 Carbon 在漏洞發現、利用驗證、補丁修復的全環節都實現了領先。</p><p>除了安全領域，Gemini 4 Carbon在 寫代碼方面 也更強了，尤其在複雜的長任務上有了明顯突破。它可以連續運行數天，突破重重難關，最終解決複雜的、多步驟的工程任務，比如在大型代碼庫和底層系統中查找並修復細微的bug。</p><p>從榜單數據中可以直觀看到，在 SWE-sweep（Agent級代碼修復能力）評測中，Gemini 4 Carbon 已經從 Gemini 4 Argon 的 4.3% 翻倍到 9.6%；在 Terminal-Bench（自主操作和工具調用能力）中，Gemini 4 Carbon 提升了 8.1%，達到 65.2%。</p><p>在 GraphWalks（超長文本處理能力）， Gemini 4 Carbon 得分 96.2%，而競爭對手最高才 71.8%，差距懸殊。</p><p>大家對榜單刷分甚至作弊早已見怪不怪。有網友直接發問： 這是評測結果達到了頂峯，還是谷歌真的重回了頂峯？</p><p>當初在官方公告和 Google CEO 劈柴哥的宣傳中，Gemini 4 Argon 的標籤是&quot;開創長週期、高難度專業任務的新時代&quot;，號稱擁有行業最低的幻覺率，能徹底扭轉 Gemini 家族在智能體和代碼實操上的弱勢。</p><p>結果彭博社隨後爆出，據內部員工透露，Gemini 4 Argon 榜單分數好看，一干活就歇菜，尤其在前端設計方面吃力。</p><p>而這一次的Carbon，更是做實了谷歌為了“考高分”刷題的“小鎮做題家”氣質。</p><p>在代碼能力上，Gemini 4 Argon 在 Terminal-Bench 4.0（命令行實操測試）的得分（57%），被行業標杆Claude Opus 5.5（66.4%）遠遠甩開。在更廣泛的整體智能指數上，它也未能超越Claude，只是勉強與 OpenAI 早已發佈的舊模型打了個平手。</p><p>還有不少人吐槽， 這次 Gemini 4 Carbon 發佈還限制開放對象，大家只能對着榜單分數乾瞪眼，無法直接體驗，等到能用的時候，黃花菜都涼了。</p><p>所有這些潑冷水的聲音，反映的都是大眾對谷歌模型的真實態度。</p><p>從定位來看，Gemini 4 Carbon 並非全新預訓練的下一代旗艦，而是在 Gemini 4 Argon 底座上做的專項增強版本，這也是它能在兩週內快速推出的核心原因。</p><p>谷歌的老問題是 跑分強，體驗差 ，更多優勢集中在長上下文、安全、科學計算等谷歌重點投入的垂直賽道，而非用户感知最強的通用編程、日常智能體體驗。</p><p>在軟件工程測試 FrontierSWE 2 中，Gemini 4 Carbon 以61.2% 落後於 GPT-6 Astra 的 65.5% 和 Claude Opus 5.5 的 62.3%；在電腦操作測試 OSWorld-2.1中，Claude Opus 5.5 得分87.2%，而 Gemini 4 Carbon 得分 81.5%，僅排第二；在專業知識工作類評測中，Gemini 4 Carbon 的表現也未拉開與競品的差距，部分場景甚至落後。</p><p>另一方面， 能力提升的背後，是“胡説八道”概率的增加 。 在 Artificial Analysis 的 AA-Omniscience 知識評測子集中，Gemini 4 Carbon 幻覺率從 Gemini 4 Argon 的 4%上升至 11%。這也正是它&quot;跑分強、體驗一般&quot;的原因之一。</p><p>一個經常“胡説八道”的模型，哪怕黑客攻防滿分，也無法讓企業客户放心使用。</p><p>自從 Gemini 從榜首滑落，疊加旗艦產品延期、核心人才流失、編程智能體方向被對手搶先定義，谷歌近期承受的壓力不小。劈柴哥在多檔播客訪談中的表態，恰好將谷歌當下的焦慮、取捨與戰略押注完整地袒露了出來。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/u4fAoAH5vZPCV4TVqAcO?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌用 Gemini 4 Argon 一夜優化 ADK 代碼庫的 20 萬行代碼</li></ul>
+<p><a href="https://www.infoq.cn/article/u4fAoAH5vZPCV4TVqAcO?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
