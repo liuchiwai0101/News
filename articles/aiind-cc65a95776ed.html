@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DigitalOcean 推出學習與數據服務，幫助 AI 智能體進行自我迭代</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>DigitalOcean 推出學習與數據服務，幫助 AI 智能體進行自我迭代</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/8a/8b/8a35a8eb1e39b918d06f55e016d7608b.jpg" alt=""></p><h3>正文</h3><p>DigitalOcean 發佈 Learning Services 和 Agent Data Services 公開預覽版 ，讓開發者可以在統一的 AI 原生雲平台上構建、評估和持續改進 AI 智能體。</p><p>新服務基於 DigitalOcean 的 Inference Engine 和 Managed Agents 構建，智能體能夠從真實世界的交互中學習、識別弱點、測試改進並使用企業自有數據：</p><p>我們構建 Inference Engine 是為了讓智能體能夠思考，構建 Managed Agents 是為了讓它們能夠執行動作，而現在推出 Agent Learning Services 和 Agent Data Services，是為了讓它們能夠持續改進——所有這一切全部運行在一個開放的雲平台上，基於客户自己的數據完成。</p><p>Learning Services 包含了三種能力：Insights，用於記錄智能體活動； Signals ，用於識別失敗和性能短板；以及 Simulations，用於在部署前通過模擬真實對話來測試潛在的改進。</p><p>增強版 Inference Router 與 Learning Services 相互獨立，但在 DigitalOcean 持續改進智能體的方案中扮演着關鍵角色。它根據任務需求優化模型選擇，平衡成本與輸出質量，並可針對新版模型重複執行同一套評估用例。</p><p>Agent Data Services 為 AI 智能體提供了一個安全的託管數據底座。它處理並索引文檔、視頻、音頻、日誌和智能體會話，使這些信息可通過具有內置治理和訪問控制的統一目錄進行搜索和訪問。它還與 Learning Services 集成，支持智能體的持續改進：</p><p>Agent Learning Services 基於 Data Services 構建，Signals 將會話寫入 Data Services，Optimizer 僅在客户明確授權的前提下，從中提取訓練、測試數據。</p><p>回寫循環是我覺得最有趣的部分。一旦追蹤、工具調用和結果反饋到評估或學習中，它們就不再是“普通日誌”，而是生產數據。</p><p>與人們都在談論的智能體數據層的讀取端相比，“回寫執行結果”這件事的價值被低估了。大多數團隊構建了出色的檢索系統，卻沒有妥善記錄結果，所以 6 個月後，沒有人能分辨哪些工具調用真正奏效了，哪些只是當時看起來沒問題。</p><p>TinyFish 聯合創始人 Keith Zhai 在總結 DigitalOcean 的發佈視頻時 強調 ，Signals 和 Simulations 可以在大量用户踩坑之前基於異常會話完成修復：</p><p>Signals 和 Simulations 會在第 400 個用户遇到同樣問題之前將該會話拉入修復流程。工具調用返回成功，但用户最終放棄了任務，這仍是大多數智能體技術棧的痛點。瓶頸在於是否有人能夠讀懂用户實際經歷的那個會話。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/upfROwtEl8R75H24D13J?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：DigitalOcean 推出學習與數據服務，幫助 AI 智能體進行自我迭代</li></ul>
+<p><a href="https://www.infoq.cn/article/upfROwtEl8R75H24D13J?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

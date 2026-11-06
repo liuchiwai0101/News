@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cloudflare 與 VoidZero 聯合推出 tsrs：由 AI 生成的 TypeScript 編譯器 Rust 移植版</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Cloudflare 與 VoidZero 聯合推出 tsrs：由 AI 生成的 TypeScript 編譯器 Rust 移植版</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/41/20/417c0785efd96c03fef863a73e642520.jpg" alt=""></p><h3>正文</h3><p>tsrs 是 TypeScript 編譯器的 Rust 移植版， 由 Cloudflare 宣佈推出， 並與 VoidZero 及 Owner.com 的 Max Schwenk 共同開發。該項目在 Oxc 工具鏈 中孵化，並與 TypeScript 團隊密切合作。Cloudflare 強調，tsrs 並非 TypeScript 的分支，語言設計仍完全由 TypeScript 團隊掌控。</p><p>Cloudflare 聲稱，在類型檢查工作線程數量相同的情況下，tsrs 的類型檢查速度 最高可提升 8 倍，內存佔用減少約 70% 。Rust 還可使項目能夠通過 @tsrs/wasm 編譯為 WebAssembly，從而在瀏覽器或 Workers 上運行檢查，而無需像 Go 二進制文件那樣將垃圾回收器一併帶入最終產物。</p><p>在一篇 詳細的技術文章 中，Schwenk 解釋説，他沒有編寫任何代碼，而是通過指揮以 Claude Opus 5.5 為核心的 Agent，完成了忠實於原版的移植。整個過程以 TypeScript 自身的 15,197 個一致性測試用例作為規範。在 Owner 擁有 37,000 個文件的單體代碼庫中，原本使用 TypeScript 7.0 需要 19 GiB 內存和 80 秒才能完成的檢查，現在只需 7 秒。</p><p>一名開發者 對兩個 npm 包進行了基準測試 ，測得 tsrs 的檢查速度提升 5.3 倍，內存佔用減少 72%，且診斷結果完全一致，生成的代碼也逐字節相同。不過，他發現 tsrs 在存在類型錯誤時會以退出碼 2 結束，而 tsc 返回 1，這一差異足以悄然破壞 CI 腳本。如果改用更新的 TypeScript 7.1 beta ，而非 7.0 作為基準， ImportStatic 的測試 顯示，性能提升幅度縮小至 2.7 倍。這也提醒開發者，Cloudflare 宣稱的 8 倍性能提升是相對於較舊版本測得的。</p><p>TypeScript 團隊的 Daniel Rosenwasser 對此回應 稱，性能提升“並不只是語言選擇的結果”，而且 tsrs 中發現的一些優化已經被用於改進 TypeScript 7.1，使其更加精簡。</p><p>我在週末遷移到了 tsrs。可以直接替換，OC 的運行速度提升了約 5 倍。</p><p>有點不可思議，微軟花了一個團隊兩年時間用 Go 重寫 TypeScript 編譯器，而現在只需讓一個 Agent 放手去做，幾周內就能得到一個明顯更好的版本。</p><p>也有人對此持謹慎態度， 質疑 基於 Arena 分配、且永不釋放內存的模型是否合理。</p><p>tsrs 與微軟基於 Go 開發的編譯器 tsgo，以及 Theo Browne 開發的另一個 Rust 移植項目 tsc-rs 並存。Cloudflare 並未打算讓這些項目相互競爭，而是 將 tsc-rs 與 tsrs 合併 為一個統一的軟件包，並計劃加入語言服務器和內容映射器支持。</p><p>目前，tsrs 仍處於實驗階段。它尚不支持 watch 模式和語言服務器， --init 與 --showConfig 也不可用，診斷信息的順序可能與原版不同。更多信息可參閲 兼容性説明 。</p><p>由於 tsrs 跟蹤的是 TypeScript 7，仍在使用 TypeScript 5 或 6 的團隊應先遷移到 微軟的原生 Go 移植版 ，再替換為 tsrs。完成前一步後，遷移到 tsrs 只需繼續使用現有的 tsconfig 即可。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/lGoA1ZSw6ojeh68GVlBl?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Cloudflare 與 VoidZero 聯合推出 tsrs：由 AI 生成的 TypeScript 編譯器 Rust 移植版</li></ul>
+<p><a href="https://www.infoq.cn/article/lGoA1ZSw6ojeh68GVlBl?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

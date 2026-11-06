@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>智能體 Harness 的演進：從鏈、圖到代碼化</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>智能體 Harness 的演進：從鏈、圖到代碼化</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/f2/14/f2c425a4f63b41a0df6c22466051yy14.jpg" alt=""></p><h3>正文</h3><p>在過去幾年裏，基於大語言模型構建的智能體經歷了翻天覆地的變化。最初只是用粘合代碼拼湊起來的臨時提示詞，如今已逐漸演變為我們所説的智能體 Harness 框架，也叫結構化執行框架——它們圍繞概率模型搭建起腳手架，讓模型變得穩定、可觀測，達到生產級水準。</p><p>這一演變並非一蹴而就，而是漸進式的，由真實業務場景不斷增長的需求推動。在這條變革弧線上，先後出現了三種截然不同的範式，每一種都反映出人們對如何約束非確定性智能、並將其落地為可靠軟件系統更深的理解。</p><p>鏈式範式：提示詞編排 最初的智能體系統圍繞簡單的線性工作流構建，我們稱之為“鏈”。這種方法直觀、落地快，能夠快速上線。你把一系列提示詞串起來，第一步的輸出作為第二步的輸入，依此類推。Harness 框架不過是工具調用、對話記憶的粘合代碼，最終把 LLM 當作一個黑盒函數來對待：文本進、文本出，外加一些語法糖。</p><p>例如在 LinkedIn，我們早期的一個 生成式 AI 智能體 就是基於 LangChain 框架構建的固定三步鏈式流程：</p><p>路由（Routing）：分類步驟，用於判斷查詢是否在範圍內，以及應由哪個專門的 AI“專家”來處理。</p><p>檢索（Retrieval）：以召回為導向的步驟，調用合適的工具（如必應網頁搜索或 LinkedIn 內部 API）來收集特定信息，創建一份檔案，為檢索增強生成（RAG）提供事實依據。</p><p>生成（Generation）：以精度為導向的步驟，對檢索到的數據進行過濾和綜合，形成通順的最終答案。</p><p>雖然構建和部署相對較快，但這種簡單結構很脆弱。該工作流（例如通過一系列工具調用、基於 LinkedIn 經濟圖譜回答用户問題）完全依賴前一步的文本保真度。上游的一個錯誤會級聯傳播，使整個流程偏離軌道，因為系統沒有內置機制來系統性識別錯誤或者自動修復。</p><p>這種方法體現了這些早期智能體產品“盡力而為”的特點。構建最初 80% 的體驗相對較快，但要彌合生產環境所需的最終質量，則需要通過嚴格的評估、提示詞優化和持續的工程投入進行大量迭代。</p><p>圖範式：引入結構與控制 隨着智能體系統應用場景變得日益複雜，線性鏈式方案固有的侷限性和脆弱性已無法忽視。開發者轉而採用圖——這是一種很自然的抽象方式，可以在工作流中加入分支、條件邏輯、並行執行和重試機制。</p><p>在這種方案中，基於圖的 Harness 框架用節點表示不同的任務（如 LLM 調用、工具調用或驗證），用邊來控制流程。這種從線性結構到圖的轉變，與數據管道和傳統分佈式系統的演進如出一轍。</p><p>圖系統的關鍵創新不只是增加了分支，而是讓控制流變得顯式且可聲明。開發者不再將邏輯隱式地嵌入提示詞或代碼中，而是定義成方便查看、修改、梳理的執行計劃。這形成了一種推理循環控制流，LLM 可以在動態環境中利用圖結構來路由和執行復雜的長耗時任務。</p><p>對於許多複雜任務，單體智能體應用已不再可行。圖系統催生了多智能體系統的出現，由頂層智能編排器來管理任務流和依賴關係。這種向多智能體的轉變需要成熟的協議來建立智能體之間的異步通信，如 A2A 和 ACP （後者最終合併進了 A2A）。</p><p>受限於智能體本身的推理能力，“人在迴路”（HITL）機制必不可少。智能體並非完全自主，相反，它們會在關鍵決策點向人類尋求澄清、接收反饋或請求批准，在自主性與可控性之間取得平衡。</p><p>在 LinkedIn，我們通過複用現有的 LinkedIn 消息系統來 實現編排和智能體間通信 ，以此來處理長耗時任務——將任務拆分為消息序列，保障嚴格的“先進先出”（FIFO）投遞和無縫的消息歷史查找。這一基礎提供了：</p><p>靈活的執行模式：智能體可以一次性返回結果、同步流式輸出，或者跨多條消息異步流式輸出。</p><p>基於圖的工作流通過 LangGraph 實現，提供了多項關鍵功能，提升了系統的魯棒性和複雜度的可管理性：</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/B7tsA5tjD08k2gd0OtXd?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：智能體 Harness 的演進：從鏈、圖到代碼化</li></ul>
+<p><a href="https://www.infoq.cn/article/B7tsA5tjD08k2gd0OtXd?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
