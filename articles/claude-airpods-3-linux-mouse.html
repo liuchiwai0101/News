@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude 助破解 AirPods 3 動作感應　Linux 用户以頭部動作操控滑鼠</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Claude 助破解 AirPods 3 動作感應　Linux 用户以頭部動作操控滑鼠</h1>
+<div class="notice">內容機器翻譯自第三方媒體（NewMobileLife 流動日報），僅供參考，以原文為準。</div><p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/11/Air-Pods-3-Buds-xl.jpg" alt=""></p><p>一名 Linux 用户藉助 AI 找出 AirPods 動作感應數據的存取方法，成功以 AirPods 3 的頭部追蹤數據操控滑鼠指標，相關開源專案 MousePods 亦已公開代碼。</p><h3>同類專案原稱不支援</h3><p>AirPods 與 AirPods Pro 內置動作感應器，具備頭部追蹤能力，現時用於空間音訊及 Siri 互動。Apple 允許 AirPods 以標準藍牙耳機方式在 Linux 及其他平台運作，可作一般聆聽，但一旦離開 Apple 生態，頭部追蹤等功能便無法使用。</p><p>Matteo Guaduisi 在週五的 Reddit 貼文中表示，希望在 Linux 上以 AirPods 3 控制滑鼠，但同領域的開源專案均指出 AirPods 3 不受支援。他因此花了一個下午，利用 Claude Code 查明 AirPods 3 的動作追蹤如何運作。</p><h3>協定與 MTU 設定成關鍵</h3><p>過程中，AI 代理被指示在背景查閲其他同類專案尋找答案，其中一個代理在 iOS 框架程式碼中找到答案。結果顯示，AirPods 3 採用與 Pro 型號不同的協定。數據亦因一項限制較嚴的預設設定而沒有傳送：預設最大傳輸單位（MTU）太小，無法同時容納標準音訊數據與動作感應數據，後者因此被排除。修正之後，頭部追蹤數據以 200Hz 經藍牙傳輸。</p><h3>MousePods 以頭部動作移動遊標</h3><p>這番工作促成 MousePods 專案，在 Linux 讀取 AirPods 3 與 AirPods Pro 的動作感應數據，用户的頭部動作會轉化為桌面上的遊標移動。專案的改動集中在 Linux 主機端，不會直接影響 AirPods 韌體，因此實驗後不會留下無法使用的 AirPods，亦不涉及保養失效。專案同時以「Open」形式公開代碼，供他人用於自己的專案。</p><h3>動手前應先查閲保養條款</h3><p>這宗個案亦反映 AI 應用的演變：AI 由最初不算聰明的實體，到逐步改善，再進入 vibe coding 的階段。當以 AI 處理艱難編程工作的想法成形後，關注點便轉向改動既有軟件。遊戲 mod 以往以相對非破壞性的方式做到類似效果，現在 AI 則更直接地處理程式碼，不限於重製 Adobe 產品或攻擊系統，也有人用來為相機等裝置製作新韌體，完全改變其運作方式。</p><p>不過，走這條路之前應先查閲裝置的保養條款。視條款而定，在官方韌體更新以外改動裝置軟件未必可以接受；若在改動過程中弄壞裝置，損失由用户自行承擔。</p><h3>7 月曾有飛盤統計應用</h3><p>今年 7 月亦出現一個不尋常的 AirPods 應用：一名開發者把 AirPods 變成飛盤統計追蹤器。把 AirPod 固定在飛盤上，動作數據可傳送到 iPhone 上的 Kinapod Disc 應用，包括轉速、總轉數及估算出手速度。該個案雖屬 Apple 硬件上的應用，但同樣在未改動任何韌體的情況下保留 AirPods 的用途。</p><p>MousePods 的處理方式亦無需任何韌體更新，屬非破壞性的解決方法，並讓其他開發者一窺相關技術在 Apple 生態以外平台上的運作。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/07/claude-logo.webp" alt="與 Claude 相關的圖片">
+<p><a href="https://www.newmobilelife.com/2026/11/07/claude-airpods-3-linux-mouse/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
