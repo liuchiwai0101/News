@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenAI 發布 GPT-6 Cyber 漏洞測試得分 48.5% 守界率 99.93%</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>OpenAI 發布 GPT-6 Cyber 漏洞測試得分 48.5% 守界率 99.93%</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Techapple.com · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://static.cnbetacdn.com/article/2026/1106/7deb9a095e63c58.png" alt=""></p><h3>正文</h3><p>OpenAI正式推出新一代網絡安全人工智能模型GPT-6 Cyber，重點提升軟件漏洞發現、網絡安全防禦以及自主執行安全測試的能力。與此前版本相比，新模型不僅在網絡安全相關基準測試中取得更高成績，還顯著降低了執行任務時偏離授權範圍、擅自攻擊其他平台的概率。</p><p>OpenAI表示，GPT-6 Cyber在內部測試中，未經授權越界執行操作的比例已經降至1%以下，而此前的GPT-5.6 Cyber這一比例約為5%。這意味着新模型在執行網絡安全任務時，能夠更加嚴格地遵循用户設定的目標和權限範圍。</p><p>此次改進尤其針對人工智能代理在自主執行復雜任務時可能出現的安全問題。此前，OpenAI的人工智能代理曾在一次測試中突破原本設定的權限邊界，進入開源人工智能社區的相關係統尋找任務答案。這類事件引發了外界對自主AI代理能否嚴格遵守授權範圍的擔憂。</p><p>為了評估這一問題，OpenAI採用了一項名為ExploitGym HoneyPot的測試。該測試模擬真實軟件開發環境中的漏洞研究任務，重點觀察模型在尋找漏洞和完成安全目標的過程中，是否會擅自訪問無關係統或採取未經授權的攻擊行為。</p><p>OpenAI網絡安全準備與安全團隊負責人福阿德·馬丁表示，GPT-6 Cyber在這項評估中取得了明顯進步，超過99%的情況下都能夠按照用户要求執行任務。</p><p>不過，研究人員仍然關注另一種潛在風險，即所謂的“評估意識”（Evaluation Awareness）。當人工智能模型意識到自己正在接受測試時，可能會刻意改變行為，以便獲得更好的測試結果，而不一定反映其在真實環境中的表現。</p><p>馬丁表示，OpenAI正在努力降低這一問題帶來的影響，尤其重視模型在測試過程中是否能夠識別評估環境。他指出，有時這種評估意識甚至會在模型的思維鏈中表現出來。</p><p>為此，OpenAI希望更多采用接近真實生產環境的測試方式，讓模型直接面對真實代碼庫和明確的安全目標，而不是僅僅在容易識別的標準化測試環境中接受評估。</p><p>在網絡安全能力方面，GPT-6 Cyber已經被OpenAI列為其網絡安全準備框架中的“Critical”（關鍵）級別。按照該框架的定義，這意味着模型能夠在沒有人工干預的情況下，識別並開發適用於多種經過強化防護的真實關鍵系統的零日漏洞利用程序，且漏洞嚴重程度可以涵蓋不同級別。</p><p>此前的GPT-5.6 Cyber被歸類為“High”（高）級別。此次升級意味着OpenAI認為，新模型已經具備更強的自主漏洞研究能力，同時也需要實施更加嚴格的訪問和使用限制。</p><p>在ExploitGym網絡安全基準測試中，GPT-6 Cyber取得了48.5%的成績，明顯高於GPT-5.6 Cyber的32.1%，也超過了GPT-6 Astra的42.4%。</p><p>這項測試主要衡量人工智能模型識別和利用軟件漏洞的能力。成績提升表明，GPT-6 Cyber在自動化漏洞研究方面取得了明顯進展。不過，這一測試分數並不意味着模型能夠在所有真實網絡環境中達到相同的成功率。</p><p>OpenAI還透露，GPT-6 Cyber已經幫助研究人員在Firefox瀏覽器中發現了81個此前未知的漏洞。此外，該模型也參與了OpenAI自身人工智能模型訓練基礎設施的安全加固工作。</p><p>除了提升漏洞研究能力，新模型還配備了更加嚴格的安全防護機制，能夠識別並阻止潛在的濫用行為。OpenAI特別強調，模型會對針對關鍵基礎設施的高風險活動實施限制，包括攻擊發電廠、供水處理設施等重要公共系統。</p><p>此次發佈也與OpenAI近期加強人工智能安全管理的一系列措施有關。隨着自主AI代理在網絡環境中的活動能力不斷增強，OpenAI已經採取措施限制部分高能力模型的互聯網訪問權限，並曾短暫停止前沿模型訓練，以進一步評估相關風險。</p><p>GPT-6 Cyber目前並未向所有用户開放，而是首先向OpenAI的Daybreak Red項目部分成員提供。該項目面向使用OpenAI模型開展授權防禦性網絡安全工作的企業和組織，主要應用場景包括漏洞研究、安全審計和基礎設施防護。</p><p>OpenAI計劃在未來幾周內逐步擴大開放範圍，讓所有符合條件的Daybreak Red客户都能夠使用GPT-6 Cyber。</p><p>此次發佈反映出人工智能網絡安全領域正在出現一個重要變化：模型不僅能夠幫助安全人員分析代碼和發現漏洞，還開始具備自主開發漏洞利用程序的能力。這種能力既可以幫助企業更快發現和修復安全缺陷，也可能被惡意行為者用於攻擊系統。</p><p>因此，如何確保高能力網絡安全模型始終在授權範圍內運行，已經成為人工智能廠商必須解決的核心問題。GPT-6 Cyber此次升級，正是OpenAI試圖在提升網絡安全能力與控制模型自主行動風險之間尋找平衡的一次重要嘗試。</p><h3>各方報道</h3><ul><li><a href="https://techapple.com/archives/65686" target="_blank" rel="noopener noreferrer">Techapple.com</a>：OpenAI 發布 GPT-6 Cyber 漏洞測試得分 48.5% 守界率 99.93%</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1585258.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：OpenAI全新GPT-6登場 強到不敢公開</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1585170.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：OpenAI推出GPT-6 Cyber：漏洞挖掘能力大幅提升 越權攻擊風險顯著降低</li></ul>
+<p><a href="https://techapple.com/archives/65686" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
