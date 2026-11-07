@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenAI最新籌資估值1.25兆美元策略師説Anthropic宜估1兆以免股災</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>OpenAI最新籌資估值1.25兆美元策略師説Anthropic宜估1兆以免股災</h1>
+<div class="notice">內容機器翻譯自第三方媒體（聯合新聞網 · IT之家 · 愛範兒 · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/11/acd10ecf-ad15-41cd-9432-0973151088f5.jpg?x-bce-process=image/format,f_auto" alt=""></p><h3>正文</h3><p>你付錢調用的那個 AI，真的是商家承諾的那個模型嗎？</p><p>比如，一個第三方平台聲稱接入了旗艦模型，後台卻換成便宜的小模型、舊模型，光看回答的語氣和質量，我們很難判斷；又或者是同一道題目，官網能做出來，用中轉站卻卡住了。</p><p>圖｜GitHub 上部分 AI API 中轉站推薦與評測項目 不少通過第三方 API、聚合平台或中轉服務調用模型的國內用户來説，這大概是經常需要面對的問題。</p><p>一個看起來簡單的模型請求，背後需要經過「用户—中轉站—上游服務商—模型」多個環節，只要其中一環缺少透明度，我們就很難確認自己買到的，是不是標價對應的模型。</p><p>圖｜研究鏈接：https://www.anthropic.com/research/provable-inference Anthropic 近日發佈的一項研究，試圖把這個只能靠口碑、截圖和體感爭論的問題，變成一個可以數學驗證的問題。</p><p>這套名為 FlashProve 的開源研究原型，可以為模型推理生成密碼學證明。它嘗試讓服務商為模型的計算結果提供密碼學證明，用户不用拿到模型權重，也不用自己再跑一遍大模型，就能核驗。</p><p>不公開模型，也能證明「你就是你」 除了使用模型廠商官方的應用，和從官網調用 API 進行對話，我們能確認使用模型的情況。在大多數的 API 調用裏，我們提交問題，服務器返回回答，模型世界上是跑在了遠程的機器上，我們無法得知後台究竟進行了那些計算。</p><p>斯坦福大學的研究項目《Model Equality Testing》曾經就測試過 2024 年四款 Llama 模型的 31 個商業 API 端點，發現其中 11 個端點的輸出分佈，與 Meta 發佈權重的參考分佈存在統計差異。</p><p>同一個模型名字，有時候並不能對應同一種表現。即便在服務頁面掛着的都是 Opus 5.5，但根本無法保證用户獲得完全相同的模型。</p><p>有時候我們想着可以靠幾個問題來鑑別模型，就像最近內測 Opus 5.5 一樣，有網友説問他 2026 年 5 月，Karpathy 去了哪裏，如果模型答不出他去了 Anthropic，那就是沒有被測試到。</p><p>但靠這些問題來鑑別模型，還會遇到模型廠商自己路由的問題，往往很難直接定位原因。像是碰巧答錯、參數不同、上下文沒傳完整，和後台換了模型，最後都可能表現成一句「怎麼變笨了」、「這不是我想要的模型吧」。</p><p>FlashProve 的核心，是一種名為 zkSNARK 的零知識簡潔證明技術。</p><p>首先，模型服務商為權重生成一個「承諾」，它類似一組密碼學指紋，能夠唯一鎖定特定權重，卻不會公開權重本身。</p><p>隨後，服務商針對給定的輸入與待檢查輸出，生成一份證明，核驗這些輸出是否符合事先約定的模型計算。用户拿到模型承諾、提示詞、回答和證明文件，就可以在自己的電腦上檢查： 這套被鎖定的權重處理這段輸入時，是否確實會產生這些輸出。</p><p>如果中轉站偷偷換了一套模型，或者有人修改了輸出，證明便無法與原來的模型承諾對應。</p><p>這裏用到的零知識證明也很重要，目的是為了讓驗證者在確認計算結果時，卻不會因此獲得模型權重、中間計算值，以及 MoE 模型在各層調用了哪些專家。</p><p>這也解釋了它為什麼比「讓 AI 自報家門」可靠，回答裏寫了什麼模型名字，不再充當身份證明，檢查的是輸出與指定權重之間的計算關係。</p><p>一台筆記本就能核驗 過去，為大模型生成零知識證明的最大障礙是成本，證明過程可能比普通推理慢上幾個數量級，證明文件也可能非常大。</p><p>Anthropic 使用公開 4-bit 權重的 Llama 4 Maverick 進行實驗。這是一個擁有 4000 億參數的混合專家模型，每個 token 實際激活約 170 億參數。根據 Anthropic 公佈的數據：</p><p>單張 H100 生成證明的吞吐量約為 110 tokens/秒 ； 每個 1,024-token 請求的證明約為 19 MB ； 驗證不需要 GPU，在 24 線程 CPU 上約需 17 秒 ，單線程約需 21 秒 ； 模型權重的初始承諾只需生成一次，耗時約 39 分鐘 。 不過這裏的 110 tokens/秒是 證明生成速度 ，不是用户聊天時的模型輸出速度。證明依然昂貴，在 Anthropic 的對比條件下，其 GPU 時間約為普通 vLLM 推理的 70～95 倍 。</p><p>即便不是免費，但這套方案，以及把一種過去近乎難以承受的驗證方式，推進到了開始具有實際想象空間的階段。</p><p>但解釋不了「降智」 對於中轉站用户，這項技術最直接的吸引力，當然是識別模型替換。但這裏有一個關鍵前提，是我們必須提前知道 正品模型的承諾 是什麼。</p><p>如果中轉站拿出一份有效證明，卻只能證明回答來自它自己選擇的模型 B，而用户無法確認模型 B 與自己購買的模型 A 是否相同，那麼這份證明仍然解決不了身份問題。</p><p>真正有效的使用方式，應當是由模型廠商、可信機構或公開透明的登記系統發佈模型承諾，用户驗證時固定檢查這個預期指紋。在這個前提下，FlashProve 才能從「某次計算確實發生過」，升級為「我們購買的那次計算確實發生過」。</p><h3>各方報道</h3><ul><li><a href="https://udn.com/news/story/6811/9863396" target="_blank" rel="noopener noreferrer">聯合新聞網</a>：OpenAI最新籌資估值1.25兆美元策略師説Anthropic宜估1兆以免股災</li><li><a href="https://www.ithome.com/1/023/613.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：Anthropic 研究稱 Claude AI 智能體可以靠“做夢”變得更聰明</li><li><a href="https://www.ifanr.com/1687702?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener noreferrer">愛範兒</a>：Anthropic微微發力，AI中轉站的天就要塌了？</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1585186.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：Anthropic推出個人理財工具 Claude可直接分析用户消費記錄</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1585116.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：Anthropic公佈Claude生物學研究成果：首次解析新型蛋白質結構 3天實驗縮短至90分鐘</li></ul>
+<p><a href="https://udn.com/news/story/6811/9863396" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
