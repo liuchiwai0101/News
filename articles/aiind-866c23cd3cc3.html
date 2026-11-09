@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>不能把整個安全體系押在大模型上：AI 分診 CVE，人工審查仍不能少</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>不能把整個安全體系押在大模型上：AI 分診 CVE，人工審查仍不能少</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/60/a1/60b63b5c557a098a39567540e6053ea1.jpg" alt=""></p><h3>正文</h3><p>亞馬遜雲科技的工程師 介紹了負責維護 EC2 基礎設施 Linux 內核的團隊如何處理內核 CVE 。該流程結合了自動化過濾器、AI 智能體和人工審查。團隊還 主張遷移到較新的長期支持（LTS）內核 ，因為舊分支持續積累從未被反向移植的修復。</p><p>Dylan Johnson 和 Justinien Bouron 本月早些時候在布拉格舉行的 Linux Plumbers Conference 上發表了相關演講。Johnson 在 演講錄像 開頭解釋説，該團隊負責維護 EC2 基礎設施內部使用的內核。這與 Amazon Linux 以及客户在虛擬機中運行的內核彼此獨立。</p><p>Linux 內核項目於 2024 年 2 月成為 CVE 編號授權機構。在此之前，該團隊每週大約會收到兩個內核 CVE；此後則增至每天約 16 個，2026 年 8 月 15 日當天更是發佈了 848 個。 Linux 內核 CVE 文檔 指出，項目無法知道特定系統如何使用內核，因此必須由用户自行判斷哪些 CVE 與其相關。</p><p>亞馬遜雲科技處理流程的第一階段並不使用 AI。Bouron 解釋説，內核 CVE 記錄以 JSON 格式發佈 ，其中會列出受影響的版本和源文件。如果內核版本不在受影響範圍內，或者列出的文件都沒有被構建進鏡像，腳本就會丟棄該 CVE。在亞馬遜雲科技的環境中，這一步可以排除約 70% 的 CVE，不過 Bouron 表示，該比例在很大程度上取決於內核配置 。</p><p>其餘 CVE 會被交給 AI 智能體。智能體會 收到亞馬遜雲科技的內核源代碼樹 、各平台的配置、環境與威脅模型説明，以及嚴重程度評定標準。隨後，智能體會生成一張表格，記錄受影響的子系統、漏洞類型和攻擊途徑。Bouron 表示，該團隊會忽略 CVSS 分數 ，因為這些分數並不針對其具體環境。</p><p>通常會有兩名工程師 審核這張表格 。根據演示文稿，智能體處理每個 CVE 大約需要 3.4 秒，而人工處理則需要數分鐘。Bouron 表示，審查現在已成為整個流程中最慢的步驟，但團隊並不打算取消它。</p><p>“我們不希望把整個安全體系都押在一個大語言模型智能體的輸出上。”</p><p>當被問及準確率時，Bouron 估計，智能體作出的決策中約有 5% 到 10% 存在問題 。這只是一個非正式估計，演講中沒有介紹正式評估。</p><p>該團隊還禁用了不需要的內核功能，以減少適用的 CVE 數量。Bouron 稱這種方法“看似簡單，實則困難” 。演示文稿列出了超過 3.2 萬個配置選項，移除錯誤的選項可能導致數月後才會出現的缺陷或性能回退。</p><p>團隊的數據還顯示，較舊的 LTS 分支獲得修復的時間更晚，並且包含更多尚未修復的 CVE。對於同時影響所研究全部六個分支的 CVE，從主線修復到 LTS 版本發佈的時間中位數，在 Linux 5.10 上為 31.8 天，在 6.18 上則為 18.1 天。截至 9 月 16 日，5.10 中有 1709 個已知 CVE 尚未修復，而 6.18 中為 229 個。這些數字分別針對各個分支，並不表示其中有多少會影響亞馬遜雲科技自己的內核。</p><p>自行反向移植修復也會帶來風險。Bouron 指出，CVE 記錄通常只會列出最終完成修復的提交 。如果團隊遺漏了必要的前置提交，即使應用了所列出的修復，系統仍可能存在漏洞。</p><p>亞馬遜雲科技已經縮短了自身的內核升級週期。Johnson 表示，從 4.19 升級至 5.10 大約花了兩年時間 ，這一時間從開始移植工作算起，直到全面部署至生產環境。下一次升級大約用了一年，而遷移到 6.18 則用了約六個月。在從 5.10 升級至 6.12 的過程中，43% 的跟蹤問題最終在用户空間中得到修復，因為相關工作負載依賴舊版內核行為。Johnson 表示，團隊今後會全年持續測試穩定版內核 ，並在每個新 LTS 版本發佈時遷移整個服務器集群。</p><p>Microsoft 的 Azure Linux 團隊 在同一場會議上介紹了一條類似的流水線 。該團隊的分診結論來自一張規則表，AI 只負責為其建議輸入。團隊還使用智能體執行反向移植，並報告稱，構建和測試反饋循環將成功率從約 50% 提高至 80%。InfoQ 曾 於 2025 年 10 月報道 Google DeepMind 的 CodeMender，後者專注於編寫修復。其 公告 稱，每個補丁在提交至上游之前都會由人類研究人員審查。</p><p>Process Focus 首席技術官 Berend de Boer 在 LinkedIn 上評論 了運行雲基礎設施所需的工作。他將宿主機補丁和 Linux CVE 列為組織自建雲時需要承擔的工作，並寫道：“專注於真正能為客户創造業務價值的事情。”</p><p>亞馬遜雲科技尚未發佈這些工具。當被問及是否會將其開源時，Johnson 表示，團隊希望探索共享過濾工具的可能性 。他也 承認，與通用發行版相比，亞馬遜雲科技面向內部用户的環境更容易禁用某些功能 。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/mBvmvcQ8a8ty2Ob1xN64?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：不能把整個安全體系押在大模型上：AI 分診 CVE，人工審查仍不能少</li></ul>
+<p><a href="https://www.infoq.cn/article/mBvmvcQ8a8ty2Ob1xN64?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
