@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>macOS 更新修復 eMudhra 證書漏洞　消除手動處理需求</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>macOS 更新修復 eMudhra 證書漏洞　消除手動處理需求</h1>
+<div class="notice">內容機器翻譯自第三方媒體（NewMobileLife 流動日報），僅供參考，以原文為準。</div><p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/11/Macfamily.jpeg" alt=""></p><p>Apple 今日發佈 macOS 更新，解決涉及 eMudhra 被竊取證書的安全缺口。這是繼十月份在 Safari、Mail 及其他應用程式中初步阻擋這些證書後，進一步的補救措施。</p><h3>eMudhra 證書遭竊背景</h3><p>數週前，Mozilla 報告指出，由印度數字認證公司 eMudhra 營運的八個中間證書授權機構之私鑰已遭竊。這些證書用於建立數字證書的信任，以驗證網站身份並實現安全連接。若不良行為者存取到被竊取的私鑰，可能偽造看似合法的欺詐性證書，從而冒充網站並攔截敏感用户資料。</p><p>為應對該竊取事件，Apple 於十月十九日開始自動阻擋受影響的證書，隨後在十月二十三日加入額外保護。這些變更透過自動證書配置更新傳遞，用户無需安裝 macOS 更新即可獲得保護。然而，當時的措施僅涵蓋 Safari、Mail 及使用 Apple 網絡與安全框架的應用程式，未能覆蓋所有 macOS 功能。部分命令列工具（包括 curl 和 git）仍可接受這些被竊取的證書。</p><h3>新更新全面封堵漏洞</h3><p>今日釋出的 macOS 27.2.1、macOS 26.7.3 及 macOS 15.8.3 版本，防止了上述命令列工具接受被竊取的證書，消除了管理員需手動處理此問題的需求。此外，更新亦從 /etc/ssl/cert.pem 中移除了五個根證書授權機構（Root CA），其中包括三個未列入 Apple 原始手動變通方案的額外 eMudhra 證書。</p><p>對於無法安裝最新 macOS 更新的用户，Apple 在其支援文件中繼續提供手動解決此問題的説明，並列出十二個受影響證書及五個被移除的 Root CA 名稱與 SHA-256 指紋。Apple 亦提醒，「某些應用程式和工具包含自己的 Root CA 列表，不使用 Apple 的阻擋機制或 /etc/ssl/cert.pem」，建議用户聯繫這些應用程式和工具的開發商以尋求解決方案。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2022/07/macfamily.jpg" alt="與 Mac 相關的圖片"><p><a href="https://support.apple.com/en-us/149555" target="_blank" rel="noopener noreferrer">消息來源</a></p>
+<p><a href="https://www.newmobilelife.com/2026/11/10/macos-security-update-emudhra-certificates/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

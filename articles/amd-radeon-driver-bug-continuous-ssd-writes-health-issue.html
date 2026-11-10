@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AMD 顯卡驅動程式爆 Bug！背景持續寫入數據令 SSD 壽命每月跌 1%</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AMD 顯卡驅動程式爆 Bug！背景持續寫入數據令 SSD 壽命每月跌 1%</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/10034733/2025_PCM_Banner_1080_20261109_amd_driver_ssd.jpg" alt=""></p><p>對於電腦玩家而言，顯示卡驅動程式更新原本是用作提升遊戲性能或修復系統問題，但近期 AMD Radeon 顯示卡驅動程式卻傳出嚴重 Bug。有國外玩家在 Reddit 社群發帖爆料，指 AMD 驅動程式隨附的背景服務會不停向系統硬碟寫入數據，甚至導致其 SSD 健康度在短短一年多內狂跌，引發廣大 DIY 玩家及硬件迷關注。</p><h3>持續寫入數據 每月吞噬 1% SSD 壽命</h3><p>據 Reddit 用户「darklinkpower」及多位玩家反應，罪魁禍首是隨 AMD Adrenalin 驅動程式一同安裝的「AMD External Events Utility」（EEU，外部事件公用程式）。該背景服務即使在電腦處於閒置（Idle）狀態時，依然會以約 5MB/s 的速度持續向系統碟寫入檔案。有受影響的玩家痛訴：「我才發現這個驅動程式在過去 16 個月裡面，每個月都默默消耗了我 1% 的 SSD 健康度！」若以 5MB/s 的寫入速度計算，單日寫入量可達 432GB，一個月更會累積接近 13TB 的寫入量，對 SSD 寫入壽命（TBW）造成相當大的負擔。</p><h3>涵蓋多個驅動版本 AMD 官方回應承諾修復</h3><p>值得留意的是，本次異常寫入問題似乎並非單一版本的專利。玩家回報受影響的版本包含了最新的 Adrenalin 26.09.2 及多款舊版驅動，顯示該漏洞可能已潛伏一段時間。針對社群的狂轟，AMD 官方發言人已於討論區及 Reddit 上做出回應，為此事向用户致歉，並表示團隊正在全力調查中，預計會在下一個驅動程式更新版本中正式修復此 Bug。而在 AMD 官網上，在 10 月 30 日更新了 Adrenalin 26.10.2 版本驅動程式，但説明文件上未有針對與 SSD 相關的修改事項。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/10034541/AMD-Driver-26.10.2-1024x670.png" alt=""><h3>自保貼士：兩招暫時關閉背景寫入</h3><p>在 AMD 官方正式釋出修復檔之前，玩家可透過以下兩種方法暫時自保，避免 SSD 壽命繼續被消耗：</p><ol><li><strong>停用 AMD EEU 服務</strong>：按下 Win + R 鍵，輸入 services.msc 開啟 Windows 服務，找到「AMD External Events Utility」，將其服務狀態停止，並把啟動類型改為「已停用（Disabled）」。</li><li><strong>暫時關閉 ReBAR 模式</strong>：亦有玩家發現如果在 BIOS 中關閉 Resizable BAR（ReBAR）功能，亦能阻止該服務進行異常寫入，不過這可能會輕微影響部分遊戲的顯示效能。</li></ol><p>建議各位 Radeon 顯示卡用户可先透過 Windows 的「資源監控器」（resmon）檢查「磁碟」分頁中是否有 atieclxx.exe 或 atiesrxx.exe 在進行頻繁寫入，並密切留意官方後續的驅動更新。</p>
+<p><a href="https://www.pcmarket.com.hk/amd-radeon-driver-bug-continuous-ssd-writes-health-issue/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
