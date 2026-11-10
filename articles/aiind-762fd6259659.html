@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ADD 資產驅動開發：讓 AI Coding 懂業務、守規範、穩架構、實現端到端交付｜AICon北京</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>ADD 資產驅動開發：讓 AI Coding 懂業務、守規範、穩架構、實現端到端交付｜AICon北京</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/b1/d1/b1387a0c7084cd72f391d650783757d1.jpg" alt=""></p><h3>正文</h3><p>以前，工程師的一天可能從打開 IDE、閲讀代碼開始。如今，一些深度使用 Coding Agent 的工程師，每天要做的第一件事，可能是查看幾個 AI Agent 的工作進度：哪些任務已經完成、哪些測試沒通過、哪些 PR 等待審查，以及哪些工作需要重新分配。</p><p>代碼是 AI 寫的，但工程師的工作似乎並沒有因此變得簡單。</p><p>11 月 8 日，Anthropic Claude Code 團隊工程師 Addy Osmani 在 X 上發表長文《Your Coding Agents Made You a Manager》（《你的編程智能體讓你成為了一名管理者》），提出了一個有意思的觀點： 當工程師開始頻繁使用 Coding Agent，他實際上已經在做管理工作了。</p><p>選擇任務、編寫指令、分配工作、跟進進度、評估結果，最後決定哪些代碼能夠上線。這些工作，與管理一支工程團隊有着驚人的相似之處。</p><p>但問題也隨之而來：如果一個 Agent 寫出的幾百行代碼，工程師根本沒有時間逐行檢查，該如何判斷它是否可靠？同時運行五個 Agent，就一定能獲得五倍的生產力嗎？當 Agent 能自己制定計劃、執行任務、修復錯誤時，工程師又該在哪些環節介入？</p><p>Addy 認為，真正擅長使用 Coding Agent 的工程師，未必是最擅長提示詞工程的人，而是那些懂得如何讓 Agent 自主完成工作，同時建立有效驗證機制的人。</p><p>這對許多工程師而言或許有些諷刺。他們選擇個人貢獻者（IC）的職業道路，原本就是為了專注技術，避免成為整天開會、分配任務的管理者。如今，Coding Agent 卻讓他們重新面對任務交接、工作監督和成果驗收的問題。</p><p>結合 Claude Code 的開發與使用經驗，Addy 總結了一套管理 Coding Agent 的實踐方法，涉及任務分配、自動驗證、人機協作、多 Agent 並行和最終決策。InfoQ 對原文進行了編譯整理，供大家參考。</p><p>Addy 認為，答案可以從成熟工程團隊的管理方式中尋找。經驗豐富的工程經理不會親自檢查每個人寫下的每一行代碼，而是依靠持續集成（CI）、自動化測試和代碼審查建立質量保障機制。管理 Coding Agent 也是如此：工程師需要建立一套讓 Agent 自行驗證結果的機制，而不是讓自己成為所有任務的最終測試員。</p><p>首先，要讓 Agent 學會驗證自己的工作，而不是把所有檢查任務留給工程師。 這項建議中，Addy 給出了一份 Claude Code 的最佳實踐指南。他指出，如果沒有驗證機制，Agent 往往會在任務“看起來完成”時停止。因此，開發者應該提供測試套件、構建檢查、Linter 等工具，讓 Agent 自行發現並修復錯誤。對於 UI 任務，還可以讓它打開瀏覽器檢查實際效果。</p><p>驗證機制也可以融入日常工作流。例如，在 CLAUDE.md 中記錄測試命令，使用 /goal 在每輪執行後檢查目標是否達成，通過 Stop Hook 阻止未通過類型檢查的任務結束，或使用 /code-review 讓獨立的子 Agent 審查代碼。這樣，工程師只需關注 Agent 無法自行驗證的問題。</p><p>其次，要提供明確的任務上下文，但不必重複 Agent 能自己發現的信息。 如今的 Coding Agent 已經能夠快速理解代碼結構、開發規範和測試配置。工程師更應該説明代碼倉庫中沒有的信息，例如任務為什麼重要、有哪些約束，以及如何判斷成功。</p><p>例如，與其要求“讓儀表盤更快”，不如明確要求：將萬人規模組織的 /team 儀表盤 p95 加載時間降至兩秒以內，不修改數據庫 Schema 和 API 響應結構，並通過指定腳本驗證優化效果。對於尚不明確的需求，也可以先讓 Agent 通過提問整理規格説明，再開始開發。</p><p>再者，讓每次糾錯都能積累經驗。 如果同一個問題已經糾正兩次，就應該將相關規則記錄到 CLAUDE.md ，或將重複工作封裝為 Skill。Addy 建議重點記錄驗證命令、容易誤解的代碼、倉庫中沒有的重要決策，以及反覆出現的錯誤，而不是讓每次會話都從頭開始。</p><p>不過，這並不意味着 CLAUDE.md 中的規則越多越好。Addy 此前也曾專門討論過 Agent 指令文件的維護問題 （ https://addyosmani.com/blog/audit-your-agent-files/ ） ：隨着模型能力和項目環境變化，過去有用的指令也可能變得冗餘，開發者應定期清理失效規則，避免經驗沉澱逐漸演變為新的維護負擔。</p><p>最後，當 Agent 的能力越來越強，工程師反而應該減少對它的干預。 這個建議可能有些反直覺，Addy 借鑑英特爾前 CEO Andy Grove 的管理理念，認為監督程度應該與執行者在具體任務上的能力相匹配。對於已經能夠自主完成的工作，過多的指令、規則和過程干預，未必能提高質量，反而可能限制 Agent 的發揮。</p><p>在 Claude Code 中，提示詞、 CLAUDE.md 和 Skills 主要用於指導模型，Hooks、Deny Rules 等則可以用於強制執行要求。因此，只有“禁止修改生成代碼”“必須運行指定檢查”等不可妥協的要求，才需要強制約束。對於一般偏好，應儘量讓 Agent 自主判斷。</p><p>隨着模型能力提升，過去反覆強調“think harder”“don&#x27;t be lazy”等習慣也可能不再必要。在 Addy 看來， 不斷增加規則和干預，可能只是把人類管理中的“微觀管理”搬到了 Agent 身上。</p><p>當 Agent 已經能夠獨立完成任務，工程師還需要決定何時介入、如何糾偏，以及哪些決定必須由自己負責。</p><p>Addy 提出了一條重要原則：可以委派任務，但不能委派判斷。具體來説，工程師既要幫助 Agent 在執行前明確方向，也要在關鍵節點及時糾偏，併為最終交付結果負責。</p><p>首先，應該先制定計劃，再讓 Agent 編寫代碼。 對於複雜任務，Addy 建議先進入 Claude Code 的 Plan Mode，與 Agent 反覆討論方案，檢查其中未經驗證的假設，再開始開發。對於規模更大的任務，還可以開啓第二個會話，讓另一個 Agent 以資深工程師的視角審查計劃。相比代碼完成後再返工，設計階段發現問題的成本通常更低。</p><p>任務拆分也可以交給 Agent。Claude Code 的 /batch 可以將大型代碼修改拆分為 5 至 30 個相對獨立的任務，在確認執行計劃後，通過獨立的 Git Worktree 並行執行，並根據運行環境和任務結果創建 PR。</p><p>但工程師仍需檢查任務邊界，確保不同 Agent 的工作沒有重疊，共享接口也已優先確定。否則，五個 Agent 同時開發，不一定帶來五倍產出，反而可能製造更多合併衝突。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/rsMuS4cuc2ir68ulGgEs?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：ADD 資產驅動開發：讓 AI Coding 懂業務、守規範、穩架構、實現端到端交付｜AICon北京</li></ul>
+<p><a href="https://www.infoq.cn/article/rsMuS4cuc2ir68ulGgEs?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

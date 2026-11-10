@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>硅谷瘋炒 AI 自我進化，李飛飛、Jeff Dean 齊潑冷水：無限加速不可信</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>硅谷瘋炒 AI 自我進化，李飛飛、Jeff Dean 齊潑冷水：無限加速不可信</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/47/c0/4709d86243fc9dfc5a3a118f26983cc0.png" alt=""></p><h3>正文</h3><p>這位參與過 MapReduce、Bigtable、TensorFlow、TPU 和 Gemini 等重要項目的技術老將，如今把目光投向了一個更具挑戰性的方向：讓 AI 不僅能夠解決問題，還能自己設計實驗、驗證結果，並從過去的研究中持續學習。</p><p>在斯坦福大學 HAI 的一場公開活動上，Jeff Dean 首次系統介紹了新公司 Discovery Loop 的技術思路和研發進展。</p><p>Jeff Dean 透露，團隊吸引了來自 Gemini、DeepSeek、Kimi 等模型項目的研究人員，也有參與 Go 編程語言項目的成員。公司成立前三週，他們進行了約 400 場面試。按照 Jeff Dean 在演講中的説法，團隊中大約 10% 的成員曾獲得 ACM 計算獎，另有約 10% 擁有國際信息學奧林匹克競賽獎牌。他們試圖將長期從事大規模 AI 研究的資深工程師，與年輕研究人才組織在一起。</p><p>按照他的設想，未來的科學研究可能不再需要龐大的團隊逐項開展實驗。少數領域專家就能夠藉助數以萬計的 AI Agent，同時探索不同研究方向，讓整個科研過程持續自動運轉。這家公司已經開發出自己的 Agent Harness，建立了面向大規模 Agent 協作的基礎設施，並運行着約 20 個自動化改進循環。Jeff Dean 給出了一個頗具野心的目標：讓領域專家的生產力提高 20 至 50 倍。</p><p>Jeff Dean 對大型技術團隊的複雜性有着切身體會。他曾管理過 Google 一個約 600 人的團隊，後來負責的 Google Research 和 AI 團隊規模一度達到約 4400 人。</p><p>他在演講中回憶，自己曾花費大量時間參加有關季度運營支出的會議。後來，他通過調整工作安排，將需要向自己彙報的人員規模大幅縮減。</p><p>而在 Discovery Loop，他正在嘗試另一種研發組織方式。傳統大型工程項目通常需要將複雜問題拆解為大量子問題，分配給不同研究團隊。但這會產生新的問題：不同團隊之間需要協調資源，實驗結果很難整合，而且項目啓動之後，最初的問題拆解方式往往難以改變。Jeff Dean 認為，未來可以讓自動化系統承擔相當一部分工作。由少數領域專家確定重要研究目標，AI 系統則自動識別值得解決的子問題，組織實驗，並根據結果不斷調整方向。</p><p>目前，Discovery Loop 已經運行約 20 個自動化改進循環，主要用於研究如何提高實驗效率，以及怎樣從歷史實驗結果中學習。</p><p>而在演講結束後，與斯坦福大學教授、World Labs 聯合創始人李飛飛的一場對話，則把討論進一步引向了當前硅谷最熱門、也最具爭議的技術概念之一：RSI（Recursive Self-Improvement，遞歸自我改進）。AI 究竟能否實現真正的自我進化？這種進化是否存在物理極限？當機器開始解決人類數百年來懸而未決的數學難題，科學家又將扮演什麼角色？</p><p>兩位長期參與 AI 技術發展的研究者，給出了一些頗為冷靜的回答。</p><p>以下為李飛飛與 Jeff Dean 對話實錄，經 AI 前線翻譯整理：</p><p>李飛飛： 謝謝 Jeff，剛才的演講非常精彩。我希望接下來的對話能夠稍微深入一些技術細節。</p><p>首先，祝賀你創辦 Discovery Loop。實際上，我最初想問的第一個問題就是：為什麼要創辦這家公司？你們四個人基本上都可以算是 Google 的老員工了。尤其是你，1999 年就加入 Google，對吧？</p><p>過去幾年，我們看到了不可思議的技術進步。但我仍然很好奇，在過去一兩年裏，是否發生過某個決定性的時刻，讓你、Quoc、Sanjay 和 Oriol 意識到，必須去做一些不同的事情，而且這件事不能繼續留在 Google 內部完成？</p><p>Jeff Dean： 我認為，我們一直都對自動化系統感到興奮，尤其是那些能夠幫助人們以更加自動化的方式開發軟件系統的技術。</p><p>例如，大約十年前，Quoc 就已經在神經架構搜索方面做了很多工作。你可以把它理解為一種早期的遞歸式自我改進系統。你告訴系統：“請幫我找到能夠解決計算機視覺問題，或者語言問題的優秀模型架構。”我們當時就知道，這種方法是有效的。但在那個年代，你必須通過一大堆相當笨拙的 Python 代碼來定義搜索空間。</p><p>而今天，你可以直接使用自然語言。你可以告訴一個足夠強大的模型和 Agent 系統：“請探索一些新的模型架構，看看哪些架構能夠幫助我們解讀 MRI 圖像。”然後，系統就可以自動開展相關工作。</p><p>我認為，這實際上是我們對計算機系統和 AI 系統能力認知的一次非常深刻的轉變。如果能夠讓這樣的系統穩定可靠地運行，就能夠實現許多新的事情。尤其是在科學和工程領域，我們認為，這是一組非常適合利用 AI 產生積極社會影響的研究方向。</p><p>李飛飛 ：所以，真正讓你們下定決心的，是這種循環，以及自我改進的能力？</p><p>Jeff Dean： 你也可以説，我們幾個有點過於痴迷這些循環了。不過，還有一點非常重要。我們都很享受從一個非常小的項目開始做起的過程。當只有五個人一起研究某件事情，後來加入第六個人、第七個人，再到第十個人，那種感覺很奇妙。</p><p>這件事在大公司內部當然也能實現，但我們還希望通過公益公司的形式來開展工作。我們認為，這能夠體現自己的價值觀。當然，創業意味着你還必須處理辦公場地等各種各樣的事情，但我們也覺得這些事情挺有意思。</p><p>李飛飛： 這很有趣。其實，當我們創辦 World Labs 時，也有過一個類似的決定性時刻。只不過，我們關注的技術方向與你們不同。當時，我們看到計算機視覺和生成模型開始融合。我們終於能夠構建不再侷限於文字的生成模型。那就是我們決定創辦 World Labs 的時刻。</p><p>Jeff Dean： 你們做出的那些生成模型，以及現在已經能夠實現的能力，確實非常驚人。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/mZlISiZL9c1eurrsZRpo?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：硅谷瘋炒 AI 自我進化，李飛飛、Jeff Dean 齊潑冷水：無限加速不可信</li></ul>
+<p><a href="https://www.infoq.cn/article/mZlISiZL9c1eurrsZRpo?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
