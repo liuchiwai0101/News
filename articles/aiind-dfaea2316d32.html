@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IBM管控AI智能體身份 為企業智能建立安全基礎</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>IBM管控AI智能體身份 為企業智能建立安全基礎</h1>
+<div class="notice">內容機器翻譯自第三方媒體（- IT PRO Magazine · Yahoo 財經），僅供參考，以原文為準。</div><p><img src="https://itpromag.com/wp-content/uploads/2026/11/IBM-TECHXCHANGE-2026.jpg" alt=""></p><h3>正文</h3><p>IBM 推出針對 AI 智能體的身份及管控能力，為企業前沿智能建立安全基礎 PR Newswire Asia 2026年11月10日週二 上午2:49 [EST] 2 分鐘閲讀時間 IBM GOOGL 要點：</p><p>企業部署 AI 智能體的速度，已超越其驗證智能體的能力。HashiCorp Vault 透過 Agent Identity，為每個智能體賦予受管控的身份。</p><p>即使智能體已通過驗證，企業仍須限制其存取權限。Vault 將成熟的密鑰管理能力延伸至 AI 智能體，旨在落實最小權限存取原則，並在智能體嘗試執行未經授權的操作時即時撤銷權限。</p><p>企業無法大規模採用看不見、無法測試或無法問責的智能體。IBM watsonx Orchestrate 旨在統一管理跨 Amazon Bedrock、Microsoft Foundry 及 Google Gemini 等平台的智能體發現、隔離及評估。</p><p>香港2026年11月10日 /美通社/ -- IBM（NYSE: IBM）於 2026 年 TechXchange 大會上宣佈推出多項全新能力，協助開發人員、IT 及保安團隊將 AI 智能體部署至業務系統，並為其設定明確的權限與責任。IBM 將智能體發現、可信身份、存取控制及效能評估整合起來，協助企業掌握每個智能體的擁有者、控制其可存取的內容，並追蹤其在現有應用程式及基礎設施中執行的操作。</p><p>IBM Corporation logo. Gartner 預測，到 2028 年，《財富》500 強企業平均將使用超過 15 萬個 AI 智能體。然而，只有 13% 的企業認為自身已建立合適的 AI 智能體治理機制[1]。長期有效的憑證、不清晰的責任歸屬，以及彼此分散的控制措施，令企業更難有效管控智能體之間的互動、工具調用，以及跨團隊、平台和雲端環境執行的操作。</p><p>IBM 軟件高級副總裁 Dinesh Nirmal 表示： 「企業 AI 應用領域的領先者，正在改變企業的營運方式，而不只是為業務加入更多 AI。要讓智能體在企業賴以運作的系統中承擔實際工作，便需要一套 AI 營運模式，將智能體連接至企業的數據、應用程式及基礎設施，並以營運最關鍵系統的同等嚴謹標準來管理智能體。當信任與管控融入這套模式，智能體便不再只是一項技術，而會成為企業營商及營運方式的一部分。」</p><p>是次發布進一步擴展 IBM 的產品組合，旨在提供由四大關鍵系統協同構成的 AI 營運模式，涵蓋智能體、數據、自動化及混合基礎設施。這套模式始於每個智能體均不可或缺的信任與管控，包括可信身份、僅授予完成工作所需的存取權限，以及一個無論智能體在何處建立，均可對其進行發現、保護及評估的統一平台。</p><p>HashiCorp Vault 用於管理應用程式及服務存取業務系統所需的密鑰及憑證。它透過集中管理密鑰、自動輪替所支援的憑證，以及動態產生會自動到期或可撤銷的憑證來提供控制能力。這些功能有助縮短已外洩憑證的有效時間，並將存取權限限制於各角色獲配置的範圍內。</p><p>HashiCorp Vault 已獲 ABN AMRO、Adobe、athenahealth、BBVA、BlackRock、Canva、Duke Energy、Expedia、倫敦證券交易所、星巴克、瑞士聯邦鐵路及 Target 等機構採用，用以保護非人類身份（non-human identities）。這些機構所採用的系統處理數十億美元計的交易[2]。如今，HashiCorp 將相關能力延伸至 AI 智能體，為其簽發安全、短期有效的憑證，將每個智能體的權限限制於完成工作所需的範圍內。</p><p>AI 智能體正成為一類快速增長的非人類身份，與應用程式及服務並列。當智能體開始在業務系統中執行操作，企業需要清楚記錄每個智能體的擁有者，以及其獲授予的權限。HashiCorp 將受管控的智能體身份與憑證控制結合，協助企業在權限及責任清晰明確的前提下委派工作。</p><p>與 HashiCorp Vault 配合使用時， Agent Identity 會為每個智能體建立權威記錄，包括其擁有者、生命週期狀態及獲授予的權限。這項能力旨在擴展企業現有的身份及保安投資，並與 Vault 的憑證控制功能 共享相關身份及授權情境，最終落實最小權限存取，並在智能體嘗試執行未經授權的操作時即時撤銷權限。</p><p>識別智能體只是第一步。企業亦需要控制智能體用於存取數據庫、應用程式及雲端服務的憑證，以及相關憑證的有效期限。</p><p>當智能體調用工具並在業務系統中執行操作，其憑證便成為關鍵的保安邊界。如果智能體持有長期有效且權限過高的憑證，一旦遭入侵或執行超出預期任務範圍的操作，便可能令系統及數據面臨風險。企業需要明確界定每個智能體的職責，限制其可取得的存取權限，並在情況有變時撤銷相關權限。</p><p>這些控制措施不僅限於初始身份驗證。若智能體嘗試擷取資料或執行超出其授權範圍的操作，系統可即時拒絕存取並撤銷工作階段，防止未經授權的活動。Vault 的短期憑證及最小權限控制，可進一步限制智能體的存取範圍及權限持續時間。</p><p>Vault 2.2 ：為智能體提供專屬的安全帳户、自動更新憑證，並引入後量子密碼技術，以應對量子時代的安全威脅。</p><p>Secure Hub（公開預覽版） ：讓企業能集中檢視各個 Vault 環境，更輕鬆掌握系統運行狀況、使用情況及保安資源。</p><p>在 TechXchange 大會上，多名客户代表分享其如何利用 Vault 保護企業應用程式、工作負載及 AI 智能體：</p><p>阿爾伯特•愛因斯坦醫學院 ：將 IBM Verify 及 Vault 應用於 AI 智能體身份、即時存取、動態密鑰及可審計性。</p><p>Optum ：利用 Vault Radar 偵測外洩的密鑰，並透過 Boundary 實現以身份為本的即時存取控制。</p><p>百勝餐飲集團（Yum! Brands） ：利用 IBM Verify 建立身份安全平台，並發現機器身份及密鑰管理的未來發展。</p><p>阿爾伯特•愛因斯坦醫學院資訊科技助理院長 Shailesh M. Shenoy 表示： 「AI 為加快生物醫學研究及發現帶來非凡機遇，但要充分釋放其潛力，必須建基於安全、信任及負責任的治理。根據我的經驗，IBM Verify 及 HashiCorp Vault 等技術，可在協助機構建立身份、存取及保安控制方面發揮重要作用，讓機構能夠更有信心地創新。」</p><p>身份資料可讓企業瞭解「智能體是甚麼」，但企業亦需要全面掌握其擁有的每一個智能體，無論該智能體在哪個平台建立。IBM watsonx Orchestrate 可跨 AI 生態系統運作，而非侷限於單一供應商平台，為企業提供一個發現、保護及評估智能體的統一平台。</p><h3>各方報道</h3><ul><li><a href="https://itpromag.com/2026/11/11/ibm-techxchange-26/" target="_blank" rel="noopener noreferrer">- IT PRO Magazine</a>：IBM管控AI智能體身份 為企業智能建立安全基礎</li><li><a href="https://hk.finance.yahoo.com/news/ibm-%E6%8E%A8%E5%87%BA%E9%87%9D%E5%B0%8D-ai-%E6%99%BA%E8%83%BD%E9%AB%94%E7%9A%84%E8%BA%AB%E4%BB%BD%E5%8F%8A%E7%AE%A1%E6%8E%A7%E8%83%BD%E5%8A%9B-%E7%82%BA%E4%BC%81%E6%A5%AD%E5%89%8D%E6%B2%BF%E6%99%BA%E8%83%BD%E5%BB%BA%E7%AB%8B%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A4%8E-074900556.html" target="_blank" rel="noopener noreferrer">Yahoo 財經</a>：IBM 推出針對 AI 智能體的身份及管控能力，為企業前沿智能建立安全基礎</li></ul>
+<p><a href="https://itpromag.com/2026/11/11/ibm-techxchange-26/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
