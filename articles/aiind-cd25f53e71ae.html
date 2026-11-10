@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MiniMax 開源 H3-Image 生圖模型，10 秒就能生成一張 4K 圖像</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>MiniMax 開源 H3-Image 生圖模型，10 秒就能生成一張 4K 圖像</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家 · 愛範兒），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/11/9357fee0-620c-4a72-aa3d-9b9e762a4435.png?x-bce-process=image/format,f_auto" alt=""></p><h3>正文</h3><p>今年 8 月，MiniMax 開放了 H3 視頻生成模型的權重，這是有史以來第一個達到 SOTA 水平的開源視頻模型。</p><p>此後幾個月，社區基於它玩出的花樣遠超官方演示，也催生了 H3 max 等一批衍生模型，實實在在推着 AI 創意行業往前走了一步。</p><p>現在，MiniMax 連圖像生成模型也不打算藏着了。 就在 剛剛，MiniMax H3 Image 正式發佈，重點是圖像生成與編輯，目標是開源圖像模型中的 SOTA。</p><p>此前的 H3 已經通過統一的全模態預訓練，具備了圖像、視頻、音頻等多種內容的理解與生成能力，其中也包括文生圖和圖像編輯。</p><p>而這次的 H3 Image 是在 H3 已有能力的基礎上，進一步針對圖像生成與編輯進行後訓練優化，讓模型在複雜指令遵循、圖像細節和視覺審美上有了更好的表現。</p><p>比較直觀的體驗，是分辨率和速度。在我們的實測中，H3 Image 生成一張 4096×4096、4K 畫質的高規格圖片，只需要 10～20 秒。</p><p>這意味着，過去動輒需要等待幾十秒甚至更久的高分辨率生圖，如今已經可以在十幾秒內完成。 4K 級圖像生成正在進入以十秒計的時代 ，高分辨率帶來的細節優勢，也終於可以用在更頻繁的日常創作中。</p><p>我們使用 H3 Image 生成了各種極具美學的圖片，它在 CG、遊戲場景、工業設計以及多種藝術風格上都有不錯的表現。</p><p>它還重點強化了複雜指令遵循能力，最多支持 16 張參考圖片，可以同時理解不同的主體、材質和風格要求。</p><p>更重要的是，H3 Image 在發佈當天就開放權重，開發者也可以通過 API 接入，或者在 MiniMax 開放平台、MCode 和 MiniMax 海螺平台中使用。</p><p>APPSO 也提前體驗了這款新模型，除了畫得好看，我們更想知道，它到底能理解多複雜的需求，又能把圖像細節做到什麼程度。</p><p>複雜的需求，也能準確畫出來 過去我們測試圖像模型，往往更關注它能不能畫出提示詞裏出現的物體。</p><p>但實際工作裏，我們交給設計師的需求經常複雜得多。比如，產品的零件應該如何組裝，某個區域需要保留哪些元素，不同參考圖之間又有什麼聯繫。模型需要先理解這些條件，才可能畫對圖。</p><p>這次，我們從一個工業產品的結構設計入手，讓 H3 Image 生成一台未來主義咖啡機的產品爆炸圖。它需要展示豆倉、研磨器、衝煮模塊、水箱等結構，同時標明各部分的連接關係，並保持產品設計的一致性。</p><p>除了機械結構，文字處理也是圖像生成模型經常遇到的難題。尤其是既要把字寫對，又要兼顧字體設計、畫面構圖和整體視覺效果。</p><p>對於大字海報，模型需要同時處理文字內容、字體造型和視覺構圖。而在包含大段小字的場景，文字準確性、信息層級和排版也會成為新的難題。</p><p>我們先讓 H3 Image 生成了一張以鳳凰（Phoenix）為主題的新古典主義裝飾藝術海報，融合了西方神話、復古雕版畫、維多利亞時代裝飾紋樣和現代極簡排版。</p><p>H3 Image 準確地渲染了畫面標題 PHOENIX MYTH（鳳凰神話）和副標題 Eternal Rebirth of the Fire Bird（火鳥的永恆重生）。</p><p>對於 H3 Image 在小字上的表現，我們找到了這段時間沸沸揚揚的黃仁勳公開信，讓 H3 Image 生成了一份放在桌面的信紙版。</p><p>圖片裏面的文字基本上都準確生成出來了，沒有明顯的錯誤，整體的樣式也和圖片周圍的風格保持一致。如果你仔細看信紙周圍的細節，都和老黃有關。</p><p>我們還能生成懷舊風的場景：掛在牆上的經典皮衣，伴隨着打字機上的獨白「我已經被穿了 30 年了。」</p><p>我們還嘗試讓 H3 Image 生成更復雜的遊戲界面，圖片裏的文字渲染和佈局都和生存遊戲類似，顯示生命、魔力和體力等級。</p><p>更進一步的是，看 Image 能否理解文字、圖片之間的邏輯，這要求它具備語義理解的能力，並具備科學、數學、生物等知識，並能把邏輯準確、美觀地呈現出來。</p><p>從機械結構到文字排版，再到知識理解，這些案例其實都指向同一個問題：模型能否真正理解用户想表達的信息，並將其準確地轉化為圖像。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/025/191.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：MiniMax 開源 H3-Image 生圖模型，10 秒就能生成一張 4K 圖像</li><li><a href="https://www.ifanr.com/1688790?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener noreferrer">愛範兒</a>：實測 MiniMax H3 Image：GPT 的效果加上 MJ 的審美，居然被它開源了</li></ul>
+<p><a href="https://www.ithome.com/1/025/191.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

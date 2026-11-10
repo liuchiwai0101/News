@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>接大模型別再自己配 Key、搭代理了，火山引擎 IGA Pages 一步搞定</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>接大模型別再自己配 Key、搭代理了，火山引擎 IGA Pages 一步搞定</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/77/47/7796b5fa1066f827beb3871efec75147.png" alt=""></p><h3>正文</h3><p>給 Web 應用接入大模型，通常要先準備一套服務端調用鏈路。</p><p>模型 API Key 不能放進前端代碼，否則會隨客户端資源暴露。為了從服務端發起請求，開發者還要申請並保管 API Key、配置模型服務地址、編寫轉發邏輯，再處理前端與代理之間的跨域問題。</p><p>這層代理還要單獨部署和維護。開發者除了編寫頁面和業務邏輯，還得分別處理模型服務、服務端運行環境和託管平台。</p><p>IGA Pages 是火山引擎全站加速產品體系下的 Web 應用託管和部署能力。IGA Pages 現在集成了 AI 加速網關 ，把模型接入、服務端調用和應用部署串聯起來。</p><p>創建 Pages 項目時啓用 AI 加速網關，系統自動為你的賬號創建專屬網關實例。模型服務地址和 API Key 寫入項目配置，應用代碼直接讀取就能調用模型。不用自己申請 Key、搭代理、處理跨域。</p><p>為了讓你直接體驗這個能力，IGA Pages 連同 AI 加速網關向每個賬號提供 50 萬 Token 免費額度 ，且免收 Pages 專屬網關實例的網關流量費和請求數費。</p><p>IGA Pages 集成 AI 加速網關後，開發者可以在 Pages 項目中配置模型、發起服務端調用並部署應用：</p><p>模型調用，網關代理。 AI 加速網關兼容 OpenAI 協議，充當你的應用和模型服務商之間的統一代理層。應用將模型請求發送到網關，由網關轉發到後端模型服務。你不需要直接對接模型供應商的 API，也不需要在應用中管理不同供應商的接入差異。</p><p>服務端執行，Key 不暴露。 你的應用通過 Pages Functions 在服務端發起模型請求。API Key 留在服務端環境變量中，不進入前端代碼。</p><p>部署即分發。 應用部署到 IGA Pages 後，通過全站加速網絡分發，獲得可訪問的線上地址。</p><p>換模型不改代碼。 想試另一個模型？在網關控制枱切換就行。應用始終通過同一個網關入口調用，接入代碼不用動。</p><p>*免費額度覆蓋平台免費模型；需要特定模型時，在網關實例中配置自有模型，費用由對應供應商結算。</p><p>我們做了一個 Demo 模板“AI 推理任務 · 靜默航線”，展示 IGA Pages + AI 加速網關能做出什麼樣的應用。</p><p>這是一個完整的互動推理故事：你扮演執行者，AI 擔任故事主持人，負責開場敍述、行動反饋、人物對話和結局覆盤。故事有多條分支、資源約束和多種結局，規則判定由確定性引擎執行，AI 只負責敍事表達。</p><p>火山引擎賬號已完成實名認證，已開通智能全球加速</p><p>打開 TRAE，進入 插件市場 &gt; 技能 &gt; 開發工具 ，找到 IGA 一鍵部署 ，點擊 使用 。</p><p>使用 IGA 一鍵部署技能，從“AI 推理任務 · 靜默航線”模板創建一個名為 my-mystery-story 的項目。完成 IGA Pages 雲端項目創建和關聯，接入 AI 加速網關，並同步本地和遠端模型配置。</p><p>將模型服務地址和 API Key 寫入本地和遠端環境配置。</p><p>使用 IGA 一鍵部署技能，啓動 Pages 本地預覽，並檢查模型連接。</p><p>把故事改成“雨夜美術館撤離畫作”。我是夜班修復師，要查明畫作轉移原因並安全轉運。只改故事和題材，不改玩法內核。</p><p>TRAE 會先讀取項目中的 AGENTS.md，再按約定使用內置故事創作技能，修改故事數據和頁面文案，同時沿用現有規則引擎。改完後，刷新本地頁面即可試玩，檢查故事內容和流程是否符合預期。</p><p>運行故事驗證和生產構建，檢查通過後部署到 IGA Pages，並打開返回的預覽地址確認應用可訪問。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/juu2R26yD8B6ABUEQuWB?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：接大模型別再自己配 Key、搭代理了，火山引擎 IGA Pages 一步搞定</li></ul>
+<p><a href="https://www.infoq.cn/article/juu2R26yD8B6ABUEQuWB?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
