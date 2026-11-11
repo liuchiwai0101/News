@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DeepMind以AI代理驗證Signal加密實作安全性，數學證明擴及機器碼層級</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>DeepMind以AI代理驗證Signal加密實作安全性，數學證明擴及機器碼層級</h1>
+<div class="notice">內容機器翻譯自第三方媒體（iThome · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://www.ithome.com.tw/sites/default/files/field/image/_228_-_-_deepmind.google.jpg" alt=""></p><h3>正文</h3><p>Google DeepMind 公佈 AI代理形式化驗證（Formal Verification）框架AlphaProof Code，利用AI代理驗證Signal加密通訊協定的核心程式庫libsignal，將安全性證明延伸到編譯後的機器碼。Signal協定廣泛應用於通訊服務，此次5名DeepMind研究人員與AI代理合作，4周內產出約650萬行以Lean語言撰寫的數學證明程式碼，驗證前向保密性（Forward Secrecy，FS）、身分驗證及入侵後安全性恢復等要求。</p><p>形式化驗證是先將程式應遵守的安全規則寫成數學規格，再以數學證明程式執行時符合要求。過去針對Signal的研究，多半驗證通訊協定的抽象設計，或是為了方便驗證而修改程式，即使驗證通過，也無法直接證明原有程式編譯後仍符合安全要求。</p><p>DeepMind此次使用 未經修改的Rust版libsignal程式庫 ，將其連結至命令列測試程式，編譯成AArch64 Linux機器碼，再透過數學模型分析機器碼的執行行為，證明其符合指定的安全規格。</p><p>AlphaProof Code框架由人類專家與多個AI代理分工，研究團隊先在AI代理協助下，將安全要求寫成Lean形式化規格，經人工審核後，再由Gemini 4 Carbon驅動的代理產生數學證明，交由形式化證明工具Lean檢查。</p><p>驗證涵蓋Signal的PQXDH交握機制及Triple Ratchet訊息加密機制，前者用於在通訊開始時協商初始金鑰，後者在訊息交換期間持續更新金鑰，保護過去的通訊內容，並在特定金鑰外洩情況下恢復後續通訊的安全性。研究團隊也將兩項先前修補的漏洞重新加入測試版本，均成功證明含漏洞程式違反指定安全要求。</p><p>不過，研究範圍限於特定版本libsignal編譯的命令列測試程式，並非涵蓋Signal手機App整體、群組通訊或所有後量子安全性質，且部分底層密碼運算仍以安全假設為前提。DeepMind已 公開Lean證明與相關驗證成果 ，供外界檢視。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com.tw/news/180430" target="_blank" rel="noopener noreferrer">iThome</a>：DeepMind以AI代理驗證Signal加密實作安全性，數學證明擴及機器碼層級</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1585920.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：DeepMind發佈Gemini Robotics 2.5：奔馳工廠試點分揀成功率96%</li></ul>
+<p><a href="https://www.ithome.com.tw/news/180430" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
