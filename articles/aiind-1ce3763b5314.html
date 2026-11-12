@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cloudflare研究新一代身分驗證技術，兼顧後量子安全與AI代理流量管理</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Cloudflare研究新一代身分驗證技術，兼顧後量子安全與AI代理流量管理</h1>
+<div class="notice">內容機器翻譯自第三方媒體（iThome · InfoQ · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://www.ithome.com.tw/sites/default/files/field/image/1111-mole-960.jpg" alt=""></p><h3>正文</h3><p>最近，Cloudflare 通過 AI Gateway 推出 了一款測試版的 Web Search API。該 API 可以通過 REST API 和 Cloudflare Workers 訪問，提供統一的日誌記錄、訪問控制和計費功能，並支持自帶提供商密鑰。</p><p>該 API 使 AI 代理能夠從 Ceramic.ai、Exa 和 Linkup 實時獲取網頁搜索結果。它提供統一的接口，將搜索計費與 AI Gateway 集成，可以同時記錄搜索請求和模型推理，並要求服務提供商遵守 經過驗證的機器人要求 並返回來源鏈接。</p><p>Cloudflare 的 Web Search API 允許 AI 應用程序檢索最新的網絡內容，包括近期新聞、API 變更和技術文檔，並在推理過程中將這些結果作為上下文提供給語言模型。Cloudflare 集團產品經理 Michelle Chen 、高級總監 Sam Else 以及高級系統工程師 Gabriel Massadas 解釋了該公司正在努力解決的挑戰：</p><p>當你使用一個代理，而且需要它實時抓取網頁時，代理通常只是猜測該頁面的 URL，然後調用工具通過 curl 進行抓取。這就是為什麼你有時會看到網頁抓取返回 404 未找到錯誤——這通常發生在代理猜錯了 URL 時。可以想象，總是隨機猜測 URL 並不是特別高效的做法。</p><p>應用程序和外部服務可以通過提供 AI Gateway 身份驗證令牌，並在請求負載中指定搜索提供商，從而通過 REST 端點訪問網絡搜索功能，獲得搜索結果。Chen、Else 和 Massadas 補充道：</p><p>網絡搜索提供商所使用的爬蟲必須符合 Cloudflare 在開發者文檔中定義的“已驗證機器人”的公開要求，而且網絡搜索響應必須包含指向已爬取內容的鏈接。這些規則對於構建一個公平的互聯網具有積極的意義，並且允許內容創作者自主決定如何處理自己的數據。</p><p>在 Hacker News 上的一個熱門帖 中，社區成員們討論了搜索質量、數據保留限制，以及統一 API 相比現有替代方案是否具有實質性優勢。 Simon Willison 寫道：</p><p>對於搜索 API，我的首要疑問是：它們是否允許你存儲並重新發布從它那裏獲取的結果。如果我正在運行一個代理系統，卻不被允許存儲響應結果——或者提供“分享對話記錄”按鈕——那將是一個相當大的限制。而這個問題的答案，往往被深埋在服務條款的字裏行間中。</p><p>我認為，對於已經使用 Cloudflare 的企業而言，它正逐漸成為值得信賴的主要雲服務供應商（通常這類角色由 AWS、GCP 或 Azure 擔任），企業的大部分雲服務費用將通過該平台結算（因此無需重新提交採購流程）。</p><p>Cloudflare 表示將篩選出支持“零數據保留”的供應商，並按供應商的標價提供搜索服務，不額外加收費用。該公司計劃為 AI Gateway 添加原生服務器工具，首先從 Web 搜索開始。在此之前，開發者可以使用 Cloudflare Workers 將 Web 搜索集成到其工作流中。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com.tw/news/180305" target="_blank" rel="noopener noreferrer">iThome</a>：Cloudflare研究新一代身分驗證技術，兼顧後量子安全與AI代理流量管理</li><li><a href="https://www.infoq.cn/article/SgXuVvzbHr8lKrihTAZW?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Cloudflare 推出面向 AI 應用程序的 Web Search API</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1585862.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：AI智能體瘋狂訪問網站卻不帶來真實流量 Cloudflare首席執行官警告網站成本上漲</li></ul>
+<p><a href="https://www.ithome.com.tw/news/180305" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

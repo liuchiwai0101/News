@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qwen4-Max 開放預覽　100 萬 token 上下文主打編程與 AI 代理</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Qwen4-Max 開放預覽　100 萬 token 上下文主打編程與 AI 代理</h1>
+<div class="notice">內容機器翻譯自第三方媒體（NewMobileLife 流動日報），僅供參考，以原文為準。</div><p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/11/hero-7.jpg" alt=""></p><p>阿里巴巴旗下通義千問團隊於 2026 年 11 月 11 日透過<a href="https://x.com/Alibaba_Qwen/status/2120335993643684315" target="_blank" rel="noopener noreferrer">官方 X 帖文</a>，宣佈 Qwen4 家族首個模型 Qwen4-Max 開放預覽，官方形容新模型具備更深入的知識、更豐富的世界理解，以及更強的編程與代理能力。阿里雲百煉（Model Studio）文件頁同日上架，Model ID 為 <code>qwen4-max-preview</code>。不過預覽只限 Token Plan 訂閲用户，期限只有兩星期，使用範圍亦有明確限制。</p><h3>預覽期只有兩週　結束即下線</h3><p>根據<a href="https://help.aliyun.com/zh/model-studio/qwen4-max-preview" target="_blank" rel="noopener noreferrer">阿里雲百煉文件</a>，預覽期由 2026 年 11 月 11 日 10:00 至 11 月 25 日 24:00（UTC+8），期間模型不會作出變更，預覽結束後即下線。此模型僅支援 Token Plan，不支援按量計費。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/11/card.jpg" alt="Qwen4-Max 官方宣傳圖：Now in Preview（官方圖片）"><p>除了 API 接入，官方同時在 QwenWork（千問辦公）、Qoder、Qwen App、QwenStudio 及 Qwen Chat 開放新模型。官方文件把 Qwen4-Max 定位為新一代旗艦多模態模型，適用於編程開發、辦公、前端設計及複雜智能體任務。官方文件未公佈參數規模、benchmark 分數、權重或按 token 計算的價格。</p><h3>100 萬 token 上下文　輸出上限 393,216</h3><p>Qwen4-Max 預覽版的上下文長度為 1M token，最大輸出長度為 393,216 token，而思考內容與最終回答共享同一個輸出預算。作為對照，前代旗艦 Qwen3.8-Max 為 2.4 萬億參數的 MoE 模型，同樣支援 100 萬上下文、思考模式與工具生態。</p><p>深度思考預設開啟，reasoning_effort 可選 low、medium 或 xhigh，預設為 xhigh。官方亦提醒，自此模型起，OpenAI Chat Completions 的 max_tokens 與 max_completion_tokens 等價，均限制思考內容與最終回答的總量；如果沿用只為回答預留的上限，輸出可能提前被截斷。</p><h3>多模態輸入與工具調用</h3><p>模型支援文字、圖片及影片輸入，並提供 Function Calling、聯網搜尋與內置工具，結構化輸出支援 JSON Object 及 JSON Schema。接口方面，同時兼容 OpenAI Chat Completions、OpenAI Responses 及 Anthropic Messages API，開發者可沿用現有工具鏈，把模型 ID 設為 qwen4-max-preview 即可。</p><p>Qwen4 家族另有 Flash、Plus 及 27B 三款模型，已於 9 月 22 日的雲棲大會列出，但至今仍未發布，官方亦未公佈其餘三款的時間表。</p><h3>Token Plan 定價　不可用來跑腳本的界線</h3><p>Token Plan 個人版（國際站，美元計價）分四個檔位，另設用量包，詳情如下：</p><table><thead><tr><th>檔位</th><th>月費</th><th>每月 Credits</th></tr></thead><tbody><tr><td>Lite</td><td>6 美元（新用户限時 3 美元）</td><td>20,000</td></tr><tr><td>Essential</td><td>10 美元（新用户限時 5 美元）</td><td>45,000</td></tr><tr><td>Standard</td><td>18 美元</td><td>80,000</td></tr><tr><td>Pro</td><td>43 美元</td><td>200,000</td></tr></tbody></table><p>新用户限時價至 2026 年 11 月 30 日 23:59:59（UTC+8），只限從未購買過個人版的帳號。用量包為每個每月 15 美元，每個含 20,000 Credits，最多可同時持有 5 個。預覽期間，Qwen4-Max 的 Credits 消耗低至標準的 2 折，相當於 5 倍用量；每晚 22:00 至翌日 08:00 再打 4 折，即標準的 0.8 折。</p><p>較值得留意的是使用界線。官方訂明，套餐 API Key 僅限在編程工具與智能體工具（例如 Claude Code、Cursor、Qwen Code、Qoder、OpenClaw）中互動式使用，不可用於自動化腳本、自訂應用程式後端，或任何非互動式批量調用。違規使用可能導致訂閲暫停或 API Key 被封禁。此外，套餐為訂閲人專享，禁止共享帳號，個人版暫不支援退訂。</p>
+<p><a href="https://www.newmobilelife.com/2026/11/12/alibaba-qwen4-max-preview/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
