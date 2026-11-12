@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>駭客濫用AI代理滲透測試平台AntiFox，發動AWS雲端憑證竊取攻擊</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>駭客濫用AI代理滲透測試平台AntiFox，發動AWS雲端憑證竊取攻擊</h1>
+<div class="notice">內容機器翻譯自第三方媒體（iThome），僅供參考，以原文為準。</div><p><img src="https://www.ithome.com.tw/sites/default/files/field/image/antifox.png" alt=""></p><h3>正文</h3><p>資安業者 Arctic Wolf Labs近日揭露 駭客利用開源AI代理滲透測試平台AntiFox，對網際網路服務及AWS雲端環境發動攻擊。AntiFox最初是從AI代理滲透測試工具ARTEX 0.1.1分支而來，具備中文介面，可讓使用者透過AI 代理自動執行滲透測試任務。研究人員發現，託管於阿里雲上的AntiFox相關基礎設施曾涉及多起惡意入侵活動。</p><p>在Arctic Wolf觀察到的一起事件中，攻擊者入侵暴露於公開網路上的Windows IIS伺服器，植入ASP.NET Shell，藉此執行作業系統指令、讀取應用程式設定與資料庫連線字串，並將設定檔及紀錄複製至可從網際網路存取的目錄。攻擊者接著利用有效的IAM憑證及EC2角色探索AWS雲端服務，在約30分鐘內切換多個身分、發出數百次API請求。雖然攻擊者的多數API請求都遭AWS拒絕，但仍成功取得部分正式生產環境的金鑰。</p><p>在研究人員發現的另一起事件中，則觀察到攻擊者利用有效的AWS身分，讀取、複製及刪除S儲存桶3物件。為防範此類攻擊，Arctic Wolf建議企業檢查IIS Shell活動與異常AWS存取紀錄，並撤銷受影響的工作階段及金鑰、更新可能外洩的憑證。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com.tw/news/180465" target="_blank" rel="noopener noreferrer">iThome</a>：駭客濫用AI代理滲透測試平台AntiFox，發動AWS雲端憑證竊取攻擊</li></ul>
+<p><a href="https://www.ithome.com.tw/news/180465" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI應用｜Google Gemini登陸Apple CarPlay 支援語音處理電郵及準備會議 - 香港經濟日報HKET</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI應用｜Google Gemini登陸Apple CarPlay 支援語音處理電郵及準備會議 - 香港經濟日報HKET</h1>
+<div class="notice">內容機器翻譯自第三方媒體（香港經濟日報 · unwire · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://cdn.unwire.hk/wp-content/uploads/2026/11/2026111231128.jpg" alt=""></p><h3>正文</h3><p>AI 大模型的競爭，正在從誰更會回答問題，轉向誰能真正完成一項複雜工作。</p><p>剛剛，Google CEO Pichai 在 x 上宣佈，旗下旗艦模型 Gemini 4 Carbon 正式向開發者、企業、科研人員和消費者擴大開放。</p><p>10 月 28 日，Google 首次公佈 Carbon 時，重點展示了其在網絡安全、軟件工程和長程任務方面的能力，但使用範圍主要限制在特定網絡安全防禦團隊。如今，這款模型終於走出受限測試階段，開始進入 Google AI Studio、Gemini for business、Google Antigravity，以及面向 Google AI Ultra 訂閲用户的 Gemini 應用和搜索 AI Mode。</p><p>這次開放，相比此前大模型發佈時強調知識問答、數學推理和代碼生成能力，Google 這次將真實工作場景放在了更顯眼的位置。</p><p>根據官方披露，Gemini 4 Carbon 在 CursorBench 4.0、Perplexity WANDR 和 Zapier AutomationBench 三項面向真實工作流程的評測中均排名第一，完成任務的成本比表現次優的外部模型低超過 2 倍。這三項評測分別涉及 AI 編程、信息檢索與複雜任務執行，以及跨企業應用的業務流程自動化。</p><p>在面向長上下文推理的 GraphWalks 測試中，Carbon 的 F1 分數達到 96.2%，而 Argon 為 84.2%。這項測試的上下文範圍為 256K 至 1M Token，主要考察模型在長距離信息關聯與圖結構搜索任務中的表現。</p><p>但值得注意的是，這些成績並不意味着 Carbon 已經全面領先競爭對手。</p><p>在 FrontierSWE v2 真實軟件工程任務中，Claude Fable 5.2 取得 69.9%，Carbon 則為 61.2%。也就是説，不同模型在代碼修改、終端任務、企業工作流和長程推理等場景中的表現已經出現明顯分化。</p><p>所以 Carbon 在部分 Agent 任務中的優勢，並不能説明其編程能力全面第一。</p><p>此外，Google 官方也明確指出，Gemini 4 Argon 仍然更適合大多數常規軟件工程和知識工作任務，Carbon 則主要用於需要深入推理、複雜調試和長時間驗證的高難度工作。</p><p>按照官方説法，在上述三項工作流評測中，Carbon 的單任務成本比表現次優的外部模型低超過 2 倍。對於需要頻繁調用模型、執行大量工具操作的企業而言，這一指標可能比單純的基準測試得分更有現實意義。</p><p>比評測成績更值得關注的，是 Google 對 AI 編程工作方式的改變。</p><p>在此次發佈中，Google 宣佈為 Antigravity 預覽推出 /swarm 功能。簡單來説，開發者不再需要讓一個 Agent 獨立完成所有工作，而是可以通過一條提示詞，調度多個 Agent 同時處理不同任務，並實時查看各自的執行進度。</p><p>例如，讓 Carbon 負責複雜的軟件架構設計、任務協調及代碼審查，再把相對簡單的工作分配給速度更快、成本更低的模型。多個 Agent 可以在隔離的工作空間中並行執行任務，還可以引入專門負責對抗性驗證的 Agent，對代碼修改結果進行檢查。</p><p>這樣的設計，試圖解決當前 AI 編程面臨的一個現實問題：即使單個模型的編程能力越來越強，它仍然可能在長時間執行任務時偏離目標，或者在修改一個模塊時破壞另一個模塊。</p><p>通過任務分工、獨立工作空間和相互驗證，Google 希望將複雜項目從單個 Agent 的連續執行，轉變為多個 Agent 的協同完成。</p><p>為了展示這一能力，Google 提供了多個實際案例。其中一個項目是重建埃菲爾鐵塔的歷史施工過程。</p><p>開發者只提供一條提示詞，Carbon Agent 團隊便利用 1887 年至 1889 年間的歷史照片與工程圖紙，製作出一個基於 Three.js 的交互式 3D 展覽。</p><p>Google 使用 7 份公開的市議會規劃 PDF，其中包含 206 個提取出的工程圖視圖，讓 Agent 團隊重建 Google Platform 37 辦公區域。</p><p>在經歷 10 輪夜間執行循環之後，系統生成了一個包含約 90.6 萬個三角形網格的 Three.js 交互式 3D 模型。</p><p>這些案例並不能直接證明 Carbon 已經能夠不經人工干預完成生產級軟件開發，但至少展示了 Google 對下一代 AI 編程平台的構想。未來的開發者或許不再只是向模型逐條提出編程要求，而是像管理一個小型工程團隊一樣，分配目標、檢查進度、驗證成果。</p><p>不過，真正決定這種模式能否大規模應用的，仍然是 Agent 之間的協作成本、錯誤傳播問題，以及複雜項目的最終交付質量。</p><p>從金融報告到複雜數據分析，AI 開始進入高精度知識工作</p><p>Google 這次還重點強調了 Carbon 在金融、法律和企業運營領域的應用。</p><h3>各方報道</h3><ul><li><a href="https://inews.hket.com/article/4224007/" target="_blank" rel="noopener noreferrer">香港經濟日報</a>：AI應用｜Google Gemini登陸Apple CarPlay 支援語音處理電郵及準備會議</li><li><a href="https://unwire.hk/2026/11/12/google-gemini-live-apple-carplay-ios-launch/software/iphone-app/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=google-gemini-live-apple-carplay-ios-launch" target="_blank" rel="noopener noreferrer">unwire</a>：Google Gemini 正式登陸 Apple CarPlay 揸車可隨時與AI對話 查行程兼讀 Gmail</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586018.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：Google將Gemini帶入Apple CarPlay 支持語音對話、郵件摘要和日程管理</li></ul>
+<p><a href="https://inews.hket.com/article/4224007/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
