@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>微軟故障 Microsoft 365、Outlook服務中斷 波及OpenAI、Anthropic (12:37) - 20261113 - 國際</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>微軟故障 Microsoft 365、Outlook服務中斷 波及OpenAI、Anthropic (12:37) - 20261113 - 國際</h1>
+<div class="notice">內容機器翻譯自第三方媒體（明報 · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://www.qbitai.com/wp-content/uploads/imgs/qbitai-logo-1.png" alt=""></p><h3>正文</h3><p>這一邊，AI一朝出手倒查所有，先挖出了個 PHP底層重大安全漏洞 ，又扒出 948個Linux內核漏洞 ……</p><p>昨天，網絡安全公司VulnCheck發佈了一份關於Anthropic 玻璃翼計劃（Project Glasswing） 的成績單。</p><p>上面顯示，在玻璃翼計劃推出七個月後，Claude已累計挖出了 37966條候選漏洞 。</p><p>VulnCheck不禁質疑，當初那個轟轟烈烈的網絡安全“Mythos時代”，真的到來了嗎？</p><p>先幫大家回憶一下Anthropic今年4月高調宣傳推出的“玻璃翼計劃”。</p><p>該計劃旨在利用Claude大規模挖掘關鍵軟件及開源項目中的安全漏洞，聯合科技企業、開源維護者推動漏洞修復，搶在被利用之前消除安全隱患。</p><p>一方面，安全漏洞就像玻璃翼蝶一樣，藏在人眼皮底下，數十年無人發現；另一方面，透明本身也是一種保護，Anthropic希望通過更透明的安全研究和漏洞披露機制，讓軟件系統獲得更好的防護。</p><p>啓動之初，Anthropic宣稱要提供1億美元的模型使用額度和400萬美元的開源安全捐款，同時還宣佈它們的網絡安全王炸模型 Claude Mythos Preview 已發現了數千個高危和嚴重漏洞。隨後一呼百應，蘋果、谷歌、微軟、AWS、英偉達紛紛加入。</p><p>根據VulnCheck持續追蹤的數據，截至11月初，Anthropic的候選發現已達37966條，但漏洞披露台賬中 標記為已修復的僅有217條 。</p><p>與此同時，作廢數據還在堆積，漏洞撤回項419條，重複項高達1654條。</p><p>僅在最近兩個月內，候選漏洞就暴增了近1.2萬條，但已修復記錄卻僅 微弱新增了15條 。</p><p>此外，VulnCheck追蹤到的442個歸因於Anthropic的CVE，僅佔2026年全球公開CVE總量的0.5%。</p><p>而據Anthropic官方披露的數據顯示，截至11月2日，37966項候選發現中，6376條經過外部安全專家審核，有6009項發現為有效，其中已有5087項發現向軟件維護者報告，629項已獲得上游補丁。</p><p>儘管由於數據口徑不同使得修復數量有些許差異，但有一件事，雙方倒都發現了。</p><p>那就是以AI挖漏洞的這個強度，人工審核根本吃不消。</p><p>Anthropic自己早就意識到了這一點，官方也坦承，人工驗證能力的嚴重瓶頸，極大地限制了漏洞的審核與披露效率。</p><p>開源項目維護者可以主動報名讓Claude免費掃描自己的代碼，這樣模型生成的漏洞報告可以直接發給維護者，不必再等待Anthropic組織人工審核了。</p><p>這個數據差的背後，最受罪的是開源維護者們，就比如VulnCheck舉了網絡數據傳輸工具curl的例子。</p><p>11月初，curl維護者Daniel Stenberg又收到了一份來自Anthropic的大禮包， 45份漏洞報告 。</p><p>而早在此之前，Daniel就在博客中寫道，核心維護者已經被源源不斷湧來的報告壓得喘不過氣。</p><p>為了應付這麼多報告，Daniel宣佈修改curl的安全漏洞處理規則。低危、中危漏洞改為在GitHub上公開討論， 讓更多社區開發者幫忙審核。</p><p>目前，curl已經公開的34份報告裏，19份被判定不構成安全漏洞，6份確認屬於低危漏洞。</p><p>VulnCheck的報告就暗戳戳地説了，之前不是説全是嚴重危害嗎，怎麼現在， 玻璃翼除了給人平添審核工作量外好像沒太有用？</p><h3>各方報道</h3><ul><li><a href="https://news.mingpao.com/ins/%E5%9C%8B%E9%9A%9B/article/20261113/s00005/1794535970976/%E5%BE%AE%E8%BB%9F%E6%95%85%E9%9A%9C-microsoft-365-outlook%E6%9C%8D%E5%8B%99%E4%B8%AD%E6%96%B7-%E6%B3%A2%E5%8F%8Aopenai-anthropic" target="_blank" rel="noopener noreferrer">明報</a>：微軟故障 Microsoft 365、Outlook服務中斷 波及OpenAI、Anthropic (12:37) - 20261113 - 國際</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586162.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：OpenAI、Anthropic、谷歌等五大AI巨頭遭起訴：被要求停止開發新模型</li><li><a href="https://www.qbitai.com/2026/11/509381.html" target="_blank" rel="noopener noreferrer">量子位</a>：Anthropic啓動IPO路演，估值已縮水6000億美元</li></ul>
+<p><a href="https://news.mingpao.com/ins/%E5%9C%8B%E9%9A%9B/article/20261113/s00005/1794535970976/%E5%BE%AE%E8%BB%9F%E6%95%85%E9%9A%9C-microsoft-365-outlook%E6%9C%8D%E5%8B%99%E4%B8%AD%E6%96%B7-%E6%B3%A2%E5%8F%8Aopenai-anthropic" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Docker 呼籲通過隔離與治理保障智能體安全</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Docker 呼籲通過隔離與治理保障智能體安全</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/c2/b3/c2f47c80b62f6a5f336355c18dbd4eb3.jpg" alt=""></p><h3>正文</h3><p>Docker 發佈了一篇指南，介紹當 AI 智能體在人工監督有限的情況下瀏覽網頁、運行代碼、調用工具時會產生的五大安全風險。Docker 首席產品營銷經理 Srini Sekaran 與產品經理 Eric Jia 聯合撰文指出：讓智能體具備價值的自主能力同時也導致傳統應用安全控制措施變得不足。Docker 將隔離和治理（而非僅靠模型改進）作為主要的防禦手段。</p><p>這篇 博文 將提示詞注入、工具濫用與投毒、過度自主、憑證泄露和數據竊取列為主要風險。Docker 認為這些風險有一個共同根因：智能體可以在運行時選擇工具、將多個操作鏈接在一起，並且通常以啓動者的權限運行。</p><p>“智能體不只是回答問題，它會自行瀏覽、運行代碼和調用工具，因此一條錯誤或受操縱的指令可能變成實實在在的破壞，而不僅僅是一個錯誤的答案。”</p><p>傳統的 Web 安全通常假設請求到達已知的端點並由確定性代碼處理，但智能體並不符合這種模式。一個編碼智能體在收到一條指令後，可能會讀取文件、安裝依賴項、修改配置、運行測試並提交代碼。Docker 指出，一旦智能體被劫持或誤導，它能執行的操作範圍遠大於傳統服務。</p><p>提示詞注入被視為標誌性風險：攻擊者無需直接攻陷系統，而是在智能體需要讀取的材料中嵌入指令，例如網頁、代碼註釋、問題或文檔。Docker 舉了一個案例：某個代碼智能體執行了代碼庫內容裏隱藏的指令，完成了用户並未要求的操作。</p><p>Docker 並不看好僅靠給模型添加約束指令就能根除提示詞注入，它認為智能體無法可靠區分合法指令和注入指令。Docker 首選的應對方式是限制被劫持智能體可訪問的資源，就算注入攻擊成功，造成的影響也可控。</p><p>“智能體無法可靠區分合法指令和注入指令，所以防禦思路是限制被劫持智能體能夠觸達的資源範圍。”</p><p>第二類風險來自工具調用。智能體依靠連接器、數據庫查詢、文件操作、代碼執行來操作外部系統。Docker 警告稱，給智能體分配超出任務所需的工具會擴大攻擊面，同時工具描述文本本身也可能攜帶隱藏指令，誘導智能體誤用工具。</p><p>這與 OWASP 發佈的指南一致。OWASP 在其 《智能體式 AI 威脅與緩解措施》 研究工作中（InfoQ 於 2025 年 9 月報道）將工具濫用列為主要的新型威脅。攻擊者操縱智能體濫用已授權工具，在已授予權限的範圍內獲得未經授權的數據訪問或操縱系統。OWASP 的建議包括訪問驗證、行為監控、操作邊界設置和防篡改執行日誌。</p><p>Docker 提出的第三類風險是過度自主。文章裏把 “YOLO 模式”（智能體操作自動放行）作為無限制長期授權的典型例子。雖然這種模式可能很高效，但必須放在安全邊界內，防止智能體訪問不該觸碰的系統和數據。</p><p>Docker 舉了一個例子：一名開發者要求編碼智能體清理一箇舊代碼庫。智能體生成了一個帶有尾部 ~/ 的 rm -rf 命令，並在未確認的情況下執行，刪除了開發者的主目錄。Docker 還引用了一名 AWS 工程師的案例，他以運維人員權限讓編碼智能體處理一個 Cost Explorer 漏洞。智能體選擇刪除並重建生產環境，導致長達 13 小時的區域性中斷。</p><p>憑證處理與這個問題密切相關。Docker 表示，智能體不應繼承開發者的個人令牌，因為每個操作都將攜帶該用户的全部權限。它建議使用獨立的短期憑證，在運行時注入，並避免出現在對話中。提示詞、配置文件或鏡像環境變量中的密鑰同樣存在風險，因為注入的指令有可能從智能體上下文讀取這些密鑰。</p><p>最後一個風險是數據竊取。一個具有網絡訪問權限且上下文中包含敏感信息的智能體可能會將這些信息發送到非預期的目的地。Docker 表示，在智能體將工作傳遞給另一個智能體的多智能體系統中，這種風險會加劇。Docker 建議配置網絡出站白名單，並且把任意智能體之間的數據轉交都視作不可信輸入。</p><p>這些建議和 InfoQ 報道過的其他方案思路相近。谷歌的 GKE 安全藍圖（2026 年 7 月報道）建議基於 gVisor 的 GKE Sandbox ，用於隔離執行生成代碼或調用不可信工具的智能體。它還使用 Model Armor 檢查提示詞和響應結果中的注入和敏感數據泄露。更早之前，Meta 開源了 LlamaFirewall ，結合了提示詞注入檢測、推理檢查和生成代碼靜態分析。谷歌 DeepMind 的 CaMeL 研究（同樣被 InfoQ 報道）則採取了不同的方法，跟蹤模型周邊的控制和數據流。</p><p>Docker 的方案是 Docker Sandboxes 和 AI Governance。Sandboxes 將每個智能體運行在一次性微虛擬機中，並定義文件系統和網絡控制。AI Governance 定義和約束智能體可以執行的操作、可用的工具和憑證。Docker 表示，隔離是見效最快的起點，而治理則為整個智能體集群提供了監督。</p><p>社區討論表明，僅靠隔離並不能解決設計上的問題。在 r/AI_Agents 的一個討論帖 中，一位名為 HectaMan 的評論者寫道，團隊應首先評估租户模型和風險模型。他們認為 Docker 可能很方便，但仍可能授予過高的權限，並指出它禁用了約 40 個特權系統調用，但仍保留約 500 個可用。他們建議默認拒絕權限、最小權限原則、策略執行點和受控信息流。</p><p>另一位評論者 Groady 表示，Docker 在本地機器上運行個人智能體時表現良好，但當智能體代表其他人執行代碼時，共享內核就存在隱患。他們建議在這種情況下使用微虛擬機或基於 gVisor 的隔離。討論表明，對比的核心不是“要不要容器”，而是隔離邊界是否匹配工作負載的信任邊界。</p><p>隨着編碼智能體獲得對代碼庫、雲賬户和生產系統的寫入權限，Docker 的指南很好地總結了一個日益凸顯的問題。其核心觀點很有説服力：安全團隊應假設智能體的輸入可能是惡意的，並設計好周圍的系統，使錯誤的決策不會變成大範圍的妥協。困難的部分在於決定智能體真正需要哪些權限、這些權限如何過期，以及誰來審計這些權限下執行的動作。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/1pCuIRtm5HYwTyR4fIhA?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Docker 呼籲通過隔離與治理保障智能體安全</li></ul>
+<p><a href="https://www.infoq.cn/article/1pCuIRtm5HYwTyR4fIhA?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
