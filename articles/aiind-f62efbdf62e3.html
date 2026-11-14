@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 自動寫 PR，模型反而最簡單：Inkitt 如何應對 Webhook 重複、CI 失敗與合併衝突</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI 自動寫 PR，模型反而最簡單：Inkitt 如何應對 Webhook 重複、CI 失敗與合併衝突</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/31/c4/31c571ccea0c2eb804abe89ecaf906c4.jpg" alt=""></p><h3>正文</h3><p>Inkitt 構建了一個 一次性拉取請求（PR）創建器 ，可以自動完成小型、低風險的軟件變更，從接收任務一直執行到生成可供測試和審查的草稿 PR。該工作流可以通過 Slack、Linear，或者另一個智能體發起的 API 調用觸發，並在遠程基礎設施上運行，從而減少開發者在本地配置和監督編碼智能體的需要。Inkitt Tech 在一篇技術文章中表示，該系統已經每天用於交付代碼。</p><p>一種事件驅動的編排器，它負責協調短生命週期的智能體容器，而不是依賴固定流水線。</p><p>各個階段分別負責需求説明、實現、驗證、CI 失敗修復和合並衝突解決。編排器會將每次運行的狀態持久化到數據庫中，因此執行過程可以從已經記錄的狀態繼續恢復。</p><p>該編排器將決策邏輯與副作用分離。其核心狀態轉換函數會根據當前運行狀態和傳入事件確定下一步操作，但不會直接訪問數據庫、網絡或語言模型。編排器負責保管外部系統的憑證，智能體容器則只會獲得短期有效的代碼倉庫 Token 和模型憑證。智能體無法直接訪問 Slack 或 Linear 憑證、雲身份，也不能隨意建立網絡連接。另有一項獨立檢查會查看實際的 Git Diff，確保變更沒有觸及受限制的路徑。</p><p>Inkitt 將自動化限制在預先定義的邊界內。涉及數據庫遷移、Schema 或共享契約變更、CI 和容器構建配置、身份驗證、支付代碼，以及軟件包添加或更新的任務都會被拒絕。驗證、CI 修復和合並衝突解決最多分別嘗試兩次。對於重複投遞的 Webhook，系統會通過去重和條件數據庫寫入進行處理，將 冪等操作 原則應用到可能重試或接收重複事件的工作流中。在判斷 CI 是否完成時，編排器會查詢 GitHub，確認所有相關任務都已經結束，而不會把每一個任務事件都當作整個工作流完成的信號。</p><p>該設計與其他編碼智能體採用了一些相同的防護措施，但使用了不同的編排模型。 GitHub Copilot 的雲端智能體 同樣會限制智能體權限，並要求在合併前進行人工審查； SWE-agent 則專注於通過模型驅動的界面瀏覽、編輯和執行代碼，從而解決代碼倉庫中的問題。Inkitt 的方案更強調持久化工作流狀態、有限重試，以及對外部操作的集中控制。</p><p>人工審批仍然是 Inkitt 流程的一部分。系統會創建草稿 PR，無法繞過分支保護，也不能自行合併變更。當 CI 通過並且變更進入預發佈環境時，系統會通知任務發起者。之後必須由人工將 PR 標記為可供審查，並管理審查者請求和審批。對於規模更大的任務，Inkitt 還維護了一個本地版本，讓人工持續參與開發過程。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/YRXscVHsTh0g6CVCJJ0D?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI 自動寫 PR，模型反而最簡單：Inkitt 如何應對 Webhook 重複、CI 失敗與合併衝突</li></ul>
+<p><a href="https://www.infoq.cn/article/YRXscVHsTh0g6CVCJJ0D?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

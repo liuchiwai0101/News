@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SpaceX豪擲5800億元 美兩州建AI超級電腦園區</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>SpaceX豪擲5800億元 美兩州建AI超級電腦園區</h1>
+<div class="notice">內容機器翻譯自第三方媒體（星島頭條 · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://image.hkhl.hk/f/1200p0/0x0/100/none/e6416dede9b099079e0aeb6f7b36854c/2026-11/INT01P06141126.jpg" alt=""></p><h3>正文</h3><p>Grok在讓人破繃這件事上，從來不會讓人失望。就在剛剛，安全公司Claroc發現， 超過3.5萬個用Grok構建的應用，無需登錄就能訪問，其中一部分直接暴露了企業機密和個人隱私。 最扎眼的是，老馬自家的SpaceXSI（SpaceX與xAI合併後的公司）和X，也在其中。</p><p>員工入職計劃、銷售客户資料、廣告提案……連自家的底兒，都被抖出來了。 而且，沒合併的特斯拉也沒躲過去。一份服務中心評分表，把22名技術人員的姓名、工作效率和獎金情況擺到了公開網頁上。</p><p>更騷的是，不光是用自己產品的自家員工遭了殃，泄露內容還涉及普通人的敏感信息。</p><p>包括，ICU患者的化驗結果、影像檢查、呼吸機使用記錄，以及企業員工的明文賬户密碼。</p><p>具體來説，在事情的一開始，Claroc測試了43551個（37571個仍然在線）Grok Build應用地址，發現94.7%的在線應用無需登錄就能打開。</p><p>雖説這些應用大多都是你我製作的AI泔水，像什麼小遊戲，計算器之類的……</p><p>但沙裏淘金，經過模型篩查和人工抽樣，Claroc估計，其中大概有650—800個應用包含私密數據。</p><p>涉及的機構包括SpaceXSI、X，以及另外30家企業，其中6家入選《財富》500強。</p><p>2、一家承包商的工時管理應用，把18個賬户的明文密碼寫進了腳本，訪問頁面的人都可以下載。</p><p>3、SpaceXSI的內部銷售工具，包含戰略客户賬户、銷售商機和內部團隊信息。</p><p>看下來，雖然真有「誰家好人」在Vibe Coding上的東西，記錄自己的密碼，以及體檢報告。</p><p>那麼，這些本來應該只在公司內部流轉的數據，怎麼會出現在公開網頁上？</p><p>簡單來説，在你用Grok vibecoding時，它會為每個發佈的應用分配一個獨立網址，形式類似於隨機名稱.grok.me。</p><p>這些隨機名稱由幾個單詞組成，設計初衷就是讓別人難以猜中。但問題在於， 網址難猜，不代表訪問權限安全。</p><p>Claroc發現，這些應用地址可以通過被動DNS（Passive DNS）數據庫批量找到。</p><p>簡單來説，每當有人訪問一個網站，計算機都需要通過DNS查詢域名對應的服務器地址。部分DNS解析服務會收集這些查詢記錄，並將其放進可搜索的數據庫。</p><p>有人訪問應用 → DNS查詢留下記錄 → 域名進入被動DNS數據庫 → 外部人員批量找到應用地址。</p><p>如果應用的訪問權限設置為「任何持有鏈接的人」，那麼只要找到網址，就能直接打開。</p><p>也就是説，Grok用隨機網址增加了應用被發現的難度，卻沒有真正解決訪問控制問題。</p><p>為了公平起見，Claroc還拿ChatGPT應用做了對照測試：其應用地址同樣可能被被動DNS收錄，但分享面板默認設置為「僅限我」。即使別人找到了網址，也無法訪問。</p><h3>各方報道</h3><ul><li><a href="https://www.stheadline.com/realtime-world/3636995/SpaceX%E8%B1%AA%E6%93%B25800%E5%84%84%E5%85%83-%E7%BE%8E%E5%85%A9%E5%B7%9E%E5%BB%BAAI%E8%B6%85%E7%B4%9A%E9%9B%BB%E8%85%A6%E5%9C%92%E5%8D%80" target="_blank" rel="noopener noreferrer">星島頭條</a>：SpaceX豪擲5800億元 美兩州建AI超級電腦園區</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586166.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：SpaceX豪擲超740億美元建兩座超級計算園區 AI業務收入已超公司總收入一半</li></ul>
+<p><a href="https://www.stheadline.com/realtime-world/3636995/SpaceX%E8%B1%AA%E6%93%B25800%E5%84%84%E5%85%83-%E7%BE%8E%E5%85%A9%E5%B7%9E%E5%BB%BAAI%E8%B6%85%E7%B4%9A%E9%9B%BB%E8%85%A6%E5%9C%92%E5%8D%80" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
