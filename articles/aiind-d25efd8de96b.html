@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌 Gemini 個人智能功能接入 Google Wallet 錢包應用：可為用户消費習慣提供個性化分析建議</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌 Gemini 個人智能功能接入 Google Wallet 錢包應用：可為用户消費習慣提供個性化分析建議</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家 · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/11/1a61f51d-f3dd-4f36-a6cb-0710c5e33374.png" alt=""></p><h3>正文</h3><p>在微軟多年前放棄Windows Phone業務之後，一項新的實驗項目再次讓“Windows手機”概念進入人們視野。不過這一次，實現這一目標的並非微軟，而是一位來自Google的人工智能負責人。</p><p>據報道，GoogleAI Studio產品與設計負責人Ammaar Reshi近日展示了一項名為“WindowsiOS”的開源項目。藉助Gemini 4 Carbon人工智能模型的輔助，他成功讓Windows 11運行在蘋果最新推出的摺疊屏iPhone設備“iPhone Duo”上，並公開分享了相關演示視頻。</p><p>此前不久，已有開發者利用人工智能讓蘋果iOS 26運行在微軟已停產的Surface Duo 2設備上。而這次，Ammaar Reshi則反向完成了另一項引人關注的嘗試，將微軟的Windows 11移植到了蘋果摺疊屏手機之中。</p><p>根據介紹，該項目運行的是ARM版本Windows 11 24H2系統，並通過虛擬機方式在設備本地運行。整個過程並非依賴雲串流或遠程桌面連接，而是真正在手機本機上執行Windows系統，用户可以直接通過觸摸方式進行操作。</p><p>Ammaar Reshi表示，他利用Gemini 4 Carbon協助完成了系統部署和適配工作，並將項目命名為“WindowsiOS”。由於項目已經全部開源，因此擁有相關設備的開發者和技術愛好者也能夠嘗試自行部署。</p><p>演示畫面顯示，Windows 11能夠在摺疊屏設備上較為流暢地運行。雖然Windows並非專門針對摺疊屏手機設計，但項目團隊充分利用了iPhone Duo的特殊形態，使設備在不同摺疊狀態下呈現出不同的使用模式。</p><p>當設備完全展開時，Windows桌面能夠佔據整個大屏幕顯示區域。而在半摺疊狀態下，系統則會自動切換至類似筆記本電腦的佈局設計。上半部分顯示Windows桌面界面，下半部分則變成虛擬鍵盤和觸控板區域，讓設備看起來如同一台微型筆記本電腦。</p><p>開發者介紹，這套虛擬鍵盤採用六行設計，不僅包含F1至F10功能鍵，還加入了Copilot按鍵以及完整的方向鍵佈局，同時支持多點觸控觸摸板操作。</p><p>由於iPhone Duo配備約7.6英寸內屏，其實際尺寸依然遠小於傳統PC，因此並不適合作為長時間辦公設備使用。但對於許多曾經期待Windows手機與桌面系統深度融合的用户而言，在口袋裏的摺疊手機上看到完整Windows桌面運行，本身就具有特殊意義。</p><p>項目的另一大亮點在於Gemini在開發過程中的參與。Ammaar Reshi表示，Gemini不僅幫助解決了軟件工程問題，還參與了整體實現過程，展示了現代AI代理在複雜開發任務中的潛力。</p><p>從技術角度來看，WindowsiOS為Windows構建了一套虛擬硬件環境，其中包括固件、存儲設備、網絡適配器、USB輸入設備以及音頻硬件等組件。這樣一來，Windows系統能夠像運行在標準PC上一樣識別這些設備。</p><p>例如，系統會為Windows提供一個虛擬以太網適配器，因此Windows可以藉助iPhone的網絡連接訪問互聯網，而自身則將其識別為標準以太網連接。</p><p>音頻兼容也是移植過程中面臨的重要難題。由於蘋果設備並不存在對應的Windows驅動程序，開發團隊採用虛擬音頻設備方案，使Windows能夠利用系統自帶驅動正常輸出聲音。最終，Windows運行產生的聲音可以通過iPhone揚聲器播放，而手機麥克風採集的音頻也能夠傳回Windows環境。</p><p>值得一提的是，該項目並未對設備進行越獄處理。開發團隊採用純軟件方式實現兼容，包括利用JIT即時翻譯技術執行ARM64代碼，從而繞過蘋果受限制的硬件虛擬化框架。這意味着用户在嘗試項目後，仍然可以正常返回原生iOS環境，而不會影響設備中的個人應用和數據。</p><p>在應用兼容性方面，項目還支持微軟為Windows on ARM平台開發的Prism翻譯技術。理論上，這允許部分傳統x86和x64 Windows程序在手機中的Windows環境下運行。不過開發團隊同時強調，並非所有應用程序和遊戲都能獲得完整兼容支持。</p><p>Ammaar Reshi聲稱，該項目已經能夠達到接近原生設備的運行速度，不過目前尚未公佈具體性能測試數據。當有用户詢問AI代理花費了多長時間完成開發時，他透露相關代理系統僅用了大約兩小時便完成了主要工作流程。</p><p>根據項目説明，整個安裝環境約佔用12GB存儲空間。不過對於希望親自嘗試的用户來説，仍然存在一定門檻。部署過程不僅需要蘋果Silicon芯片Mac電腦和開發工具，還需要Windows 11 ARM鏡像文件。此外，項目使用了一份經過優化處理的Windows鏡像，其中關閉了包括Defender實時防護和Windows Update後台服務等部分功能，以降低資源消耗並提升運行效率。</p><p>儘管這一項目距離實際商業應用仍有不小距離，但它展示了現代人工智能在軟件開發和系統移植領域所具備的新能力。更令人感慨的是，在微軟退出手機操作系統市場多年後，曾經未能實現的“把完整Windows裝進口袋裏”的夢想，如今卻通過摺疊屏手機、虛擬化技術以及人工智能的結合，以另一種方式重新出現在人們面前。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/027/141.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：谷歌 Gemini 個人智能功能接入 Google Wallet 錢包應用：可為用户消費習慣提供個性化分析建議</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586332.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：Gemini接入Google Wallet 可基於消費記錄提供個性化預算建議</li></ul>
+<p><a href="https://www.ithome.com/1/027/141.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
