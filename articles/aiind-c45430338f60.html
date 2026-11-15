@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yelp AI 助手融合原生 UI 與服務端驅動 UI</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Yelp AI 助手融合原生 UI 與服務端驅動 UI</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/54/f0/542ce741e7cc444fbcb65a99e8a3e4f0.jpg" alt=""></p><h3>正文</h3><p>Yelp 為其 AI 助手採用了混合用户界面架構 ，將原生移動控件與服務器驅動的對話渲染相結合，實現跨平台界面的快速迭代。該方案基於 Yelp 的 CHAOS 框架（全稱 Content Hosting Architecture with Optimization Strategies，帶優化策略的內容託管架構）渲染對話內容，導航欄與消息輸入框則保留原生實現。</p><p>Yelp 助手於 2024 年在 iOS 上推出，幫助用户向本地服務從業者提交服務需求。此後，它逐步擴展至查詢商户相關信息，並可完成預訂、預約、點餐等操作。</p><p>CHAOS 支持 Web、iOS 和 Android。在服務器驅動 UI 架構中，由後端定義客户端顯示的內容以及如何響應交互，因此無需發佈新的移動應用版本即可讓界面變更觸達用户。</p><p>我們現有的 CHAOS 框架缺少助手所需的一些能力，包括文本輸入字段和網絡請求。擴展框架會延遲交付，因此我們採用了混合方法：保持導航和消息輸入為原生實現，同時使用 CHAOS 渲染對話區域。</p><p>這套實現將視圖配置和對話數據分離。聊天會話啓動時，客户端拉取 CHAOS 配置並初始化消息事件數據集。後續消息事件直接更新現有視圖，無需重新拉取配置。事件類型包含持久化的用户消息和機器人消息、臨時輸入指示器和快速回復，以及打開目標頁面的鏈接。後端還可以發送指令來控制界面。例如，當項目請求完成時，它可以返回一條消息、一個查看匹配的鏈接，以及一個禁用聊天輸入的動作。這種事件驅動設計將渲染與對話邏輯分離開。</p><p>Airbnb 通過其 Ghost Platform 公開過類似的思路，該平台在 Web 和移動客户端上使用服務器定義的 UI。這兩種方案都允許團隊更新界面展示效果時不必每次改動都打包發佈新版本客户端。Yelp 將該模型應用於對話界面，同時保留原生控件，在客户端維護消息狀態與交互處理。</p><p>客户端顯示已提交的消息和輸入指示器，禁用輸入，並向後端發送請求。收到響應後，顯示回覆和快速回復，並重新啓用輸入。恢復錯誤會自動重試，不可恢復的故障則禁用輸入並提示用户稍後重試。</p><p>Yelp 工程師指出，該架構也帶來協同複雜度，工程師需要時間來同時理解助手和 CHAOS，而且同一套邏輯在不同平台上仍可能表現不一樣。將視圖配置與對話數據分離實現了獨立的功能開發。該架構還支持複用 Android 助手來啓動 Biz Ask Anything 試點項目。Yelp 表示，這項工作為其下一代助手奠定了基礎，新版助手現在可以將商家信息與用户可執行的操作連接起來。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/1N801doFOEl2Swqey5Jy?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Yelp AI 助手融合原生 UI 與服務端驅動 UI</li></ul>
+<p><a href="https://www.infoq.cn/article/1N801doFOEl2Swqey5Jy?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
