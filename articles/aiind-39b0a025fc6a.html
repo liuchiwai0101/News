@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>主動彙報工作，Claude越來越有眼力見了</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>主動彙報工作，Claude越來越有眼力見了</h1>
+<div class="notice">內容機器翻譯自第三方媒體（鈦媒體），僅供參考，以原文為準。</div><p><img src="https://images.tmtpost.com/uploads/images/2026/11/7e6dbc352c361d541d9e5b57dd384852_1794822847.jpg" alt=""></p><h3>正文</h3><p>T3 Code 的 Orchestrator V2 最近上線並進入穩定版——這套做了大約半年的多模型、多 Harness 編排能力終於跑順了。從一個早期體驗欠佳的開源替代品，到如今用户數超過 70 萬，它在已經成熟的編程 Agent 工具賽道里跑成了黑馬。</p><p>為什麼值得關注？因為它始終在深耕編程這件事，尤其在別家都往另一個方向走的時候。 ChatGPT 恨不得把 Dots、Spaces 和插件全塞到你眼前，Claude Code 在往通用辦公方向擴。T3 Code 的核心就是編程，它是工程師為工程師做的工具。</p><p>兼容性上，T3 Code 把你在用的模型、Harness 和訂閲接到了一起。它一直支持 Claude Code 和 Codex，最近又把幾乎所有其他選項都補上了——Codex、Claude、Cursor、Grok、OpenCode、Antigravity、Muse Code 和 Pi 都是直接內置的。想用其他兼容 ACP 的 Harness，也接入了整個 ACP Registry，Amp、Cline、Copilot 等都可以從裏面添加，還可以手動配置。你想用的工具基本都能接進來。</p><p>遠程環境管理是它明顯領先的地方。可以在一個遠程環境裏啓動任務，再讓子 Agent 到另一個已連接的遠程環境裏執行子任務——至少在一些其他頭部模型廠商的桌面應用裏，還沒見到這種支持。如果高度依賴遠程環境，T3 Code 是目前用過最好的工具；如果工作流高度依賴多個 Agent，比如指定一個模型做調研、另一個實現、再一個審查代碼，它同樣是最好的方案。架構上，所有操作都走自己的 WebSocket 服務器，而不是直接往終端發命令或靠奇怪的 Electron 調用建立連接。</p><p>一個同時訂閲 Codex、Claude、Cursor 甚至 Antigravity、寫代碼量極大的深度用户，給出的判斷是：T3 Code 尤其適合同時用多個模型的人。單從寫代碼的角度看，Codex 或 Claude 這類頭部模型廠商的桌面應用能提供的功能，T3 Code 基本也都有，使用體驗和實際表現都達到了原廠桌面編程應用的水平。</p><p>而做出這個開源項目的，是三個兼職的人，對面則是市值過萬億美元、擁有成千上萬名工程師的公司。項目已有 987 位貢獻者、5.44 萬 GitHub Star、1.02 萬 Fork，採用 MIT 協議；它本身不靠賣 AI 服務賺錢，模型訂閲要用户自己準備，但運營這個開源項目其實挺貴。</p><p>這期播客裏，T3 Code 作者 Theo Browne 和主持人 Joel Hooks 從頭聊了 T3 Code 為什麼存在、它到底解決了什麼，以及當 agent 真正承擔工作時，類型安全、測試、CI 和預覽環境為什麼反而更值錢了。本文基於該播客視頻整理，經 InfoQ 編輯。</p><p>太長不看版 Q：T3 Code 是什麼？是給普通開發者用的嗎？</p><p>A： 一個開源的 agent 編程界面，把 Codex、Claude Code、Cursor 等 Harness 統一包起來。終端裏跑一個 websocket 服務，桌面端、網頁、手機都能遠程連接，甚至能在一台電腦上操作另一台上的線程。</p><p>但它不是給普通開發者用的。我做內容、做工具本來就不是給普通開發者準備的，我想服務的是資深工程師的安全區：大公司裏周圍沒人在意的資深工程師，或者學校裏已經遠超同伴、甚至超過老師的年輕開發者。他們想深入、想痴迷，但身邊沒有同類，而我不會為了擴大受眾降低門檻。</p><p>A： 不是被拋棄，是被吸收進模型本身了。計劃模式當年存在的理由是模型太笨、需要靠“限制能力+改寫系統提示詞”來約束它別亂改，而現在模型聰明到不會在你們還沒聊完時就搶先動手。大家用“拷問（grill me）”式的追問，本質上就是在做計劃。</p><p>A： 有，但形態會變。可複用流程有價值，團隊把規則寫進共享 Markdown 很合理，但它依賴 AGENTS.md 等其他文件，兩個人跑同一個 skill 也可能因全局文件或模型不同而行為不同。以後這些流程可能變成雲端服務：團隊任何人點一下，就在不干擾本機 agent 上下文的情況下拿到報告。</p><p>A： 極少數成功，幾乎所有人都變得非常抑鬱。我只當了約三個月獨立創始人，回想那段窗口期還會覺得有壓力。</p><p>A： 他們不是在用 AI 自動化自己理解的東西，而是在用 AI 逃避建立那份理解。正確路徑是先在某件事上變得足夠好，知道它怎麼成功、怎麼失敗，再帶着這份標準把 AI 引進來。把在意用在刀刃上：自動化掉你所熱愛之事裏那些你不喜歡的部分。</p><p>用滑板術語“面試”新模型 Joel：你玩了一輩子滑板，這段經歷怎麼讓你得了“AI 精神病”？</p><p>Theo： 最表層的一點，是習慣説別人聽不懂的話。有次我坐 Uber，跟一群滑板朋友從一個滑板場去另一個活動，我坐在後排，車上大多是玩滑板的女生。她們聊占星，我一句都聽不懂。那一刻我意識到，這就是非滑板人聽我聊滑板的感受，是非工程師聽我聊工程的感受，也是不在舊金山的人聽我聊 AI 的感受。</p><p>Joel： 行話是必要的惡，本質是壓縮。你專精一個領域久了，就必須有一套自己的語言，對一種文化做壓縮。</p><p>説回滑板，這個領域還給了我一個衡量模型能力的指標——Skatebench。多數前沿模型在 82% 到 88% 之間，只有一個到了 95。你能猜到是哪個模型嗎？</p><p>Theo： Gemini 3.1 Pro。先快速説説 Skatebench 是什麼：它是一個測試，我通過物理特徵描述一個滑板動作，板往哪走、人往哪走、繞哪個軸轉、轉多少度，把正在發生的事完整描述出來。你不可能每次命名動作都把每個變量説一遍，所以滑板有自己的語言：kickflip、heelflip、tre flip、backside 360 kickflip……這些詞都是動作流行之後才被髮明出來的，但語法深深嵌在滑板裏。真正有意思的是，模型既要能推理三維動作，也要懂這套語法，才能把術語正確組合和化簡。我覺得 Google 在這裏有很大優勢：3D 推理高於平均，多語言和本地化能力又強，Fable 這類模型在同一榜單上只有 70 多到 80 出頭。</p><p>Theo： 要看模型定位。像 ox alpha 在 OpenRouter 上 stealth launch 的那一次，產品説明寫得很清楚：只做編程和 agent 任務。對這種模型，我不太會把它交給 Skatebench。真要用，目的也是測代碼能力，比如讓它把自己加進 Skatebench，看它能不能在代碼庫裏找到路徑，處理這種相對完整的任務。</p><p>更常見的做法是：把它直接放進日常工作流。先在 Harness 裏把它配好，再讓它去別的 Harness 裏配置自己。讓它用現有工具分析我的代碼庫，然後追問它為什麼選這個工具、為什麼引入這個 skill、怎麼看這個代碼庫的架構、有沒有拿到做改動所需的條件。這一輪下來，既能看出它如何理解自己的能力和邊界，也能反過來得到關於我自己系統設置的反饋。</p><p>接着讓它承擔真實工作，難度逐步提高：先從“修這個區域的 bug”開始，一直到“我有這個六年沒遷移、沒更新的應用，把它在另一套完全不同的技術棧上重建一遍”。</p><p>Theo： 更像一場理想中的面試。理想情況下，每面完一個候選人，團隊都應該交流一次：這個人走到哪一步了，接下來該往哪個方向問。我犯過幾次錯：有人按薪資區間投崗，而不是按崗位實際級別投。曾經有一位非常資深的工程師投了一個初級崗，結果整場面試表現遠低於她的真實水平，因為那就是一套初級崗的面試。理想的做法是，一旦發現能力超預期，就把面試軌道往上調。</p><h3>各方報道</h3><ul><li><a href="https://www.tmtpost.com/8206987.html" target="_blank" rel="noopener noreferrer">鈦媒體</a>：主動彙報工作，Claude越來越有眼力見了</li></ul>
+<p><a href="https://www.tmtpost.com/8206987.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

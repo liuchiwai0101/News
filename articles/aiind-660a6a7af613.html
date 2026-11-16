@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Docker Sandbox Kit規範：將AI智能體權限打包為OCI鏡像</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Docker Sandbox Kit規範：將AI智能體權限打包為OCI鏡像</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/6e/24/6e1baf91e53fce11a3e242797e747424.jpg" alt=""></p><h3>正文</h3><p>Docker 宣佈 將 Sandbox Kit 規範捐贈給 CNCF，其目標是讓“AI 智能體能夠訪問哪些資源”這件事，變得和智能體本身一樣具備可移植性。這份採用 Apache 2.0 許可的規範現已升級至 v3 版本，它將一個智能體、它所使用的工具，以及一份經過類型化聲明的、所申請的主機（hosts）、憑證（credentials）和卷（volumes）清單，統一打包為一個普通的 OCI 鏡像。</p><p>像 Claude Code 和 Codex 這樣的智能體，會代表用户安裝包、調用 API 並使用憑據。而那些讓它們真正發揮作用的授權，例如，綁定掛載（bind mount）、範圍過寬的令牌（broad tokens）、被放開的防火牆規則，通常會散落在 shell 的歷史記錄、各類控制枱看板以及人的記憶之中，而非存放在某個可供審閲的構件（artifact）裏。Docker 認為，這正是 OCI 當初被創造出來所要防止的碎片化問題，否則，每一個運行時廠商都可能各自發明一套自己的解決方案。</p><p>在 v3 版本中，Kit 不再是一種獨立的構件類型。它沒有自定義的媒體類型（media type），也沒有附屬的邊車文件（sidecar file）。其清單（manifest）中只包含一項聲明： vnd.docker.sandbox.kit.descriptor 。因此，一個 Kit 可以用 docker buildx build 來構建、用 docker pull 來拉取，並且能夠被掃描、簽名，或在 FROM 指令中引用。一旦固定（pinning）了摘要（digest），就等於把內容與權限一起固定了下來。</p><p>各項聲明都是具有類型化、版本化的能力（capabilities），例如， com.docker.sandbox/network-policy@2 和 com.docker.sandbox/credential@1 。在該規範的 GitHub CLI 示例中，這個 Kit 允許訪問 api.github.com ，但拒絕對 /repos/** 執行 DELETE 操作，因為&quot;拒絕&quot;的優先級高於&quot;允許&quot;。憑據可以由代理（proxy）來託管：一個符合規範的運行時會把真實的令牌注入到發往指定域名的請求中，而在沙箱內部只存在一個哨兵值（sentinel value）。</p><p>Kit 只是&quot;申請&quot;權限，最終由主機（host）來裁定。如果缺乏符合規範的運行時，這條註解（annotation）就是無效的。倘若某項必需的申請無法滿足，啓動就會被拒絕。Docker Sandboxes（它在擁有獨立內核的 microVM 中運行智能體）是第一個符合規範的運行時。</p><p>啓動時，會將一個工作負載 Kit（它提供根文件系統）與任意數量的混入疊加層（mixin overlays）組合起來。混入的排序依據的是 provides/requires 的依賴圖，而不是命令行標誌（flag）的先後順序。如果某個 requires 未得到滿足，或者有兩個 Kit 提供了同一個名稱，解析就會失敗。相互重疊的聲明會進行協調（reconcile）：網絡規則取並集（unioned），而不兼容的規則則被視為錯誤。</p><p>每一份描述符（descriptor）還可以歸約為一組規範化的授權集合。對更新進行門控（gates）的運行時，可以記錄這一集合，並阻止任何將其範圍擴大的新版本，包括移除了 deny 規則的版本。Docker 表示，隨規範一同交付了兩套一致性測試套件，一套針對 Kit 構件，一套針對運行時。</p><p>標準是讓一個生態能夠在不發生碎片化的前提下快速向前的關鍵，而很少有公司比 Docker 更懂得這一點。通過將 Sandbox Kits 交付為標準的 OCI 鏡像，Docker 正在為整個行業提供一種開放的、可重複的方式，把 AI 智能體、它的工具以及它的護欄（guardrails）打包為單一的構件。</p><p>不過，這些帖子並未説明該規範是否已被納入 CNCF 的某個孵化項目，也未提及它將進入哪一個成熟度等級。</p><p>希望進行嘗試的工程師可以訪問 docker/sandbox-kit-spec 倉庫，示例可以通過 sbx CLI 進行測試（例如， sbx run ./hello --kit ./gh ）。雖然現有的鏡像倉庫、掃描工具和簽名工具無需任何改動即可處理 Kits，但描述符語法以及每一項能力的具體語義都是全新的，需要重新學習。需要特別注意的是，權限執行完全取決於運行時。由於 Docker Sandboxes 目前是唯一符合規範的實現，跨不同運行時的可移植性尚未得到驗證。在治理結構發生變更之前，Docker 將繼續維護該規範，並鼓勵社區就任何當前尚無法表達出來的 Kit 職責或運行時職責提供反饋。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/yV89L6iMCqSLDHeSoLxo?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Docker Sandbox Kit規範：將AI智能體權限打包為OCI鏡像</li></ul>
+<p><a href="https://www.infoq.cn/article/yV89L6iMCqSLDHeSoLxo?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DigitalOcean Managed Agents為AI智能體提供託管雲基礎設施</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>DigitalOcean Managed Agents為AI智能體提供託管雲基礎設施</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/1e/bd/1ed0063e07bf6482807f640f632787bd.png" alt=""></p><h3>正文</h3><p>DigitalOcean最近推出了DigitalOcean Managed Agents的公開預覽版 ，為 AI 智能體提供了一層託管的雲端基礎設施，具備隔離的 microVM 運行時、受管控的工具訪問（governed tool access）以及無服務器 AI 推理（serverless AI inference）能力。</p><p>DigitalOcean 指出，智能體工作流（agentic workflows）與傳統雲端應用存在本質差異。如果開發者在常規虛擬機上運行智能體，就必須自行構建並管理其支撐性的運行時環境：</p><p>開發者不得不把精力投入到各種基礎（plumbing）工作中，以維護智能體的上下文、持久化保存製品（artifacts）並讓它們在其創建者之外的場景下仍然可以訪問、協調並行的工作，以及為工具提供經過安全加固的訪問。</p><p>其他方面的挑戰還包括：維護閒置的虛擬機容量以確保智能體能夠快速啓動，以及按需預置和配置計算資源。DigitalOcean Managed Agents 旨在通過整合兩項服務來應對這些挑戰，分別是 Harness Runtime 與 Action Gateway。</p><p>二者相結合，讓開發者得以擴展其智能體所能完成的工作，而底層的執行、持久化、工具訪問與基礎設施則交由 DigitalOcean 來管理。下面我們來深入瞭解這兩項新服務各自的能力，以及它們如何幫助你在雲端擴展智能體的工作。</p><p>Harness Runtime 基於輕量級的 microVM 構建，為多種受支持的 harness 中的智能體提供持久化、隔離的計算環境，涵蓋 Claude Code、Codex CLI、OpenCode 等編碼智能體，Hermes 這種通用智能體，以及使用 LangGraph 構建的自定義智能體。</p><p>Harness Runtime 能夠跨會話持久化保存對話歷史與工作狀態，這些會話可以被暫停、恢復或分叉（fork）。當會話處於空閒狀態，即沒有正在進行的 LLM 調用或工具調用時，它們還會自動暫停智能體。</p><p>每個會話都運行在經過安全加固的計算與存儲資源之上，同時允許開發者連接到內部服務而無需將其暴露到公網。會話可以跨代碼倉庫和任務並行啓動，從而支持分而治之（divide and conquer）、協作以及 map/reduce 等工作流。</p><p>Action Gateway 是智能體訪問外部工具與服務的接口，通過一個統一的 MCP 端點（endpoint）對外提供，目前已有超過 16000 種工具可供使用。這些工具涵蓋 Web Search（網頁搜索）、Web Fetch（網頁抓取）、Browser Automation（瀏覽器自動化）、DigitalOcean 基礎設施管理 API，以及面向 GitHub、HubSpot、Stripe 等流行平台的連接器。</p><p>該網關實現了多重安全措施，包括集中式權限管理（用以界定每個智能體可以使用哪些工具與操作），以及對敏感操作強制要求人工審批。為了高效支持多個智能體訪問外部系統，網關提供了速率限制（rate limiting）、重試、退避（backoff）和超時等機制。</p><p>前 Meta AI 工程師、現正打造 Dair.ai 的 Elvis Saravia 在X.com上評論這一發布時寫道 ：</p><p>非常令人興奮。我喜歡它對性能與成本削減的關注，因為許多其他的智能體管理平台都貴得令人望而卻步，使得在生產環境中擴展智能體變得困難。</p><p>最後，Seaotter 平台架構師兼創始人 Ryan Martin指出 ：&quot;空閒時暫停（Pause-when-idle）+ 受治理的工具，才是真正能夠規模化擴展的運維模式。&quot;</p><p>DigitalOcean Managed Agents 的推出時間與 Docker Cloud Sandboxes 大致同期，二者在沙箱（sandbox）與運行時層面存在顯著重疊。兩種方案都提供 microVM 隔離與持久化能力。但是，它們的側重點各不相同。Docker Cloud Sandboxes 更聚焦於開發者工作流，尤其是讓沙箱在本地與雲端算力之間遷移的能力，而 DigitalOcean Managed Agents 則更聚焦於生產環境基礎設施，並提供更豐富的編排（orchestration）與工具支持。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/LjVeWVAsBWwaiifdMRiu?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：DigitalOcean Managed Agents為AI智能體提供託管雲基礎設施</li></ul>
+<p><a href="https://www.infoq.cn/article/LjVeWVAsBWwaiifdMRiu?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>突發！DeepSeek開放全家桶API</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>突發！DeepSeek開放全家桶API</h1>
+<div class="notice">內容機器翻譯自第三方媒體（量子位 · InfoQ · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://www.qbitai.com/wp-content/uploads/imgs/qbitai-logo-1.png" alt=""></p><h3>正文</h3><p>11 月 13 日，DeepSeek 宣佈開放“全家桶應用 API”，試圖減少這部分工作。它將官方 App 和網頁端使用的聯網搜索、深度思考搜索、文件輸入、網頁閲讀等能力整合進現有 API，同時開放搜索、網頁抓取、OCR、ASR 和 TTS 等獨立接口。</p><p>DeepSeek 聲稱，開發者可以利用這些能力實現與官方 App 基本一致的對話體驗，甚至 1:1 復刻出完整的 DeepSeek App。</p><p>對於聯網搜索和網頁閲讀，開發者只需在 API 請求中聲明相應工具，模型即可根據任務需要自主決定是否調用，搜索、網頁抓取及相關上下文處理由 DeepSeek 服務端完成。文件輸入則需要先通過 Files API 上傳並解析，再將返回的文件 ID 加入對話；OCR、ASR、TTS 等能力則支持通過獨立接口調用。</p><p>“產品化之後確實不一樣了，DeepSeek 這都開始把自己的 App 能力拆出來了，從搜索到 OCR、再到語音，這個感覺怎麼有種衝着百度來的即視感。”開源項目《GSYVideoPlayer》 作者戀貓在知乎上評價。</p><p>價格方面，官方表示，用户調用 DeepSeek API 使用擴展能力時，除收取 Token 費用外，也將收取相關工具的調用費用。具體價格如下：</p><p>“我按官方價格表算了一下，寫一篇帶資料檢索的文章，成本不到 4 毛錢。”知乎用户藥塵 Ray 總結稱，“API 的錢已經便宜到可以忽略，貴的是三樣東西：控制調用次數的工程、合規，以及你自己的判斷。第三樣最貴。”</p><p>用 DeepSeek App 裏免費語音聊天的用户表示，文字轉語音的效果“其實是有點拉的”，商用 API 如果是一樣的效果，“那這個價格就不值了，不如火山引擎接豆包”。</p><p>還有用户認為，“語音識別、語音合成的價格感覺有點抽象，不過價格也不算貴，應該只是用來給用户兜底的，考慮到那些不方便部署自己語音識別和語音合成服務的人。文字識別這個好像綜合下來不一定比百度便宜，百度的是 2.5 元/千頁更貴，但有 1000/2000 次的免費額度。”</p><p>實際上，DeepSeek 這條路線已經有不少先行者。OpenAI、Anthropic 和 Google 都在通過各自的 API，將模型、搜索、文件處理和工具執行整合到一起。DeepSeek 此次補齊應用層能力，也讓模型廠商之間的競爭延伸到開發者過去自行維護的工具鏈。</p><p>也有用户對比了三家價格：DeepSeek 的聯網搜索每千次 5 元。作為對比，OpenAI 和 Anthropic 的同類工具每千次都是 10 美元。</p><p>傳統模式下，開發者會在請求中向模型聲明可用工具。模型認為需要查詢外部信息時，返回工具名稱及參數，應用程序根據這些參數執行搜索、數據庫查詢或其他操作，再把結果傳回模型。模型能夠選擇工具，但工具如何執行、何時重試、返回什麼數據，主要由應用程序負責。</p><p>隨着任務複雜度提高，這套流程也會變得繁瑣。例如，一個需要多次搜索的 Agent 可能在一輪對話中產生數次工具調用。每次調用都涉及數據傳遞、結果整理和上下文更新。開發者還需要處理不同工具之間的參數格式、調用失敗以及模型誤用工具等情況。</p><p>DeepSeek 此次提供的服務端工具改變了其中一部分流程。</p><p>根據官方開發文檔，開發者可以在現有 API 請求中聲明`deepseek_web_search`和`deepseek_read_url`兩個工具。前者負責聯網搜索，後者負責讀取用户提供的鏈接。</p><p>開啓非思考模式時，模型可以根據用户問題自動搜索網頁或圖片，並生成帶有來源引用的回答。開啓思考模式後，模型還可以在推理過程中多次搜索、打開網頁和查找頁面內容。DeepSeek 稱，開啓思考模式後，模型最多可以執行約 20 次工具調用，包括聯網搜索、打開網頁和頁內查找，讓模型能夠在多步推理過程中持續檢索和核對信息。</p><p>與開發者自行組織搜索流程相比，新接口將搜索決策、工具執行及結果處理整合到了服務端。客户端不再需要分別向搜索和抓取接口發起請求。</p><p>返回結果中仍保留工具調用記錄、搜索結果和引用信息。開發者需要將這些內容正確展示在界面中，並在後續對話中按協議回傳相關內容塊，但無需自行執行 DeepSeek 提供的服務端搜索工具。</p><p>這一變化尤其適合需要聯網問答、新聞檢索和資料查詢的應用。開發者可以直接使用官方維護的搜索鏈路，將更多精力放在業務功能和用户體驗上。</p><p>文件處理也是類似的思路。新版 API 允許開發者將 PDF、Word、PowerPoint 和圖片上傳至 DeepSeek Files API，解析完成後返回文件 ID，再將其加入對話。開發者可以選擇純文本識別，也可以選擇圖文混排識別。</p><p>後者能夠提取文檔中的圖片、圖表和示意圖，並按照原始位置與文字一起提供給模型。這意味着開發者無需另外整合 OCR 和基礎文檔版面解析服務，就可以讓模型閲讀一部分包含圖文內容的複雜材料。</p><p>不過，文件解析仍然需要上傳和引用兩個步驟。官方也明確指出，圖文混排識別無法保證提取所有圖表，解析後的圖片仍會消耗模型輸入 Token。</p><p>DeepSeek 同時開放了獨立的 Search、Fetch、OCR、ASR 及 TTS 接口。開發者既可以使用服務端自動編排，也可以將獨立工具接入自己的工作流。</p><p>實際上，DeepSeek 早在 10 月 17 日就開放了自研搜索引擎的 Search 和 Fetch API。此次發佈的主要增量是將這些底層工具進一步整合到模型對話中，讓服務端承擔一部分過去由應用負責的工作。</p><h3>各方報道</h3><ul><li><a href="https://www.qbitai.com/2026/11/510003.html" target="_blank" rel="noopener noreferrer">量子位</a>：突發！DeepSeek開放全家桶API</li><li><a href="https://www.infoq.cn/article/NWmk4epBL0jPAUtpKSKb?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：DeepSeek又來掀桌子了！官方App全套能力開放API，聯網搜索價格不到OpenAI、Claude的8%</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586584.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：DeepSeek被曝收緊App及網頁端額度 長對話與每日使用受限</li></ul>
+<p><a href="https://www.qbitai.com/2026/11/510003.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

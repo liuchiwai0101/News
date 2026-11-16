@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>實測騰訊 Hy4 flash：花兩毛錢，就能讓 AI 從零做個 3D 交互網頁</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>實測騰訊 Hy4 flash：花兩毛錢，就能讓 AI 從零做個 3D 交互網頁</h1>
+<div class="notice">內容機器翻譯自第三方媒體（愛範兒），僅供參考，以原文為準。</div><p><img src="https://s3.ifanr.com/wp-content/uploads/2026/11/exec-7d220a33-0856-4f59-a997-afaa52f2e7d5.jpg" alt=""></p><h3>正文</h3><p>11 月初，騰訊 Hy4 發佈，新模型在大模型競技場上一躍升至開源第一。</p><p>我們此前在 WorkBuddy 內體驗過 Hy4 的 Agent 長程任務和日常辦公能力。從逐幀分析視頻、復刻遊戲和網頁，到文件整理、Office 文檔處理，Hy4 都交出了不錯的成果。</p><p>整體實測表現，也基本符合它在大模型競技場上的成績。</p><p>但對於經常使用 WorkBuddy 的用户來説，模型能力只是選擇標準之一。是否免費、需不需要排隊、執行速度夠不夠快，同樣會影響實際體驗。</p><p>比如在工作日高峯期打開 WorkBuddy，倍率只有 0.11x 的 DeepSeek V4.1 Flash，繁忙程度卻常常居高不下。</p><p>早在 Hy4 發佈時，騰訊就預告過一款主打效率的 Hy4 flash。</p><p>就在剛剛，Hy4 flash 正式發佈。騰訊希望將 Hy4 已有的 Agent、長程任務和生產力能力，以更低的成本帶到高頻使用場景。</p><p>APPSO 提前拿到了 Hy4 flash 的測試資格。這次我們最關心的是， 它能否在保證任務完成質量的同時，減少 Agent 執行過程中的時間和 Token 消耗。</p><p>相較於 Hy4，新的 Hy4 flash 對 Token 效率進行了大量優化，Hy4 flash 總參數量為 224B，激活參數 12B，支持多模態和 1M 上下文長度。模型輸出更加精簡，吞吐量和整體響應速度也有所提升。</p><p>更高的 Token 效率也讓 Hy4 flash 的價格要比 Hy4 便宜不少，Hy4 flash 的輸入價格為 0.5 元每百萬 Token 輸入，而輸出則是每百萬 Token 輸出 2 元，幾乎是 Hy4 價格的十分之一。</p><p>我們可以直接在 WorkBuddy 內選擇 Hy4 flash 模型，新模型還有為期兩週的限時免費福利，11月16日–11月30日，每日贈送免費額度。</p><p>打開執行記錄，看着它讀取文件、拆解任務、編寫代碼、調用工具、檢查結果……一整套流程下來，幾十分鐘過去，模型可能還在反覆檢查同一個文件，甚至把剛修好的問題又改了出來。</p><p>這些彎路不會出現在最終的成果截圖裏，卻會實實在在地增加任務耗時和 Token 賬單。</p><p>所以，當 Agent 開始承擔真實工作，我們也需要關心一個更實際的問題： 完成同一件事，究竟需要多少時間和成本？</p><p>為了測試 Hy4 flash 的實際效率，我們在 WorkBuddy 中準備了相同的任務，分別交給 Hy4 flash 和 DeepSeek V4.1 Flash。測試過程中，提示詞、工具權限和其他設置保持一致，重點觀察兩款模型的執行過程、最終交付，以及背後的時間和 Token 消耗。</p><p>我們先用了一些在 WorkBuddy 內重複、瑣碎，但又需要花時間的工作，這些工作雖然不需要模型從零開發一套複雜系統，但也很考驗它對信息的理解、整理和工具調用能力。</p><p>例如進行一些深度研究的任務，看看是否能高效地獲得信息可靠、條理清晰、便於進一步使用的結果。</p><p>圖｜報告鏈接：https://workbuddy.link/p/RtOGPtOZXVoSfTCbjDeqkd 讓它對近期黃仁勳因出軌而辭去英偉達 CEO 的事情進行深度研究，並給我呈現一份網頁的分析報告。DeepSeek V4.1 Flash 交付的內容整體類似，也是從摘要、時間線、時長、基本面、產品、華爾街等等幾個方面來呈現這件事情的始末，卻比 Hy4 flash 多花了 10 分鐘的時間。</p><p>再看看編程，我們讓兩款模型在 WorkBuddy 中構建一艘可以交互的 3D 歷史帆船。</p><p>Hy4 flash 很快搭出了帆船的基本結構，網頁也能正常交互，整體是相對完整的原型。</p><p>圖｜體驗地址：https://workbuddy.link/p/tsu8HyORrowH5UBViw5c1C DeepSeek V4.1 Flash 則做得更細緻一些。水面波動更加自然，帆船也有了更多細節和可以探索的內容。</p><p>不過兩款模型在完成時間上的差距很大，DeepSeek 花了 1 小時 30 分鐘，Hy4 flash 只用了半小時。</p><p>對於只想快速驗證想法、搭建網頁原型的用户，尤其需要是迭代速度較快的場景，Hy4 flash 更經得起高頻使用，而且產出已經具備繼續修改的基礎，</p><h3>各方報道</h3><ul><li><a href="https://www.ifanr.com/1689653?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener noreferrer">愛範兒</a>：實測騰訊 Hy4 flash：花兩毛錢，就能讓 AI 從零做個 3D 交互網頁</li></ul>
+<p><a href="https://www.ifanr.com/1689653?utm_source=rss&utm_medium=rss&utm_campaign=" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

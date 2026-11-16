@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 寫得快，誰來接住生產責任</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>AI 寫得快，誰來接住生產責任</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/db/7e/dbyycedf391b2db23805ea437f069a7e.jpg" alt=""></p><h3>正文</h3><p>AI 已經能在幾分鐘內把一個應用的 Demo 寫出來，這件事早就不新鮮了。真正懸而未決的，是這些 Demo 能不能走到生產環境，並且一直活下去。</p><p>近日在 DBTalk 數據庫 AI 技術沙龍成都站上，騰訊雲 PG 數據庫技術專家黃輝把這個問題擺上了枱面，並給出了自己的判斷：AI 縮短的是代碼生成的時間，不是生產工程的責任清單——這份責任沒有消失，只是從&quot;誰來寫&quot;變成了&quot;誰來扛&quot;。</p><p>他舉了一個團隊任務管理系統的例子：一個賬號、幾個頁面，接上數據就能演示。但要推向生產，問題立刻浮現：這個應用給多少用户用？用户歸屬哪些團隊、有什麼權限？某個用户突然發出大量請求怎麼處理？數據被誤操作了怎麼恢復？</p><p>這些問題可以歸納成三道工程鴻溝，而且都指向同一個結論——AI 沒有分擔這部分責任，只是把它推後到了上線之後。</p><p>成本結構不匹配 ：傳統數據庫固定規格、長期計費，而 AI 應用負載波動極大，為了兜底高峯去買高規格，平時大部分時間反而在為閒置付費。</p><p>資源供給不匹配 ：傳統應用上線前有數週到數月的評估週期，資源可以提前準備，而 AI 應用要的是快速試錯，等不起這個週期——現在最快的雲數據庫創建也要幾分鐘，在 WorkBuddy 這類 AI 平台上跑一個任務，光等數據庫就位就要十幾分鍾，用户的耐心早就耗盡了。</p><p>運行治理不完整 ：身份認證、權限隔離、數據保護、容災恢復，這些能力在 Demo 階段都不需要，但在生產環境裏一樣都不能少。</p><p>三道鴻溝各自有解法，但思路是一致的：把本該由人盯着的責任，寫進系統的默認行為裏。</p><p>先看成本結構不匹配怎麼補。解法是把計費單位從&quot;固定規格 × 時長&quot;換成按活躍時間片計算的 CU（1 核 2G 每小時），計費精確到分鐘，沒請求不產生計算費用。偶爾被調用幾次的小應用，不再需要為一整月的閒置買單。</p><p>那資源供給不匹配呢？解法是把數據庫創建這件耗時的事，提前挪到用户請求之前：平台預置好一批初始化完成的實例，放進資源池，請求來了直接分配，只需補上身份綁定和網絡配置這兩步輕量動作。交付時間因此從行業常見的 5 分鐘級，壓到 3 秒以內，提速約 100 倍。</p><p>第一步，讓權限默認寫進數據層。 思路對標了 Supabase 範式——把 PostgreSQL 的 Schema 當成 API、權限和 AI 共同理解的唯一後端契約。權限上分三種角色：匿名角色只訪問公開數據，登錄角色承擔絕大部分業務訪問（由 GRANT 控對象權限、RLS 控行級可見性），高權限角色只給服務端用。一個最小示例看得更直觀：先開啓行級安全，再用一條策略把訪問和寫入都綁在同一個租户上：</p><p>這條策略效果是：應用代碼不用處處寫 WHERE tenant_id = ? ，漏寫了，數據庫自己會攔下來。</p><p>第二步，讓同一資源池裏的應用互不干擾。 答案是 Serverless 模式：讓渡的是資源長期獨佔，換來低成本按需計費和秒級交付。隔離拆成三層：路由只到自己的實例，連接權限不屬於別人，Schema 和對象權限嚴格隔離。一個實例回收重新入池前，要按順序走完這套流程：</p><p>任何一步沒做乾淨，都可能讓舊憑證重新訪問到已回收的數據。應用變大之後也有退路：小應用先在 Serverless 資源池裏跑，訪問量上來了就在池內調高配額，業務穩定後再一鍵遷到預置規格實例，全程不用改代碼。</p><p>這套數據層隔離的思路，還延伸到了 Agent 場景：用 Branch 和沙箱讓 AI 先在隔離環境裏驗證，而不是直接在生產數據上試錯。而 Serverless 這套隔離機制本身，也正好劃出了整套方案的邊界。</p><p>整套解法的前提是一次價值交換：用户放棄長期預留的固定資源，換來低成本和秒級交付。這筆交換也劃出了 Serverless 模式的邊界——需要長期保持大量併發連接、負載持續高位，或者對性能隔離、故障域和 SLA 有明確要求的核心交易系統，按需模式省不了多少錢，也給不了固定資源那樣的確定性，直接選預置規格實例更合適。</p><p>這條界線劃清楚，開發者和平台的分工也就跟着清楚了：開發者繼續負責業務模型、業務權限、業務邏輯和產品體驗；可用性保障、數據備份恢復，以及安全合規所需的基礎能力，則由平台通過架構和託管能力統一承接。</p><p>他最後用一句話結束了這場分享：讓 AI 寫出的每一個應用，都有一套能長期運行的生產級後端。這句話回應的正是開頭那個問題——AI 寫應用之後能不能活下去，答案不在模型寫得多快，而在誰來接住代碼落地之後那一串沒人替你扛的工程責任。</p><p>從 Demo 到生產的鴻溝，從來不是今天才有。每一次開發範式換代，都要重新回答一次&quot;誰該接住這份責任&quot;，這一次，輪到數據庫來接。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/sIqEVPmL3P9PExLjPzPW?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：AI 寫得快，誰來接住生產責任</li></ul>
+<p><a href="https://www.infoq.cn/article/sIqEVPmL3P9PExLjPzPW?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
