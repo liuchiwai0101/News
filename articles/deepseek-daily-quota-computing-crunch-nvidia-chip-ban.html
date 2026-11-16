@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DeepSeek 疑因算力不足推「每日限額」　美擬封殺東南亞租用 NVIDIA 芯片後門</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>DeepSeek 疑因算力不足推「每日限額」　美擬封殺東南亞租用 NVIDIA 芯片後門</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/16224120/PCM_Banner_1080_202561116_deepseek.jpg" alt=""></p><p>中國知名 AI 初創公司 DeepSeek 近日傳出因「算力不足」，被迫收緊旗下手機 App 及網頁版免費服務的使用限制。據多方消息指，在平台調用量登頂全球第一的背後，DeepSeek 開始實施每日對話配額，反映用户需求呈指數級爆發下，加上美國對中國的 AI 芯片出口管制，令其算力供應正面臨嚴峻考驗。</p><h3>單週 Token 量冠絕全球　兩個月急升近 3 倍</h3><p>今次 DeepSeek 罕有採取「限流」措施，最直接的導火線是其平台用户及調用量在短期內急劇膨脹。根據大模型 API 聚合平台 OpenRouter 統計數據，DeepSeek V4.1 Flash 模型在 11 月 9 日至 15 日單週內，便完成了高達 59.2 萬億（Trillion）個 Tokens 的調用量，高居全球首位；對比該模型於 9 月中旬剛推出時的單週 15.8 萬億次，短短兩個月內用量急升近三倍。</p><p>在算力擴張追不上用户需求增長的情況下，平台穩定性亦頻頻響起警號。DeepSeek 官方狀態頁面顯示，自 10 月以來平台曾發生多次服務中斷，其中 10 月 15 日更出現長達約 5 小時的嚴重故障，導致網頁版、App 及 API 服務同時受阻。</p><h3>設 4 萬字上限　取消閒置對話釋放記憶體</h3><p>根據多名網民收到的系統通知，DeepSeek 已針對普通免費用户收緊多項規則：除了單次輸入的字數上限被大幅收緊至約 40,000 個字符外，系統亦不再支援閒置超過 7 天（部分用户顯示為 72 小時）的長對話紀錄。一旦用户達到「每日對話限額」，畫面便會彈出「伺服器繁忙（Server congestion）」及配額已滿的提示。</p><p>有業界分析指出，此舉背後的技術考量是為了回收閒置對話所佔用的「KV Cache」資源。由於長對話會持續佔用珍貴的 GPU 顯示記憶體（VRAM）以保存上下文記憶，當大量長時閒置的對話未有釋放，便會嚴重擠佔活躍用户的推理算力。值得注意的是，是次配額僅針對免費 App 及網頁版，面向開發者的付費 API 則維持獨立計費與並發限制（如 deepseek-flash 上限為 2,500 個並發帳號）。</p><h3>美擬堵截東南亞算力「後門」　國產芯片成唯一出路</h3><p>市場分析認為，DeepSeek 實施配額制，成為外界觀察中國 AI 開發商面臨高階算力短缺的罕見公開指標。由於美國實施嚴格出口管制，禁止中國企業直接採購 NVIDIA 最先進的 AI 芯片，不少中資科企過去一直依賴走私，或透過雲端遙距租用位於東南亞數據中心的 NVIDIA 算力以填補缺口。</p><p>然而，這條「迂迴路線」亦正面臨被全面封殺的危機。《華爾街日報》早前報道，針對 NVIDIA 大量向東南亞銷售高階 AI 芯片事件，美國商務部正草擬新規定，計劃限制向馬來西亞、印尼及新加坡出口高階芯片，並進一步堵塞中國企業遙距存取當地算力的渠道。</p><h3>遠水難救近火　千億融資建數據中心 2027 年始投產</h3><p>為徹底解決算力瓶頸，市場消息指 DeepSeek 早於 10 月已完成第二輪高達 1,055 億元人民幣（約 158 億美元）融資，並計劃在烏蘭察布興建部署至少 16 萬張國產 AI 芯片的超大型數據中心。不過，該批國產算力集群預計要到 2027 年底至 2028 年初才能逐步投產，意味著未來一年多的算力缺口，仍需靠「限流調度」硬撐。</p><p>對於即將公佈季度業績的 NVIDIA 而言，DeepSeek 的算力荒既反映中國市場對高階 AI 芯片的龐大需求仍遠未被滿足，同時亦突顯出這部分潛在需求高度依賴華府隨時準備切斷的灰色渠道。截至目前，DeepSeek 仍未就相關使用限制發表公開回應，外界正關注這個堅持「不急於商業化」的 AI 巨頭，會否在算力重壓下被迫推出付費訂閲計劃。</p><p>資料來源：<a href="https://investinglive.com/stocks/ai-daily-quotas-come-to-deepseek-a-visible-sign-of-china-s-ai-chip-crunch/" target="_blank" rel="noopener noreferrer">investingLive</a></p>
+<p><a href="https://www.pcmarket.com.hk/deepseek-daily-quota-computing-crunch-nvidia-chip-ban/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>打破 NVIDIA CUDA 壟斷！Claude Mythos 3 日完成 AMD 晶片適配　省卻一年工程</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>打破 NVIDIA CUDA 壟斷！Claude Mythos 3 日完成 AMD 晶片適配　省卻一年工程</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/16232336/PCM_Banner_1080%EF%BC%BF0261116_claude_amd_gpu.jpg" alt=""></p><p>長久以來，NVIDIA 憑藉成熟且封閉的 CUDA 軟件生態系統，在 AI 運算市場築起一道難以逾越的「護城河」。然而，隨著生成式 AI 寫碼能力大幅躍進，這道防線正逐漸被打破。AI 巨頭 Anthropic 近日在上市路演（IPO roadshow）中向投資者披露，旗下模型 Claude Mythos 幾乎在「零人類幹預」的情況下，僅花約 3 日便完成將 AI 模型適配至 AMD GPU 的底層軟件工程，大幅縮短原本需時長達 6 至 12 個月的開發週期。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/16231908/AMD_GPU-1-1024x576.jpg" alt="">Anthropic 在上市前路演上表示有使用 AMD GPU 作主要算力之一。<p>Anthropic 聯合創辦人兼首席運算總監 Tom Brown 在投資者簡報中指出，過去要將 AI 模型部署至全新的硬件加速器上，往往需要動員數十名工程師耗費半年至一年時間，針對特定晶片架構編寫及調校底層核心程式碼（Kernels）。不過，透過 Claude Mythos Preview 模型自動化移植及編寫近 100% 的底層核心，團隊僅用了約 3 日時間，便成功讓旗下一個 AI 模型在 AMD MI355X GPU 上以實用效能水平運作（涵蓋提示詞處理 Prefill 階段）。</p><p>Anthropic 一直採取多晶片策略，目前同時在 NVIDIA GPU、AMD GPU、Google TPU 及 AWS Trainium 上運作模型，並將所有算力資源整合成單一靈活調度的運算池。公司在招股書中亦強調，現時已能以「過去所需時間的一小部分」將新晶片平台投入生產。今年 Anthropic 首次引入 AMD GPU，雙方更已簽署高達 2 吉瓦（GW）算力規模的合作協議，並預計於 2027 年上半年接收採用 AMD 新一代 MI450 晶片的 Helios 機櫃。</p><p>事實上，AMD 近年積極推動旗下 ROCm 平台以抗衡 CUDA，過去雖推出過程式碼轉換工具 HIPify，但開發者仍需承擔高昂的遷移成本。AMD AI 軟件副總裁 Anush Elangovan 早前便曾直言，Claude 在程式碼轉換上的表現甚至比自家工具 HIPify 更出色；AMD 行政總裁蘇姿豐（Lisa Su）亦曾透露，Anthropic 工程師在部署 MI355X 時，幾乎完全不需要 AMD 團隊提供技術支援，AI 生成的底層核心在部分情況下甚至超越人工深度調校的版本。</p><p>面對外界質疑 CUDA 優勢正在收窄，NVIDIA 行政總裁黃仁勳早前受訪時則回應指，NVIDIA 同樣大量運用 AI 編寫自家核心程式碼，並強調「沒有人比我們更瞭解自家架構」，認為 Anthropic 只是個別例子而非行業趨勢。值得注意的是，NVIDIA 與 AMD 均在參與 Anthropic 總值 260 億美元的 IPO 認購名單之列。<br>業界分析機構 SemiAnalysis 指出，雖然 AI 代理（AI Agents）大幅降低了跨平台編寫底層軟件的門檻，削弱了 CUDA 的軟件壁壘，但 AI 在生成及測試程式碼的過程中，依然高度依賴實體 GPU 進行驗證，而 AMD 內部目前仍面臨測試用 GPU 供應緊張的瓶頸。此外，Anthropic 今次披露的 3 日數據主要針對「提示詞處理」階段，尚未公開完整推理（Decode）表現及與 NVIDIA 晶片的直接效能對比。CUDA 的護城河雖明顯變窄，但距離完全瓦解仍有一定距離。</p><p>資料來源：<a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropic-says-claude-mythos-slashed-software-work-to-onboard-amd-gpus-from-up-to-12-months-to-around-three-days-writing-almost-100-percent-of-kernels-autonomously-chips-away-at-nvidias-cuda-moat" target="_blank" rel="noopener noreferrer">Tom’s Hardware</a></p>
+<p><a href="https://www.pcmarket.com.hk/anthropic-claude-mythos-amd-gpu-cuda-3-days/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
