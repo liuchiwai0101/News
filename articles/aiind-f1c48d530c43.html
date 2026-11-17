@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>研發「OpenAI硬件」公司 租下金融區辦公空間 - Singtaousa</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>研發「OpenAI硬件」公司 租下金融區辦公空間 - Singtaousa</h1>
+<div class="notice">內容機器翻譯自第三方媒體（星島），僅供參考，以原文為準。</div><p><img src="https://singtaousa2025.s3.us-west-2.amazonaws.com/wp-content/uploads/2026/11/17040339/sf10-1-7.jpg" alt=""></p><h3>正文</h3><p>美國時間 2026 年 11 月 13 日，兩家公司兩場發佈會同天發生。一邊是企業級對話式智能體公司 Sierra 聯合 Meta 正式發佈個 人代理協議 Poppy v1.0，解決助手怎麼「進門」的問題 ；另一邊是 OpenAI 推出面向個人助手 dots 的 ChatGPT Wallet， 解決助手怎麼「付錢」的問題 。</p><p>同一天打通進門和結賬，本身就足夠耐人尋味。更值得留意的，是站在兩套方案背後的同一批名字。Visa 和 Mastercard 同時出現在兩邊的名單裏，Shopify、Stripe 這些掌管電商與支付基礎設施的公司，則站在 Poppy 的核心夥伴之列。</p><p>Agent 的下一場競爭，表面上看是巨頭搶入口，底層的暗線卻是一場圍繞商業通道的提前佔位。</p><p>Sierra 與 Meta 聯合發佈個人代理協議 Poppy v1.0｜圖片來源：Sierra 官方博客</p><p>過去，個人助手訪問企業網站只能像個隱身訪客，商家看不清來者是誰，更不敢把查訂單、改地址、訂機票或金融預審這類敏感操作交給它。</p><p>Meta 和 Sierra 推出的 Poppy 要解決的核心就是信任 ，它讓企業在接到請求時，能用密碼學手段確認三件事——來敲門的是哪個助手、它代表哪位用户、到底拿了多少權限。</p><p>「門牌」 。接入 Poppy 的企業，會在網站標準路徑/.well-known/poppy 下放一份配置文件。你可以把它想象成貼在店鋪門口的訪客指南，寫清楚開放了哪些通信端點、怎麼登錄、允許執行哪些操作。助手找上門時，不用再去瞎猜網頁按鈕怎麼點，先看門牌就能按規矩辦事。</p><p>「地基」 。Poppy 沒有推翻互聯網現有的通信方式，它直接建立在 OAuth 授權、HTTPS 加密傳輸、OpenAPI 以及模型上下文協議之上。如果用户只是查商品價格，助手可以作為匿名訪客對話；一旦涉及賬户操作，就必須走授權登錄，讓企業驗明正身。</p><p>「雙向授權」 。用户這一端可以決定，向助手開放只讀權限，還是允許修改信息與交易；企業那一端則劃定外部助手在自家地盤上最多能走多遠。兩邊都點頭，一次交互才算成立。</p><p>從發佈信息來看，Sierra 與 Meta 聯手推動這套協議，可以説非常互補。由前 Salesforce 聯席首席執行官 Bret Taylor 與前 Google 高管 Clay Bavor 創立的 Sierra，主業是幫企業打造自有客服智能體，天然坐在「接待方」一側；Meta 旗下的個人助手 Muse 則是典型的「來訪方」，需要敲開無數網站的大門。接待方和來訪方各出了一半力氣，才湊成這次標準落地。目前 Muse 訪問參與站點時，已經默認優先查找並調用 Poppy 協議。</p><p>開放協議最怕遇到先有雞還是先有蛋的冷啓動難題。這一次真正幫 Poppy 跨過門檻的，是電商基礎設施巨頭 Shopify。</p><p>協議發佈的同時，Shopify 直接為全球 175 多個國家的每一位商家自動開啓並生成了 Poppy 發現文件，不需要商家任何手動配置。再加上超過 100 家設計合作伙伴裏，囊括了達美航空、1Password、Okta 和 Cloudflare 等各行業代表，這套門禁系統在第一天就鋪開了不小的覆蓋面。</p><p>讓 Agent 幫自己掏錢包，大多數人的本能反應都是抗拒。OpenAI 推出的 ChatGPT Wallet，設計出發點非常明確，就是讓 Agent 能把交易推到終點，但從頭到尾都碰不到真實資金信息。</p><p>在實際購物流程裏，用户可以讓自己的 dot 搜索商品、比價、放進購物車並準備好結賬頁面。可只要走到付款這一步，dot 就必須停下來，把決定權交還給人類。用户親自核對商品清單、總金額和所選銀行卡後， 必須通過人臉識別或指紋掃描等生物識別方式完成授權，交易才會被放行 。</p><p>OpenAI 個人助手 dot（Rufus）在對話中發起「Review purchase」結賬確認｜圖片來源：OpenAI</p><p>更關鍵的安全設計藏在後台。無論是跑腿的 dot 還是收錢的商家，在整筆交易裏都永遠看不到你真實的信用卡卡號。用户授權後，合作的卡組織網絡會生成一個一次性支付憑證，包含臨時卡號、安全碼和有效期。商家拿到的只是這串臨時信息，你的真實卡號始終沒有露面。</p><p>為了實現這套機制，OpenAI 拉來了 American Express、Mastercard 和 Visa 聯合開發，完整保留了原有的信用卡積分、權益和拒付保護。OpenAI 還在發佈時專門劃清界限， 強調 ChatGPT Wallet 絕非加密錢包，也不走區塊鏈或穩定幣支付，完全運行在傳統法幣銀行與卡組織基礎設施之上 。</p><p>從公開信息來看，各方的商業動機都很清晰。對 OpenAI 而言，個人助手如果只會給建議、甩鏈接，就永遠停留在導購階段；把結賬閉環留在對話生態內，dots 才能從建議者變成成交者。而對傳統卡組織來説，一旦智能體成為新的消費入口，誰都不願看到交易流量被新型支付網絡切走。藉着這次合作，三大卡組織順理成章把新通道接回了自己的清算網絡。</p><p>ChatGPT Wallet 初期只面向美國年滿 18 歲的 ChatGPT Pro 訂閲用户限量開放，支持符合條件的美國發行銀行卡，包括 Amex、Visa、Mastercard 以及 Chase 發行的卡。從公開信息來看，先拿付費用户試水，大概率是想在風控上走得穩一些。</p><p>把這兩條新聞放在同一張桌面上對比，會看到一個很有意思的交叉圖景。</p><p>在 Poppy 的首批核心夥伴名單裏，Shopify、Stripe、PayPal、Visa、Mastercard 悉數在列；轉到 ChatGPT Wallet 這邊，站台開發的又是 Amex、Visa 和 Mastercard。真正橫跨兩邊的只有 Visa 和 Mastercard，它們既在 Poppy 的名單裏，也是 Wallet 的開發夥伴。</p><p>更耐人尋味的細節是，OpenAI 自己的名字，也赫然列在 Poppy 的 100 多家設計合作伙伴名單之中。</p><p>在消費端市場，Meta 的 Muse 和 OpenAI 的 dots 是再直接不過的競爭對手，都在拼命搶佔用户每天打開的第一個入口。可一旦走到企業訪問層，兩家巨頭卻坐到了同一張會議桌前，準備共用同一張門禁卡。原因不難理解，航空公司或零售商很難願意為每家模型廠商各維護一套互不兼容的接口。C 端可以各顯神通搶入口，B 端必須共建同一套通行證。</p><h3>各方報道</h3><ul><li><a href="https://www.singtaousa.com/2026/11/17/news/usa/openai-hardware-company-rents-office/" target="_blank" rel="noopener noreferrer">星島</a>：研發「OpenAI硬件」公司 租下金融區辦公空間</li></ul>
+<p><a href="https://www.singtaousa.com/2026/11/17/news/usa/openai-hardware-company-rents-office/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
