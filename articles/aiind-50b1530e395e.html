@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>從 SDLC 到 ADLC：寶潔的 AI 原生組織實驗</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>從 SDLC 到 ADLC：寶潔的 AI 原生組織實驗</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/e4/32/e4b6b9ec1b47889146585beae8105f32.jpeg" alt=""></p><h3>正文</h3><p>在今天的寶潔中國， AI 已經貫穿整個業務鏈條：從消費者研究、產品研發、品牌營銷、供應鏈、到客服等等，每個環節都有 AI 的觸角。</p><p>一家穿越週期有着百年曆史的消費品企業如此擁抱 AI，比僅僅談論上線了多少個 AI 工具更值得我們思考。在極客時間 9 週年「AI 落地見真章」訪談中，寶潔大中華區 CTO 童熙談到了研發團隊正在做的一項探索：他們嘗試讓 Agent 串聯從業務需求到開發、測試、發佈和運維的更多環節。這就是他在訪談裏提到的 ADLC。</p><p>生成代碼快了多少，説明的只是其中一步。從需求進團隊到結果能用，中間還有多少等待和返工，才是流程重構要算的那筆賬。</p><p>一、中間幾步快了，整條流程還在等誰 SDLC（軟件開發生命週期） 這套流程，做開發的人都熟：需求提出、開發編碼、測試驗證、發佈上線、運維監控，中間還夾着提單、代碼評審、上線工單、發佈檢查。每個環節一個角色，交接一次。</p><p>它跑了幾十年，前提是每個環節都要有人來做決策、做執行，流程是按人的協作方式設計的。Agent 出來之後，這個前提鬆動了。</p><p>童熙説，當我們把開發工作交給智能體、交給數字員工去做的時候，會發現它不再按角色分配任務，甚至有好幾個環節都不需要存在了。</p><p>童熙舉了個假設。一項工作有七步，即使 Agent 能順暢完成第二到第五步，第一步和第六步仍可能卡在人工交接上。</p><p>哪些交接可以簡化，哪些檢查要明確責任人，是流程重構裏最需要判斷的地方。</p><p>ADLC（Agent 驅動的開發生命週期） 要回答的就是這個：越來越多環節由 Agent 參與之後，整個生命週期怎麼重新設計。這件事沒法靠給每個環節配一個 AI 助手解決，流程圖得重畫。</p><p>原有的流程是以人為中心設計的，現在需要設計一個新的、以 Agent 為中心的流程。童熙認為，這種流程本身的變化，也需要組織去匹配。</p><p>二、研發流程變了，團隊如何匹配？ 有個現象挺普遍：一個人用 AI，效率提升看得見；放到整個團隊、整個公司，交付速度沒怎麼動。</p><p>童熙的解釋是部門牆。他提到，個人提效經常可以看得到，但放到公司層面效果不明顯，原因就在不同部門、不同角色之間的協同溝通成本。</p><p>你在自己工位上把效率翻了一倍，工作流到下一個部門、下一個角色，還是要走同樣的審批、同樣的溝通。局部省下來的時間，被流程裏的人為節點吃掉了。</p><p>所以寶潔先動的不是技術。人才招聘、人才培養、技術治理，三件事一起推。</p><p>擁抱 AI 的人才招聘 過去，IT 崗位描述分得很清楚：前端、後端、測試工程師，各有技能要求和職業路徑。</p><p>今年，描述換了。不再細分崗位，統一為擁抱 AI 為中心、圍繞 AI agent 開發的崗位</p><p>背後的判斷不復雜：AI 把編碼門檻降下來，工程師能跨過原來的專業分工，崗位需求就跟着往 Agent 開發上挪。</p><p>這也接上了童熙反覆講的那句話：“AI 本身不是目的，如何能運用好 AI，最終為業務為消費者產生價值，這才是我們的目的。”</p><p>用人標準在從“你會什麼技術棧”變成“你能不能用 AI 創造消費者價值”。</p><p>推動研發人員向 AI 全棧轉型 過去研發團隊是典型的敏捷模式：五人小隊，前端、後端、測試各管一攤。從去年開始，寶潔在推動研發人員向 AI 全棧工程師轉型，藉助 AI 工具跨過原來的分工，把一段工作從需求理解推進到實現和驗證。</p><p>要做轉型，童熙認為，自上而下和自下而上都很重要，關鍵是怎麼讓大家從內心裏認同。</p><p>他們的解法是社區和黑客松。公司內部辦了不少黑客松，建了各種技術社區，其中一個叫 Vibe Coding 的社群，每個月有好幾場討論會，大家講自己用 AI 提效的做法。業務部門的同學也會被請來：不少人已經能用 AI 做原型、搭小系統了，他們的分享對 IT 是個刺激，“他們都可以，為什麼我們自己不行呢？”</p><p>這條大概是整場訪談裏最難複製的一條。它靠的不是制度，是身邊有人先做成了。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/prRYMYmhOvSY9EaMz8Oc?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：從 SDLC 到 ADLC：寶潔的 AI 原生組織實驗</li></ul>
+<p><a href="https://www.infoq.cn/article/prRYMYmhOvSY9EaMz8Oc?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
