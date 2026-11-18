@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GitHub 讓 AI 接管工作流，單次默認預算 10 美元：是不是太大方了？</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>GitHub 讓 AI 接管工作流，單次默認預算 10 美元：是不是太大方了？</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/e1/8a/e17734e1d4a92936977ebb20303f358a.jpg" alt=""></p><h3>正文</h3><p>GitHub 已宣佈 GitHub Agentic Workflows 正式可用。這個開源項目可以在 GitHub Actions 中運行編碼智能體，處理 Issue 分類和持續集成（CI）故障分析等代碼倉庫任務。智能體啓動時僅擁有隻讀權限，其提出的任何更改都由獨立作業應用，而這些作業持有各自的寫入令牌。</p><p>這種隔離也有侷限。項目的 常見問題 指出，這些保護措施不會自動覆蓋直接授予的寫入權限，也不適用於工作流作者自行添加的自定義作業，因此工作流是否安全取決於具體配置。作者還可以添加 GitHub Environment 保護規則，要求寫入作業在運行前必須經過審核人員批准。</p><p>開發者使用自然語言 Markdown 描述任務，並通過 YAML Front Matter 進行配置。項目會將這一定義編譯成標準的 Actions 工作流，從而複用現有的 Runner 組和策略限制；團隊既可以使用 Copilot，也可以接入其他編碼智能體。根據 正式可用公告 ，智能體運行在由 Agent Workflow Firewall 保護的沙箱容器中，威脅檢測作業會在應用修改前掃描智能體提出的變更。該項目於 2026 年 6 月進入公開預覽階段。</p><p>公開預覽以來，GitHub 新增了對 Actions Runner Controller （ARC）的支持。ARC 是 GitHub 面向自託管 Runner 推出的 Kubernetes Operator，可以配合 Docker-in-Docker （DinD）使用。DinD 會在 Runner Pod 內運行一個 Docker 守護進程，使智能體能夠啓動自己的沙箱容器。項目指南指出，ARC 默認以特權容器的方式運行 DinD Sidecar，這意味着一個擁有特權的組件與採用最小權限設計的智能體運行在同一環境中。</p><p>支出默認設有上限。GitHub 的 文檔 將 AI Credit（AIC）的價格定為每個 0.01 美元，並將每次運行的上限設為 1000 AIC，即 10 美元。項目的 企業控制參考文檔 還規定了多項默認限制：每天 5000 AIC、每次威脅檢測運行 400 AIC，以及智能體步驟最多運行 20 分鐘，組織可以覆蓋這些設置。已經結束實驗階段的 gh aw forecast 命令可以估算每月的 AI Credit 支出，其中包括威脅檢測的費用。</p><p>埃森哲戰略、架構與創新團隊高級經理 Ben Alton 在公告中表示：“我們的一位負責人估計，僅在開發工作上每週就節省了 29 個小時。”公告並未解釋這一數據的測量方式。</p><p>參與項目測試的工程師則表現得更加謹慎。在一篇介紹 Issue 分類工作流的實操文章 中，freenet 中間件團隊負責人 Sascha Mirow-Stanitzok 認為，默認預算對於 Issue 分類而言過於寬鬆，因此將每次運行限制為 100 AIC、15 輪交互和 10 分鐘。他還指出，僅僅要求智能體忽略 Issue 文本中的指令，並不能真正保護工作流；對於會修改代碼或創建 Pull Request 的工作流，他不會採用同樣的模式。</p><p>GitLab 的 Duo Agent Platform Flow 採用了不同的方案。它們以一種 複合身份 在 Runner 上運行，將實際執行操作的服務賬户與發起請求的人類用户綁定在一起。其 觸發操作 必須由人類用户發起，例如提及智能體或為其分配任務，因此一個 Flow 無法啓動另一個 Flow。這項規則可以阻止智能體在沒有人類發起操作的情況下，跨多個 Flow 串聯執行任務。</p><p>GitHub 的常見問題指出，對於可復現的構建和測試，傳統 Actions 仍然是更合適的選擇；智能體工作流則適用於需要理解或生成內容的任務。該項目面向 github.com 上的 GitHub Free、Team 和 Enterprise 用户開放，默認使用的 Copilot CLI 引擎需要 Copilot 許可證。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/lMs1bM1muspglUjMr1l3?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：GitHub 讓 AI 接管工作流，單次默認預算 10 美元：是不是太大方了？</li></ul>
+<p><a href="https://www.infoq.cn/article/lMs1bM1muspglUjMr1l3?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

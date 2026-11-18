@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌公佈已發現 500 多個 XSS 漏洞的 AI 安全代理 PageBreak</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌公佈已發現 500 多個 XSS 漏洞的 AI 安全代理 PageBreak</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/c3/64/c3aa081d373cb2c7b1cafe8b8729c164.jpg" alt=""></p><h3>正文</h3><p>根據谷歌發表的一篇論文，其人工智能驅動的安全代理自今年 1 月全面投入運行以來，已 在旗下各類 Web 應用中發現了 500 多個 XSS 漏洞 。Google PageBreak 利用 Gemini 模型自主調查潛在漏洞，但僅在確定性驗證器在運行中的應用程序上成功復現該漏洞時才會上報，因此誤報率幾乎為零。</p><p>藉助 PageBreak，每個漏洞假設都會在運行環境中通過真實的漏洞利用方式進行測試，例如執行 JavaScript 以驗證 XSS、向一個全局可讀的位置寫入數據以驗證路徑遍歷，或觸發外向 DNS 請求以驗證遠程代碼執行（RCE）。谷歌信息安全工程師 Michał Bentkowski 解釋道：</p><p>在 PageBreak 的開發初期，我們就刻意決定優先考慮確定性驗證。該系統並非僅僅根據代碼模式推測缺陷，而是通過在運行環境中驗證潛在缺陷來實現閉環。這種方法使誤報率接近於零，確保不會因未經驗證的漏洞報告而給產品團隊造成過重的負擔。</p><p>谷歌還會在內部保留非確定性檢測結果，為未來進行更深入的掃描提供線索，識別其驗證能力的不足，並指導新驗證器的開發。這些未經驗證的候選漏洞不會發送給產品團隊，從而使他們能夠將注意力集中在可信度較高的漏洞上。Bentkowski 寫道：</p><p>雖然確定性驗證是我們的黃金標準，但我們也意識到，目前的驗證器尚不具備覆蓋所有漏洞類型或複雜場景的能力。這會帶來漏報的風險——那些漏洞本來可能被非確定性驗證器檢測出來。</p><p>在 Google Bug Hunters 上的另一篇文章“ 谷歌的 PageBreak 項目——在現實世界中的發現 ”中，Bentkowski 描述了 PageBreak 發現的三個技術案例：一個 XSS 漏洞、一個由服務配置錯誤導致的緩存中毒問題，以及一個路徑遍歷漏洞。在 LinkedIn 上， 谷歌高級信息安全工程師 Lukas Weichselbaum 強調了減少誤報的重要性 ：</p><p>許多由 AI 生成的漏洞報告聽起來很有説服力，但最終卻被證明是錯誤的，而收到這些報告的團隊則不得不浪費時間逐一核查。在 PageBreak 中，模型可以隨意提出建議，但只有當驗證器使用真實的有效載荷確認後，該發現才算有效。這些驗證器是由安全工程師編寫的普通代碼，並非由模型生成，而且位於代理循環之外。</p><p>Bentkowski 表示，PageBreak 受益於谷歌的工程環境，特別是 谷歌的單體庫（monorepo） 端到端代碼可視性、將實時 HTTP 流量與源代碼關聯的安全信號，以及可為其 Web 應用程序提供經過身份驗證訪問權限的現有掃描基礎設施。</p><p>谷歌的長期目標是將產品團隊的參與範圍縮小至僅對 AI 生成的修復方案進行驗證。為此，谷歌正在將 PageBreak 與其他代理式安全項目（如 CodeMender）進行集成，以便針對其發現的漏洞自動生成修復方案。</p><p>目前，這 500 多個漏洞尚未經過任何獨立的驗證。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/uGTol3TSzOV72NSrcBrB?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌公佈已發現 500 多個 XSS 漏洞的 AI 安全代理 PageBreak</li></ul>
+<p><a href="https://www.infoq.cn/article/uGTol3TSzOV72NSrcBrB?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
