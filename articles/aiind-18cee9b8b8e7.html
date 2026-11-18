@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>800 個 MCP Server、5000 個工具，AI 智能體的“微服務危機”來了</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>800 個 MCP Server、5000 個工具，AI 智能體的“微服務危機”來了</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/32/4f/328d6b9cb0378b88870da5d07b7b4f4f.png" alt=""></p><h3>正文</h3><p>隨着 AI 智能體在公司內部得到廣泛採用，Uber 構建了一套 MCP Gateway，用於規範智能體發現和調用內部服務的方式 ，以解決集成碎片化、基礎設施重複建設和安全實踐不一致等問題。該平台支持 800 多個 MCP 服務器和 5000 多個工具，為服務發現、協議轉換、授權和執行提供統一層。</p><p>Uber 工程師將該方案描述為一種微服務架構，可以將現有 API 公開為 MCP 工具，而無需修改底層服務。整個架構將作為控制平面的 MCP Registry 與負責運行時執行的 Proxy Gateway 分離。Registry 維護工具定義、Schema、所有權和啓用設置；Proxy 則將 MCP 請求轉換為 HTTP、gRPC 或 TChannel 調用，再將響應轉換回兼容 MCP 的結果。</p><p>該架構被拿來與成熟的 API 網關模式比較。Microsoft CoreAI 首席軟件工程師 Ajay Sharma 在一篇 LinkedIn 帖子 中回覆：</p><p>Azure API Gateway 早就在做這件事了。這是一套將大語言模型帶來的混亂重新整理為秩序的方法。</p><p>Uber 的新 MCP 網關，看起來與過去幾十年裏我們為 API、後來又為 GraphQL 構建的網關完全相同。</p><p>Tamir Dresher 在一篇 LinkedIn 帖子 中強調，安全、服務發現、可觀測性和治理等傳統分佈式系統問題，在今天仍然具有重要意義。</p><p>Uber 的 AutoCrawler 使用 Cadence 自動發現工具。它會掃描內部接口定義語言（IDL）註冊表，從 Protocol Buffers 和 Thrift Schema 中提取 API 定義，隨後生成兼容 MCP 的 Schema，並使用大語言模型生成工具描述。新發現的工具默認保持禁用狀態，直到其所屬團隊完成審核並明確啓用。配置變更可以直接傳播到數據平面，無需重啓服務或重新部署。</p><p>該網關通過 Uber 內部訪問控制系統，在服務器和工具兩個層級執行授權。它還支持對工具響應中的個人身份信息（PII）和其他敏感數據進行脱敏。對於 Jira 和 Google 等第三方集成，一項獨立服務會將內部用户 Token 交換為相應的第三方身份驗證 Token。</p><p>隨着工具目錄不斷擴張，將數千個工具的定義全部載入智能體上下文會變得低效。Uber 為此開發了 Omni MCP，支持漸進式發現，讓智能體能夠搜索服務器、發現相關工具、獲取單個 Schema，並按需調用選定的工具。Response Projection 則允許智能體指定需要的響應字段，而不必接收完整載荷。Uber 的 aifx 命令行界面 也支持編碼智能體發現和調用工具，並將結果寫入文件，以便選擇性查看。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/FrDlAvNIwkr8ttdvWMCC?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：800 個 MCP Server、5000 個工具，AI 智能體的“微服務危機”來了</li></ul>
+<p><a href="https://www.infoq.cn/article/FrDlAvNIwkr8ttdvWMCC?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

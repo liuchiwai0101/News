@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DeepSeek API 定價調整：調用模型時觸發服務端搜索、網頁抓取不再計費，僅按模型 Token 用量計費</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>DeepSeek API 定價調整：調用模型時觸發服務端搜索、網頁抓取不再計費，僅按模型 Token 用量計費</h1>
+<div class="notice">內容機器翻譯自第三方媒體（IT之家 · 愛範兒 · cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://img.ithome.com/newsuploadfiles/2026/11/ff378fba-bc61-4210-a756-2d1178679e78.jpg?x-bce-process=image/format,f_auto" alt=""></p><h3>正文</h3><p>過去兩天，越來越多人發現，自己用了快兩年的免費 DeepSeek，突然開始彈出「使用額度已達上限」。有人的長對話無法繼續，有人聊了不到兩個小時就觸發限制。</p><p>用户徹底怒了，甚至湧入應用商店給 DeepSeek 打下差評，並表示自己在DeepSeek 聊天窗口裏已經積累數十萬字，一起和 AI 完成連續幾周的故事就這樣不能繼續了。</p><p>長對話無法續聊：超過 7 天不活躍的長對話不再支持，系統會提示導出歷史數據。 輸入字數限制：單次輸入文字上限縮短至 4 萬字左右。 每日額度上限：限制每日對話總次數，達到上限後提示「服務器繁忙」，需次日恢復。 評論區還有不少用户開始求着 DeepSeek 收錢，希望 DeepSeek App 可以推出月卡、季卡或年卡，讓高頻用户能夠付費使用。但壞消息是，DeepSeek App 目前根本沒有會員可以開。</p><p>好消息是，如果你真的願意花錢繼續用 DeepSeek，其實有個「不限額」的用法，不是邪修，正兒八經的官方渠道。</p><p>今天，APPSO 就來手把手教大家，即便從來沒有接觸過 API 這個概念，普通用户也能學會花錢接入，把之前的聊天記錄一起搬過去，給 DeepSeek「開會員」。</p><p>調用 API 並不麻煩 大多數的網友可能聽到 API 就覺得複雜，它的全稱是 Application Programming Interface 應用程序接口，我們可以簡單地把它理解成我們使用 DeepSeek App 要輸入的登錄憑證，即手機號和密碼/驗證碼。</p><p>此前用於登錄 App 的手機號，可以理解為 DeepSeek 給每個手機號分配了一定的免費額度，而 API 的額度，則是需要我們自己去充值。</p><p>充值的方式也很簡單，在 DeepSeek 的官方網站找到「API 開放平台」，點擊之後，使用手機號或者直接微信授權登錄。</p><p>圖｜🔗 DeepSeek 官網 https://www.deepseek.com/ 在 DeepSeek 開放平台首頁，左側邊欄依次是檢查每日使用情況的「用量信息」、「API Keys」、「充值」、「賬單」，以及底部的 API 接口文檔和產品定價等信息。</p><p>圖｜🔗 DeepSeek 開放平台官網 https://platform.deepseek.com/ 如果你還沒有創建過 API，第一步可以是到充值頁面，使用微信支付或支付寶充值對應的金額。</p><p>以在高峯時段使用 DeepSeek Flash 模型為例，我們在 DeepSeek 官方的 Agent 平台內把推理等級調到最大的 Max 檔位，發送提示詞「幫我深度研究最近市面上在賣的筆記本，有什麼比較推薦的，6000 塊左右的，給我一份網頁報告。」</p><p>DeepSeek 最後花了 19 分鐘，一共消耗了 5564 萬 Tokens，其中 99.3% 累計 5504 萬 Tokens 都是緩存命中，未緩存命中的輸入是 38.1 萬 Tokens， 輸出 20.9 萬 Tokens，因此按照每百萬 Token 的定價， 計算的花費則是 （輸入 38.1 * 2 + 輸出 20.9 * 8 + 緩存 5500 * 0.04）/ 100（百萬單位） = 4.634 元。</p><p>在開放平台也能看到消耗的金額在 4.92 元，其中還有 tool-search 等費用。目前聯網搜索（文字、圖片）和網頁抓取均按次計費，一次 0.005 元，我們在這輪測試中使用了 38 次 tool-search，即 0.19 元。</p><p>這就是大多數人第一次用 API 的感受，「為什麼我只是發了一句你好，後台就顯示扣掉了幾毛錢。」</p><p>如果你充值 50 塊，類似的深度研究任務大概只可以完成 10 次。模型的輸入不僅僅是我們發送的提示詞，還包括隨請求發送的歷史對話等上下文，而 Tokens 也不等於中文字數。此外，還有緩存命中會降低輸入成本，聯網搜索等工具費用則另計。</p><p>而如果我們只是想在對話裏面使用，並不涉及到 Agent 等流程，Token 的消耗會大幅減少。同樣的問題，我們在問答的 DeepSeek 內，它只是用了 6s 就為我們生成了答案，花費 0.17 元，其中 tool-search 16 次花費 0.08 元，消耗 Token 67038 個花費 0.09 元。</p><p>Token 計費為（輸入緩存命中 3.17 萬 * 高峯期 0.04 + 未命中緩存輸入 3.15 萬 * 高峯期 2 + 輸出 0.31 萬 * 高峯期 8）/ 100 = 0.089 元。</p><p>因此，單純想復刻此前的 DeepSeek App 或者網頁版內的使用體驗，50 塊錢可以支撐我們將近 300 次這樣的提問，並且是開啓了「深度思考」和「智能搜索」的情況下。</p><p>搞清楚 API 的收費規則之後，我們就可以放心去充值了。DeepSeek 賬户有餘額的情況下，創建的 API Key 就可以正常使用，API Key 就像是你的登錄密碼一樣，是一串由 sk- 開頭的密碼。</p><p>一旦 API Key 泄露，被有心的人使用，就有可能把我們剛剛充值的金額全部消耗光。</p><p>API Key 只會顯示一次，不過即便不記得了也可以重新再創建一個，把之前的刪除。目前 DeepSeek 開放平台最多支持保留 300 個 API Key，足夠大部分人的使用。</p><p>官方的電腦版 App 有了 API Key 後，最簡單的方法，是直接下載 DeepSeek 官方的 Agent 平台，DeepSeek Harness。</p><p>我們此前分享過多篇與 DeepSeek Harness 有關的教程，這是一個類似 Codex 或者説最近大火的豆包工作、千問辦公和 WorkBuddy 的產品。它和一般對話聊天相比，最大的優點就是能使用電腦上的工具，操作我們的電腦來完成各種更復雜的任務。</p><p>圖｜🔗 https://www.deepseek.com/harness/ 目前，DeepSeek Harness 也支持直接登錄 DeepSeek 開放平台的賬號，並使用開放平台的餘額。登錄之後，我們在設置的「賬號與餘額」裏面，就能看到對應的在 DeepSeek 官方開放平台充值的金額。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com/1/029/058.htm" target="_blank" rel="noopener noreferrer">IT之家</a>：DeepSeek API 定價調整：調用模型時觸發服務端搜索、網頁抓取不再計費，僅按模型 Token 用量計費</li><li><a href="https://www.ifanr.com/1689869?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=" target="_blank" rel="noopener noreferrer">愛範兒</a>：DeepSeek 不限額的用法，都在這裏了 |  附指南</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586724.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：DeepSeek舊長對話被限額無法繼續 聊天記錄遷移工具彙總</li><li><a href="https://www.cnbeta.com.tw/articles/tech/1586666.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：DeepSeek“限額”？多名網友反饋收到提示：使用額度已達上限</li></ul>
+<p><a href="https://www.ithome.com/1/029/058.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

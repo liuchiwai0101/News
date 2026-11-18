@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Java4Shell 漏洞 CVSS 9.2 分　CISA 促即時修補 Oracle Java</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Java4Shell 漏洞 CVSS 9.2 分　CISA 促即時修補 Oracle Java</h1>
+<div class="notice">內容機器翻譯自第三方媒體（NewMobileLife 流動日報），僅供參考，以原文為準。</div><p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/11/java.webp" alt=""></p><p>美國網絡安全及基建安全局（<a href="https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching" target="_blank" rel="noopener noreferrer">CISA</a>）於 2026 年 11 月 17 日發出警報，要求機構即時修補被稱為 Java4Shell 的 CVE-2026-114938 漏洞。這是涉及 x86-64 HotSpot JVM Base64 解碼器的嚴重記憶體損壞問題，特製輸入可令 JVM 崩潰，甚至免認證執行任意程式碼。</p><h3>一則 65 字元輸入就觸發</h3><p>發現漏洞的資安公司 <a href="https://x.com/calif_io/status/2122724367654334810" target="_blank" rel="noopener noreferrer">Calif</a> 表示，65 個字元輸入，即 64 個 A 加一個等號，已可觸發。解碼器為該輸入配置 50 bytes 陣列，尾部補位令輸出長度算成負數，結果完整寫入 64 bytes，越界 62 bytes。Calif 按 CVSS 4.0 評 9.2 分，Oracle 則按 CVSS 3.1 評 8.1 分。</p><img src="https://www.newmobilelife.com/wp-content/uploads/2026/11/calif-poster.jpg" alt="像素風格的 Java4Shell 研究宣傳圖，畫上星艦與舉手禮人物"><h3>要 AVX-512 VBMI 才算中招</h3><p>漏洞只在支援 AVX-512 VBMI 的 x86-64 處理器上觸發，包括 Intel Ice Lake 或更新架構、AMD Zen 4 或更新架構，ARM64 不受影響。<a href="https://www.oracle.com/security-alerts/cspunov2026.html" target="_blank" rel="noopener noreferrer">Oracle 公告</a>列出的受影響版本為 Java SE 17.0.21.0.3、21.0.13.0.3、25.0.5.0.3 及 27.0.1.0.3；OpenJDK 17.0.6 或更新的建構版本同樣受影響。</p><h3>補丁已出　未及更新先用啟動參數</h3><p>Oracle 11 月安全更新已包含修正；<a href="https://openjdk.org/groups/vulnerability/advisories/2026-11-17" target="_blank" rel="noopener noreferrer">OpenJDK</a> 亦於 11 月 17 日發布安全公告。未能即時更新者可用啟動參數 -XX:-UseBASE64Intrinsics 或 -XX:UseAVX=2。</p><p>CISA 建議機構先盤點 JDK 及 Java runtime，包括第三方應用及容器映像內建版本，優先修補對外系統；短期間可限制及驗證 Base64 輸入大小、限制未認證存取。</p><p>Calif 已示範對 Keycloak、Jira、Confluence、JFrog Artifactory、Jenkins 及 PingFederate 免認證執行任意程式碼，部分產品則要登入後才可；目前沒有通用利用程式。Quang Luong 稱要求 Codex 審視 JIT 及 intrinsics，一小時找到漏洞，兩小時做出首個利用程式。</p>
+<p><a href="https://www.newmobilelife.com/2026/11/18/java4shell-cisa-patch/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
