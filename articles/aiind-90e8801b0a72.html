@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>快與真：範式首批國產算力訓練的Phai系列模型，究竟有什麼不同</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>快與真：範式首批國產算力訓練的Phai系列模型，究竟有什麼不同</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/a3/29/a3773ca23572ca8ac6d6837b93a6e529.jpg" alt=""></p><h3>正文</h3><p>11 月 18 日，範式智能無預告發布了自己的兩款 Phai 系列模型：語言模型 Phai-A1 主打“快”，官方口徑是同等質量下響應速度比同參數級別模型快 8–10 倍；視頻模型 Phai-M1 主打“真”，即 AI 感更弱、畫風細膩。</p><p>兩款模型上線後，很快引起了 AI 圈的關注。部分網友甚至反應當天體驗入口的服務器都崩掉了。</p><p>如此火爆的反響之下，這兩款模型的“快”和“真”的背後，很值得我們仔細拆解一番。</p><p>本文結合官方公開透露信息與行業背景機制來進行分析——官方尚未公佈細節的部分，文中會明確標註。</p><p>根據範式公佈的測試數據，在相同單卡 RTX 3090 運行環境、相同版本代碼 Agent 任務下，Phai-A1 響應速度較 Qwen 27B 提升約 8 至 10 倍。</p><p>Phai-A1 在 ModelScope 上的公開資料顯示，它採用了 MoE（混合專家）架構：總參數 350 億，但每個 token 只激活約 30 億參數。Transformer 推理的計算量與激活參數成正比，激活量降一個數量級，單 token 的前向計算就降一個數量級——這是 8–10 倍速度的主要來源。</p><p>對於技術圈而言，MoE 並不是新東西，但把它用在“代碼與 Agent 場景優先”的模型上，不得不説是個聰明的匹配：這類任務交互頻繁、單次請求短，延遲比吞吐更影響體驗。總參數保住了知識容量，激活參數壓低了延遲成本——“大模型的腦子，小模型的腿”。</p><p>要知道，標準注意力機制下，上下文越長，KV Cache 越大，推理越慢。A1 原生支持百萬級上下文 仍能保持響應速度，這意味着它在注意力機制或 KV 管理上必然做了工程處理。</p><p>這一點常被忽略：單 token 快不算快，長任務跑到第 50 萬 token 還不崩、不拖，才是 Agent 場景的真速度。</p><p>據悉，Phai-A1 的模型權重已在 YaRN（factor=4）進行過額外訓練適配，並且在 config.json 中已經默認開啓 rope scaling 以支持 1M 上下文。</p><p>此外，Phai 官網給出了一個數據方面的細節：後訓練數據直接覆蓋百萬 Token 長上下文場景，可結合大型代碼倉庫、長篇資料和持續對話開展工作。</p><p>更多的 Trick，還是等等範式團隊即將公開的技術報告吧。</p><p>響應時延 = 首 token 延遲 + 生成 token 數 × 單 token 速度。前兩項取決於模型“想多久”：Phai-A1 面向寫代碼、修問題、工具調用、多步任務做了強化訓練，目標之一就是少走彎路——不生成冗餘推理步驟，直接給出可執行的答案。</p><p>對 Agent 任務來説，砍掉無效 token 比單純加速每個 token 的體感提升更明顯：任務完成時間被整體壓縮。</p><p>單張消費級顯卡能跑，意味着推理可以發生在本機。對代碼補全這類高頻交互，省掉的不只是 API 的網絡往返延遲，還有排隊、限流這些不可控變量。</p><p>據範式官網介紹，Phai-A1 支持個人電腦本地部署，支持在 16G 顯存參數的消費卡運行，並同步提供了兩個 24G 顯存參數的量化版本。這意味着開發者和企業可以根據硬件條件、數據合規要求及業務需求，選擇不同的部署方式。</p><p>所以總結下，可以看出 Phai-A1 能做到快同級別參數模型 8–10 倍，一定不是單點魔法，而是多個乘數疊積的結果——激活參數降一個量級、原生百萬上下文、後訓練任務路徑縮短、部署位置前移。</p><p>當然，這也意味着它的快是場景化的：在長交互 Agent 任務上，優勢會更加突出。</p><p>相比通用語言模型，Phai-M1 面向的是另一個正在快速變化的市場——AI 視頻生成。</p><p>目前 AI 視頻的競爭已經從單純生成畫面，逐漸轉向人物表現、動作連貫性、畫面細節、音畫同步以及生成效率等多個維度。</p><p>視頻生成模型的“AI 感”——塑料質感、物理不合理的運動、飄忽的細節——大部分來自訓練數據的分佈。網絡視頻素材分辨率參差、鏡頭語言隨意，模型學到的就是“網絡視頻的樣子”。據悉，Phai-M1 面向影視級生產場景，圍繞真人影視場景進行訓練與優化，重點提升人物表現、畫面細節和整體視覺質感，生成視頻結果可達到影視級的畫面水準。</p><p>不難發現，範式近年來一直有着影視內容業務的合作，這無疑為這條管線提供了天然的數據與場景反饋。有自身的專業影視素材訓練做支撐，也就不難理解為何 Phai-M1 的人物輸出更加自然、更接近真人影視了。</p><p>人對音畫錯位極其敏感，偏差超過約 100 毫秒就能察覺，而恰恰是“聲音對不上畫面”最容易暴露 AI 生成痕跡。</p><p>然而，這也是短視頻、短劇、影視劇等眾多場景裏的剛需問題：配音後期的傳統管線既慢又容易失真。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/DQlimzDy7bqiZ3mc5Vvq?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：快與真：範式首批國產算力訓練的Phai系列模型，究竟有什麼不同</li></ul>
+<p><a href="https://www.infoq.cn/article/DQlimzDy7bqiZ3mc5Vvq?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
