@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>​Google搜索首頁迎來重大改版 AI對話入口直接出現在頁面上</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>​Google搜索首頁迎來重大改版 AI對話入口直接出現在頁面上</h1>
+<div class="notice">內容機器翻譯自第三方媒體（cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://static.cnbetacdn.com/article/2026/1110/d75804e5e6406bf.png" alt=""></p><h3>正文</h3><p>和 Jev 一樣，這款模型不生成任何文本，只計算供程序直接驅動 Agent 執行的候選項概率和置信度，不需要逐 Token 生成答案，連輸出 Token 費用也省了。</p><p>更大的突破出現在並行計算上。Gemini Decision 1 可以在同一份上下文中處理至多 1000 項獨立判斷，而且支持文本、圖像、音頻、視頻和 PDF 混合輸入。對於需要反覆檢查文檔、選擇工具、評估任務狀態的 Agent，大量原本分散在不同模型調用中的判斷，現在可以集中在一輪請求中完成。</p><p>在數據上，7 項雙方均有報告的共享基準中，Gemini Decision 1 贏下 5 項，Jev 在 When2Call 工具調用和 Mind2Web 多模態上仍保持優勢（82.0% vs 79.9%，86.8% vs 86.2%）。</p><p>不過，Gemini 每 100 萬輸入 Token 收費 0.10 美元，是 Jev 的約 2.38 倍。性能上去了，價格也更貴了，谷歌顯然想用更強的多模態能力和批量決策能力打開市場。</p><p>Jev 在 9 月發佈後數週內拿下 75 億美元估值，a16z 領投 8.7 億美元，約三分之一財富 500 強被列為客户。但質疑從未消散：廠商自報的“快 193 倍、便宜 445 倍”缺乏第三方復現，原創性爭議尚未定論，獨立評測指向同一個結論：快和便宜是真的，質量是另一回事。雷峯網</p><p>Google 此時入場，至少證明了一件事：決策模型不是一場鬧劇，而是一個值得巨頭押注的品類。</p><p>普通 LLM 處理“從四個工具裏選一個”這類任務時，仍然走自迴歸解碼：逐 Token 生成工具名或 JSON，程序再解析執行。模型承擔的是開放式文本生成，業務需要的卻是有限候選項中的概率判斷。</p><p>Gemini Decision 1 把輸出目標改成了候選項評分。開發者提前定義問題、候選集合和判斷標準，模型讀取輸入後，直接返回各候選項的概率分佈。整個過程通過單次前向計算完成，不需要逐 Token 生成答案，也沒有輸出 Token 費用。</p><p>這和普通的 Structured Output 有明顯區別。Structured Output 仍然讓模型生成文本，只是通過 Schema 限定 JSON 的字段和格式，Gemini Decision 1 則直接圍繞有限候選空間完成評分，返回結果本身就是程序可以讀取的數據。</p><p>這裏有一個容易被忽略的細節：不同判斷類型返回的概率含義並不相同。Noul 處理二元判斷，返回某個條件成立的概率，範圍為 0.01—0.99。如果問題本身存在歧義，開發者還可以分別定義什麼情況算 Yes、什麼情況算 No，減少判斷標準不清晰帶來的偏差。</p><p>Choice 處理多分類問題，支持 2—255 個候選項，返回勝出選項以及各候選項的歸一化概率，所有候選項概率之和為 1。它適合工具路由、模型選擇和任務分類。</p><p>不過，這種概率分配始終發生在給定的候選集合內，即使所有選項都不符合輸入，模型仍會選出一個相對匹配的結果。因此，開發者需要提供 Other 選項，或者額外設置範圍檢查。</p><p>Score 的設計更有意思。它並不簡單返回一個等級，而是先給有序評分標準中的每個等級分配概率，再計算加權評分。例如，將問題分為 0 級、1 級和 2 級，模型可能給出 0.1、0.7 和 0.2 的概率，最終評分可以落在 1 和 2 之間。</p><p>這實際上把離散分類擴展成了連續評分，方便程序進行排序和閾值篩選。不過，加權結果會壓縮概率分佈中的信息：兩個輸入即使得到相同分數，背後的等級概率也可能完全不同。因此，對於需要區分風險等級的任務，程序還應該讀取各等級的概率，不能只使用最終評分。</p><p>這三種類型構成了 Gemini Decision 1 的輸出體系。模型不再負責生成一段可以供人閲讀的答案，開發者需要設計清晰的問題和候選標準，程序則負責把概率結果轉化成具體執行條件。雷峯網 (公眾號：雷峯網)</p><p>Gemini Decision 1 的請求結構是一份 Shared Input 對應一組 Questions 。前者承載文本、圖像、音頻、視頻和 PDF，後者定義需要完成的判斷任務。每個問題可以使用不同的判斷類型和評分標準，單次請求支持至多 1000 項問題。</p><p>以設備巡檢為例，系統收到一段運行視頻、一份維修記錄和一段現場語音，需要判斷設備是否異常、異常類別、嚴重程度以及是否需要人工檢查。</p><p>開發者可以把三種材料放進同一份輸入，再分別定義這些問題。異常檢測使用 Noul，類別判斷使用 Choice，嚴重程度使用 Score。模型讀取相同材料，分別完成各項評分。</p><p>這套設計有兩個技術細節。首先，每項問題具有獨立的評估路徑。Google 文檔明確説明，各問題只能讀取共享輸入，不能讀取其他問題的答案。</p><p>增加或刪除某項問題，也不會改變其他問題的答案。這意味着並行評分沒有依賴前序問題的推理鏈，模型可以在同一輪前向計算中完成多個獨立判斷。</p><p>其次，共享輸入只計費一次。每項問題額外產生的費用來自自身的 instructions 和 criteria Token，而不需要重複計算整份材料。對於長文檔批量審核、音視頻檢查和多維度內容評估，這種計費結構會影響整體調用成本。</p><p>但 1000 項問題並不意味着可以把任意複雜的工作流塞進一個請求。如果問題 B 必須根據問題 A 的具體結果生成新的候選項，兩項任務就存在前後依賴。開發者需要先讀取 A 的結果，再提交 B。</p><p>若 B 的候選項已經確定，只是需要在 A 不滿足條件時忽略 B 的答案，則可以將兩項判斷同時提交，由程序決定是否採用結果。</p><h3>各方報道</h3><ul><li><a href="https://www.cnbeta.com.tw/articles/tech/1587152.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：​Google搜索首頁迎來重大改版 AI對話入口直接出現在頁面上</li></ul>
+<p><a href="https://www.cnbeta.com.tw/articles/tech/1587152.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
