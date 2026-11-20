@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>華為雲開源昇騰原生具身世界模型CloudRobo-WM1.2，兩項評測均列第一</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>華為雲開源昇騰原生具身世界模型CloudRobo-WM1.2，兩項評測均列第一</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/41/0e/41424535042971ef152bf708069e9e0e.png" alt=""></p><h3>正文</h3><p>11 月 16 日，華為雲發佈了昇騰原生具身世界模型 CloudRobo-WM1.2，並表示將在 11 月 30 日開放該模型權重、推理代碼和後訓練代碼。該模型採用共享世界模型骨幹網絡，通過預測增強世界表徵，並基於世界模型原生 DualAct 架構實現動作生成。據華為雲介紹，CloudRobo-WM1.2 在 RoboTwin 2.0 和 LiberoPro 2.0 兩項評測中均位列第一。</p><p>具身智能要從實驗室進入真實物理環境，機器人需要具備的不只是視覺識別和指令理解能力，還要能夠理解物體之間的物理關係，預測交互過程可能產生的結果，並將這些認知轉化為具體動作。目前，這一過程仍面臨多方面挑戰，包括多模態物理信息理解困難、世界認知與動作生成之間的銜接不夠緊密、異構數據利用效率有限，以及不同形態機器人之間的能力遷移問題。此外，實時推理對算力和部署成本也提出了較高要求。</p><p>針對這些問題，CloudRobo-WM1.2 圍繞世界表徵、動作生成、數據訓練、跨本體泛化和推理部署進行了五方面的技術設計。</p><p>在世界表徵方面，CloudRobo-WM1.2 採用 PPA（Predictive Physical-aware Architecture）多模態世界表徵架構。與主要依靠靜態圖像識別環境的方式不同，該架構試圖讓模型理解物體及其物理屬性，並預測物體發生交互後可能出現的變化，使模型能夠從視覺觀察進一步延伸到對動態物理過程的理解。</p><p>在動作生成方面，模型採用世界模型原生 DualAct 架構，將世界建模與動作生成結合起來，使世界模型能夠直接輸出機器人動作，實現原生動作控制。同時，基於 MOT 架構，動作專家也可以直接、高效地輸出動作。雙通道動作架構允許開發者根據實際任務靈活定義動作專家的規模，從而提高後訓練效率。</p><p>數據利用方面，CloudRobo-WM1.2 引入多粒度監督數據自適應預訓練框架，根據不同數據實際包含的有效信息組織訓練監督，降低因局部信息缺失而丟棄整條數據的情況。對於具身模型而言，訓練數據往往來自不同設備、不同採集環境，數據完整程度也存在差異。該框架能夠兼容缺少動作標註、部分動作維度無效、深度信息缺失以及相機視角不完整等數據，提升異構數據的利用效率，為擴大訓練數據規模提供支持。</p><p>針對不同機器人之間的動作遷移問題，模型採用本體語義保真的跨具身運動建模方法，為單臂、雙臂和輪式等不同形態的機器人建立統一的運動建模方式，同時保留不同本體各自的運動語義，使共享模型能夠區分不同機器人的動作特徵。這一設計有助於多種機器人共享訓練數據和模型能力，改善跨本體任務中的泛化表現。</p><p>在推理部署方面，CloudRobo-WM1.2 提供 World/Expert Action、Joint/Action-only 四種可按需組合的彈性推理模式。開發者可以根據具體任務的算力資源和推理延遲要求選擇不同模式，在模型能力與部署成本之間進行調整。</p><p>除了模型本身，具身智能的產業化還需要解決訓練、部署和真實環境運行中的工程問題。</p><p>華為雲依託昇騰雲計算平台，為 CloudRobo-WM1.2 提供異構算力支持，並結合 PB 級多模態數據的統一存儲、搜索和快速索引能力，以及 AI 框架原生加速能力，覆蓋模型從訓練到實際作業的工程流程。相關能力涉及仿真冷啓動、雲原生訓練、跨本體適配、持續學習進化和安全可靠運行等環節，旨在降低機器人模型從仿真環境遷移到真實物理環境的工程門檻。</p><p>在生態開放方面，華為雲表示，將持續投入具身智能模型研發，並開放模型、工具鏈及相關技術實踐，依託昇騰雲算力和雲原生基礎設施，為產業夥伴提供模型開發與訓練支持。同時，華為雲計劃聯合機器人本體廠商、模型廠商、高校科研機構及行業客户，共同推進具身智能行業解決方案建設。</p><p>此次 CloudRobo-WM1.2 的發佈和開源，也體現出具身智能競爭正在從單一模型能力向模型、數據、算力和工程體系的綜合能力延伸。對於機器人廠商而言，如何利用不同本體的數據開展聯合訓練，如何將模型能力穩定遷移到真實物理環境，以及如何控制大規模訓練和實時推理成本，仍是具身智能走向規模化應用需要解決的關鍵問題。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/LCqRiGDSeMBfXo4iktdA?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：華為雲開源昇騰原生具身世界模型CloudRobo-WM1.2，兩項評測均列第一</li></ul>
+<p><a href="https://www.infoq.cn/article/LCqRiGDSeMBfXo4iktdA?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

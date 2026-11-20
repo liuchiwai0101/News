@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grab 通過安全策略應對 AI 生成代碼變更激增，提升移動端 App 穩定性</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Grab 通過安全策略應對 AI 生成代碼變更激增，提升移動端 App 穩定性</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/98/f5/983110b8655f728706d6c3f47e14f5f5.jpg" alt=""></p><h3>正文</h3><p>Grab 表示，AI 編程助手的普及加快了開發速度，也讓每個版本的代碼變更量變多，缺陷和應用崩潰出現的概率隨之上升。為應對這些挑戰， 他們實現了一套分層防禦策略 ，在整個開發與發佈生命週期中對崩潰問題進行預防、檢測和隔離。</p><p>Grab 提到，“AI 提升了代碼編寫速度，而分層防禦則保障這種提速是安全的。”</p><p>在 Grab 這樣的業務規模下，讓崩潰問題流入生產環境是一個持續存在的風險。每週都有大量來自眾多產品團隊的合併請求，不少功能通過功能灰度開關發佈，且這些開關的啓用與版本發佈相互獨立。任何一處變更都有可能引入崩潰。</p><p>Grab 的分層防禦遵循 左移 策略，通過在開發週期各階段設置一系列保障措施儘可能早地發現崩潰問題：從合併前到預生產、發佈控制，再到發佈後響應。</p><p>在合併前到預生產階段，目標是預防，Grab 將其描述為“主要防線”。為實現這一目標，Grab 工程師使用靜態代碼分析工具，如 Android Lint 和 SwiftLint ，通過平台特定、社區驅動和自定義的 Lint 規則在代碼合併前捕獲問題；同時進行自動化和手動測試，包括單元測試、UI 測試和質量保證檢查；此外還使用 Grab Early Access（GEA），這是一個預生產門禁，將早期構建包分發給內部用户，並對其進行持續監控：</p><p>在 GEA 中只有少數內部用户會遇到的崩潰問題在生產規模下將會演變為崩潰率大幅飆升、客服壓力激增，甚至需要緊急熱修復。GEA 會在這些崩潰問題到達生產用户之前將其捕獲，是我們最重要的穩定性門禁之一。</p><p>在發佈階段，Grab 通過分階段發佈和功能開關來控制崩潰問題進入生產環境的可能性。分階段發佈讓新版本先只推送給一小部分用户，工程師可以監控其崩潰情況，並在檢測到異常崩潰率時暫停發佈。功能開關讓團隊可以逐步開啓功能，同時監控其對崩潰率的影響。如果某個功能導致崩潰率超過預設閾值，可以立即將其關閉，無需發佈新版本。</p><p>在發佈後階段，Grab 專注於快速事件響應，使用相關機制來檢測、排查和控制生產環境中的崩潰問題。這些機制包括：使用 Firebase Crashlytics 和 BigQuery 進行實時崩潰監控，以便在構建上線後儘快識別異常；自動化分診和增強診斷，用於聚合崩潰元數據和堆棧跟蹤信息，幫助團隊將崩潰問題映射到具體的 PR；以及反饋循環和事後分析，用以擴充 Lint 規則和測試覆蓋範圍。</p><p>Grab 的分層防禦方法還有很多內容無法在此一一涵蓋，建議閲讀原文了解所有細節。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/AH8deOIGb5hMHRPIKfrf?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Grab 通過安全策略應對 AI 生成代碼變更激增，提升移動端 App 穩定性</li></ul>
+<p><a href="https://www.infoq.cn/article/AH8deOIGb5hMHRPIKfrf?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

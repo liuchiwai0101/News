@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>“美國大豆包”又發新模型，Neon 接入 Antigravity 後編程解題率升至三倍多</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>“美國大豆包”又發新模型，Neon 接入 Antigravity 後編程解題率升至三倍多</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/2d/8a/2de376bef857b35ae259d7b5e48e288a.png" alt=""></p><h3>正文</h3><p>11 月 18 日亮相的 Gemini 4 Neon，在默認推理檔追平了自家的旗艦 Carbon，開到最高檔後比 high 檔的 Carbon 高出 1 分，進入 Artificial Analysis 智能指數總榜前三。對於這款新模型，Google 強調的是完成任務的速度。它想讓開發者用接近 Flash 檔的速度，跑完原本要交給更重的模型處理的軟件工程、知識工作和科研任務。</p><p>繼 Argon、Carbon 和 Hydrogen 之後，Neon 是 Google DeepMind 在約七週內發佈的第四款模型。據 Artificial Analysis 測算，與 Carbon 相比，Neon 完成評測所需的成本更低、用時也更短。</p><p>把兩款模型都放在 high 檔，Neon 和 Carbon 在 Artificial Analysis 智能指數上同為 60 分。Neon 平均每項任務花費 3.74 美元，Carbon 按標準價計算則要 7.76 美元。Neon 開到 xhigh 後，單任務成本升至 6.44 美元，仍比按標準價計費的 Carbon 低約 17%。</p><p>Neon 的速度優勢也體現在整項任務上。Artificial Analysis 測得，Neon 每秒能生成約 110 個 token，接近 Carbon 的兩倍。它在每項任務中平均還會多生成約 15% 的 token，完成任務的時間仍縮短了約四成。</p><p>Neon 在評測中的成本優勢來自更低的 token 單價。它每百萬輸入和輸出 token 分別收費 3 美元和 15 美元，都是 Hydrogen 的兩倍。Carbon 和 Argon 的首發優惠持續到 11 月 30 日，期間每百萬輸入和輸出 token 分別收費 2 美元和 10 美元，低於 Neon。12 月 1 日起，兩款模型的輸入和輸出單價將分別漲至 4 美元和 20 美元。</p><p>Artificial Analysis 認為，Neon 進步最大的兩個方面是利用 Agent 完成知識工作，以及視覺推理。</p><p>GDP.pdf Neon（high）得分為 33.4%，比 Carbon（high）的 28.4% 高出 5 個百分點，與該項評測的最高成績相當。Neon 在 xhigh 檔位的得分為 28.0%。</p><p>Neon 的上下文窗口約為 100 萬 token，最多可輸出 100 萬 token。它可以處理文本、圖片、視頻、音頻和 PDF，支持 Computer Use 、代碼執行和文件搜索，也可以藉助 Google 搜索和地圖中的信息生成有依據的回答。Neon 暫不支持生成圖像或音頻。</p><p>Antigravity 的 Harness 與 Gemini 經過聯合訓練。Neon 也針對長時間的編程會話做了優化，減少不必要的文件讀取，並改善上下文管理。Antigravity 還可以讓多個子 Agent 在各自的 Git worktree 中工作，再驗證它們的改動。就 Neon 而言，這次只公佈了 mini-SWE 和 Antigravity 兩套配置的成績。各項優化分別貢獻了多少，以及換到其他代碼倉庫後能否復現，還有待驗證。</p><p>Neon 還加入了 Google 隨 Hydrogen 推出的模型切換機制。處理同一項編程任務時，Neon 可以負責規劃和解決較難的問題，把常規工作交給 Hydrogen。藉助此前隨 Carbon 推出的 /swarm 功能，它還可以並行調度多個 Hydrogen 子 Agent。Google 尚未公佈這套分工下的單任務成本。</p><p>Gemini 4 Neon 發佈之際，Antigravity 迎來了上線一週年。Varun Mohan 宣佈，Google 將重置所有用户在平台上全部模型的使用額度。 11 月初，Antigravity 曾重置 Gemini 和 Argon 的額度，隨後又單獨重置過 Gemini。這次，Claude 和 GPT-OSS 等第三方模型也在重置範圍內。</p><p>Mohan 此前與 Douglas Chen 共同創辦了後來更名為 Windsurf 的公司。2025 年 7 月，Google 將兩人和多名 Windsurf 研究人員招入 DeepMind，並取得 Windsurf 技術的非獨家授權。四個月後，這支團隊推出 Antigravity，讓 Agent 可以跨編輯器、終端和瀏覽器執行任務，也讓開發者能在一個界面裏查看多個 Agent 的工作進度。</p><p>Antigravity 按 Agent 的工作量計算額度，長任務通常比短任務消耗更多。免費用户的基礎額度每週刷新，Pro 和 Ultra 用户每五小時刷新一次，同時受每週上限約束。這次重置補回已消耗的額度，讓觸及上限的用户能繼續手頭的項目，各套餐的額度上限照舊。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/tDxNggErsJNeb53ZkYeF?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：“美國大豆包”又發新模型，Neon 接入 Antigravity 後編程解題率升至三倍多</li></ul>
+<p><a href="https://www.infoq.cn/article/tDxNggErsJNeb53ZkYeF?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
