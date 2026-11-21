@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>微軟宣佈 Windows 支援 RDMA over USB4 技術　串連多部 PC 合併算力運行大型本地 AI 模型</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>微軟宣佈 Windows 支援 RDMA over USB4 技術　串連多部 PC 合併算力運行大型本地 AI 模型</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21181059/PCM_Banner_1080_20261121_windows_rdma_usb4.jpg" alt=""></p><p>本地端運行大型語言模型（LLM）向來極度考驗電腦的記憶體容量與顯示核心效能，單機往往難以負荷。微軟 (Microsoft) 近日正式宣佈為 Windows 推出「RDMA over USB4」開發者預覽功能，允許用户透過標準 USB4 連接線將多部 PC 串連，合併各機的記憶體與 GPU 算力，共同運行單一大型本地 AI 模型。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21180632/RDMA-USB4-HERO-WINDOWS-1536x812-1-1024x541.webp" alt=""><h3>免買昂貴網卡　標準 USB4 線材實現超低延遲</h3><p>過往在數據中心或 AI 運算叢集中，系統多數依賴 NVIDIA ConnectX 等專用網絡介面卡及高速交換器，透過 RDMA（遠端直接記憶體存取）技術進行多機協同。微軟今次將 RDMA 技術引入消費級 Windows 平台的 USB4 介面上，支援 40 Gbps 及 80 Gbps 傳輸頻寬，且無需額外添置專用網卡、交換器或第三方驅動程式。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21180351/clipboard_image-2-1795046288515.webp" alt="">微軟發放數據指，使用 RDMA 方式透過 USB4 串連兩台 PC，比起以 UDP 方式的 USB4 連線，平均快 4 倍。<p>官方數據顯示，透過 RDMA over USB4 傳輸小型封包的往返延遲（Round-trip latency）可大幅壓低至約 28 至 50 微秒，較同一 USB4 連接下的傳統 UDP 網絡協定快約四倍，讓數據能在多部電腦之間直接高速調度。</p><h3>AMD、Intel 實測示範　三機聯手流暢跑 235B 巨型模型</h3><p>微軟聯同 AMD 及 Intel 展示了多組實機測試成績，證明該技術能有效突破單機記憶體容量限制：</p><ul><li><strong>AMD 平台實測</strong>：微軟使用三部配備 AMD Ryzen AI Max+ 395 處理器（內置 Radeon 8060S 圖像核心及每部 128GB 統一記憶體）的 Mini PC 進行串連，成功運行採用 4-bit 量化的 Qwen3-235B-A22B 超大型模型。微軟錄得生成速度約為每秒 18.5 tokens，而 AMD 則在自家配置下測得每秒 21.98 tokens 的表現。<br></li><li><strong>Intel 平台實測</strong>：Intel 方面則以三部及四部配備 64GB 記憶體的 Core Ultra Series 3 系統串連運行 GPT-OSS-120B 模型，生成速度分別達到每秒 49.4 tokens 及每秒 54.2 tokens。</li></ul><h3>須採用點對點直連　將於 Windows Insider 頻道推出</h3><p>在硬件連接要求方面，微軟建議使用 40 Gbps 或以上速度的 USB4 連接埠（亦兼容 Thunderbolt 4 及 Thunderbolt 5）。值得注意的是，參與運算的電腦必須採用「點對點（Mesh）」方式直接相連；以三部 PC 為例，每部機均需具備兩個 USB4 埠並使用三條連接線互相接駁。微軟特別提醒，若採用菊花鏈（Daisy-chain）方式串接，系統效能將會大幅下降。</p><p>目前該功能尚未向公眾推送，微軟計劃稍後透過 Windows Insider Experimental Channel 釋出預覽版本，而相關的 NetworkDirect 驅動程式及經修改的 <code>llama.cpp</code> 推理框架則已率先以開源形式發布。</p>
+<p><a href="https://www.pcmarket.com.hk/microsoft-rdma-over-usb4-windows-multi-pc-local-ai/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

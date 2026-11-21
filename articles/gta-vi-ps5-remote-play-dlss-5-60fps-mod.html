@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>令人期待 PC 版！Mod 玩家透過 PS5 Remote Play 串流　成功為《GTA VI》開啟 DLSS 5 及 60fps 畫質大升</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>令人期待 PC 版！Mod 玩家透過 PS5 Remote Play 串流　成功為《GTA VI》開啟 DLSS 5 及 60fps 畫質大升</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21184009/PCM_Banner_1080_20261121_gta_VI_dlss5_60fps.jpg" alt=""></p><p>萬眾期待的《Grand Theft Auto VI》（GTA VI）已正式登陸主機平台，不過即使在性能最強的 PlayStation 5 Pro 上，遊戲依然鎖定在 30fps 運行。在官方 PC 版尚未推出之際，近日有外國 Mod 玩家成功突破限制，透過 PS5 Remote Play 串流配合 PC 顯示卡算力，為遊戲強行開啟 NVIDIA DLSS 5 神經渲染（Neural Rendering）及 Frame Generation（幀生成）技術，令畫面流暢度倍增至 60fps，光影及畫質亦大幅提升。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21184145/%E8%9E%A2%E5%B9%95%E6%88%AA%E5%9C%96-2026-11-21-10.21.06-1024x552.png" alt="">DLSS 5 成功增加大量細節位。<h3>無需擷取卡　靠開源工具 Veyra 實時加強畫質</h3><p>是次突破由開發者 Phosphen 示範，他利用一張 NVIDIA GeForce RTX 5080 顯示卡，配合名為「Veyra」的開源影片畫質增強應用程式實現這項技術。玩家只需透過 PS5 Remote Play 將主機畫面串流至 Windows PC（完全無需額外購買擷取卡），Veyra 便會實時接收串流影像，並在顯示於螢幕前加入神經渲染、畫質增強以及幀生成運算。</p><blockquote><p>i ran GTA VI on my PC through an RTX 5080, look at this picture, it&#x27;s f*cking incredible<br><br>on every PS5, even the Pro, the game is locked to 30 fps. on my PC the same frames run at 60 with DLSS 5 lighting, that&#x27;s the bottom half of the video<br><br>here&#x27;s what i measured and how to set… <a href="https://t.co/HDqMa8qPj6" target="_blank" rel="noopener noreferrer">https://t.co/HDqMa8qPj6</a><a href="https://t.co/pAlg10Lvye" target="_blank" rel="noopener noreferrer">pic.twitter.com/pAlg10Lvye</a></p>— Phosphen (@phosphenq) <a href="https://x.com/phosphenq/status/2123108147753521245?ref_src=twsrc%5Etfw" target="_blank" rel="noopener noreferrer">November 18, 2026</a></blockquote><p>根據 Phosphen 公佈的 80 秒實測數據，系統將原本的 2,351 幀原始畫面，透過補幀運算輸出至 4,700 幀，成功把畫面幀率由約 29.5fps 推高至 59fps（1% Low 亦達 56.3fps）。在 RTX 5080 上運行時，每層神經渲染僅需 4.1ms 處理時間，幀生成則耗時 1.5ms，整套運算流程的總延遲約為 12ms，顯示卡使用率僅佔 39%。</p><h3>屬影片串流後製　操作延遲與原生 PC 版仍有差距</h3><p>雖然視覺效果令人驚艷，但這種做法與 Rockstar Games 官方原生的 DLSS 5 支援仍有本質上的分別。由於《GTA VI》本體依然在 PS5 上以 30fps 運算，Veyra 的運作原理是偵測 60Hz 串流影片中的重複畫面並予以移除，再透過 AI 運算生成中間幀數。</p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21183624/GTA6-DLSS5-1-1024x576.webp" alt="">DLSS5 開啟<img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/21183638/GTA6-DLSS5-2-1024x576.webp" alt="">DLSS5 關閉<p>換言之，雖然肉眼看到的畫面變得極為流暢，且具備 DLSS 5 的光影增強效果，但遊戲內部的物理模擬與手掣操作反應，依然維持在主機原本的 30fps 水平；加上經過 Remote Play 網絡傳輸及 PC 端 GPU 後製運算，無可避免會帶來額外的輸入延遲（Input Lag）。此外，由於外部程式無法讀取遊戲引擎底層的動態向量（Motion Vectors）及渲染緩衝區數據，部分 Reddit 用家亦回報在鏡頭快速移動時，畫面偶爾會出現殘影或塗抹感。</p><p>目前 Phosphen 已在 GitHub 公開自動化安裝腳本及《GTA VI》專用設定檔，Veyra 亦除了支援 RTX 50 系列專屬後端外，亦提供社群開發的版本供較舊型號的 RTX 顯示卡使用。不過在官方正式推出 PC 版之前，這套「曲線救國」方案無疑為追求高畫質與高幀率的玩家提供了相當吸引的替代選擇。</p>
+<p><a href="https://www.pcmarket.com.hk/gta-vi-ps5-remote-play-dlss-5-60fps-mod/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
