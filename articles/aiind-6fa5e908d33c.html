@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entire Git Forge：面向編碼智能體重構 Git 協作方式</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Entire Git Forge：面向編碼智能體重構 Git 協作方式</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/e5/5e/e5d5c62b40136988feb041e9722edc5e.jpeg" alt=""></p><h3>正文</h3><p>Entire 是一個專為人類開發者與 AI 編碼智能體協作而設計的 Git 代碼託管平台 。它的核心觀點是，傳統軟件開發基礎設施，尤其是 PR 模式，並不適合 AI 智能體高速生成、評審、迭代代碼的場景。</p><p>Entire 現任 CEO、前 GitHub CEO Thomas Dohmke 解釋説，GitHub 和 GitLab 以異步代碼評審與版本控制為中心，改變了人與人之間的協作方式。 相比之下，多智能體代碼託管平台則以 AI 智能體與人類協同工作的異步編排、版本控制和審計為中心 。</p><p>Entire 基於全分佈式架構構建，代碼推送速度最高可達 GitHub 的 89 倍。其核心組件是 trails（軌跡），用來解決 AI 代碼智能體給傳統 PR 開發模型帶來的痛點：</p><p>合併請求的時間線已經變成只有智能體才會去讀的審計日誌，無法給開發者提供足夠信息，讓開發者有把握判斷是否可以合併。</p><p>Trail 會把最重要的信息置頂展示，以評估分數的形式呈現，每次代碼推送都會更新分數。開發者可以藉助這些分數判斷該 PR 是否已經穩定，或是需要讓 AI 智能體繼續編碼、評審，進入下一輪迭代：</p><p>Trail 可以由缺陷工單、功能需求手動發起，可以跨多個代碼倉庫。每當有新代碼推送時，運行在雲沙箱中的評審智能體會評估變更，並根據代碼質量、安全性、slop（低質量代碼）以及是否需要人工評審返回分數和理由。例如，如果 slop 分數為橙色，開發者可以要求編碼智能體改進代碼並推送新的變更，從而觸發新一輪迭代。</p><p>每次評估都會顯示最近 5 輪結果和當前結果。我們認為這一點至關重要，因為單次評估經常會漏掉關鍵問題。多輪迭代、直到評分趨於穩定，是智能體編碼成功的關鍵。</p><p>評估智能體既可以在 Entire 平台界面配置，也可以通過倉庫級 JSON 文件配置。</p><p>評審智能體可以給出修復建議或優化方案，這些內容在 Trail 開啓期間保持可見。所有評審發現的問題必須在合併前解決或關閉。開發者還可以配置倉庫級的 Gates（門禁），定義合併通過的條件。</p><p>Entire 引入的另一個基礎概念是 continuous memory（持續記憶），它將所有累積的知識保存在倉庫中，讓智能體能夠跨會話複用這些知識，而不是從頭開始。持續記憶由兩個開源工具實現：，它構建 Git 倉庫的預計算圖譜，包括排序後的代碼搜索、定義和調用者、類型和路由等；以及 ，它通過將代碼庫圖譜與之前的智能體會話以及 Git 歷史中記錄的信息相結合，創建一個持久的記憶層。</p><p>這讓智能體總能在合適的時機拿到正確的上下文，也就是“變更內容”背後的“變更原因”。</p><p>在 Hacker News 的相關討論中，用户 conartist6 表達了這樣的觀點： 工程師們已經將編寫代碼的工作委託給了智能體 ，因為編程語言和工具還有很多不盡如人意之處。目前就職於 Entire 的 Haimantika 指出，問題從來不在語言或工具本身：</p><p>推理過程在人與產出物之間被丟棄了。提交説明一直都很糟糕，文檔容易過時，“為什麼這裏有這段代碼”只能靠記得的人來解釋。智能體只是放大了這個問題，因為現在沒有人記得了。這正是我們想要解決的問題。如果未來有更好的編程語言也能解決這個問題，説實話，我也樂意接受。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/6swrOq5xUXwVqrREwJwc?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Entire Git Forge：面向編碼智能體重構 Git 協作方式</li></ul>
+<p><a href="https://www.infoq.cn/article/6swrOq5xUXwVqrREwJwc?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
