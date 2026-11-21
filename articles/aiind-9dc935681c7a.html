@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>群聯展示內置NPU與64GB內存的智能SSD方案 可直接運行AI模型</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>群聯展示內置NPU與64GB內存的智能SSD方案 可直接運行AI模型</h1>
+<div class="notice">內容機器翻譯自第三方媒體（cnBeta.COM），僅供參考，以原文為準。</div><p><img src="https://static.cnbetacdn.com/article/2026/1122/2998473d19429a7.webp" alt=""></p><h3>正文</h3><p>在芝加哥舉行的2026年國際超級計算大會（SC26）上，存儲控制器廠商群聯電子（Phison）展示了一項面向人工智能服務器的新型SSD設計方案。該方案在固態硬盤內部集成神經網絡處理器（NPU）以及64GB內存，能夠直接在硬盤上運行PyTorch和llama.cpp等AI框架和模型，從而讓部分數據處理工作在數據離開存儲設備之前完成。</p><p>當前許多AI服務器的大量時間都用於從SSD讀取數據，再交由CPU或GPU進行處理。群聯希望改變這種模式，通過在存儲設備內部完成部分計算任務，讓硬盤不僅負責存儲數據，還能參與數據分析和推理工作。</p><p>根據群聯介紹，新設計能夠在數據存儲位置直接對數據進行並行掃描和處理，而無需將完整數據集傳輸到主機系統。硬盤處理完成後，只需將關鍵結果返回給服務器即可。對於適合的應用場景，這種方式有望將數據傳輸量減少10倍至100倍，同時降低CPU負載，為主機處理器釋放更多資源。</p><p>在硬件規格方面，該SSD搭載的64GB內存可提供約130GB/s的帶寬。相比之下，群聯即將推出的PCIe 6.0 SSD控制器與主機之間的數據傳輸速度約為28GB/s。這意味着硬盤內部讀取自身存儲數據的速度遠快於向外傳輸數據的速度，從而進一步凸顯在存儲端進行計算的價值。</p><p>群聯還表示，開發人員無需學習全新的專用開發工具。該設計支持vLLM、OpenVINO等主流AI軟件框架，因此現有人工智能軟件生態有望較容易地適配這一架構。</p><p>不過，關於這款SSD最核心的AI計算性能指標，群聯公佈的信息仍然有限。公司目前僅給出了36，800 DMIPS這一計算指標。DMIPS屬於誕生已久的CPU整數運算基準測試標準。業內分析認為，這一數字更可能代表硬盤內部配套CPU核心的性能，而非NPU本身的人工智能算力。值得注意的是，群聯並未公佈業界常用的TOPS（每秒萬億次運算）指標，因此外界暫時難以準確評估其真實AI性能水平。</p><p>此外，該產品目前尚未公佈正式型號、上市時間或樣品出貨計劃。群聯也沒有説明採用何種類型的存儲器技術。公司表示，本次展示的許多產品和功能仍處於研發階段。因此，這項技術目前更接近一種未來架構方案，而非數據中心能夠立即採購部署的成熟產品。</p><p>實際上，“可計算存儲”並非全新概念。早在2018年，三星就曾推出搭載FPGA的SmartSSD，並於2022年發佈第二代產品。然而，這類產品後來逐漸淡出市場視野。有分析認為，生成式人工智能熱潮推動了市場對大容量存儲的巨大需求，相較之下，具備存儲端計算能力的產品並未獲得同等關注。</p><p>與三星早期方案相比，群聯此次提出的設計存在一個明顯差異。此前的SmartSSD需要客户自行開發相關軟件和知識產權模塊，而群聯則承諾兼容開發者已經廣泛使用的AI工具鏈。如果這一兼容性能夠順利實現，同時其NPU性能達到官方預期，那麼存儲設備直接承擔AI計算任務的理念或許有機會再次獲得產業界的關注。</p><h3>各方報道</h3><ul><li><a href="https://www.cnbeta.com.tw/articles/tech/1587420.htm" target="_blank" rel="noopener noreferrer">cnBeta.COM</a>：群聯展示內置NPU與64GB內存的智能SSD方案 可直接運行AI模型</li></ul>
+<p><a href="https://www.cnbeta.com.tw/articles/tech/1587420.htm" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
