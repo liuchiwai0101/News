@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>安謀科技發佈“星辰100e” AIoT 原型平台，AI推理性能最高提升 340 倍</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>安謀科技發佈“星辰100e” AIoT 原型平台，AI推理性能最高提升 340 倍</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/4c/6f/4ced410bae3db9966060e99f088e4d6f.png" alt=""></p><h3>正文</h3><p>11 月 18 日，安謀科技（中國）有限公司（以下簡稱“安謀科技”）舉辦 Arm® Cortex®-M CPU 新品説明會，深度解析 Arm Cortex-M42 CPU，並正式推出基於該產品的“星辰 100e”AIoT 原型平台。</p><p>Cortex-M42 處理器面向對成本和麪積敏感的智能端點設備打造，基於 Armv8.1-M 架構，兼具三大核心能力：</p><p>· Arm Helium™技術：加速向量處理，帶來更強的機器學習（ML）和數字信號處理（DSP）性能。</p><p>· Arm 自定義指令（ACI）：支持芯片合作伙伴實現專用指令，針對特定工作負載優化處理性能。</p><p>· 基於 AHB 的緊湊設計：沿用成熟的微控制器（MCU）系統架構，無需複雜的內存子系統，可高效集成至現有設計中。</p><p>這些能力共同為芯片合作伙伴提供了一條更簡便的演進路徑：使他們能夠在現有 Arm Cortex-M4 和 Arm Cortex-M33 產品基礎上輕鬆升級，同時保留在成熟 MCU 設計中的大部分既有投入。</p><p>該產品由安謀科技與 Arm 合作開發，在中國市場命名為“星辰”STAR-MC3，此次正式納入 Arm Cortex-M 全球產品路線圖，進一步擴展了 Cortex-M 產品組合。該技術同時納入 Arm Flexible Access 和 Arm Total Access 技術授權訂閲模式的產品組合，加速邊緣 AI 創新，將 AI 能力下沉至更廣的低功耗設備中。</p><p>“星辰 100e”AIoT 原型平台是 Cortex-M42 CPU+Arm Ethos™-U55 NPU 的異構計算平台，已在 FPGA 平台上跑通關鍵字檢測、目標識別、自動語音識別等典型 AI 用例，可為客户提供參考設計，顯著縮短研發週期，助力客户快速將 AI 能力部署到各類低功耗 AIoT 設備。</p><p>Arm Cortex-M42：兼顧效率與性能，將 AI 算力下沉至低功耗端側設備</p><p>作為 Cortex-M 家族的最新成員，Cortex-M42 基於業界應用廣泛的 32 位架構，兼顧效率與性能，進一步拓展邊緣 AI 應用場景，廣泛適用於可穿戴設備、低功耗 AI 計算域、連接設備及通用 MCU 等領域。</p><p>從可穿戴設備中的音頻處理和關鍵詞識別，到互聯控制器和工業控制器中的傳感器分析、狀態監測與信號處理，再到物理 AI 場景中的感知、異常檢測、預測性維護，Cortex-M42 為廣泛的低功耗智能端點提供高效計算能力。</p><p>Arm 邊緣 AI 產品管理高級總監 Lionel Belnet 表示，Cortex-M42 基於 AHB 總線，具備實時響應、面積小、功耗低三大核心優勢，Armv8.1-M 架構內置的 Helium 矢量擴展技術，讓 CPU 能更高效地處理向量計算，同時支持 ACI，客户可根據應用場景擴展專屬運算指令。Helium 與 ACI 互為補充，既能覆蓋通用 AI 場景，又能滿足客户差異化需求，共同為低功耗邊緣 AI 提供兼具性能與靈活性的算力底座。</p><p>在 AI 計算性能方面，Helium 技術為 Cortex-M42 帶來了顯著提升：與前代 Cortex-M33 處理器相比，向量計算能力提升至 3 倍，向量能效提升至 2 倍。系統性測試顯示，Helium 在 DSP、神經網絡（NN）、計算機視覺（CV）三大核心端側計算場景中均有顯著加速效果，其中，8 位定點工作負載的提升幅度可達 32 位浮點的 2 倍以上，與端側 AI 普遍採用低精度量化的趨勢高度契合。</p><p>Cortex-M42 為芯片合作伙伴提供了一種比 Arm Cortex-M52 面積更小、功耗更低的方案，適用於不需要豐富內存子系統（包括可選緩存和緊耦合內存 TCM）的設計。在採用 TSMC 22ULL 工藝、150MHz 頻率的配置中，與 Cortex-M52 相比，Cortex-M42 在提供相近的標量和向量性能的同時，硅片面積減少 10%、功耗降低 15%。</p><p>“星辰 100e”AIoT 原型平台：為低功耗端側設備提供各種類型的高效算力</p><p>當前，端側 AI 工作負載正在快速演進，從簡單的關鍵詞識別到實時語音處理、物體檢測，乃至小語言模型推理，卷積神經網絡（CNN）、張量計算等重負載場景對算力的需求，已經超出了 CPU 矢量擴展的最優範圍。</p><p>Arm Ethos NPU 系列產品以極致的功耗與面積效率著稱，作為專用 AI 加速器與 Cortex-M 系列 CPU 協同工作，可為低功耗端側設備提供全場景高效算力，尤其在卷積、全連接等重計算神經網絡場景中，性能和能效優勢更為突出。</p><p>安謀科技 CPU 產品總監朱曉鳴表示，針對廣泛的邊緣 AI 場景，安謀科技構建了“星辰”CPU+Helium 矢量擴展+Ethos NPU 的 AIoT 原型平台。此次發佈的新一代 AIoT 原型平台“星辰 100e”，採用 Cortex-M42+Ethos-U55，是安謀科技在邊緣 AI 領域的又一次技術探索，致力於為低功耗端側設備提供各種類型的高效算力。</p><p>目前，安謀科技在 FPGA 平台上搭建了“星辰 100e”系統，已經跑通關鍵字檢測、目標識別、語音識別等系列 AI 用例。實測數據顯示，與單獨使用 Cortex-M42 處理器相比，Cortex-M42 搭配 Ethos-U55 後，關鍵字檢測推理性能提升 95 倍；目標識別推理性能提升超過 132 倍；自動語音識別性能提升更是超 340 倍。</p><p>“星辰”AIoT 原型平台持續演進，第一代平台“星辰 300”選擇 Cortex-M52（“星辰”STAR-MC2）和 Ethos-U55，已全面支持主流小模型；更高性能的下一代“星辰”原型平台將於 2027 年推出。</p><p>隨着 Cortex-M42 加入 Cortex-M 產品家族，“星辰 100e”AIoT 原型平台的發佈，安謀科技與 Arm 為開發智能嵌入式產品的芯片合作伙伴帶來了更多創新選擇。Cortex-M42 提供了一條更簡便的路徑，讓成熟的 MCU 設計也能輕鬆獲得更強的 ML 與 DSP 能力；“星辰 100e”則印證了 CPU 向量處理與專用 NPU 加速的結合，足以支持更高要求的 AI 工作負載。二者協同助力合作伙伴在嚴苛的功耗與面積約束下，持續演進現有產品、解鎖全新能力。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/pdjVKiH3ONYjePlUDufv?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：安謀科技發佈“星辰100e” AIoT 原型平台，AI推理性能最高提升 340 倍</li></ul>
+<p><a href="https://www.infoq.cn/article/pdjVKiH3ONYjePlUDufv?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
