@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pinterest 讓大模型取代多階段聚類，但最大的提速來自“少推理”</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Pinterest 讓大模型取代多階段聚類，但最大的提速來自“少推理”</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/d9/12/d989af9bcc76111dd15d91ade6972812.png" alt=""></p><h3>正文</h3><p>Pinterest 已將 其用户旅程推斷系統從多階段聚類流水線改為經過微調的 40 億參數語言模型，並報告稱電子郵件點擊率提升了 1.1%，推送消息打開率提升了 1.3%。</p><p>該模型不再將關鍵詞聚類為興趣，而是分析用户的活動歷史，識別長期目標，再將這些旅程送入 Pinterest 現有的推薦基礎設施。</p><p>Pinterest 將“旅程”定義為跨越多個會話、連接興趣、意圖和情境的目標。例如，一個正在翻新廚房的人可能先搜索櫥櫃設計、保存枱面創意，隨後又查看防濺板瓷磚或照明方案。這些互動共同指向一個連貫的項目，而不是幾項互不相關的興趣。</p><p>該公司此前的系統會從用户活動中提取關鍵詞，使用嵌入和層次聚類將其分組，為生成的聚類命名，再通過其他模型和多樣性啓發式規則對其排序。</p><p>儘管與更早基於興趣的通知方式相比，這種方法是有效的，但它可能把相關活動拆分為不同旅程，生成籠統的標籤，或將偶然的互動誤判為持續的意圖。</p><p>新系統則將旅程推斷視為生成任務。經過微調的大語言模型會讀取 360 天內最多 150 項用户行為的時間順序記錄，以及一份精簡的用户畫像，然後生成按優先級排序的旅程名稱。搜索和保存行為的權重高於偶然點擊；提示詞則要求模型考慮重複互動、近期行為和具體程度。</p><p>此次整合將舊系統中大量排序和過濾行為移入提示詞。指令要求模型避免合併無關興趣，排除一次性行為和有噪聲的自動生成標籤，並在缺乏足夠證據證明存在有意義的旅程時允許返回空結果。Pinterest 將這些指令的變更視為生產環境上線，而不是簡單的提示詞修改。</p><p>為了在沒有大規模人工標註數據集的情況下構建系統，Pinterest 使用前沿模型，根據用户活動歷史生成合成訓練樣本。這些樣本隨後用於通過監督微調和低秩適配（LoRA）微調參數量較小的開放權重 Qwen3 模型。</p><p>團隊測試了參數量從 6 億到 80 億的模型，最終選擇了 40 億參數模型，以兼顧推斷質量和服務吞吐量。</p><p>在 Pinterest 的規模下運行該模型又帶來了另一項工程挑戰。該公司在運行於 L40S GPU 上的 vLLM 工作節點前部署了 NVIDIA Dynamo，並使用連續批處理、PagedAttention 和前綴緩存感知路由來提高推理效率。</p><p>不過，吞吐量提升幅度最大的措施之一，是直接避免不必要的推理。系統會記錄每位用户的旅程上次生成的時間，並跳過此前幾天內已經處理過的用户。</p><p>Pinterest 通過並排比較、由另一個大語言模型擔任評判者以評估旅程與用户活動的相關性及其依據，以及在線實驗來評估旅程質量。美國和加拿大的初步 A/B 測試顯示，與基於聚類的系統相比，電子郵件點擊率和推送消息打開率分別提升了上述 1.1% 和 1.3%；互動和留存指標也取得了具有統計顯著性的提升。</p><p>這種方法與 Netflix 在個性化推薦基礎模型方面的工作 有相似之處。Netflix 曾介紹如何從用户的長序列互動中學習，生成可供下游推薦模型複用的表示。</p><p>Netflix 側重於可複用的偏好表示，Pinterest 則生成明確的旅程描述；但兩者都利用更長期的行為歷史來增強現有的個性化基礎設施，而不是將其完全替換。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/vaEUVvWD9AIaFXZhzSMH?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Pinterest 讓大模型取代多階段聚類，但最大的提速來自“少推理”</li></ul>
+<p><a href="https://www.infoq.cn/article/vaEUVvWD9AIaFXZhzSMH?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

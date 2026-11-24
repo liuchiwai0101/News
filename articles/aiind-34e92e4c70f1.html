@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>當 AI 改變一切，下一步如何構建？</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>當 AI 改變一切，下一步如何構建？</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/0f/2f/0fec8953a57a85ec8cba02445661602f.jpg" alt=""></p><h3>正文</h3><p>海外開發者都在用什麼 AI 工具？他們擔心被 Agent 取代嗎？關於技術、工作和未來，你還有什麼好奇的問題？歡迎留言，或戳鏈接提交你的「re:Invent 之問」</p><p>“如果 Agent 能比我更快地寫代碼，那我還有什麼價值？我的編程技能還有意義嗎？我對雲計算的理解呢？”</p><p>即使是亞馬遜雲科技首席開發者佈道師 Darko Mesaroš，也曾因 AI 編程能力的快速進步而陷入身份危機。今年 11 月，在“What If Lab｜萬一實驗室 AI 硬件創意黑客松”上，Darko 坦誠地分享了這段自我懷疑的經歷。</p><p>雲計算興起之前，Darko 是一名系統管理員，與網絡、數據庫和存儲管理員分工協作。隨着雲計算普及，基礎設施逐漸被抽象為雲服務，他也不得不掌握更廣泛的技術能力。</p><p>“突然之間，我不能只懂得如何管理系統了。我必須瞭解所有這些事情，因為一切都被抽象化了。”</p><p>二十年前，雲計算改變了工程師構建和運行軟件的方式。如今，AI 正在接手越來越多的編程和工程任務。開發者需要再次思考，自己的工作將如何改變。</p><p>這兩輪技術變革，都與亞馬遜雲科技密切相關。而 re:Invent 大會，作為亞馬遜雲科技每年規格最高、影響力最大的全球技術與行業盛會，是觀察這些變革最集中的舞台。</p><p>2006 年，亞馬遜雲科技推出 Amazon S3 和 Amazon EC2，讓企業能夠按需獲取存儲和計算資源。過去，新業務上線需要提前採購服務器、建設機房；雲計算普及後，企業可以根據業務增長逐步擴容，工程師也開始從基礎設施管理轉向更廣泛的軟件開發工作。</p><p>2012 年，首屆 re:Invent 大會在拉斯維加斯舉辦。此後，這場大會上的一些重要技術發佈，逐漸成為觀察軟件開發方式變化的切口。</p><p>2014 年，Amazon Lambda 發佈。 開發者可以運行事件驅動的代碼，無須自行管理服務器，Serverless 開始走向更廣泛的應用。</p><p>2017 年，Amazon SageMaker 發佈。 模型開發、訓練和部署逐漸被整合進託管平台，機器學習工程的門檻進一步降低。</p><p>2018 年，亞馬遜雲科技在 re:Invent 發佈首款自研 Arm 服務器處理器 Graviton，並推出搭載該芯片的 EC2 A1 實例，為長期由 x86 架構主導的雲計算市場帶來新的選擇。 此後，隨着 Graviton2 等產品推出，Arm 架構逐漸在雲數據中心獲得更廣泛的應用。</p><p>2025 年，亞馬遜雲科技發佈 Kiro autonomous agent、Security Agent 和 DevOps Agent ，分別面向軟件開發、安全和運維任務，AI 開始嘗試承擔更長時間、更復雜的工程工作。</p><p>這些技術發佈對應着軟件工程中的不同變化：基礎設施管理逐漸被雲平台接管，機器學習成為更多開發者能夠使用的能力，如今，AI 又開始參與代碼編寫和任務執行。</p><p>但每一次抽象和自動化，也會產生新的工程問題。Serverless 需要處理冷啓動和狀態管理，機器學習平台需要解決模型部署與運維問題，Agent 則開始讓工程師面對執行權限、可靠性和成本控制等挑戰。</p><p>從目前公佈的議程來看，今年值得關注的變化，是 Agent 正在從相對獨立的任務執行，進一步走向複雜的企業生產環境。</p><p>五場主題演講覆蓋了 AI 開發工具、基礎設施、企業數據和商業生態等不同層面。</p><p>Developer Keynote（11 月 30 日）： AI 輔助開發、代碼質量驗證，以及 Agent 的穩定運行。</p><p>Data &amp; AI Keynote（12 月 2 日）： Agent 如何獲取企業數據與業務上下文，如何衡量業務價值、控制行動邊界。</p><p>Partner Keynote（12 月 2 日）： Agent 帶來的新客户需求，以及合作伙伴如何開發產品、進入市場。</p><p>Technical Innovations Keynote（12 月 3 日）： 從芯片、網絡到存儲，雲基礎設施如何適應新的 AI 工作負載。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/iRm9lBSQj0OCvDdgLQrO?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：當 AI 改變一切，下一步如何構建？</li></ul>
+<p><a href="https://www.infoq.cn/article/iRm9lBSQj0OCvDdgLQrO?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

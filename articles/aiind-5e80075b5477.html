@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>谷歌發現，技術債務會通過“智能體分心”導致編碼智能體偏離正軌</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>谷歌發現，技術債務會通過“智能體分心”導致編碼智能體偏離正軌</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/ac/d1/ac383447f8771a8ac7e305ed98b404d1.jpg" alt=""></p><h3>正文</h3><p>在最近的一篇文章中，谷歌高級軟件工程師 Sam Saccone 和高級數據科學家 Madhuri Garikapati 指出了智能體分心的代價： AI 編碼智能體會因陳舊的技術債務（如過時的 TODO 註釋、已廢棄的 Bug 引用和過時的規格説明）而偏離正軌 ，從而開始執行用户沒有要求的“支線任務”。</p><p>過時的規格説明、早已解決的 Bug 以及過時的文檔，不再只是沉睡在代碼庫中那些被遺忘的角落裏，而是被無意間引入了上下文中，間接地誤導了下一代編碼者，也就是這些智能體。</p><p>按照作者的説法，在最好的情況下，智能體分心會增加令牌消耗和執行時間；在最壞的情況下，則可能會導致智能體產生“錯誤的邏輯和決策”。為了研究其影響，他們將研究重點放在了 TODO(bug/...) 註釋上——正如他們所指出的那樣，這類註釋“往往在底層缺陷被修復或放棄後仍然長期地保留了下來”。</p><p>通過將智能體遇到的每個 TODO 與該 TODO 的 Bug 狀態及用户提示詞進行交叉比對，我們可以大規模地自動區分有效的工作與無謂的繞路。</p><p>通過分析來自數千名工程師的分佈式跟蹤數據以及數億次智能體操作，谷歌發現，在約 13% 的會話中，智能體遇到了內聯的 TODO/FIXME 引用，而在其中 6% 的案例中，智能體針對被引用的缺陷採取了行動。在大多數情況下，提示詞甚至沒有提及被引用的缺陷。此外，在這些沒有提示的“繞道”操作中，在 41% 的情況下，智能體處理的是已經關閉了的工單；在 57% 的情況下，它們處理的是仍然處於開放狀態但超出了開發者請求範圍的缺陷，調查人員將此歸類為“範圍蔓延”。</p><p>研究人員採用多向固定效應迴歸模型（標準誤差按開發者分組），發現這些冗餘操作給每次會話帶來了額外的開銷：步驟增加了 70%，token 消耗增加了 77%，等待時間增加了 105%。</p><p>為了解決這一問題，谷歌開發了掃描智能體，用於識別並清理代碼庫中已經過時的 TODO 項。在某些情況下，這些智能體需要檢查長達數年的 Git 歷史記錄，才能確認某個 TODO 及其背後的意圖均已過時。不過，只有在確認這一點後，它們才會提交拉取請求（PR），從代碼庫中移除過時的引用。</p><p>得益於這種多層級的方法，我們的 TODO 清理工具在過去的 6 個月中成功地移除了數千個真正過時的引用，並且人工審核員的認可率超過 95%。</p><p>研究人員得出結論：提交前分析器、代碼庫掃描器和自動化智能體等工具有助於緩解“智能體分心”現象，從而提高 AI 編碼智能體的效率。</p><p>針對這一發現，X 平台用户 Tulasiram 評論道：“這提醒我們， 註釋也是上下文的一部分 。” Ryan White 強調 ：</p><p>這不過是初級開發者的行為在以機器速度重演。留下一個誤導性的註釋，就會有人為此耗費一整天。只不過現在，這種情況每小時會發生 40 次，而你還要為此支付 token 費用。</p><p>在 LinkedIn 上， 用户 Awais Raza 對緩解智能體分心的可能性表示樂觀 ：</p><p>TODO 清理工具獲得了 95% 以上用户的認可。這一事實頗具啓示意義：這表明清理工作可以實現自動化，同時又不失人類的判斷力。</p><p>最後， Muhammad Zohaib 進一步拓展了這一觀點 ，他指出：“網站可能也是如此：過時的頁面和相互矛盾的信息會讓 AI 系統更難選出正確的答案。”</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/sFmubmDWkulIOTBLX0Dr?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：谷歌發現，技術債務會通過“智能體分心”導致編碼智能體偏離正軌</li></ul>
+<p><a href="https://www.infoq.cn/article/sFmubmDWkulIOTBLX0Dr?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>螞蟻OceanBase發佈湖庫一體AI數據平台OceanLake，CTO楊傳輝解讀三大能力</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>螞蟻OceanBase發佈湖庫一體AI數據平台OceanLake，CTO楊傳輝解讀三大能力</h1>
+<div class="notice">內容機器翻譯自第三方媒體（量子位 · 雷峯網），僅供參考，以原文為準。</div><p><img src="https://static.leiphone.com/uploads/new/images/20261124/6b053f07c5a11.jpg?imageMogr2/quality/90" alt=""></p><h3>正文</h3><p>11月24日，螞蟻OceanBase AI數據大會在北京召開。OceanBase正式發佈湖庫一體AI數據平台OceanLake，並宣佈開源其核心引擎AI數據庫OceanSeek。OceanBase CTO楊傳輝在大會分享中透露了背後的技術思考，他認為，面向AI時代，數據基礎設施需要具備湖庫一體、在離線一體、Agent友好和多模混合搜索等關鍵能力，為企業AI應用提供統一的數據底座。</p><p>楊傳輝的判斷來自螞蟻真實業務及OceanBase自身的AI實踐，大會披露的一組數據顯示：主要面向Agent調用的MCP訪問量，從4月到9月增長約13.36倍，人工頁面訪問PAGE同期增長約9.86倍。隨着AI進一步進入企業業務部門，數據訪問方式正在發生變化。螞蟻部分業務場景從BI轉向AI後，數據倉庫調用量在半年內提升了一個數量級。</p><p>Agent既需要處理海量數據和複雜查詢，也需要高併發和實時響應，過去在線數據庫與離線分析系統之間的分工，已難以充分滿足新的需求。</p><p>OceanBase自身的AI coding轉型也帶來了類似挑戰：研發效率顯著提升後，研發服務器和測試服務器成為新的瓶頸。為此，OceanBase通過提升Token使用效率、利用數據分支替代新實例創建等方式，降低基礎設施成本。楊傳輝認為，性價比應成為AI基礎設施設計的第一考慮要素。</p><p>三個技術判斷： 湖庫一體 、 Agent友好 與 多模混合搜索</p><p>面對這些變化，OceanBase如何構建面向AI的數據基礎設施？楊傳輝給出三個技術判斷。</p><p>第一個是湖庫一體，實現在離線融合。數據湖提供開放存儲格式和海量數據承載能力，數據庫提供事務、一致性與實時處理能力。面向Agent，兩者需要在統一架構下融合，通過一份數據支持在線讀寫、實時分析與離線加工。基於對象存儲的存算分離架構，適應Agent工作負載的彈性變化，在支持海量數據處理的同時降低基礎設施成本。</p><p>第二個是Agent友好，支持低成本運行與安全試錯。Agent數量龐大、活躍度變化明顯，數據平台需要通過邏輯表實現數據邏輯隔離，並按需使用計算資源。數據庫分支則可以秒級創建可獨立讀寫的數據環境，支持不同記憶策略或執行方案並行驗證，保留有效結果，並在失敗時回滾，讓Agent能夠在隔離環境中持續探索和改進。</p><p>第三個是多模混合搜索，提升AI獲取和使用數據的能力。楊傳輝認為，多模混合搜索將成為與事務處理、分析處理並列的重要工作負載。通過在同一張表中統一管理結構化與非結構化數據，結合關係過濾、全文搜索、向量搜索、圖搜索與AI計算，AI數據平台能夠為AI提供更符合業務需求的信息，減少Token消耗，提升後續AI處理的準確性。</p><p>基於這些判斷，OceanLake正式亮相，將湖庫一體、Agent友好與多模混合搜索融入統一的數據平台。</p><p>其中，OceanLake Core以OceanBase AI數據庫為核心引擎，基於對象存儲承載海量數據，支持Iceberg、Paimon等開放表格式，並結合Spark、Flink、Ray等計算引擎，覆蓋實時讀寫、實時分析、離線加工與多模混合搜索等負載，統一Catalog負責元數據管理，DataStudio則面向數據開發人員提供數據集成、開發、治理和任務調度能力。</p><p>面向AI Agent場景，邏輯表支持海量應用共享底層資源，同時保持數據邏輯隔離；數據分支支持企業基於業務數據創建可獨立讀寫的環境，複用基線數據、增量保存改動，並行驗證多個Agent方案，降低試錯成本，“Agent友好需成為AI 數據基礎設施的原生能力”。</p><p>在楊傳輝看來，“多模混合搜索已成為一類工作負載”，面向多模態數據，OceanBase AI數據庫支持在一次查詢中組合標量過濾、JSON查詢、全文檢索與向量搜索，並根據LOB大小採用分層存儲，兼顧檢索效率與資源成本，使搜索從相似內容查找延伸到多種業務數據的組合檢索。</p><p>面向本體語義，OceanBase Ontos從企業已有的表結構、SQL、ETL流程和知識庫中提取語義，以自動化與人工結合的方式構建業務知識圖譜。據介紹，OceanBase Ontos可將90%以上的本體建模工作自動化，將本體構建效率提升10倍以上，並支持本體自動維護。楊傳輝認為，本體語義將成為AI數據基礎設施的原生能力。</p><p>目前，OceanLake已在多個場景落地：在螞蟻靈波的多模態數據處理與模型訓練場景中，通過高效的數據組織與緩存，對象存儲讀取數據量減少97%。此外，OceanBase在千億級標量與百億級標籤混合搜索測試中，P95 SQL響應時間達到15.7毫秒。在某保險公司的文檔處理場景中，準確率由60%提升至97%，Token使用量減少78.6%。OceanBase AI數據庫同步開源，開源項目OceanSeek採用Apache License 2.0，已在螞蟻阿福、螞蟻靈光和支付寶AI付等大規模生產場景中得到驗證。</p><p>OceanLake的發佈，標誌着OceanBase形成了覆蓋數據存儲與計算、開發與治理、業務語義、Agent運行及智能分析的完整AI數據平台。從底層的湖庫一體與多模混合搜索，到Ontos本體語義、Agentbase運行服務，再到DataPilot智能分析，OceanBase將數據、業務知識與AI應用貫通起來，為企業提供從數據準備、應用開發到生產運行的全流程支撐，減少多套系統之間的集成與協作成本。</p><p>行業人士指出，從平台能力覆蓋看，OceanBase已形成與Databricks類似的全棧AI數據平台佈局。</p><p>這些技術領先性背後，是OceanBase十六年的根自研積累。“從分佈式數據庫打破TPC-C世界紀錄，到一體化數據庫支撐十多個行業關鍵信息基礎設施，數據庫能力始終是底座。”楊傳輝説。</p><p>OceanBase將繼續深耕數據庫，集中式版本持續補齊MySQL與Oracle兼容性，三種主備保護模式已GA，旗艦版規劃多副本保護與內核自動切換；分佈式版本圍繞“少等、少配、少猜”優化，更多DDL在線完成，CDC單生產多消費已支撐正式切流，鎖衝突可追到持鎖SQL；AI賦能數據庫方面，ODC輔助SQL生成與糾錯，OCP解讀告警，OAgent編排診斷並關聯指標、SQL、計劃、鎖證據給出因。</p><p>“以關鍵業務的可靠性，構建面向未來的AI數據平台。”楊傳輝表示，OceanBase的路線是從核心數據庫出發，持續向AI數據平台拓展，堅持開源開放，降低產業使用門檻。“這是OceanBase的技術路線，也是我們對AI時代數據基礎設施的回答。”</p><p>Copyright © 2011-2026 雷峯網 深圳英鵬信息技術股份有限公司 版權所有 粵ICP備11095991號 辦公電話 0755-26581864</p><h3>各方報道</h3><ul><li><a href="https://www.qbitai.com/2026/11/512383.html" target="_blank" rel="noopener noreferrer">量子位</a>：螞蟻OceanBase發佈湖庫一體AI數據平台OceanLake，CTO楊傳輝解讀三大能力</li><li><a href="https://www.leiphone.com/category/industrynews/HXbRi8ascVBkUsJP.html" target="_blank" rel="noopener noreferrer">雷峯網</a>：螞蟻OceanBase發佈湖庫一體AI數據平台OceanLake，CTO楊傳輝解讀三大能力</li><li><a href="https://www.leiphone.com/category/industrynews/vo7BI6hIy3wL6Mi4.html" target="_blank" rel="noopener noreferrer">雷峯網</a>：螞蟻OceanBase發佈AI數據平台：統一管理多模態數據，為Agent提供業務上下文</li></ul>
+<p><a href="https://www.qbitai.com/2026/11/512383.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
