@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>比黑客入侵更難防的，是 AI 正在執行的“合法操作”：企業安全防線，可能守錯了地方</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>比黑客入侵更難防的，是 AI 正在執行的“合法操作”：企業安全防線，可能守錯了地方</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/4b/81/4bb940a020d1acb157eced20cd6cd381.png" alt=""></p><h3>正文</h3><p>標題：比黑客入侵更難防的，是 AI 正在執行的“合法操作”：企業安全防線，可能守錯了地方</p><p>法國合作銀行 Crédit Mutuel Arkéa 披露，黑客通過欺詐性交易，從該銀行控制的賬户中盜走約 1 億歐元，摺合人民幣超過 8 億元。銀行隨後暫停了部分交易，並展開調查。據路透社報道，攻擊涉及第三方服務商平台，但具體入侵手法尚未完全公開。</p><p>就在此前兩個月，微軟也披露了一場針對企業賬户的攻擊活動。</p><p>攻擊者冒充企業 IT 支持人員，誘導員工更新 Passkey、MFA 或單點登錄設置。一旦獲取有效的登錄會話，攻擊者便可能進一步訪問 Microsoft 365、SharePoint 和 OneDrive 等企業服務，蒐集郵件和敏感文件。</p><p>更值得警惕的是，部分攻擊活動利用了正常的身份驗證流程和合法 API。對於企業來説，系統看到的可能是一次已經通過認證的訪問，而不是一個正在試圖突破防火牆的黑客。</p><p>AI 的加入，則正在進一步改變攻擊的效率。過去，企業發現一次網絡攻擊，往往會從異常流量開始。</p><p>短時間內出現大量訪問請求，服務器負載突然升高，某個接口被反覆調用，或者陌生 IP 地址頻繁嘗試登錄，這些都是安全團隊熟悉的危險信號。</p><p>但現在，一些真正危險的攻擊，可能根本不會觸發這些傳統警報。</p><p>攻擊者不需要讓服務器癱瘓，也不必突破複雜的網絡防線。他們可能只是註冊一個看起來正常的賬户，完成幾次身份驗證，再按照網站允許的流程發起支付或轉賬。整個過程未必存在明顯的技術違規，卻可能造成真實的資金損失。</p><p>隨着 AI 被用於生成身份、偽造網站、自動化操作和協調攻擊，這類風險正在變得更加複雜。</p><p>10 月底，Akamai 發佈《2026 年欺詐與濫用報告》（AI-Driven Digital Deception: The Fraud and Abuse Report 2026），披露了一組值得關注的數據：2026 年第一季度，在其監測數據中，網絡詐騙的檢出數量首次超過傳統釣魚攻擊；與此同時，釣魚攻擊的平均持續時間從 2025 年第四季度的約 48 天縮短至 2026 年第二季度的 22 天。</p><p>這意味着，攻擊者不僅可以更快地製造騙局，還能更快地更換攻擊基礎設施。</p><p>近日，Akamai 北亞區技術總監劉燁在圍繞這份報告展開的分享中，討論了 AI 對網絡欺詐、賬户安全和企業防禦策略的影響。</p><p>一個重要的變化是，網絡安全正在從識別惡意程序、異常流量，進一步走向識別真實業務流程中的惡意意圖。</p><p>企業過去熟悉的那套防禦體系，可能需要重新審視了。</p><p>攻擊者先註冊一個與真實品牌相似的域名，搭建仿冒網站，再通過郵件、搜索廣告或者社交媒體引導用户訪問。用户輸入賬號密碼後，攻擊者便能獲得登錄憑證，進而嘗試接管真實賬户。</p><p>這套方法存在已久，但 AI 正在改變它的成本結構。</p><p>以前製作一個逼真的釣魚網站可能需要具備網頁開發能力，還要設計仿冒頁面、編寫欺騙性內容。但生成式 AI 出現後，可以幫助攻擊者更快地生成網站內容、模仿品牌風格，並針對不同地區和語言製作詐騙材料。</p><p>更值得注意的是，攻擊者的目的也在變化。曾經不少釣魚攻擊首先希望竊取賬號密碼，再利用賬户實施進一步操作。現在，一部分攻擊者不再滿足於獲取憑證，而是直接誘導用户付款。例如，攻擊者製作一個與真實遊戲網站極為相似的頁面，通過社交媒體廣告吸引用户。用户進入後，以為自己正在官方平台充值，實際上錢已經進入攻擊者控制的支付渠道。</p><p>在這種情況下，真實遊戲平台可能從未遭到入侵，用户也未必泄露了賬號密碼，但詐騙已經完成。</p><p>Akamai 報告顯示，在其觀察到的威脅活動中，網絡詐騙檢出數量從約 320 萬增加至 640 萬，並在 2026 年第一季度首次超過傳統釣魚攻擊。</p><p>另一組數據同樣值得關注：釣魚攻擊的平均持續時間已經從約 48 天縮短至 22 天，降幅超過一半。</p><p>這一變化背後，是釣魚即服務（PhaaS）、自動化域名註冊、快速部署和基礎設施輪換等手段的普及。AI 進一步降低了生成和修改攻擊內容的成本。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/LwwdlrNGE3tbxPO1wIcT?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：比黑客入侵更難防的，是 AI 正在執行的“合法操作”：企業安全防線，可能守錯了地方</li></ul>
+<p><a href="https://www.infoq.cn/article/LwwdlrNGE3tbxPO1wIcT?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

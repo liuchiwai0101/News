@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>微軟確認 11 月更新引致部分第三方程式授權失敗 涉 NTLM 簽署機制變更</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>微軟確認 11 月更新引致部分第三方程式授權失敗 涉 NTLM 簽署機制變更</h1>
+<div class="notice">內容機器翻譯自第三方媒體（PCM），僅供參考，以原文為準。</div><p><img src="https://cdn.pcmarket.com.hk/wp-content/uploads/2026/11/25193537/PCM_Banner_1080_20261125_windows_nov%EF%BC%BF6_update_NTLM.jpg" alt=""></p><p>微軟近日確認，2026 年 11 月推出的安全更新會令部分 Windows 用户在透過第三方應用程式或裝置進行驗證時出現授權失敗情況。相關問題源於微軟逐步強化 NTLM 驗證安全機制的改動，部分未符合最新簽署要求的第三方產品在連線時會觸發登入錯誤。</p><p>根據微軟在支援文件（KB5135557）的説明，自 11 月 10 日安全更新起，Windows 用户端在進行非匿名連線時，預設會主動提供 NTLM 訊息簽署（NTLM signing）以防範中繼攻擊（relay attacks）。然而，當部分第三方軟件或裝置在回應 NTLM 挑戰時，所提供的 TargetInfo 缺少必要的 NetBIOS 電腦或網域名稱資訊，便可能導致驗證中斷並回傳 STATUS_LOGON_FAILURE 錯誤。</p><p>事件檢視器方面，受影響環境在 Microsoft-Windows-NTLM/Operational 記錄中可能出現事件 ID 4021，且 Target Information 顯示為未找到。業界觀察指出，部分涉及虛擬應用程式或視訊會議等第三方產品在特定驗證路徑下均可能受影響，而今次授權異常與部分裝置在安裝 11 月累積更新時遇到的安裝錯誤或啟用問題屬於不同狀況。</p><p>微軟表示，今次 NTLM 簽署調整屬於分階段推進的安全改進，第一階段已於 11 月 10 日展開，而第二階段預計於 2027 年 5 月起進一步要求伺服器端預設強制執行 NTLM 簽署，屆時未能提供簽署的連線將被拒絕。官方建議企業管理員盡量保持更新已安裝，並透過升級第三方產品韌體或軟件，或改用受支援的 Kerberos 驗證設定作長遠解決。</p><p>對於需要暫時維持運作的企業環境，管理員可先核對受影響系統版本、驗證路徑及事件記錄，審慎評估是否需要調整暫時性相容設定，同時避免隨意停用防毒、防火牆或既有安全防護控制。隨着微軟持續收緊舊有驗證協定，企業 IT 團隊亦應及早盤點內部系統對 NTLM 的依賴程度，為明年的強制執行階段作好準備。</p>
+<p><a href="https://www.pcmarket.com.hk/microsoft-confirms-authentication-issues-after-november-updates/" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
