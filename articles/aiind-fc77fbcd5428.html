@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>英國NCSC示警AI輔助網路攻擊顯著增加，駭客數分鐘內就可能利用企業既有資安弱點</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>英國NCSC示警AI輔助網路攻擊顯著增加，駭客數分鐘內就可能利用企業既有資安弱點</h1>
+<div class="notice">內容機器翻譯自第三方媒體（iThome），僅供參考，以原文為準。</div><p><img src="https://www.ithome.com.tw/sites/default/files/field/image/1126-ncsc-960-jpg.jpg" alt=""></p><h3>正文</h3><p>AI代理式攻擊加快駭客發現及利用資安弱點的速度，企業長年累積的技術債成為攻擊突破口。英國NCSC建議企業優先縮減對外攻擊面，並落實基本資安防護措施。（情境示意圖）</p><p>英國國家網路安全中心（National Cyber Security Centre，NCSC）11月24日 發布警告 指出，自今年9月以來，該機構觀測到AI輔助網路攻擊顯著增加，已波及多個產業的組織，部分事件造成服務中斷或系統遭到入侵。駭客濫用原本供紅隊演練等資安測試使用的AI代理式攻擊框架（Agentic Offensive Framework），得以更低成本快速且持續地發動攻擊，而企業長年累積、未妥善處理的資安弱點，正是這類攻擊的主要目標。</p><p>AI代理加快攻擊速度，企業多年累積的技術債成為突破口</p><p>這類攻擊框架可讓大型語言模型（LLM）搭配既有資安工具，規畫攻擊步驟、執行任務，並根據執行結果調整後續行動，相關工具包括多代理式滲透測試及紅隊演練工具ARTEX，以及Cairn、PentAGI、RedAmon、Xalgorix及Darkmoon等。</p><p>NCSC指出，AI代理所使用的多為駭客原本就能取得的資安工具，但搭配成本低廉且具備一定能力的開放AI模型，或透過非法API轉售業者取得模型存取權限，駭客便能大規模發動攻擊，更全面地搜尋目標系統的資安弱點。企業早已遺忘的金鑰或缺乏防護的API，過去可能多年未被發現，如今AI代理可能只需數分鐘就能找到這些資安弱點。</p><p>就NCSC目前掌握的攻擊事件而言，駭客所利用的並非新型記憶體破壞漏洞，甚至不是已知但尚未修補的軟體漏洞，而是企業多年累積的技術債（Technical Debt）所衍生的資安弱點，例如誤將存取憑證提交至程式碼儲存庫、基礎架構即程式碼（Infrastructure as Code，IaC）的組態設定錯誤、使用預設登入憑證或缺乏身分驗證機制，以及API存在安全弱點等。攻擊者初步入侵系統後，還可能利用企業內部存取憑證權限過大、網路缺乏適當區隔等問題，進一步擴大入侵範圍。</p><p>資安媒體CyberScoop報導指出 ，資安業者CrowdStrike資深情報分析師Eric Loui日前於資安大會CYBERWARCON透露，該公司正追蹤數十個駭客組織，發現這些組織愈來愈常將攻擊決策交由AI代理處理。以一起針對阿根廷醫療機構的攻擊事件為例，即使駭客未提供詳細的攻擊步驟，AI代理仍能在約90分鐘內發現並利用SQL注入漏洞。</p><p>美國聯邦調查局（FBI）11月13日發布的 資安警示 也揭露，至少自今年8月起，已有不同駭客組織濫用ARTEX攻擊全球多個產業的企業及機構，部分事件從鎖定目標到取得系統高權限，耗時不到3小時。</p><p>台灣企業也曾遭遇這類攻擊。 iThome先前報導 ，電商技術服務業者91APP於10月22日公佈遭駭事件調查結果，確認旗下電商服務平台Commerce Cloud的一座訂單資料庫遭到非法存取，調查過程中也發現ARTEX的使用痕跡。</p><p>政府機構同樣面臨這類威脅。歐盟執委會11月23日於 例行記者會 證實，先前偵測到的AI輔助網路攻擊已波及線上學習平台EU Academy，造成該平台外部使用者的姓名及電子郵件地址外洩。這波攻擊 於10月22日遭到偵測 ，目前該平台已暫停公開存取，執委會也已通報歐洲資料保護監管機關（European Data Protection Supervisor，EDPS），實際外洩規模仍在調查。</p><p>AI代理式攻擊目前著重速度而非隱匿性，企業仍有機會及早偵測</p><p>現階段的AI代理式攻擊框架多半著重速度而非隱匿性，產生的網路流量及活動紀錄也讓資安人員更容易偵測。相較於人工操作，AI代理往往會在短時間內密集發送請求，接著出現短暫停頓，反覆測試不同服務端點及請求參數，並產生較高的錯誤率。</p><p>資安人員可彙整不同來源的日誌進行關聯分析，藉此辨識異常活動，掌握攻擊者曾存取哪些IT資產，以及執行哪些操作，以利後續調查及復原。不過，NCSC提醒，未來若有攻擊框架更著重隱匿性，這類攻擊也可能變得更難偵測。</p><p>NCSC提出8項防禦建議，企業應優先縮減對外攻擊面</p><p>為了因應AI代理式攻擊，NCSC提出8項防禦建議，其中包括重新檢視對外開放的IT資產及既有防自動化攻擊措施。</p><p>NCSC發現，駭客利用AI代理式攻擊框架成功入侵的系統，有些正是企業早已遺忘的舊網站或老舊設備。因此，企業除了盤點暴露於公開網路的IT資產，也應重新評估相關服務是否有對外開放的必要。NCSC認為，多數企業都能在短時間內將大部分對外服務改為僅供員工或合作夥伴存取，讓資安人員集中資源強化其餘對外服務的資安防護。</p><p>AI代理能在短時間內針對多個目標嘗試利用已知漏洞，企業也必須加快對外系統的漏洞修補速度。此外，身分與存取管理（Identity and Access Management，IAM）的組態設定也可能隨時間改變，而不再符合原有的安全要求，需要定期檢視及改善。</p><p>既有的防自動化攻擊措施也面臨挑戰。NCSC提醒，企業即使在網頁介面部署防機器人驗證機制，若底層API未強制執行相關驗證，攻擊者仍可能繞過這些防護措施。</p><p>此外，攻擊者可利用AI代理頻繁更換IP位址，使IP位址封鎖措施難以奏效。即使企業限制個別帳號發送請求的頻率，攻擊者仍可能透過快速註冊新帳號加以規避。因此，企業除了強化API安全，也須管控新帳號的註冊頻率。</p><p>企業也可利用AI代理不斷搜尋弱點及嘗試攻擊的特性，部署誘餌資料（Honeytoken）及誘餌系統等欺敵防禦措施，不僅能藉由誘餌資料偵測異常存取行為，也能透過誘餌系統消耗攻擊者的時間及資源。NCSC援引微軟近期的案例指出，這類防禦措施已成功減少真實系統接收到的攻擊流量。</p><p>NCSC：目前觀測到的攻擊幾乎都能透過既有資安措施防範</p><p>NCSC認為，AI輔助威脅偵測及自動化資安事件應變，有助於縮小攻防雙方的能力差距，但相關防禦技術仍待成熟。企業不應將AI視為抵禦AI代理式攻擊的唯一手段，更不能因此延後改善既有資安防護措施。</p><p>就NCSC目前觀測到的攻擊而言，幾乎都能透過落實資安最佳實務、零信任架構及適當的技術控制措施加以防範，包括確實驗證存取者身分、全面落實最小權限原則，以及以系統可能已遭入侵為前提部署防護措施。即使未來出現攻擊能力更強、更難偵測的AI代理式攻擊框架，這些基本資安防護原則仍然適用。</p><h3>各方報道</h3><ul><li><a href="https://www.ithome.com.tw/news/180781" target="_blank" rel="noopener noreferrer">iThome</a>：英國NCSC示警AI輔助網路攻擊顯著增加，駭客數分鐘內就可能利用企業既有資安弱點</li><li><a href="https://www.ithome.com.tw/tags/ai%E8%BC%94%E5%8A%A9%E7%B6%B2%E8%B7%AF%E6%94%BB%E6%93%8A" target="_blank" rel="noopener noreferrer">iThome</a>：AI輔助網路攻擊</li></ul>
+<p><a href="https://www.ithome.com.tw/news/180781" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
