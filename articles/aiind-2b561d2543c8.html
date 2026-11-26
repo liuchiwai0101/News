@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Uber 推出安全 AI 框架：對 AI 智能體進行全生命週期治理</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Uber 推出安全 AI 框架：對 AI 智能體進行全生命週期治理</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/1b/b5/1b0635c0c9790a5c4c8111e336b24ab5.jpg" alt=""></p><h3>正文</h3><p>在最近的一篇文章中， Uber 工程團隊指出了傳統身份認證和 API 控制在保護 AI 智能體方面的侷限性，這些智能體會對外部內容進行動態推理並採取真實的操作 。為應對這一挑戰，Uber 開發了一個框架，用於判斷智能體的行動是否恰當，其依據包括用户的請求、智能體的預期目的、權限以及交互的上下文。</p><p>身份與鑑權系統可以判定用户或服務是否有權訪問某項資源，但無法判斷智能體提議執行的行為在當前場景下是否恰當。</p><p>這帶來了多重風險，包括提示詞注入、工具和記憶投毒、目標劫持、行為漂移以及由幻覺引發的危險操作。Uber 的這個框架通過三層機制應對這些風險，覆蓋智能體的整個生命週期，從部署前到運行時執行，再到部署後的持續保障。</p><p>在配置階段，智能體必須在 Uber AI Registry 中註冊，確立身份、所有權、角色、允許的意圖、約束、依賴關係和風險分類。該過程使用 Argus 自動化完成，它會分析智能體的源代碼、提示詞、配置、依賴、暴露的端點和工具調用路徑，識別出安全隱患。同樣的方法也適用於智能體使用的 MCP 服務器和工具。</p><p>在運行時，框架在傳統安全模型（策略管理、策略決策、策略執行）基礎上新增行為鑑權能力，用於評估智能體的行為在當前上下文裏是否合適。</p><p>行為授權通過三個組件實現：AI Registry、AI Guard 和 Agent Guard 運行時鈎子。AI Registry 定義和管理智能體策略、角色、意圖和約束，AI Guard 根據既定策略評估交互和提議的動作。Agent Guard 運行時鈎子“在關鍵檢查點調用 AI Guard，並在交互或動作被允許繼續之前採納其判定結果”。</p><p>部署完成後，重心轉向持續可信評估（Continuous Assurance），依賴端到端的可觀測性、審計、可解釋性和回放能力。該層包含兩個主要組件：一個統一的執行追蹤鏈路，串聯智能體動作、工具調用和安全決策；已記錄的交互，可在策略和護欄更新後隨時回放，用於評估它們在新上下文中的有效性。</p><p>Uber 還指出了在生產環境中實施安全控制的若干挑戰，把握策略嚴格程度，兼顧誤報過多和防護不足；控制運行時延；降低開發者接入成本；脱離通用管控規則，轉向面向智能體定製策略，從而“讓管控更貼合場景、更加精準”。</p><p>聯合國高級信息技術官員 Tristan G. 在 LinkedIn 上評論 Uber 的方案時 提出了幾點擔憂 ，他指出，雖然“每個智能體的角色、意圖、約束和校準”是價值最大的部分，但也伴隨着巨大的成本，因為“工作量會隨工作流數量的增加而增加”。此外：</p><p>按照 Uber 自己的説法，最強的控制手段是將智能體限制在顯式約束內，這本質上就是最小權限原則，並非新的想法。對我來説，懸而未決的問題是，對於不是你構建的智能體，比如第三方廠商、SaaS 的智能體，你無法插入執行鈎子，此時該如何運作。</p><p>他們口中最不起眼的手段反而是效果最好的，即為每個智能體單獨定義明確意圖與約束，而不是通用閾值方案，因為每個智能體都有不同的用途和風險特徵。代價是犧牲靈活性，而他們認為這個取捨是值得的。</p><p>Uber 的 Secure AI 框架仍在迭代中，計劃將其能力擴展到上述所有領域。框架細節繁多，本文無法全部覆蓋，建議讀者閲讀原文了解完整信息。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/xA3g2i0VtTZIOVePMedY?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：Uber 推出安全 AI 框架：對 AI 智能體進行全生命週期治理</li></ul>
+<p><a href="https://www.infoq.cn/article/xA3g2i0VtTZIOVePMedY?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
