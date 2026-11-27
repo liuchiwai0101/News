@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DoorDash利用AI智能體將生鮮雜貨復購延遲從16秒降至2秒</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>DoorDash利用AI智能體將生鮮雜貨復購延遲從16秒降至2秒</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/2f/91/2f9280765a1f1378ed3d35786bc88591.jpg" alt=""></p><h3>正文</h3><p>DoorDash 將其 AI驅動的生鮮雜貨復購流程 的延遲從約 16 秒縮短至 2 秒，其方法是預計算週期性的購買需求，而不是在每次請求時重新構建。這一改變使購物列表的查看量翻了一番，並將該流程的下單率提升了約 34%。這個實現建立在 DoorDash 的 共享智能體平台 和 具象化購物界面（grounded shopping interface） 之上，這兩個組件提供了可複用的智能體基礎設施，並允許消費者直接修改購物列表。</p><p>該實現結合了批量大語言模型（LLM）推理、確定性驗證和實時商品目錄解析，這些功能均集成在 Ask DoorDash （該公司的對話式購物助手）中。此前的 InfoQ 報道曾經介紹過 Ask DoorDash 如何利用專用智能體和工具來支持對話式發現與購物。在生鮮雜貨復購場景中，DoorDash 會處理 90 天的購買歷史以及消費者畫像信號。批量 LLM 推理用於識別可能出現的週期性購買項，而確定性驗證則在存儲可複用的購物列表數據之前檢查生成的結果。</p><p>服務路徑（serving path）會檢索這些準備好的數據，並根據當前目錄解析每個商品。系統首先嚐試匹配原始商店的商品，然後匹配目錄商品標識符，最後匹配搜索詞。這使得系統能夠適應不斷變化的商品列表和缺貨商品，而避免了為每個請求重複進行歷史推理。</p><p>該共享平台提供了編排、記憶管理、模型訪問、追蹤、評估基礎設施和發佈控制。領域團隊保留對智能體指令、技能、工具和評估標準的所有權。DoorDash 報告稱，添加其預訂（Reservations）智能體僅花費了一週時間，這比構建其初始的領域智能體快了大約 10 倍。</p><p>Ask DoorDash 共享智能體的平台架構（圖片來源： DoorDash博客文章 ）</p><p>更好的智能體系統並不一定意味着更多的推理，關鍵在於決定哪些環節應留在智能體循環中，哪些可以提前處理。</p><p>將週期性購買分析轉移至離線處理，減少了實時請求期間所需的工作量，同時保留了當前的目錄信息以供用户進行商品選擇。對於需要額外推理的請求（例如，根據當前價格、促銷、包裝規格、庫存和消費者偏好尋找更便宜的替代品），系統仍會調用生鮮雜貨智能體。而更簡單的操作（包括更改數量或刪除商品）則會直接更新購物列表，無需再次經過 LLM 的往返處理。</p><p>消費者的直接編輯具有最高權威性：智能體的下一步操作將從編輯後的列表開始，而不是基於之前説過的內容。</p><p>該設計將購物列表視為一種結構化的製品（structured artifact），消費者和智能體都可以對其進行更新，而不是僅僅依賴對話歷史。其他生鮮雜貨平台也在使用 AI 來個性化購物體驗。 Instacart的AI購物助手 利用消費者偏好和本地生鮮供應，支持膳食計劃、列表創建和商品發現。而 DoorDash 的實現則專門通過將歷史購買分析與實時商品解析分離，來降低復購延遲。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/2uDBVKjk3kJXRb6CqQfu?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：DoorDash利用AI智能體將生鮮雜貨復購延遲從16秒降至2秒</li></ul>
+<p><a href="https://www.infoq.cn/article/2uDBVKjk3kJXRb6CqQfu?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

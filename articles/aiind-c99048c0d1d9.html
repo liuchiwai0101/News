@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>給 AI 編碼智能體裝上知識庫，反而更費 Token？JioHotstar 測完六種方案，文件搜索依然能打</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>給 AI 編碼智能體裝上知識庫，反而更費 Token？JioHotstar 測完六種方案，文件搜索依然能打</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/12/8b/124833c28e4500518c7ff9f5a4bf948b.png" alt=""></p><h3>正文</h3><p>JioHotstar 評估了 六種幫助 AI 編碼智能體理解大型代碼庫的方案 。結果顯示，在目標明確的工程任務中，結構化代碼搜索表現良好；面對需求模糊的任務時，語義檢索則更有幫助。評估還發現，增加檢索層並不能穩定提升任務完成率，也不一定能夠減少 Token 消耗。</p><p>JioHotstar 高級資深工程師 Abhishek Bansal 對比了文件系統工具、 Sourcebot 、 Graphify 、 CocoIndex Code、 Repowise ，以及一套內部開發的檢索增強生成（RAG）管線。團隊使用 SWE-bench 和 CodeScaleBench 的部分數據集評估這些方案，同時針對 JioHotstar 的代碼庫構建了一套自定義問答測試框架。實驗採用 Claude Sonnet 作為解題模型，並衡量任務準確率、Token 消耗、智能體交互輪數和工具易用性。</p><p>JioHotstar 用於評估 AI 編碼智能體代碼檢索方案的基準測試設置。（來源： JioHotstar 博客文章 ）</p><p>文件系統基線方案依賴本地檢出的代碼倉庫以及標準的搜索和文件操作，在目標明確的任務中依然具備競爭力。Sourcebot 提供索引文本搜索、符號定義與引用查詢以及文件讀取等能力，在難度更高的 SWE-bench Verified 任務中表現優於基線方案，成本也更低。但在較簡單的 SWE-bench Lite 任務中，檢索通常只會增加額外開銷，並不能穩定改善結果。</p><p>CodeScaleBench 呈現出了不同的規律。當智能體需要理解模糊的問題描述，並將其對應到無法通過精確文本或符號搜索直接發現的實現細節時，語義檢索更有幫助。這些發現表明，檢索方案應該根據任務特點進行選擇，而不應被視為可以相互替換的通用解決方案。</p><p>報告還強調了工具設計的重要性。相比需要進一步驗證的高層抽象，智能體往往更傾向於使用開發者熟悉的操作，例如搜索文本、讀取文件和定位符號。</p><p>不同編碼智能體知識庫方案中各類工具的調用情況。（來源： JioHotstar 博客文章 ）</p><p>Siddharth Vaithinathan 在一篇 討論該研究的 LinkedIn 帖子 中提出了一個更宏觀的架構問題：</p><p>編碼智能體是否不僅應該理解代碼，還應該理解創造這些代碼的公司？他認為，僅對代碼倉庫建立索引，無法捕捉架構決策背後的原因、塑造這些決策的約束條件，以及工程團隊從過往事故中吸取的經驗。</p><p>Vaithinathan 建議將智能體的知識範圍從代碼和文檔進一步擴展到架構、約束、決策、決策依據、事故及其結果。這些上下文可以幫助智能體在提出修改建議之前評估現有設計選擇，尤其是在那些架構決策深受歷史運維經驗影響的系統中。</p><p>Tarun Bhargava 提出了一個與基準測試結果解讀密切相關的問題，特別是在評估只採用有限數據子集和概率模型的情況下：</p><p>JioHotstar 的評估並未找出一種能夠在所有任務中表現最佳的檢索方案。JioHotstar 建議保留文件系統工具作為基線，在目標明確、以代碼為中心的問題中使用結構化搜索，在需求模糊或涉及多個模塊的任務中使用語義索引。JioHotstar 工程團隊還強調，除了任務準確率，還應衡量工具調用軌跡，以判斷檢索是否減少了不必要的探索。研究結果進一步説明，檢索能力需要同時匹配具體的編程任務以及智能體瀏覽代碼庫的方式。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/Ql4GGMIEqA3bI2W2lh7h?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：給 AI 編碼智能體裝上知識庫，反而更費 Token？JioHotstar 測完六種方案，文件搜索依然能打</li></ul>
+<p><a href="https://www.infoq.cn/article/Ql4GGMIEqA3bI2W2lh7h?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
