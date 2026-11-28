@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>華映資本董事總經理李巖已確認出席 AICon北京，分享AI 落地中值得持續積累的能力</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>華映資本董事總經理李巖已確認出席 AICon北京，分享AI 落地中值得持續積累的能力</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/9f/ed/9fa92761855c3a4f0yy3cf168f5d8aed.png" alt=""></p><h3>正文</h3><p>AI 正在從回答問題的輔助工具，走向能夠理解目標、調用系統並完成任務的工作承擔者。當 Agent 真正進入企業流程，挑戰不再只是「如何把 AI 做出來」，而是哪些工作可以交給 AI、如何驗收結果，以及怎樣管理它的權限、成本與風險。</p><p>12 月 18 日-19 日， 2026 年 AICon 人工智能開發與應用大會 · 北京站 將在北京新雲南皇冠假日酒店舉辦。本屆大會以「探索 AI 應用邊界」為主題，設置 13 大技術專題，全日程共計近 60 場演講，覆蓋大模型後訓練、推理優化、Agent 工程、知識工程、智能體評測與安全、自進化系統、AI 軟件交付、原生架構及組織變革等核心方向。來自阿里巴巴、騰訊、螞蟻集團、快手、京東、淘天、微軟、華為、火山引擎、榮耀、攜程、貨拉拉、商湯、網易、科大訊飛、飛豬，以及清華大學、北京大學等高校與科研機構等一線技術專家，將系統分享 AI 在真實生產環境中的系統規模、任務效果、人工介入、運行成本、失敗經驗與架構取捨。</p><p>淘寶（中國）軟件有限公司淘天集團 AI 研發負責人呂承飛（呂行）已確認出席 Keynote 主題演講 ，並發表題為 《 從輔助編碼到 Agent 主導交付：淘寶 AI 原生研發系統實戰 》 的主題分享。當前，AI 研發在工具軟件等場景中已廣泛落地並取得顯著收益。然而，面對歷經長期演化、擁有海量服務與嚴苛業務要求的超大規模複雜存量工程系統，企業究竟該如何破局並取得倍數級的研發收益？</p><p>呂承飛（呂行）的本次演講，將圍繞上述命題，系統覆盤我們在淘寶的實戰經驗與核心解法：</p><p>破局“局部生碼提速、全局交付不提效”：明確將研發執行主體從“人類專家”移位為“自主 Agent”的 AI 原生研發模式，構建支撐“人 -Agent / Agent-Agent”深度協同的平台底座；針對業務生產現場的落地阻力，探索並驗證了兼顧不同組織成熟度與業務複雜度的 「需求端到端 - 半托管（人主導流程）」 與 「需求端到端 - 全託管（Agent 主導流程）」 兩種推進範式。</p><p>專職 Agent 矩陣與工業級客觀評測：系統解答企業級研發 Agent 的拆解依據與職責邊界，給出 “1 TL 編排中樞 ＋ 若干專職 Agent 矩陣” 協同方案；此外，構建了一套貫穿階段過程產物與代碼事實的 Agent 工業級評測體系，實現複雜交付效果的客觀度量與精準歸因。</p><p>企業私域知識自動化抽取與雙模應用：針對私域隱性規則難以顯性化的難題，構建了一套算法主導的研發知識自動化抽取與動態評價方案；進一步圍繞 Agent 如何精準使用知識，對比驗證了 “上下文動態注入通用 SOTA 模型” 與 “私域知識內化訓練淘寶領域專家模型” 兩種技術路線的差異效果。</p><p>呂承飛（呂行），淘寶（中國）軟件有限公司淘天集團 AI 研發負責人，長期從事端側智能、3D/XR 及企業級軟件 AI 研發等方向技術探索。2017 年起牽頭構建淘寶端側智能技術體系，研發端側推理引擎 MNN（GitHub 16K+ Stars）和端雲協同機器學習系統 Walle，並以第一作者身份在 OSDI 發表相關論文。相關技術已規模化應用於手淘搜索推薦、電商直播、AR 試用等場景。2025 年起牽頭淘寶企業級軟件 AI 研發項目，構建“懂淘寶技術”的 AI 原生研發系統，探索以 Agent 執行為主、人類專家決策與驗收為輔的 AI 原生研發模式，並在多個團隊開展應用驗證。曾獲 CCF 科技進步一等獎、上海市科技進步一等獎。他在本次會議的詳細演講內容如下：</p><p>掌握複雜存量工程中 AI 研發的落地思路，結合團隊成熟度與業務風險，選擇半托管或全託管模式，明確人和 Agent 的分工</p><p>借鑑多 Agent 協作、私域知識應用與工業級評測方法，提升端到端交付能力，並用實際產物和代碼事實判斷效果、定位問題</p><p>聚焦海量服務、複雜依賴和嚴格質量要求下的真實研發場景，討論 AI 如何從局部代碼生成走向端到端需求交付</p><p>分享 Agent 執行、人類決策與驗收的 AI 原生研發模式，以及適配不同團隊和業務風險的半托管、全託管兩種落地路徑</p><p>介紹“1 個 TL Agent ＋多個專職 Agent”的分工協作架構，以及讓 Agent 理解和使用企業私域知識的關鍵方法</p><p>不以代碼生成量衡量效果，而是結合過程產物、代碼事實和交付結果，客觀評估 Agent 能力並定位問題來源</p><p>除此之外，Clipto 首席科學家韓玫、清華大學教授李寧、華映資本董事總經理李巖等多位來自學界與產業界的專家也將在 Keynote 主題演講中圍繞 AI 應用落地的全過程，探討 AI 的價值如何從回答問題擴展到承擔工作，什麼能在端側被記住、什麼能在超大規模工程裏被交付、組織應當如何被重塑、哪些能力可以跨越模型迭代被積累。</p><p>本次大會還策劃了 Post-Training Engineering｜數據、獎勵與模型能力塑造 、 大模型推理與算力調度實踐 、 Knowledge Engineering｜讓 Agent 理解企業 、 Multi-Agent Systems 、 智能體評測與生產可靠性探索 、 Agent Security｜身份、權限與行動安全 、 AgentOps｜企業 Agent 全生命週期管理 、 Self-Evolving Agents｜從經驗學習到可控進化 、 Agentic Software Engineering｜從代碼生成到軟件交付 、 Personal Agent 、 AI 原生架構的演進與治理 、 AI 時代的組織重構 、 AI × Industries ｜產業智能化 等 13 個專題論壇，屆時將有來自不同行業、不同領域、不同企業的資深專家在現場帶來前沿技術洞察和一線實踐經驗。</p><p>9 折優惠限時開啓，現在報名立減 580，查看更多詳情可掃碼或聯繫票務經理 13269078023 進行諮詢。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/SfAOlgtjHYikEQUKrRVT?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：華映資本董事總經理李巖已確認出席 AICon北京，分享AI 落地中值得持續積累的能力</li></ul>
+<p><a href="https://www.infoq.cn/article/SfAOlgtjHYikEQUKrRVT?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

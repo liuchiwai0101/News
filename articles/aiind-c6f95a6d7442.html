@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Solana 推出網頁開發工具新版本 整合 AI Agent 降低寫程式門檻 - Yahoo股市</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>Solana 推出網頁開發工具新版本 整合 AI Agent 降低寫程式門檻 - Yahoo股市</h1>
+<div class="notice">內容機器翻譯自第三方媒體（Yahoo 股市），僅供參考，以原文為準。</div><p><img src="https://s.yimg.com/lo/mysterio/api/d1bdcfb3bb7cb178b434d1339493a47f1971501c054a39e9ecedfc136b7a5660/lightyear_networkapi/resizefill_w1200%3Bquality_80%3Bformat_jpg/https%3A%2F%2Fmedia.zenfs.com%2Fca%2Fsunmedia_664%2F700e5a1af6ef88c4d9ba30fdd8efd851.jpg_up.jpg" alt=""></p><h3>正文</h3><p>但如果讓 20個AI Agents組成一支工程團隊 ，不告訴它們具體該改哪一行代碼，讓它們自己 尋找性能瓶頸、提出技術方案、設計實驗， 甚至 互相審查代碼 呢？</p><p>近日，AI初創公司 TabbyML 公佈了一項頗有意思的工作。他們將一支由20個AI Agents組成的系統工程團隊，投入到了一個真實的開源搜索引擎Quickwit中。</p><p>人類設定優化目標和工程約束，剩下的工作交給AI。</p><p>更重要的是，在數據庫性能基準ClickBench的數據湖類別中，經過AI優化的Quickwit，在同口徑熱查詢評分對比中，超越了此前所有公開成績。</p><p>這一次，AI做的不只是寫代碼， 它開始承擔一支專業系統工程團隊的工作。</p><p>Quickwit是一款面向大規模日誌和可觀測性數據的搜索引擎，底層基於Rust編寫的全文搜索庫Tantivy，能夠直接利用雲端對象存儲處理海量數據。</p><p>與一般的軟件開發任務不同，系統性能優化是一項相當複雜的工程工作。</p><p>工程師不僅需要理解龐大的代碼庫，還要深入分析CPU、內存、數據結構、存儲訪問等底層機制。</p><p>而一個看似有效的優化，也可能在另一個場景下造成性能退化，甚至引入極難察覺的Bug。為了衡量AI團隊的工作成果，TabbyML團隊選擇了數據庫領域知名的性能基準ClickBench。</p><p>在包含1億行數據的測試集上，AI團隊對Quickwit支持的40條查詢展開優化。最終，Quickwit的熱查詢geomean評分從 403毫秒下降至304毫秒 。</p><p>按同一組40條查詢重算，優化後的Quickwit在熱查詢geomean上為 304毫秒 ，比Duckflight公開成績的354毫秒 快了16% 。</p><p>TabbyML團隊也復現了ClickHouse和Quickwit未經優化的成績（圖中第四和第五行）：Quickwit的熱查詢geomean為 304毫秒，ClickHouse為392毫秒 。</p><p>值得注意的是，AI並沒有重新設計整個搜索引擎，而是深入已有系統的底層實現，逐個尋找可以被消除的性能瓶頸。</p><p>這20個AI Agents圍繞緩存配置、數據結構、解壓縮器複用和內存分配機制等多個環節展開優化。</p><p>如果直接讓20個AI Agents同時修改一個代碼庫，會發生什麼？</p><p>它們可能重複勞動，相互覆蓋代碼修改，也可能將測試中的隨機波動誤認為性能提升。</p><p>甚至，為了追求更高的Benchmark分數，AI可能逐漸找到一些投機取巧的辦法。</p><p>TabbyML的解決方案，是 讓AI像真實的工程團隊一樣分工協作 。</p><p>這些Agents不負責修改代碼，而是專注於性能分析。</p><p>多個Agents可以同時探索不同方向，從數據解碼到內存管理，從聚合操作到存儲訪問。</p><h3>各方報道</h3><ul><li><a href="https://tw.stock.yahoo.com/news/solana-%E6%8E%A8%E5%87%BA%E7%B6%B2%E9%A0%81%E9%96%8B%E7%99%BC%E5%B7%A5%E5%85%B7%E6%96%B0%E7%89%88%E6%9C%AC-%E6%95%B4%E5%90%88-ai-agent-032301717.html" target="_blank" rel="noopener noreferrer">Yahoo 股市</a>：Solana 推出網頁開發工具新版本 整合 AI Agent 降低寫程式門檻</li></ul>
+<p><a href="https://tw.stock.yahoo.com/news/solana-%E6%8E%A8%E5%87%BA%E7%B6%B2%E9%A0%81%E9%96%8B%E7%99%BC%E5%B7%A5%E5%85%B7%E6%96%B0%E7%89%88%E6%9C%AC-%E6%95%B4%E5%90%88-ai-agent-032301717.html" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>

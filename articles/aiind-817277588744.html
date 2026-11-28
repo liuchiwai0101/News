@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>十年：谷歌更新 SRE 著作，擁抱 AI 時代</title>
+<style>
+img,video,figure,table{max-width:100%;}
+img,video{height:auto;}
+.table-scroll{width:100%;max-width:100%;overflow-x:auto;}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;}
+th,td{padding:8px 10px;border:1px solid #e2e8f0;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+pre{max-width:100%;overflow-x:auto;}
+</style>
+</head>
+<body>
+<p><a href="../">← 返回日報</a></p>
+<h1>十年：谷歌更新 SRE 著作，擁抱 AI 時代</h1>
+<div class="notice">內容機器翻譯自第三方媒體（InfoQ），僅供參考，以原文為準。</div><p><img src="https://static001.infoq.cn/resource/image/e7/8a/e792335fc029cc3f64b3013777499b8a.jpg" alt=""></p><h3>正文</h3><p>谷歌宣佈對其開創性著作 《Site Reliability Engineering: How Google Runs Production Systems》（網站可靠性工程：谷歌如何運行生產系統） 進行了徹底重寫，推出了第二版，距該書首版問世已有十年。本書更新了網站可靠性工程（SRE）的理念，覆蓋現代雲架構、平台工程和 AI 工作負載，同時保留了將軟件工程技術應用於運維工作的原始核心理念。</p><p>新版本由谷歌 SRE 項目經理 Betsy Beyer 和軟件工程師 David Huska 聯合發佈。自 2016 年第一版問世以來，生產環境已發生巨大變化，新版的推出正是對這一變化的回應。作者指出，當前的核心問題已不再是如何採用雲基礎設施，而是如何在系統變得更加分佈式、相互依賴且持續變化的情況下保持可靠性。</p><p>“現代生產環境始終處在不斷變化之中。系統邊界更加複雜，依賴關係盤根錯節，故障模式比以往更加複雜，也更具破壞性。”</p><p>首版 SRE 一書之所以影響深遠，是因為它公開介紹了谷歌運營大規模服務的方法。書中介紹了服務等級目標（SLO）、錯誤預算、減少重複勞作、事件管理和事後覆盤等實踐。InfoQ 在 2016 年的 書評 中指出，該書將 SRE 定義為將軟件工程在運維領域的應用，工程師應自動化重複性運維工作，而不是簡單地被動響應。</p><p>第二版並未將 SRE 當成一套固定不變的實踐。相反，它描述了隨着企業從早期雲遷移和單體應用轉向微服務、多雲部署、無服務器系統和內部開發者平台，這些實踐是如何演變的。</p><p>多年來最明顯的變化之一就是 SLO 和錯誤預算。谷歌表示，團隊過去需要依賴基本的可用性指標，手動應用錯誤預算策略。修訂後的指南描述了以用户為中心的多層 SLO、動態燃燒率告警和自動化策略執行。可靠性實踐本身已從單純關注基礎設施正常運行時間演變為關注故障對用户影響的度量。</p><p>可觀測性也在不斷演進，本書新版對此進行了詳細闡述。在第一版所描述的世界中，靜態儀表盤、基礎日誌和手動告警分類已被 OpenTelemetry、分佈式追蹤和自動化異常關聯所取代。其目標不只是收集更多遙測數據，而是縮短從告警到定位故障根因的時間。</p><p>自動化是第三大修訂重點。谷歌描述了從解決孤立任務的自定義腳本向聲明式基礎設施即代碼、內部開發者平台和自愈系統的轉變。這與目前大型企業中常見的平台工程模式一致：可靠性能力被一次性內置到平台中，產品團隊可以直接使用，而不是讓每個團隊重複造輪子。</p><p>可靠性測試也發生了變化。谷歌將按計劃進行的“遊戲日”和合成負載測試與持續的彈性檢查、自動化流水線測試和實時生產金絲雀測試進行了對比。這意味着彈性已成為交付流水線的一部分，而不是在重大發布前才偶爾進行的演練。</p><p>“現代工程不再只依賴定期故障演練和合成負載測試，而是把持續彈性檢查、自動化流水線測試和實時生產金絲雀測試內置到流程當中。”</p><p>容量管理是本書的另一處更新重點。谷歌表示，手動配置和靜態預測已被動態自動擴縮、雲 FinOps 對齊以及針對 GPU 和 TPU 集群的優化所取代。這點至關重要，因為 AI 訓練和推理工作負載會將需求集中在稀缺的加速計算資源上，使得容量規劃、網絡連接和成本控制變得更具運營意義。</p><p>生成式 AI 不可避免地出現在第二版中。首先，SRE 被視作運營 AI 基礎設施必備的工程體系。本書涵蓋了大型 GPU 和 TPU 集群的可靠性、網絡拓撲、非確定性模型輸出、延遲行為以及用於訓練、微調和數據處理的流水線。這些運營問題與傳統無狀態 Web 服務所涉及的問題截然不同。</p><p>其次，AI 成了可靠性工程師的工具。公告中肯定了生成式 AI 在事件分診、覆盤文檔撰寫、遙測數據自然語言查詢、瓶頸預測（在故障發生前識別資源瓶頸）方面的價值。公告中的案例大多把 AI 定位成輔助角色，例如為工程師收集和整理證據，而不是聲稱 AI 可以取代運營判斷。最近的行業動態似乎支持這一觀點，InfoQ 在 2026 年 10 月 報道，Datadog 發佈 Scout 專用模型，用於在 Bits AI SRE 產品中排查生產問題。其他供應商也在探索類似領域，如 Honeycomb 的 Canvas Agent、Splunk AI SRE 和 New Relic 的 SRE Agent。InfoQ 還在 2026 年 2 月 報道了谷歌雲 SRE 在真實故障中使用 Gemini CLI：AI 協作工程師處理事件，而不是作為值班人員的自主替代品。</p><p>公告還修訂了 SRE 的組織模式。谷歌描述了從專門負責特定應用的專職 SRE 團隊向混合模式、平台工程集成以及嵌入產品團隊的可靠性倡導者的轉變。之所以出現這種轉變，是因為許多組織無法為每項服務配備一箇中心 SRE 團隊，因此可靠性專業知識必須更廣泛地分佈。</p><p>儘管技術層面有所更新，谷歌認為其底層文化並未改變。作者重申了以可靠性為中心的文化的重要性，並擴充了系統工程中人的因素相關內容。David Blank-Edelman 在 2025 年波士頓 InfoQ Dev Summit 的演講 “ You Are Asking the Wrong Questions (about Reliability and SRE) ”（你問錯問題了（關於可靠性與 SRE））中提出了一個相關觀點。他認為，可靠性工作應從客户視角而非組件視角出發，SRE 本質上是協作性工作。他還對只找單一根因的傳統思路提出質疑，主張應考察故障背後的多種促成因素。</p><p>第二版可通過 Google Books 購買紙質版，也可從 O&#x27;Reilly 獲取數字版。對於已經在實踐 SRE 的團隊來説，其價值可能不在於介紹熟悉的概念，而在於展示這些概念如何為適應平台、分佈式系統和 AI 密集型基礎設施所做出的調整。對於處於可靠性旅程早期階段的組織來説，它仍然是一本重要的參考書，指導如何將運維工作轉化為軟件工程問題，而不是一系列手動任務。</p><h3>各方報道</h3><ul><li><a href="https://www.infoq.cn/article/vD2gdB9ER7QgjD0W5wds?utm_source=rss&amp;utm_medium=article" target="_blank" rel="noopener noreferrer">InfoQ</a>：十年：谷歌更新 SRE 著作，擁抱 AI 時代</li></ul>
+<p><a href="https://www.infoq.cn/article/vD2gdB9ER7QgjD0W5wds?utm_source=rss&utm_medium=article" target="_blank" rel="noopener noreferrer">查看原文 ↗</a></p>
+</body>
+</html>
